@@ -11,6 +11,12 @@ import android.view.ViewGroup;
 
 import com.contag.app.R;
 import com.contag.app.util.Constants;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
@@ -22,11 +28,13 @@ import com.google.android.gms.plus.model.people.Person;
 /**
  * Created by tanay on 30/7/15.
  */
-public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult> {
 
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = LoginFragment.class.getName();
     private SignInButton btnGooglePlus;
+    private LoginButton btnFb;
+    private CallbackManager cmFacebook;
 
     //////////// static public methods ///////////////////////////////
 
@@ -43,11 +51,20 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
 
 
     ////////////// Overridden methods /////////////////////////
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        buildGoogleApiClient();
+        initializeFacebook();
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        buildGoogleApiClient();
         btnGooglePlus = (SignInButton) view.findViewById(R.id.btn_plus_sign_in);
+        btnFb = (LoginButton) view.findViewById(R.id.btn_fb_login);
+        btnFb.registerCallback(cmFacebook, this);
         btnGooglePlus.setOnClickListener(this);
         return view;
     }
@@ -132,5 +149,27 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
                 .addScope(new Scope(Scopes.PROFILE))
                 .addScope(new Scope(Scopes.PLUS_LOGIN))
                 .build();
+    }
+
+    private void initializeFacebook() {
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        cmFacebook = CallbackManager.Factory.create();
+    }
+
+    /////////////// Facebook login result buttons //////////////////////////////
+
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        Log.d(TAG, loginResult.getAccessToken().getUserId());
+    }
+
+    @Override
+    public void onCancel() {
+
+    }
+
+    @Override
+    public void onError(FacebookException e) {
+
     }
 }

@@ -25,6 +25,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.github.asne:asne-linkedin:0.3.3'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     compile 'com.github.asne:asne-instagram:0.3.3'
-    compile 'com.github.asne:asne-facebook:0.3.3'
 }

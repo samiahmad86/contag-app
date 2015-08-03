@@ -15,6 +15,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -25,16 +28,22 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 /**
  * Created by tanay on 30/7/15.
+ * TODO: Access Token Management
  */
-public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult> {
+public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
 
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = LoginFragment.class.getName();
     private SignInButton btnGooglePlus;
     private LoginButton btnFb;
     private CallbackManager cmFacebook;
+    private ArrayList<String> listOfFbPermissions;
 
     //////////// static public methods ///////////////////////////////
 
@@ -54,8 +63,10 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         buildGoogleApiClient();
         initializeFacebook();
+
     }
 
 
@@ -64,6 +75,8 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         btnGooglePlus = (SignInButton) view.findViewById(R.id.btn_plus_sign_in);
         btnFb = (LoginButton) view.findViewById(R.id.btn_fb_login);
+        btnFb.setFragment(this);
+        btnFb.setReadPermissions(listOfFbPermissions);
         btnFb.registerCallback(cmFacebook, this);
         btnGooglePlus.setOnClickListener(this);
         return view;
@@ -84,10 +97,14 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult");
+
         if (requestCode == Constants.Login.RC_GPLUS_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
                 mGoogleApiClient.connect();
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+            cmFacebook.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -152,8 +169,10 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     }
 
     private void initializeFacebook() {
+        listOfFbPermissions = new ArrayList<>();
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         cmFacebook = CallbackManager.Factory.create();
+        listOfFbPermissions.add("email");
     }
 
     /////////////// Facebook login result buttons //////////////////////////////
@@ -161,6 +180,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     @Override
     public void onSuccess(LoginResult loginResult) {
         Log.d(TAG, loginResult.getAccessToken().getUserId());
+        GraphRequest.newMeRequest(loginResult.getAccessToken(), this).executeAsync();
     }
 
     @Override
@@ -170,6 +190,13 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
 
     @Override
     public void onError(FacebookException e) {
+        e.printStackTrace();
+    }
 
+    //////////////////// Facebook request for user information complete listener ////////////////
+
+    @Override
+    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+        Log.d(TAG, jsonObject.opt("email").toString());
     }
 }

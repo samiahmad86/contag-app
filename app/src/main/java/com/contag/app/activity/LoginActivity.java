@@ -34,12 +34,11 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.Login.RC_GPLUS_SIGN_IN) {
+        super.onActivityResult(requestCode, resultCode, data);
             LoginFragment lf = (LoginFragment) getSupportFragmentManager().findFragmentByTag(Constants.Login.TAG_LOGIN_FRAG);
             if(lf != null) {
                 lf.onActivityResult(requestCode, resultCode, data);
             }
-        }
     }
 
 }

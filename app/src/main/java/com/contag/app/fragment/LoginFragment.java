@@ -33,8 +33,9 @@ import java.util.ArrayList;
 
 /**
  * Created by tanay on 30/7/15.
- * TODO: Access Token Management
  */
+// TODO: Access Token Management
+
 public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
 
     private GoogleApiClient mGoogleApiClient;
@@ -47,7 +48,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     //////////// static public methods ///////////////////////////////
 
     /*
-        Always use this method to create fragment object.
+        Always use this factory method to create fragment object.
         Never create object directly
      */
     public static LoginFragment newInstance() {
@@ -108,7 +109,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     }
 
 
-    ////////////////// ConnectionCallbacks methods //////////////////////////////////////
+    ////////////////// Google plus ConnectionCallbacks methods //////////////////////////////////////
     @Override
     public void onConnected(Bundle bundle) {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {

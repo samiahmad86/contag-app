@@ -25,6 +25,8 @@ import java.util.ArrayList;
 public class NavDrawerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
+    public static final String KEY_NAV_DRAWER_LIST = "nav_drawer_list";
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -34,7 +36,7 @@ public class NavDrawerFragment extends Fragment {
     public static NavDrawerFragment newInstance(ArrayList<NavDrawerItem> navDrawerItems) {
         NavDrawerFragment fragment = new NavDrawerFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("any-key", navDrawerItems);
+        args.putParcelableArrayList(KEY_NAV_DRAWER_LIST, navDrawerItems);
         fragment.setArguments(args);
         return fragment;
     }

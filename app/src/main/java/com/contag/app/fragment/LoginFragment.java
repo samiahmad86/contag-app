@@ -171,7 +171,6 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
 
     private void initializeFacebook() {
         listOfFbPermissions = new ArrayList<>();
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         cmFacebook = CallbackManager.Factory.create();
         listOfFbPermissions.add("email");
     }

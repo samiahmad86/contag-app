@@ -7,6 +7,7 @@ public class Constants {
 
     public class Global {
         public static final String PREVIOUS_ACTIVITY = "previousActivity";
+        public static final String HEADER_DEVICE_ID = "Device_ID";
         }
 
     public class Login {

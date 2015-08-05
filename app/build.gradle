@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 22
@@ -24,7 +25,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.github.asne:asne-linkedin:0.3.3'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
-    compile 'com.github.asne:asne-instagram:0.3.3'
+    compile('com.octo.android.robospice:robospice-retrofit:1.4.14') {
+        exclude group: 'org.apache.commons', module: 'commons-io'
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+    apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
+    compile "com.raizlabs.android:DBFlow-Core:2.2.1"
+    compile "com.raizlabs.android:DBFlow:2.2.1"
 }

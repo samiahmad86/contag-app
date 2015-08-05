@@ -1,6 +1,7 @@
 package com.contag.app.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.util.Router;
@@ -17,11 +18,13 @@ import com.contag.app.util.Router;
 
 public class SplashActivity extends BaseActivity {
 
+    public static final String TAG = SplashActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        Log.d(TAG, getBaseContext().getCacheDir().getAbsolutePath());
         Router.startLoginActivity(SplashActivity.this, SplashActivity.class.getName());
     }
 }

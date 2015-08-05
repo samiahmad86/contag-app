@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;

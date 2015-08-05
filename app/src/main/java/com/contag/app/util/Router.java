@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.contag.app.activity.HomeActivity;
 import com.contag.app.activity.LoginActivity;
 import com.contag.app.service.ContactService;
+import com.octo.android.robospice.persistence.CacheManager;
 
 /**
  * Created by tanay on 30/7/15.

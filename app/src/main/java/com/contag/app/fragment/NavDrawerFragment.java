@@ -91,7 +91,7 @@ public class NavDrawerFragment extends Fragment {
         public void onFragmentInteraction(int value);
     }
 
-
+    ////////////////////////////////// Navigation drawer Adapter //////////////////////////
     public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerViewHolder>{
 
 
@@ -111,6 +111,7 @@ public class NavDrawerFragment extends Fragment {
         }
     }
 
+    ////////////////////////// Nav Drawer View Holder /////////////////////////////
     public  class NavDrawerViewHolder extends RecyclerView.ViewHolder{
 
         public NavDrawerViewHolder(View itemView) {
@@ -118,7 +119,7 @@ public class NavDrawerFragment extends Fragment {
         }
     }
 
-
+    ////////////////////////////// Nav Drawer item model /////////////////////////////
     public static class NavDrawerItem implements Parcelable {
 
         @Override

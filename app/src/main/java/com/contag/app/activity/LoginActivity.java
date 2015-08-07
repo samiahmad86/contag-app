@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -7,7 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.contag.app.R;
 import com.contag.app.fragment.LoginFragment;
-import com.contag.app.util.Constants;
+import com.contag.app.config.Constants;
 
 /**
  * Created by tanay on 30/7/15.

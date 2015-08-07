@@ -1,9 +1,8 @@
 package com.contag.app.service;
 
 import android.app.Application;
-import android.provider.Settings;
 
-import com.contag.app.util.Constants;
+import com.contag.app.config.Constants;
 import com.contag.app.util.DeviceUtils;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
@@ -14,7 +13,6 @@ import java.io.File;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.Request;
 
 /**
  * Created by tanay on 5/8/15.

@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.contag.app.R;
-import com.contag.app.util.Constants;
+import com.contag.app.config.Constants;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;

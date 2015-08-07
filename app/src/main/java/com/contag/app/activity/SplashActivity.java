@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.contag.app.R;
-import com.contag.app.util.Router;
+import com.contag.app.config.Router;
+import com.contag.app.util.PrefUtils;
 
 /**
  * Created by tanay on 30/7/15.
@@ -24,7 +25,11 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Log.d(TAG, getBaseContext().getCacheDir().getAbsolutePath());
-        Router.startLoginActivity(SplashActivity.this, SplashActivity.class.getName());
+        if (isUserLoggedIn()) {
+            Router.startHomeActivity(this, SplashActivity.class.getName());
+        } else {
+            Router.startLoginActivity(SplashActivity.this, SplashActivity.class.getName());
+        }
     }
+
 }

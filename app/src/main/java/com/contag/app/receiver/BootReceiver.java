@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.contag.app.util.Router;
+import com.contag.app.config.Router;
 
 public class BootReceiver extends BroadcastReceiver {
     public BootReceiver() {

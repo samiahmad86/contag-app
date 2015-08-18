@@ -40,5 +40,4 @@ public class LoginActivity extends BaseActivity {
                 lf.onActivityResult(requestCode, resultCode, data);
             }
     }
-
 }

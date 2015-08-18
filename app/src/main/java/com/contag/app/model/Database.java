@@ -1,9 +1,10 @@
 package com.contag.app.model;
 
-/**
- * Created by tanay on 5/8/15.
- */
+import com.raizlabs.android.dbflow.annotation.Table;
 
+/**
+ * Created by Kartikey on 8/18/2015.
+ */
 @com.raizlabs.android.dbflow.annotation.Database(version = Database.VERSION, name = Database.NAME)
 public class Database {
 

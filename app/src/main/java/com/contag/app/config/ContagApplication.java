@@ -12,7 +12,7 @@ public class ContagApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FlowManager.init(this);
+//        FlowManager.init(this);
         FacebookSdk.sdkInitialize(this);
     }
 }

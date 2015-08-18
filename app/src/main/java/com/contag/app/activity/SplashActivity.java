@@ -1,6 +1,8 @@
 package com.contag.app.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.contag.app.R;
@@ -24,7 +26,6 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Log.d(TAG, getBaseContext().getCacheDir().getAbsolutePath());
         Router.startLoginActivity(SplashActivity.this, SplashActivity.class.getName());
     }
 }

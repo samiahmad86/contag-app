@@ -9,15 +9,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.contag.app.R;
+import com.contag.app.service.APIService;
+import com.octo.android.robospice.SpiceManager;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BaseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+/**Every fragment
+using robospice must use Base fragment so
+as for using spice manager*/
+
 public class BaseFragment extends Fragment {
 
-
+private SpiceManager spiceManager=new SpiceManager(APIService.class);
     public static BaseFragment newInstance() {
         BaseFragment fragment = new BaseFragment();
         Bundle args = new Bundle();
@@ -36,8 +43,16 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        spiceManager.start(getActivity());
+        super.onStart();
+    }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
     /**
      * This interface must be implemented by activities that contain this

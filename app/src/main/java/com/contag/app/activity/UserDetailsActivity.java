@@ -6,6 +6,11 @@ import android.view.MenuItem;
 
 import com.contag.app.R;
 
+/**
+ * When a new user logs he fills out his details here.
+ * The activity shows two fragments
+ */
+
 public class UserDetailsActivity extends BaseActivity {
 
     @Override

@@ -12,7 +12,7 @@ import com.octo.android.robospice.SpiceManager;
 /**
  * Created by tanay on 30/7/15.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
 

@@ -10,8 +10,8 @@
     <!-- ui elements -->
     <string name="login">LOGIN</string>
     <string name="enter_phone_num">Enter your phone number</string>
-
-
+    <string name="enter_otp">Enter otp</string>
+    <string name="otp_msg">We have sent an OTP to your number, please enter it to proceed.</string>
     <string name="hello_world">Hello world!</string>
 
 <!-- TODO: Remove or change this placeholder text -->

@@ -23,4 +23,7 @@ public class LoginResponse {
     @Expose
     @SerializedName("new_user")
     public boolean isNewUser;
+    @Expose
+    @SerializedName("otp")
+    public String otp;
 }

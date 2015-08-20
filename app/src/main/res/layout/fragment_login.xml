@@ -1,18 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context="com.contag.app.fragment.LoginFragment">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/btn_plus_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
-    <com.facebook.login.widget.LoginButton
+    <android.support.v7.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_plus_sign_in"
-        android:id="@+id/btn_fb_login"/>
+        android:textSize="15sp"
+        android:text="@string/otp_msg"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:id="@+id/tv_otp_msg"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_gray_rect"
+        android:layout_below="@id/tv_otp_msg"
+        android:hint="@string/enter_phone_num"
+        android:inputType="number"
+        android:padding="10dp"
+        android:textSize="20sp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_phone_num"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <include
+        android:id="@+id/pb_login"
+        layout="@layout/layout_progress_bar" />
 
 </RelativeLayout>

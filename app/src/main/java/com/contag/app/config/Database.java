@@ -1,6 +1,4 @@
-package com.contag.app.model;
-
-import com.raizlabs.android.dbflow.annotation.Table;
+package com.contag.app.config;
 
 /**
  * Created by Kartikey on 8/18/2015.
@@ -8,6 +6,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 @com.raizlabs.android.dbflow.annotation.Database(version = Database.VERSION, name = Database.NAME)
 public class Database {
 
-    public static final String NAME = "Contag Database";
+    public static final String NAME = "ContagDatabase";
     public static final int VERSION = 1;
 }

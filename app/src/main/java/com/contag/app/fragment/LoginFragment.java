@@ -1,197 +1,161 @@
 package com.contag.app.fragment;
+
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.contag.app.config.Router;
+import com.contag.app.model.Login;
+import com.contag.app.model.LoginResponse;
+import com.contag.app.request.LoginRequest;
+import com.contag.app.util.DeviceUtils;
+import com.contag.app.util.RegexUtils;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Created by tanay on 30/7/15.
+ * A simple {@link BaseFragment} subclass for login.
+ * Activities that contain this fragment must implement the
+ * {@link BaseFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link LoginFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-// TODO: Access Token Management
 
-public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
-    private GoogleApiClient mGoogleApiClient;
-    private static final String TAG = LoginFragment.class.getName();
-    private SignInButton btnGooglePlus;
-    private LoginButton btnFb;
-    private CallbackManager cmFacebook;
-    private ArrayList<String> listOfFbPermissions;
-    //////////// static public methods ///////////////////////////////
-    /*
-        Always use this factory method to create fragment object.
-        Never create object directly
-     */
-    public static LoginFragment newInstance() {
-        LoginFragment lf = new LoginFragment();
-        Bundle bundle = new Bundle();
-        lf.setArguments(bundle);
-        return lf;
+public class LoginFragment extends BaseFragment implements View.OnClickListener, RequestListener<LoginResponse> {
+
+    private OnFragmentInteractionListener mListener;
+    private final static String TAG = LoginFragment.class.getName();
+    private int mFragmentType;
+    private boolean isNewUser;
+
+    public static LoginFragment newInstance(int code, boolean isNew) {
+        LoginFragment fragment = new LoginFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.Keys.KEY_FRAGMENT_TYPE, code);
+        args.putBoolean(Constants.Keys.KEY_NEW_USER, isNew);
+        fragment.setArguments(args);
+        return fragment;
     }
-    ////////////// Overridden methods /////////////////////////
+
+    public LoginFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        buildGoogleApiClient();
-        initializeFacebook();
-
+        Bundle args = getArguments();
+        if (args != null) {
+            mFragmentType = args.getInt(Constants.Keys.KEY_FRAGMENT_TYPE);
+            if (mFragmentType == Constants.Values.FRAG_OTP) {
+                isNewUser = args.getBoolean(Constants.Keys.KEY_NEW_USER, false);
+            }
+        }
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        TelephonyManager tMgr = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("Splash", getActivity().getCacheDir().getAbsolutePath()+mPhoneNumber);
-        btnGooglePlus = (SignInButton) view.findViewById(R.id.btn_plus_sign_in);
-        btnFb = (LoginButton) view.findViewById(R.id.btn_fb_login);
-        btnFb.setFragment(this);
-        btnFb.setReadPermissions(listOfFbPermissions);
-        btnFb.registerCallback(cmFacebook, this);
-        btnGooglePlus.setOnClickListener(this);
+        Button btnLogin = (Button) view.findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(this);
+        switch (mFragmentType) {
+            case Constants.Values.FRAG_OTP: {
+                ((EditText) view.findViewById(R.id.et_phone_num)).setHint
+                        (resources().getString(R.string.enter_otp));
+                view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
+                btnLogin.setText("SUBMIT");
+                break;
+            }
+        }
         return view;
     }
-    public static String getDeviceId(Context context) {
-        String android_id = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        return android_id;
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+
 
     @Override
-    public void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult");
-
-        if (requestCode == Constants.Values.RC_GPLUS_SIGN_IN) {
-            if (resultCode == Activity.RESULT_OK) {
-                mGoogleApiClient.connect();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-            cmFacebook.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
-    ////////////////// Google plus ConnectionCallbacks methods //////////////////////////////////////
-    @Override
-    public void onConnected(Bundle bundle) {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            if (currentPerson != null) {
-                Log.d(TAG, "login success for " + currentPerson.getName().getGivenName());
-            } else {
-                Log.d(TAG, "login failure");
-            }
-        } else {
-            Log.d(TAG, "API client not connected");
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
-    /////////////// on click listener method ////////////////////////////////////////
     @Override
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.btn_plus_sign_in: {
-                Log.d(TAG, "g plus login button");
-                mGoogleApiClient.connect();
-                break;
+
+            case R.id.btn_login: {
+
+                if (getView() != null) {
+
+                    switch (mFragmentType) {
+
+                        case Constants.Values.FRAG_LOGIN: {
+                            String phNum = ((EditText) getView().findViewById(R.id.et_phone_num)).getText().toString();
+                            if (!RegexUtils.isPhoneNumber(phNum)) {
+                                showToast("Enter a valid phone number.");
+                                return;
+                            }
+                            getActivity().findViewById(R.id.pb_login).setVisibility(View.VISIBLE);
+                            LoginRequest lr = new LoginRequest(DeviceUtils.getmDeviceId(getActivity()), new Login(phNum));
+                            getSpiceManager().execute(lr, this);
+                            break;
+                        }
+
+                        case Constants.Values.FRAG_OTP: {
+                            String otp = ((EditText) getView().findViewById(R.id.et_phone_num)).getText().toString();
+                            try {
+                                Double.parseDouble(otp);
+                            } catch (NumberFormatException ne) {
+                                showToast("Enter valid otp");
+                                return;
+                            }
+                            // TODO: check if the otp matches with the response
+                            if (isNewUser) {
+                                Router.startUserDetailsActivity(getActivity(), TAG);
+                            } else {
+                                Router.startHomeActivity(getActivity(), TAG);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
+
     }
 
-    /////////////////////////////// Connection failure methods ////////////////////////////
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "connection failed because " + connectionResult);
-        if (connectionResult.hasResolution()) {
-            try {
-                connectionResult.startResolutionForResult(getActivity(), Constants.Values.RC_GPLUS_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                e.printStackTrace();
-                mGoogleApiClient.connect();
-            }
+    public void onRequestFailure(SpiceException spiceException) {
+        if (getView() != null) {
+            getView().findViewById(R.id.pb_login).setVisibility(View.GONE);
         }
-    }
-
-
-    ////////// private methods ////////////////////////////////////////
-    private void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
-                .addScope(new Scope(Scopes.PLUS_LOGIN))
-                .build();
-    }
-
-    private void initializeFacebook() {
-        listOfFbPermissions = new ArrayList<>();
-        cmFacebook = CallbackManager.Factory.create();
-        listOfFbPermissions.add("email");
-    }
-    /////////////// Facebook login result buttons //////////////////////////////
-    @Override
-    public void onSuccess(LoginResult loginResult) {
-        Log.d(TAG, loginResult.getAccessToken().getUserId());
-        GraphRequest.newMeRequest(loginResult.getAccessToken(), this).executeAsync();
-    }
-    @Override
-    public void onCancel() {
-
+        log(TAG, spiceException.getMessage());
     }
 
     @Override
-    public void onError(FacebookException e) {
-        e.printStackTrace();
-    }
-
-    //////////////////// Facebook request for user information complete listener ////////////////
-
-    @Override
-    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-        Log.d(TAG, jsonObject.opt("email").toString());
+    public void onRequestSuccess(LoginResponse loginResponse) {
+        // TODO: save login response
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Constants.Keys.KEY_NEW_USER, loginResponse.isNewUser);
+        mListener.onFragmentInteraction(Constants.Values.FRAG_OTP, bundle);
     }
 }

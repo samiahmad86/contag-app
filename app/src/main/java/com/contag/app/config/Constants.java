@@ -12,11 +12,15 @@ public class Constants {
         public static final String HEADER_TOKEN = "token";
         public static final String APP_PREFS = "appPrefs";
         public static final String KEY_ACCESS_TOKEN = "accessToken";
+        public static final String KEY_FRAGMENT_TYPE = "fragmentType";
+        public static final String KEY_NEW_USER = "newUser";
     }
 
     public class Values {
         // Request code for google plus sign in
         public static final int RC_GPLUS_SIGN_IN = 0;
+        public static final int FRAG_LOGIN = 0;
+        public static final int FRAG_OTP = 1;
     }
 
     public class Regex {

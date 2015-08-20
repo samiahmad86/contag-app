@@ -2,41 +2,39 @@ package com.contag.app.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 /**
- * Created by Kartikey on 8/18/2015.
+ * Created by tanay on 20/8/15.
  */
-@Table(databaseName = Database.NAME)
-public class User extends BaseModel{
+public class User extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
-    int id;
+    public int id;
     @Column
-    String name;
+    public String name;
     @Column
-    String mobile_number;
+    public String mobile_number;
     @Column
-    int is_mobile_verified;
+    public int is_mobile_verified;
     @Column
-    String gender;
+    public String gender;
     @Column
-    String personal_email;
+    public String personal_email;
     @Column
-    String work_email;
+    public String work_email;
     @Column
-    String work_mobile_number;
+    public String work_mobile_number;
     @Column
-    String work_landline_number;
+    public String work_landline_number;
     @Column
-    String work_address;
+    public String work_address;
     @Column
-    String blood_group;
+    public String blood_group;
     @Column
-    String date_of_birth;
+    public String date_of_birth;
     @Column
-    String marrital_status;
+    public String marital_status;
     @Column
-    String marriage_anniversary;
+    public String marriage_anniversary;
 }

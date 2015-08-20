@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common colors -->
+    <color name="black">#000000</color>
+    <color name="dark_gray">#aaa</color>
+    <color name="light_gray">#ddd</color>
+    <color name="light_blue">#5890FF</color>
+    <color name="white">#ffffff</color>
+
+    <!-- view colors -->
+    <color name="tb_color">@color/black</color>
+    <color name="hint_color">@color/dark_gray</color>
+    <color name="login_btn">@color/light_blue</color>
+
+</resources>

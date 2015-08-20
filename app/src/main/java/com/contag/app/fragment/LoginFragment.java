@@ -1,9 +1,11 @@
 package com.contag.app.fragment;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,16 +38,13 @@ import java.util.ArrayList;
 // TODO: Access Token Management
 
 public class LoginFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
-
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = LoginFragment.class.getName();
     private SignInButton btnGooglePlus;
     private LoginButton btnFb;
     private CallbackManager cmFacebook;
     private ArrayList<String> listOfFbPermissions;
-
     //////////// static public methods ///////////////////////////////
-
     /*
         Always use this factory method to create fragment object.
         Never create object directly
@@ -56,10 +55,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         lf.setArguments(bundle);
         return lf;
     }
-
-
     ////////////// Overridden methods /////////////////////////
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,11 +63,12 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         initializeFacebook();
 
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        TelephonyManager tMgr = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+        Log.d("Splash", getActivity().getCacheDir().getAbsolutePath()+mPhoneNumber);
         btnGooglePlus = (SignInButton) view.findViewById(R.id.btn_plus_sign_in);
         btnFb = (LoginButton) view.findViewById(R.id.btn_fb_login);
         btnFb.setFragment(this);
@@ -80,8 +77,11 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         btnGooglePlus.setOnClickListener(this);
         return view;
     }
-
-
+    public static String getDeviceId(Context context) {
+        String android_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        return android_id;
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -97,7 +97,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult");
 
-        if (requestCode == Constants.Login.RC_GPLUS_SIGN_IN) {
+        if (requestCode == Constants.Values.RC_GPLUS_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
                 mGoogleApiClient.connect();
             }
@@ -147,7 +147,7 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         Log.d(TAG, "connection failed because " + connectionResult);
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(getActivity(), Constants.Login.RC_GPLUS_SIGN_IN);
+                connectionResult.startResolutionForResult(getActivity(), Constants.Values.RC_GPLUS_SIGN_IN);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
                 mGoogleApiClient.connect();
@@ -172,15 +172,12 @@ public class LoginFragment extends BaseFragment implements GoogleApiClient.Conne
         cmFacebook = CallbackManager.Factory.create();
         listOfFbPermissions.add("email");
     }
-
     /////////////// Facebook login result buttons //////////////////////////////
-
     @Override
     public void onSuccess(LoginResult loginResult) {
         Log.d(TAG, loginResult.getAccessToken().getUserId());
         GraphRequest.newMeRequest(loginResult.getAccessToken(), this).executeAsync();
     }
-
     @Override
     public void onCancel() {
 

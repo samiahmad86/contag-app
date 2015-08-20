@@ -3,43 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ViewFlipper
-        android:id="@+id/vf_tutorial"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include
+        android:id="@+id/tb_login"
+        layout="@layout/layout_toolbar" />
 
-        <ImageView
-            android:id="@+id/iv_tutorial_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_tutorial_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_tutorial_3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_tutorial_4"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-
-    </ViewFlipper>
-
-    <FrameLayout
-        android:id="@+id/fl_login"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_phone_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@android:color/transparent" />
+        android:layout_below="@id/tb_login"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_gray_rect"
+        android:hint="@string/enter_phone_num"
+        android:inputType="number"
+        android:padding="10dp"
+        android:textSize="20sp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_phone_num"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <include android:id="@+id/pb_login"
+        layout="@layout/layout_progress_bar"
+        />
 
 </RelativeLayout>

@@ -39,7 +39,7 @@ public class APIService extends RetrofitGsonSpiceService {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(getServerUrl()).setConverter(getConverter()).setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader(Constants.Global.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getBaseContext()));
+                request.addHeader(Constants.Keys.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getBaseContext()));
             }
         });
         return builder;

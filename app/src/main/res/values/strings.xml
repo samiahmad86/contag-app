@@ -1,13 +1,31 @@
 <resources>
-    <string name="app_name">Contag</string>
 
-    <string name="hello_world">Hello world!</string>
+    <!-- app strings -->
+    <string name="app_name">Contag</string>
+    <string name="facebook_app_id">1487599681495272</string>
+
+    <!-- action bar items -->
     <string name="action_settings">Settings</string>
 
+    <!-- ui elements -->
+    <string name="login">LOGIN</string>
+    <string name="enter_phone_num">Enter your phone number</string>
 
-    <string name="facebook_app_id">1487599681495272</string>
+
+    <string name="hello_world">Hello world!</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+    <string name="title_activity_fuck">FuckActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 
 </resources>

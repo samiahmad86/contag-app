@@ -6,15 +6,20 @@ package com.contag.app.config;
  */
 public class Constants {
 
-    public class Global {
+    public class Keys {
         public static final String PREVIOUS_ACTIVITY = "previousActivity";
-        public static final String HEADER_DEVICE_ID = "deviceID";
+        public static final String HEADER_DEVICE_ID = "X-Device-ID";
+        public static final String HEADER_TOKEN = "token";
+        public static final String APP_PREFS = "appPrefs";
+        public static final String KEY_ACCESS_TOKEN = "accessToken";
     }
 
-    public class Login {
+    public class Values {
         // Request code for google plus sign in
         public static final int RC_GPLUS_SIGN_IN = 0;
-        // Tag for login fragment
-        public static final String TAG_LOGIN_FRAG = "loginFragment";
+    }
+
+    public class Regex {
+        public static final String PHONE_NUM = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$";
     }
 }

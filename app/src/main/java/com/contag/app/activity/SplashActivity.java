@@ -1,6 +1,8 @@
 package com.contag.app.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.contag.app.R;
@@ -10,11 +12,11 @@ import com.contag.app.util.PrefUtils;
 /**
  * Created by tanay on 30/7/15.
  * TODO:
- *  1) Create animation
- *  2) Check if user is logged in,
- *      a) if not then start LoginActivity
- *      b) else open HomeActivity
- *  3) Close the activity after corresponding activity is launched
+ * 1) Create animation
+ * 2) Check if user is logged in,
+ * a) if not then start {@link LoginActivity} using {@link Router#startLoginActivity(Context, String)}
+ * b) else open {@link HomeActivity} using {@link Router#startHomeActivity(Context, String)}
+ * 3) Close the activity after corresponding activity is launched.
  */
 
 public class SplashActivity extends BaseActivity {
@@ -25,11 +27,13 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         if (isUserLoggedIn()) {
-            Router.startHomeActivity(this, SplashActivity.class.getName());
+            Router.startHomeActivity(this, TAG);
         } else {
-            Router.startLoginActivity(SplashActivity.this, SplashActivity.class.getName());
+            Router.startLoginActivity(SplashActivity.this, TAG);
         }
+
     }
 
 }

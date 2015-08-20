@@ -57,7 +57,6 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * show a toast of duration {@link Toast#LENGTH_SHORT}
-     *
      * @param message the message of the toast.
      */
     protected void showToast(String message) {
@@ -88,13 +87,14 @@ public abstract class BaseFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(int code, Bundle args);
+        /**
+         * used for interaction with attached activity
+         * @param fragmentType
+         * @param args data to pass to other components.
+         */
+        public void onFragmentInteraction(int fragmentType, Bundle args);
     }
 
 

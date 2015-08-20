@@ -5,13 +5,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.contag.app.R;
+import com.contag.app.fragment.BaseFragment;
 
 /**
  * When a new user logs he fills out his details here.
- * The activity shows two fragments
+ * The activity shows two fragments one after the other
+ *      1) {@link com.contag.app.fragment.SocialMediaFragment}
+ *      2) {@link com.contag.app.fragment.EditUserFragment}
  */
 
-public class UserDetailsActivity extends BaseActivity {
+public class EditUserActivity extends BaseActivity implements BaseFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +42,10 @@ public class UserDetailsActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(int fragmentType, Bundle args) {
+
     }
 }

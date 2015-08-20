@@ -5,8 +5,8 @@ import android.content.Intent;
 
 import com.contag.app.activity.HomeActivity;
 import com.contag.app.activity.LoginActivity;
-import com.contag.app.activity.UserDetailsActivity;
-import com.contag.app.activity.UserProfileActivity;
+import com.contag.app.activity.EditUserActivity;
+import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
 
 /**
@@ -29,13 +29,13 @@ public class Router {
     }
 
     public static void startUserDetailsActivity(Context mContext, String className) {
-        Intent iStartUserDetails = new Intent(mContext, UserDetailsActivity.class);
+        Intent iStartUserDetails = new Intent(mContext, EditUserActivity.class);
         iStartUserDetails.putExtra(Constants.Keys.PREVIOUS_ACTIVITY, className);
         mContext.startActivity(iStartUserDetails);
     }
 
     public static void startUserProfileActivity(Context mContext, String className) {
-        Intent iUsrProf = new Intent(mContext, UserProfileActivity.class);
+        Intent iUsrProf = new Intent(mContext, UserActivity.class);
         iUsrProf.putExtra(Constants.Keys.PREVIOUS_ACTIVITY, className);
         mContext.startActivity(iUsrProf);
     }

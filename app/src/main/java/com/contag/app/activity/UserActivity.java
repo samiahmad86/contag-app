@@ -15,7 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 
 import com.contag.app.R;
 
-public class UserProfileActivity extends AppCompatActivity
+public class UserActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -137,7 +137,7 @@ public class UserProfileActivity extends AppCompatActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((UserProfileActivity) activity).onSectionAttached(
+            ((UserActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }

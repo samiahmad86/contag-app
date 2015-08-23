@@ -16,9 +16,10 @@ import com.contag.app.service.ContactService;
 
 public class Router {
 
-    public static void startLoginActivity(Context mContext, String currentClassName) {
+    public static void startLoginActivity(Context mContext, String currentClassName, int flags) {
         Intent iStartLogin = new Intent(mContext, LoginActivity.class);
         iStartLogin.putExtra(Constants.Keys.PREVIOUS_ACTIVITY, currentClassName);
+        iStartLogin.addFlags(flags);
         mContext.startActivity(iStartLogin);
     }
 
@@ -28,13 +29,13 @@ public class Router {
         mContext.startActivity(iStartHome);
     }
 
-    public static void startUserDetailsActivity(Context mContext, String className) {
+    public static void startEditUserActivity(Context mContext, String className) {
         Intent iStartUserDetails = new Intent(mContext, EditUserActivity.class);
         iStartUserDetails.putExtra(Constants.Keys.PREVIOUS_ACTIVITY, className);
         mContext.startActivity(iStartUserDetails);
     }
 
-    public static void startUserProfileActivity(Context mContext, String className) {
+    public static void startUserActivity(Context mContext, String className) {
         Intent iUsrProf = new Intent(mContext, UserActivity.class);
         iUsrProf.putExtra(Constants.Keys.PREVIOUS_ACTIVITY, className);
         mContext.startActivity(iUsrProf);
@@ -45,4 +46,7 @@ public class Router {
         mContext.startService(iStartContactService);
     }
 
+    public static void startGcmRegisterService(Context context) {
+
+    }
 }

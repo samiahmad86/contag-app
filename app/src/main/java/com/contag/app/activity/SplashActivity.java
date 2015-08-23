@@ -14,7 +14,7 @@ import com.contag.app.util.PrefUtils;
  * TODO:
  * 1) Create animation
  * 2) Check if user is logged in,
- * a) if not then start {@link LoginActivity} using {@link Router#startLoginActivity(Context, String)}
+ * a) if not then start {@link LoginActivity} using {@link Router#startLoginActivity(Context, String, int)}
  * b) else open {@link HomeActivity} using {@link Router#startHomeActivity(Context, String)}
  * 3) Close the activity after corresponding activity is launched.
  */
@@ -31,9 +31,16 @@ public class SplashActivity extends BaseActivity {
         if (isUserLoggedIn()) {
             Router.startHomeActivity(this, TAG);
         } else {
-            Router.startLoginActivity(SplashActivity.this, TAG);
+            Router.startGcmRegisterService(this);
         }
 
+    }
+
+    /**
+     * @return boolean denoting if user is logged in.
+     */
+    protected boolean isUserLoggedIn() {
+        return PrefUtils.getKeyAccessToken() != null;
     }
 
 }

@@ -30,7 +30,7 @@ public class APIService extends RetrofitGsonSpiceService {
 
     @Override
     protected String getServerUrl() {
-        return null;
+        return Constants.Values.BASE_URL;
     }
 
 

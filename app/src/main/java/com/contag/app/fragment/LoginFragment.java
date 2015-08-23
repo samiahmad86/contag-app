@@ -130,7 +130,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                             }
                             // TODO: check if the otp matches with the response
                             if (isNewUser) {
-                                Router.startUserDetailsActivity(getActivity(), TAG);
+                                Router.startEditUserActivity(getActivity(), TAG);
                             } else {
                                 Router.startHomeActivity(getActivity(), TAG);
                             }

@@ -6,7 +6,15 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="ANDROID.PERMISSION.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.contag.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.contag.app.permission.C2D_MESSAGE" />
 
     <application
         android:name=".config.ContagApplication"
@@ -20,29 +28,26 @@
         <activity
             android:name=".activity.HomeActivity"
             android:label="@string/app_name" />
-
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/app_name" />
-
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.SplashActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.EditUserActivity"
             android:label="@string/title_activity_user_details"></activity>
-
         <activity
             android:name=".activity.UserActivity"
-            android:label="@string/title_activity_fuck"></activity>
-
+            android:label="@string/title_activity_fuck" />
 
         <!-- Facebook Activity -->
 
@@ -77,6 +82,46 @@
             </intent-filter>
         </receiver>
 
+        <!-- GCM Receiver -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.contag.app" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Robospice Retrofit API Service for network-->
+
+        <service
+            android:name=".service.APIService"
+            android:exported="false" />
+
+        <!-- Service called when GCM notification received -->
+
+        <service
+            android:name=".service.GcmService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <!-- Service called if GCM token is changed -->
+
+        <service
+            android:name=".service.GcmTokenRefreshService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.GcmRegisterIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

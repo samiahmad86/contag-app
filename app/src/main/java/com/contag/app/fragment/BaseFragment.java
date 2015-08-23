@@ -65,7 +65,6 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * prints a message if logcat if {@link com.contag.app.BuildConfig#DEBUG} is true
-     *
      * @param tag     the tag associated with the log message
      * @param message the message
      */
@@ -94,7 +93,7 @@ public abstract class BaseFragment extends Fragment {
          * @param fragmentType
          * @param args data to pass to other components.
          */
-        public void onFragmentInteraction(int fragmentType, Bundle args);
+        void onFragmentInteraction(int fragmentType, Bundle args);
     }
 
 

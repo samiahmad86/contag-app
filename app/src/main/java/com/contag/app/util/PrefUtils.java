@@ -23,8 +23,15 @@ public class PrefUtils {
         mEditor.putString(Constants.Keys.KEY_ACCESS_TOKEN, accessToken).commit();
     }
 
+    public static void setGcmToken(String token) {
+        mEditor.putString(Constants.Keys.KEY_GCM_TOKEN, token).commit();
+    }
+
     public static String getKeyAccessToken() {
         return mSharedPref.getString(Constants.Keys.KEY_ACCESS_TOKEN, null);
     }
 
+    public static String getGcmToken() {
+        return mSharedPref.getString(Constants.Keys.KEY_GCM_TOKEN, null);
+    }
 }

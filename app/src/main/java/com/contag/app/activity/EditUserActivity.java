@@ -1,11 +1,16 @@
 package com.contag.app.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.contag.app.R;
+import com.contag.app.config.Constants;
 import com.contag.app.fragment.BaseFragment;
+import com.contag.app.fragment.EditUserFragment;
+import com.contag.app.fragment.SocialMediaFragment;
 
 /**
  * When a new user logs he fills out his details here.
@@ -19,7 +24,15 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+        setContentView(R.layout.activity_user);
+
+        setUpActionBar(R.id.tb_user_details);
+
+        if(savedInstanceState != null) {
+            return;
+        }
+
+        onFragmentInteraction(Constants.Values.FRAG_SOCIAL, null);
     }
 
     @Override
@@ -46,6 +59,13 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
 
     @Override
     public void onFragmentInteraction(int fragmentType, Bundle args) {
-
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if(fragmentType == Constants.Values.FRAG_SOCIAL) {
+            ft.add(R.id.fl_user, SocialMediaFragment.newInstance());
+        } else if(fragmentType == Constants.Values.FRAG_EDIT_USER) {
+            ft.replace(R.id.fl_user, EditUserFragment.newInstance(fragmentType));
+        }
+        ft.commit();
     }
 }

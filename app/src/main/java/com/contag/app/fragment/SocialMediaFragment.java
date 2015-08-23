@@ -44,10 +44,10 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
     private LoginButton btnFb;
     private CallbackManager cmFacebook;
     private ArrayList<String> listOfFbPermissions;
-    //////////// static public methods ///////////////////////////////
-    /*
-        Always use this factory method to create fragment object.
-        Never create object directly
+
+    /**
+     * Factory method to create an instance of fragment
+     * @return new instance of {@link SocialMediaFragment}
      */
     public static SocialMediaFragment newInstance() {
         SocialMediaFragment lf = new SocialMediaFragment();
@@ -55,20 +55,18 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
         lf.setArguments(bundle);
         return lf;
     }
-    ////////////// Overridden methods /////////////////////////
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
         initializeFacebook();
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_social, container, false);
         TelephonyManager tMgr = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("Splash", getActivity().getCacheDir().getAbsolutePath()+mPhoneNumber);
         btnGooglePlus = (SignInButton) view.findViewById(R.id.btn_plus_sign_in);
         btnFb = (LoginButton) view.findViewById(R.id.btn_fb_login);
         btnFb.setFragment(this);
@@ -77,11 +75,7 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
         btnGooglePlus.setOnClickListener(this);
         return view;
     }
-    public static String getDeviceId(Context context) {
-        String android_id = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        return android_id;
-    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -108,7 +102,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
     }
 
 
-    ////////////////// Google plus ConnectionCallbacks methods //////////////////////////////////////
     @Override
     public void onConnected(Bundle bundle) {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
@@ -128,7 +121,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
 
     }
 
-    /////////////// on click listener method ////////////////////////////////////////
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -141,7 +133,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
         }
     }
 
-    /////////////////////////////// Connection failure methods ////////////////////////////
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "connection failed because " + connectionResult);
@@ -156,7 +147,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
     }
 
 
-    ////////// private methods ////////////////////////////////////////
 
     private void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -174,7 +164,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
         listOfFbPermissions.add("email");
     }
 
-    /////////////// Facebook login result buttons //////////////////////////////
 
     @Override
     public void onSuccess(LoginResult loginResult) {
@@ -191,7 +180,6 @@ public class SocialMediaFragment extends BaseFragment implements GoogleApiClient
         e.printStackTrace();
     }
 
-    //////////////////// Facebook request for user information complete listener ////////////////
 
     @Override
     public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {

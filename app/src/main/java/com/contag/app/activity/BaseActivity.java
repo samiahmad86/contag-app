@@ -1,10 +1,12 @@
 package com.contag.app.activity;
 
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
+import com.contag.app.R;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.service.APIService;
 import com.octo.android.robospice.SpiceManager;
@@ -29,19 +31,21 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Setup {@link Toolbar}
+     * @param id of the toolbar in the layout file.
+     */
+    protected void setUpActionBar(int id) {
+        final Toolbar tb = (Toolbar) findViewById(id);
+        setSupportActionBar(tb);
+    }
+
+    /**
      * @return an instance of {@link SpiceManager} to execute network request.
      */
     protected SpiceManager getSpiceManager() {
         return mSpiceManager;
     }
-
-    /**
-     * @return boolean denoting if user is logged in.
-     */
-    protected boolean isUserLoggedIn() {
-        return PrefUtils.getKeyAccessToken() != null;
-    }
-
+    
     /**
      * show a toast of duration {@link Toast#LENGTH_SHORT}
      * @param message the message of the toast.

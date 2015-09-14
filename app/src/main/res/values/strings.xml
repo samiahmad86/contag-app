@@ -5,18 +5,20 @@
     <string name="facebook_app_id">1487599681495272</string>
     <string name="gcm_sender_id">684232164335</string>
 
+    <!-- intent filters -->
+    <string name="intent_filter_sms">com.contag.app.sms</string>
+
     <!-- action bar items -->
     <string name="action_settings">Settings</string>
 
     <!-- ui elements -->
     <string name="login">LOGIN</string>
-    <string name="enter_phone_num">Enter your phone number</string>
+    <string name="enter_phone_num">Enter your 10 digit phone number</string>
     <string name="enter_otp">Enter otp</string>
     <string name="otp_msg">We have sent an OTP to your number, please enter it to proceed.</string>
     <string name="hello_world">Hello world!</string>
     <string name="add_accounts">Add your social media accounts to your Contag Profile.</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>
     <string name="title_activity_fuck">FuckActivity</string>

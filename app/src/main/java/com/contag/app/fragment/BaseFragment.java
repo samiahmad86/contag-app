@@ -32,13 +32,16 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onStart() {
-        mSpiceManager.start(getActivity());
         super.onStart();
+        mSpiceManager.start(getActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        if (mSpiceManager.isStarted()) {
+            mSpiceManager.shouldStop();
+        }
     }
 
     /**
@@ -57,6 +60,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * show a toast of duration {@link Toast#LENGTH_SHORT}
+     *
      * @param message the message of the toast.
      */
     protected void showToast(String message) {
@@ -65,6 +69,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * prints a message if logcat if {@link com.contag.app.BuildConfig#DEBUG} is true
+     *
      * @param tag     the tag associated with the log message
      * @param message the message
      */
@@ -90,8 +95,9 @@ public abstract class BaseFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         /**
          * used for interaction with attached activity
+         *
          * @param fragmentType
-         * @param args data to pass to other components.
+         * @param args         data to pass to other components.
          */
         void onFragmentInteraction(int fragmentType, Bundle args);
     }

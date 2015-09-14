@@ -144,6 +144,7 @@
     <orderEntry type="library" exported="" name="play-services-identity-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="facebook-android-sdk-4.0.0" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.3.2" level="project" />
+    <orderEntry type="library" exported="" name="realm-android-0.82.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-appstate-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />

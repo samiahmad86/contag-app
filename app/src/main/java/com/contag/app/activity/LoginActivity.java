@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity implements BaseFragment.OnFragme
             return;
         }
 
-        onFragmentInteraction(Constants.Values.FRAG_LOGIN, null);
+        onFragmentInteraction(Constants.Types.FRAG_LOGIN, null);
     }
 
 
@@ -46,10 +46,10 @@ public class LoginActivity extends BaseActivity implements BaseFragment.OnFragme
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        if (fragmentType == Constants.Values.FRAG_OTP) {
-            ft.replace(R.id.fl_login, LoginFragment.newInstance(fragmentType, args.getBoolean(Constants.Keys.KEY_NEW_USER)));
+        if (fragmentType == Constants.Types.FRAG_OTP) {
+            ft.replace(R.id.fl_login, LoginFragment.newInstance(fragmentType, args.getLong(Constants.Keys.KEY_NUMBER)));
         } else {
-            ft.add(R.id.fl_login, LoginFragment.newInstance(Constants.Values.FRAG_LOGIN, false));
+            ft.add(R.id.fl_login, LoginFragment.newInstance(Constants.Types.FRAG_LOGIN, 0));
         }
         ft.commit();
 

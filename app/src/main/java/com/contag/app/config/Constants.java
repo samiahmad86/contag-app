@@ -7,24 +7,41 @@ package com.contag.app.config;
 public class Constants {
 
     public class Keys {
-        public static final String PREVIOUS_ACTIVITY = "previousActivity";
+        public static final String KEY_PREVIOUS_ACTIVITY = "previous_activity";
+        public static final String KEY_APP_PREFS = "app_prefs";
+        public static final String KEY_AUTH_TOKEN = "auth_token";
+        public static final String KEY_GCM_TOKEN = "gcm_token";
+        public static final String KEY_FRAGMENT_TYPE = "fragment_type";
+        public static final String KEY_NEW_USER = "is_new_user";
+        public static final String KEY_OTP = "otp";
+        public static final String KEY_NUMBER = "number";
+    }
+
+    public class Headers {
+        public static final String HEADER_DEVICE_TYPE = "X-Device-Type";
+        public static final String HEADER_PUSH_ID = "X-Push-ID";
         public static final String HEADER_DEVICE_ID = "X-Device-ID";
+        public static final String HEADER_APP_VERSION_ID = "X-App-Version-ID";
         public static final String HEADER_TOKEN = "token";
-        public static final String APP_PREFS = "appPrefs";
-        public static final String KEY_ACCESS_TOKEN = "accessToken";
-        public static final String KEY_GCM_TOKEN = "gcmToken";
-        public static final String KEY_FRAGMENT_TYPE = "fragmentType";
-        public static final String KEY_NEW_USER = "newUser";
     }
 
     public class Values {
         // Request code for google plus sign in
         public static final int RC_GPLUS_SIGN_IN = 0;
+    }
+
+    public class Types {
+
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_SOCIAL = 2;
         public static final int FRAG_EDIT_USER = 3;
-        public static final String BASE_URL = "http://api.gonomnom.com";
+    }
+
+    public class Urls {
+        public static final String BASE_URL = "http://54.255.219.32:7999";
+        public static final String URL_LOGIN = "/login/";
+        public static final String URL_OTP = "/otp/";
     }
 
     public class Regex {

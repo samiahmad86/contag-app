@@ -30,7 +30,7 @@ public class APIService extends RetrofitGsonSpiceService {
 
     @Override
     protected String getServerUrl() {
-        return Constants.Values.BASE_URL;
+        return Constants.Urls.BASE_URL;
     }
 
 
@@ -39,7 +39,7 @@ public class APIService extends RetrofitGsonSpiceService {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(getServerUrl()).setConverter(getConverter()).setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader(Constants.Keys.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getBaseContext()));
+                request.addHeader(Constants.Headers.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getBaseContext()));
             }
         });
         return builder;

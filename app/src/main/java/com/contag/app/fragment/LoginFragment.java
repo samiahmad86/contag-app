@@ -1,23 +1,34 @@
 package com.contag.app.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.contag.app.BuildConfig;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.config.Router;
 import com.contag.app.model.Login;
-import com.contag.app.model.LoginResponse;
+import com.contag.app.model.OTP;
+import com.contag.app.model.OTPResponse;
+import com.contag.app.model.Response;
 import com.contag.app.request.LoginRequest;
+import com.contag.app.request.OTPRequest;
 import com.contag.app.util.DeviceUtils;
+import com.contag.app.util.PrefUtils;
 import com.contag.app.util.RegexUtils;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link BaseFragment} subclass for login.
@@ -28,18 +39,21 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * create an instance of this fragment.
  */
 
-public class LoginFragment extends BaseFragment implements View.OnClickListener, RequestListener<LoginResponse> {
+public class LoginFragment extends BaseFragment implements View.OnClickListener, RequestListener<Response> {
 
     private OnFragmentInteractionListener mListener;
     private final static String TAG = LoginFragment.class.getName();
     private int mFragmentType;
-    private boolean isNewUser;
+    private long phoneNum;
 
-    public static LoginFragment newInstance(int code, boolean isNew) {
+
+    public static LoginFragment newInstance(int code, long number) {
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.Keys.KEY_FRAGMENT_TYPE, code);
-        args.putBoolean(Constants.Keys.KEY_NEW_USER, isNew);
+        if (code == Constants.Types.FRAG_OTP) {
+            args.putLong(Constants.Keys.KEY_NUMBER, number);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +68,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         Bundle args = getArguments();
         if (args != null) {
             mFragmentType = args.getInt(Constants.Keys.KEY_FRAGMENT_TYPE);
-            if (mFragmentType == Constants.Values.FRAG_OTP) {
-                isNewUser = args.getBoolean(Constants.Keys.KEY_NEW_USER, false);
+            if (mFragmentType == Constants.Types.FRAG_OTP) {
+                phoneNum = args.getLong(Constants.Keys.KEY_NUMBER);
             }
         }
     }
@@ -67,18 +81,32 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         Button btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
-        switch (mFragmentType) {
-            case Constants.Values.FRAG_OTP: {
-                ((EditText) view.findViewById(R.id.et_phone_num)).setHint
-                        (resources().getString(R.string.enter_otp));
-                view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
-                btnLogin.setText("SUBMIT");
-                break;
-            }
+        if (mFragmentType == Constants.Types.FRAG_OTP) {
+            ((EditText) view.findViewById(R.id.et_phone_num)).setHint
+                    (resources().getString(R.string.enter_otp));
+            view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
+            btnLogin.setText("SUBMIT");
         }
         return view;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mFragmentType == Constants.Types.FRAG_OTP) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brSms,
+                    new IntentFilter(getActivity().getResources().getString(R.string.intent_filter_sms)));
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mFragmentType == Constants.Types.FRAG_OTP) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brSms);
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -108,32 +136,47 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
                     switch (mFragmentType) {
 
-                        case Constants.Values.FRAG_LOGIN: {
+                        case Constants.Types.FRAG_LOGIN: {
                             String phNum = ((EditText) getView().findViewById(R.id.et_phone_num)).getText().toString();
                             if (!RegexUtils.isPhoneNumber(phNum)) {
                                 showToast("Enter a valid phone number.");
                                 return;
                             }
                             getActivity().findViewById(R.id.pb_login).setVisibility(View.VISIBLE);
-                            LoginRequest lr = new LoginRequest(DeviceUtils.getmDeviceId(getActivity()), new Login(phNum));
+                            phoneNum = Long.parseLong(phNum);
+                            Login mLogin = new Login(phoneNum);
+                            LoginRequest lr = new LoginRequest(mLogin);
                             getSpiceManager().execute(lr, this);
                             break;
                         }
 
-                        case Constants.Values.FRAG_OTP: {
+                        case Constants.Types.FRAG_OTP: {
                             String otp = ((EditText) getView().findViewById(R.id.et_phone_num)).getText().toString();
+                            int num;
                             try {
-                                Double.parseDouble(otp);
+                                num = Integer.parseInt(otp);
                             } catch (NumberFormatException ne) {
                                 showToast("Enter valid otp");
                                 return;
                             }
-                            // TODO: check if the otp matches with the response
-                            if (isNewUser) {
-                                Router.startEditUserActivity(getActivity(), TAG);
-                            } else {
-                                Router.startHomeActivity(getActivity(), TAG);
-                            }
+                            HashMap<String, String> hmHeaders = new HashMap<>();
+                            hmHeaders.put(Constants.Headers.HEADER_APP_VERSION_ID, "" + BuildConfig.VERSION_CODE);
+                            hmHeaders.put(Constants.Headers.HEADER_DEVICE_TYPE, "android");
+                            hmHeaders.put(Constants.Headers.HEADER_PUSH_ID, PrefUtils.getGcmToken());
+                            hmHeaders.put(Constants.Headers.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getActivity()));
+                            OTP objOTP = new OTP(phoneNum, num);
+                            OTPRequest or = new OTPRequest(objOTP, hmHeaders);
+                            getSpiceManager().execute(or, new RequestListener<OTPResponse>() {
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {
+                                    log(TAG, spiceException.getMessage());
+                                }
+
+                                @Override
+                                public void onRequestSuccess(OTPResponse otpResponse) {
+
+                                }
+                            });
                             break;
                         }
                     }
@@ -152,10 +195,22 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onRequestSuccess(LoginResponse loginResponse) {
-        // TODO: save login response
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(Constants.Keys.KEY_NEW_USER, loginResponse.isNewUser);
-        mListener.onFragmentInteraction(Constants.Values.FRAG_OTP, bundle);
+    public void onRequestSuccess(Response response) {
+        if (response.result) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(Constants.Keys.KEY_NUMBER, phoneNum);
+            mListener.onFragmentInteraction(Constants.Types.FRAG_OTP, bundle);
+        }
     }
+
+    private BroadcastReceiver brSms = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String otp = intent.getStringExtra(Constants.Keys.KEY_OTP);
+            View view = getView();
+            if (otp != null && view != null) {
+                ((EditText) view.findViewById(R.id.et_phone_num)).setText(otp);
+            }
+        }
+    };
 }

@@ -32,7 +32,7 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
             return;
         }
 
-        onFragmentInteraction(Constants.Values.FRAG_SOCIAL, null);
+        onFragmentInteraction(Constants.Types.FRAG_SOCIAL, null);
     }
 
     @Override
@@ -61,9 +61,9 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
     public void onFragmentInteraction(int fragmentType, Bundle args) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if(fragmentType == Constants.Values.FRAG_SOCIAL) {
+        if(fragmentType == Constants.Types.FRAG_SOCIAL) {
             ft.add(R.id.fl_user, SocialMediaFragment.newInstance());
-        } else if(fragmentType == Constants.Values.FRAG_EDIT_USER) {
+        } else if(fragmentType == Constants.Types.FRAG_EDIT_USER) {
             ft.replace(R.id.fl_user, EditUserFragment.newInstance(fragmentType));
         }
         ft.commit();

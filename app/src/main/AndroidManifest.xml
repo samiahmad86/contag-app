@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <permission
         android:name="com.contag.app.permission.C2D_MESSAGE"
@@ -44,7 +47,7 @@
         </activity>
         <activity
             android:name=".activity.EditUserActivity"
-            android:label="@string/title_activity_user_details"></activity>
+            android:label="@string/title_activity_user_details" />
         <activity
             android:name=".activity.UserActivity"
             android:label="@string/title_activity_fuck" />
@@ -89,11 +92,12 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.contag.app" />
             </intent-filter>
         </receiver>
 
-        <!-- Robospice Retrofit API Service for network-->
+        <!-- Robospice Retrofit API Service for network -->
 
         <service
             android:name=".service.APIService"
@@ -118,10 +122,18 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
         <service
             android:name=".service.GcmRegisterIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <receiver
+            android:name=".receiver.SmsReceiver"
+            android:enabled="true"
+            >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

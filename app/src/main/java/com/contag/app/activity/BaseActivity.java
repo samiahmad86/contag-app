@@ -20,18 +20,21 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        mSpiceManager.start(this);
         super.onStart();
+        mSpiceManager.start(this);
     }
 
     @Override
     protected void onStop() {
-        mSpiceManager.shouldStop();
         super.onStop();
-    }
+        if (mSpiceManager.isStarted()) {
+            mSpiceManager.shouldStop();
+        }
+      }
 
     /**
      * Setup {@link Toolbar}
+     *
      * @param id of the toolbar in the layout file.
      */
     protected void setUpActionBar(int id) {
@@ -45,9 +48,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected SpiceManager getSpiceManager() {
         return mSpiceManager;
     }
-    
+
     /**
      * show a toast of duration {@link Toast#LENGTH_SHORT}
+     *
      * @param message the message of the toast.
      */
     protected void showToast(String message) {
@@ -56,11 +60,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * prints a message if logcat if {@link com.contag.app.BuildConfig#DEBUG} is true
-     * @param tag the tag associated with the log message
+     *
+     * @param tag     the tag associated with the log message
      * @param message the message
      */
     protected void log(String tag, String message) {
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Log.d(tag, message);
         }
     }

@@ -1,20 +1,19 @@
 package com.contag.app.model;
 
-import com.contag.app.config.Database;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+import io.realm.RealmObject;
 
-/**
- * Created by Kartikey on 8/18/2015.
- */
+public class Contact extends RealmObject {
 
-@Table(databaseName = Database.NAME)
-public class Contact extends BaseModel {
-    @Column
-    @PrimaryKey(autoincrement = true)
-    public int id;
-    @Column
-    public String name;
+    public long id;
+    public ContagContact contactContagUser;
+    public String createdOn;
+    public String updatedOn;
+    public String contactName;
+    public String contactNumber;
+    public boolean isOnContag;
+    public boolean isInvited;
+    public String invitedOn;
+    public boolean isMuted;
+    public boolean isBlocked;
+
 }

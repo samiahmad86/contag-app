@@ -2,8 +2,6 @@ package com.contag.app.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.config.Router;
@@ -40,7 +38,7 @@ public class SplashActivity extends BaseActivity {
      * @return boolean denoting if user is logged in.
      */
     protected boolean isUserLoggedIn() {
-        return PrefUtils.getKeyAccessToken() != null;
+        return PrefUtils.getAuthToken() != null;
     }
 
 }

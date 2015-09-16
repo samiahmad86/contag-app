@@ -7,10 +7,12 @@
     <color name="light_gray">#ddd</color>
     <color name="light_blue">#5890FF</color>
     <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
 
     <!-- view colors -->
     <color name="tb_color">@color/light_gray</color>
     <color name="hint_color">@color/dark_gray</color>
     <color name="login_btn">@color/light_blue</color>
+    <color name="resend_otp_btn">@color/red</color>
 
 </resources>

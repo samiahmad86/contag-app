@@ -45,7 +45,6 @@ public class APIService extends RetrofitGsonSpiceService {
         return builder;
     }
 
-    /////////////////////////// cache methods //////////////////////////////////////////
     @Override
     public CacheManager createCacheManager(Application application) throws CacheCreationException {
         CacheManager cacheManager = new CacheManager();

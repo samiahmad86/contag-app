@@ -15,8 +15,8 @@ import com.contag.app.fragment.LoginFragment;
  * Called by Splash Screen Activity.
  * Logs in user with their phone number.
  * On log in success
- * If the user is first time user then goto {@link EditUserActivity}
- *      via {@link com.contag.app.config.Router#startEditUserActivity(Context, String)}
+ * If the user is first time user then goto {@link NewUserActivity}
+ *      via {@link com.contag.app.config.Router#startNewUserActivity(Context, String)}
  * else goto {@link HomeActivity}
  *      via {@link com.contag.app.config.Router#startHomeActivity(Context, String)}
  */

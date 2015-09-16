@@ -15,6 +15,10 @@ public class Constants {
         public static final String KEY_NEW_USER = "is_new_user";
         public static final String KEY_OTP = "otp";
         public static final String KEY_NUMBER = "number";
+        public static final String KEY_CONTAG_ID = "contag_id";
+        public static final String KEY_FB_ACCESS_TOKEN = "fb_access_token";
+        public static final String KEY_CONTACT_NAME = "contact_name";
+        public static final String KEY_CONTACT_NUMBER = "contact_number";
     }
 
     public class Headers {
@@ -34,14 +38,16 @@ public class Constants {
 
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
-        public static final int FRAG_SOCIAL = 2;
-        public static final int FRAG_EDIT_USER = 3;
+        public static final int FRAG_USER_DETAILS = 2;
+        public static final int FRAG_CREATE_USER = 3;
     }
 
     public class Urls {
         public static final String BASE_URL = "http://54.255.219.32:7999";
         public static final String URL_LOGIN = "/login/";
         public static final String URL_OTP = "/otp/";
+        public static final String URL_USER = "/user/";
+        public static final String URL_CONTACT = "/contact/";
     }
 
     public class Regex {

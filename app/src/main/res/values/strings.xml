@@ -18,6 +18,11 @@
     <string name="otp_msg">We have sent an OTP to your number, please enter it to proceed.</string>
     <string name="hello_world">Hello world!</string>
     <string name="add_accounts">Add your social media accounts to your Contag Profile.</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="contag_id">Enter your 8 character CONTAG ID </string>
+    <string name="contag_id_not_available">It seems the CONTAG ID you wanted is unavailable.</string>
+    <string name="create_user">SUBMIT</string>
+    <string name="sync_fb">Sync with facebook</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>

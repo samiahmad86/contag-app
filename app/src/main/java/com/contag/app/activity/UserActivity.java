@@ -130,7 +130,7 @@ public class UserActivity extends AppCompatActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_fuck, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_new_user_edit, container, false);
             return rootView;
         }
 

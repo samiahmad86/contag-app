@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:hint="@string/contag_id"
+        android:id="@+id/et_contag_id"
+        android:background="@drawable/bg_gray_rect"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hint_color"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_contag_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_contag_id"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/create_user"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_error_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/et_contag_id"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:text="@string/contag_id_not_available"/>
+
+</RelativeLayout>

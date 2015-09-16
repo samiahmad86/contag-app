@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.contag.app.R;
+import com.contag.app.config.Router;
 
 
 public class HomeActivity extends BaseActivity {
@@ -21,6 +22,7 @@ public class HomeActivity extends BaseActivity {
         }
 
         RecyclerView rv;
+        Router.startContactService(this);
     }
 
     @Override

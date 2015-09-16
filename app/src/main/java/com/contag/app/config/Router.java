@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.contag.app.activity.HomeActivity;
 import com.contag.app.activity.LoginActivity;
-import com.contag.app.activity.EditUserActivity;
+import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
 import com.contag.app.service.GcmRegisterIntentService;
@@ -30,10 +30,11 @@ public class Router {
         mContext.startActivity(iStartHome);
     }
 
-    public static void startEditUserActivity(Context mContext, String className) {
-        Intent iStartUserDetails = new Intent(mContext, EditUserActivity.class);
-        iStartUserDetails.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
-        mContext.startActivity(iStartUserDetails);
+    public static void startNewUserActivity(Context mContext, String className, long phoneNumber) {
+        Intent iNewUserDetails = new Intent(mContext, NewUserActivity.class);
+        iNewUserDetails.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iNewUserDetails.putExtra(Constants.Keys.KEY_NUMBER, phoneNumber);
+        mContext.startActivity(iNewUserDetails);
     }
 
     public static void startUserActivity(Context mContext, String className) {

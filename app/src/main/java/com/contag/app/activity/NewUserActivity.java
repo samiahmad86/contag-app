@@ -9,17 +9,14 @@ import android.view.MenuItem;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.fragment.BaseFragment;
-import com.contag.app.fragment.EditUserFragment;
-import com.contag.app.fragment.SocialMediaFragment;
+import com.contag.app.fragment.EditNewUserFragment;
+import com.contag.app.fragment.NewUserFragment;
 
 /**
  * When a new user logs he fills out his details here.
- * The activity shows two fragments one after the other
- *      1) {@link com.contag.app.fragment.SocialMediaFragment}
- *      2) {@link com.contag.app.fragment.EditUserFragment}
  */
 
-public class EditUserActivity extends BaseActivity implements BaseFragment.OnFragmentInteractionListener {
+public class NewUserActivity extends BaseActivity implements BaseFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +29,7 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
             return;
         }
 
-        onFragmentInteraction(Constants.Types.FRAG_SOCIAL, null);
+        onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, getIntent().getExtras());
     }
 
     @Override
@@ -61,10 +58,10 @@ public class EditUserActivity extends BaseActivity implements BaseFragment.OnFra
     public void onFragmentInteraction(int fragmentType, Bundle args) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if(fragmentType == Constants.Types.FRAG_SOCIAL) {
-            ft.add(R.id.fl_user, SocialMediaFragment.newInstance());
-        } else if(fragmentType == Constants.Types.FRAG_EDIT_USER) {
-            ft.replace(R.id.fl_user, EditUserFragment.newInstance(fragmentType));
+        if(fragmentType == Constants.Types.FRAG_CREATE_USER) {
+            ft.add(R.id.fl_user, NewUserFragment.newInstance(args.getLong(Constants.Keys.KEY_NUMBER)));
+        } else if(fragmentType == Constants.Types.FRAG_USER_DETAILS) {
+            ft.replace(R.id.fl_user, EditNewUserFragment.newInstance());
         }
         ft.commit();
     }

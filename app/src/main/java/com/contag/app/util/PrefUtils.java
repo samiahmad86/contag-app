@@ -19,15 +19,15 @@ public class PrefUtils {
         mEditor.commit();
     }
 
-    public static void setKeyAccessToken(String accessToken) {
-        mEditor.putString(Constants.Keys.KEY_AUTH_TOKEN, accessToken).commit();
+    public static void setAuthToken(String authToken) {
+        mEditor.putString(Constants.Keys.KEY_AUTH_TOKEN, authToken).commit();
     }
 
     public static void setGcmToken(String token) {
         mEditor.putString(Constants.Keys.KEY_GCM_TOKEN, token).commit();
     }
 
-    public static String getKeyAccessToken() {
+    public static String getAuthToken() {
         return mSharedPref.getString(Constants.Keys.KEY_AUTH_TOKEN, null);
     }
 

@@ -55,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
      * @return boolean denoting if user is logged in.
      */
     protected boolean isUserLoggedIn() {
-        return PrefUtils.getKeyAccessToken() != null;
+        return PrefUtils.getAuthToken() != null;
     }
 
     /**

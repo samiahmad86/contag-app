@@ -6,21 +6,21 @@
     tools:context="com.contag.app.fragment.LoginFragment">
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_otp_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:text="@string/otp_msg"
         android:padding="10dp"
-        android:visibility="gone"
-        android:id="@+id/tv_otp_msg"/>
+        android:text="@string/otp_msg"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_phone_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_otp_msg"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_gray_rect"
-        android:layout_below="@id/tv_otp_msg"
         android:hint="@string/enter_phone_num"
         android:inputType="number"
         android:padding="10dp"
@@ -38,6 +38,19 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_resend_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_login"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone"
+        android:text="@string/resend_otp"
+        android:textColor="@color/resend_otp_btn"
+        android:textSize="15sp" />
 
     <include
         android:id="@+id/pb_login"

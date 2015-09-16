@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import com.contag.app.BuildConfig;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.contag.app.model.Login;
 import com.contag.app.model.OTP;
 import com.contag.app.model.OTPResponse;
@@ -84,8 +86,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             ((EditText) view.findViewById(R.id.et_phone_num)).setHint
                     (resources().getString(R.string.enter_otp));
+            View btnResendOtp = view.findViewById(R.id.btn_resend_otp);
+            btnResendOtp.setVisibility(View.VISIBLE);
+            btnResendOtp.setOnClickListener(this);
             view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
             btnLogin.setText("SUBMIT");
+        } else {
+            TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            ((EditText) view.findViewById(R.id.et_phone_num)).setText(mPhoneNumber);
         }
         return view;
     }
@@ -174,13 +183,31 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
                                 @Override
                                 public void onRequestSuccess(OTPResponse otpResponse) {
-
+                                    if(otpResponse.success) {
+                                        if(otpResponse.isNewUser) {
+                                            Router.startNewUserActivity(getActivity(), TAG, phoneNum);
+                                            getActivity().finish();
+                                        } else {
+                                            PrefUtils.setAuthToken(otpResponse.authToken);
+                                            Router.startHomeActivity(getActivity(), TAG);
+                                            getActivity().finish();
+                                        }
+                                    } else {
+                                        showToast("OTP is incorrect");
+                                    }
                                 }
                             });
                             break;
                         }
                     }
                 }
+            }
+
+            case R.id.btn_resend_otp: {
+                Login mLogin = new Login(phoneNum);
+                LoginRequest lr = new LoginRequest(mLogin);
+                getSpiceManager().execute(lr, this);
+                break;
             }
         }
 
@@ -196,7 +223,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onRequestSuccess(Response response) {
-        if (response.result) {
+        if (response.result && mFragmentType == Constants.Types.FRAG_LOGIN) {
             Bundle bundle = new Bundle();
             bundle.putLong(Constants.Keys.KEY_NUMBER, phoneNum);
             mListener.onFragmentInteraction(Constants.Types.FRAG_OTP, bundle);

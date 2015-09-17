@@ -1,3 +1,4 @@
+
 # IDE and build system files
 .gradle
 .idea
@@ -11,4 +12,3 @@ build/
 app/app.iml
 contag-android-app.iml
 Contag.iml
-

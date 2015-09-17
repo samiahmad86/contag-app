@@ -1,5 +1,6 @@
 package com.contag.app.service;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -9,14 +10,17 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.contag.app.config.ContagApplication;
 import com.contag.app.model.Contact;
+import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContactResponse;
-import com.contag.app.model.ContagContact;
 import com.contag.app.model.ContagContactResponse;
-import com.contag.app.model.Interest;
-import com.contag.app.model.InterestResponse;
+import com.contag.app.model.ContagContag;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
 import com.contag.app.model.RawContacts;
 import com.contag.app.request.ContactRequest;
 import com.google.gson.Gson;
@@ -25,10 +29,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
-
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class ContactService extends Service implements Loader.OnLoadCompleteListener<Cursor> {
@@ -37,12 +40,14 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
     private static final String TAG = ContactService.class.getName();
 
-    public ContactService() {
-    }
-
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public ContactService() {
+
     }
 
     @Override
@@ -86,13 +91,26 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
     @Override
     public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
-        ArrayList<RawContacts> contacts = new ArrayList<>();
+        HashSet<RawContacts> contacts = new HashSet<>();
         while (cursor.moveToNext()) {
-            contacts.add(new RawContacts(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)),
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))));
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//            boolean flag = true;
+//            for (RawContacts fuckBhai : contacts) {
+//                if(fuckBhai.contact_number.equalsIgnoreCase(phoneNumber) && fuckBhai.)
+//            }
+//            if (flag) {
+            phoneNumber = phoneNumber.replace(" ", "");
+            phoneNumber = phoneNumber.replace("+91", "");
+            if (phoneNumber.indexOf("0") == 0) {
+                phoneNumber = phoneNumber.substring(1);
+            }
+            contacts.add(new RawContacts(name, phoneNumber));
+//            }
         }
         cursor.close();
         Gson gson = new Gson();
+        Log.d(TAG, "" + contacts.size());
         Log.d(TAG, gson.toJson(contacts).toString());
         ContactRequest cr = new ContactRequest(contacts);
         mSpiceManager.execute(cr, new RequestListener<ContactResponse.ContactList>() {
@@ -103,80 +121,46 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
             @Override
             public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-//                Log.d(TAG, "" + contactResponses.size());
-//                for (ContactResponse response : contactResponses) {
-//                    Realm realmInstance = Realm.getInstance(getApplicationContext());
-//                    realmInstance.beginTransaction();
-//                    Contact contact = realmInstance.createObject(Contact.class);
-//                    copyResponse(realmInstance, contact, response);
-//                    realmInstance.commitTransaction();
-//                }
-//                Realm test = Realm.getInstance(getApplicationContext());
-//                RealmResults<Contact> responses = test.where(Contact.class).findAll();
-//                Log.d(TAG, responses.get(0).getContactName());
+                Gson gson = new Gson();
+                Log.d(TAG, "fuck you" + contactResponses.size());
+                Log.d(TAG, "fuck" + gson.toJson(contactResponses.get(28)) + gson.toJson(contactResponses.get(29)));
+                DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+                ContactDao mContactDao = session.getContactDao();
+                Log.d(TAG, "fuck" + mContactDao.loadAll().size());
+                for (ContactResponse response : contactResponses) {
+                    Contact mContact = new Contact(response.id);
+                    mContact.setUpdatedOn(response.updatedOn);
+                    mContact.setInvitedOn(response.invitedOn);
+                    mContact.setContactNumber(response.contactNumber);
+                    mContact.setContactName(response.contactName);
+                    mContact.setIsBlocked(response.isBlocked);
+                    mContact.setIsMuted(response.isMuted);
+                    mContact.setIsOnContag(response.isOnContag);
+                    mContact.setIsInvited(response.isInvited);
+                    if (mContact.getIsOnContag()) {
+                        ContagContactResponse ccResponse = response.contactContagUser;
+                        ContagContagDao ccDao = session.getContagContagDao();
+                        ContagContag cc = new ContagContag(ccResponse.id);
+                        cc.setUpdatedOn(ccResponse.updatedOn);
+                        cc.setAddress(ccResponse.address);
+                        cc.setWorkAddress(ccResponse.workAddress);
+                        cc.setAndroidAppLink(ccResponse.androidAppLink);
+                        cc.setContactId(response.id);
+                        cc.setContact(mContact);
+                        ccDao.insert(cc);
+                        Log.d(TAG, ccDao.loadAll().size() + "");
+                    }
+                    Log.d(TAG, "" + mContact.getId() + " " + response.id);
+                    Log.d(TAG, "" + mContact.getContactName() + " " + response.contactName);
+                    try {
+                        mContactDao.insert(mContact);
+                    } catch (Exception ex) {
+                        // TODO : handle this
+                        ex.printStackTrace();
+                    }
+                }
             }
         });
-    }
-
-    private void copyResponse(Realm instance, Contact contact, ContactResponse response) {
-        contact.setId(response.id);
-        contact.setContactName(response.contactName);
-        contact.setContactNumber(response.contactNumber);
-        contact.setCreatedOn(response.createdOn);
-        contact.setInvitedOn(response.invitedOn);
-
-        contact.setBlocked(response.isBlocked);
-        contact.setInvited(response.isInvited);
-        contact.setMuted(response.isMuted);
-        contact.setUpdatedOn(response.updatedOn);
-        contact.setOnContag(response.isOnContag);
-        if (contact.isOnContag()) {
-            ContagContact contagContact = instance.createObject(ContagContact.class);
-            copyContag(instance, contagContact, response.contactContagUser);
-            contact.setContactContagUser(contagContact);
-        } else {
-            contact.setContactContagUser(null);
-        }
-
-    }
-
-    private void copyContag(Realm instance, ContagContact contact, ContagContactResponse response) {
-        contact.setId(response.id);
-        contact.setUpdatedOn(response.updatedOn);
-        contact.setAddress(response.address);
-        contact.setAndroidAppLink(response.androidAppLink);
-        contact.setAvatarUrl(response.avatarUrl);
-        contact.setBloodGroup(response.bloodGroup);
-        contact.setContag(response.contag);
-        contact.setCreatedOn(response.createdOn);
-        contact.setDateOfBirth(response.dateOfBirth);
-        contact.setDesignation(response.designation);
-        contact.setEmergencyContactNumber(response.emergencyContactNumber);
-        contact.setWorkMobileNumber(response.workMobileNumber);
-        contact.setMobileNumber(response.mobileNumber);
-        contact.setWorkFacebookPage(response.workFacebookPage);
-        contact.setAndroidAppLink(response.androidAppLink);
-        contact.setIosAppLink(response.iosAppLink);
-        contact.setRegisteredWith(response.registeredWith);
-        contact.setLandlineNumber(response.landlineNumber);
-        contact.setWorkLandlineNumber(response.workLandlineNumber);
-        contact.setGender(response.gender);
-        contact.setMobileVerified(response.isMobileVerified);
-        contact.setPersonalEmail(response.personalEmail);
-        contact.setWorkEmail(response.workEmail);
-        contact.setWorkAddress(response.workAddress);
-        contact.setMarriageAnniversary(response.marriageAnniversary);
-
-        RealmList<Interest> interests = new RealmList<>();
-
-        for (InterestResponse ir : response.userInterest) {
-            Interest interest = instance.createObject(Interest.class);
-            interest.setId(ir.id);
-            interest.setName(ir.name);
-            interests.add(interest);
-        }
-
-        contact.setUserInterest(interests);
     }
 
 }

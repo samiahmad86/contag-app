@@ -8,6 +8,6 @@ gradle-app.setting
 bin/
 gen/
 build/
-
-
+app/app.iml
+contag-android-app.iml
 

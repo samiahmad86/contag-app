@@ -1,31 +1,30 @@
 package com.contag.app;
 
 
+import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
+import de.greenrobot.daogenerator.Property;
 import de.greenrobot.daogenerator.Schema;
 
-/**
- * Created by tanay on 17/9/15.
- */
 public class ContagDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(1, "com.contag.app.model");
 
         Entity contact = schema.addEntity("Contact");
-        contact.addLongProperty("id");
+        contact.addIdProperty();
         contact.addStringProperty("createdOn");
         contact.addStringProperty("updatedOn");
         contact.addStringProperty("contactName");
         contact.addStringProperty("contactNumber");
         contact.addStringProperty("invitedOn");
         contact.addBooleanProperty("isOnContag");
-        contact.addStringProperty("isMuted");
-        contact.addStringProperty("isBlocked");
-        contact.addStringProperty("isInvited");
+        contact.addBooleanProperty("isMuted");
+        contact.addBooleanProperty("isBlocked");
+        contact.addBooleanProperty("isInvited");
 
         Entity contagContact = schema.addEntity("ContagContag");
-        contagContact.addLongProperty("id");
+        contagContact.addIdProperty();
         contagContact.addStringProperty("createdOn");
         contagContact.addStringProperty("updatedOn");
         contagContact.addStringProperty("name");
@@ -53,8 +52,16 @@ public class ContagDaoGenerator {
         contagContact.addBooleanProperty("maritalStatus");
         contagContact.addStringProperty("marriageAnniversary");
 
+        Property cuntagToContact = contagContact.addLongProperty("contactId").getProperty();
+        contagContact.addToOne(contact, cuntagToContact);
+
         Entity interest = schema.addEntity("Interest");
-        interest.addLongProperty("id");
+        interest.addIdProperty();
         interest.addStringProperty("name");
+
+        Property interestToCuntag = interest.addLongProperty("contagUserId").getProperty();
+        interest.addToOne(contagContact, interestToCuntag);
+
+        new DaoGenerator().generateAll(schema, "../app/src/main/java");
     }
  }

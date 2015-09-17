@@ -1,7 +1,7 @@
 apply plugin: 'application'
 apply plugin: 'java'
 
-mainClassName = "com.contag.app.contaggreendao.ContagDaoGenerator"
+mainClassName = "com.contag.app.ContagDaoGenerator"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

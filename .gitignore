@@ -1,7 +1,12 @@
+# IDE and build system files
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
+.idea
+local.properties
+gradle-app.setting
+.iml
+
+# generated files
+bin/
+gen/
+build/
+

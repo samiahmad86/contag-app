@@ -3,10 +3,11 @@
 .idea
 local.properties
 gradle-app.setting
-.iml
 
 # generated files
 bin/
 gen/
 build/
+
+
 

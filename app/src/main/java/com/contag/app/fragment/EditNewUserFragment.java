@@ -58,6 +58,8 @@ public class EditNewUserFragment extends BaseFragment {
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
+
+
                                 log(TAG, response.toString());
                             }
                         });

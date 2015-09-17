@@ -17,4 +17,26 @@ public class RawContacts {
         this.contact_name = name;
         this.contact_number = phoneNum;
     }
+
+    @Override
+    public boolean equals(Object object) {
+
+        RawContacts rc = (RawContacts) object;
+        if(rc.contact_number.equalsIgnoreCase(this.contact_number) && rc.contact_name.equalsIgnoreCase(this.contact_name)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for(int i = 0; i < contact_name.length(); i ++) {
+            sum = sum + contact_name.charAt(i);
+        }
+        for(int i = 0; i < contact_number.length(); i ++) {
+            sum = sum + contact_number.charAt(i);
+        }
+        return sum;
+    }
 }

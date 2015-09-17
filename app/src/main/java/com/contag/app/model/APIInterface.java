@@ -3,6 +3,7 @@ package com.contag.app.model;
 import com.contag.app.config.Constants;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import retrofit.http.Body;
 import retrofit.http.Header;
@@ -45,5 +46,5 @@ public interface APIInterface {
     })
     @POST(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList sendContacts(@Header(Constants.Headers.HEADER_TOKEN) String token,
-                                             @Body ArrayList<RawContacts> contacts);
+                                             @Body HashSet<RawContacts> contacts);
 }

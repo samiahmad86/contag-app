@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#494848"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/phone_num"
+            android:text="Assign your contag id ,choose a new one."
+            android:textColor="#fff"
+            android:layout_marginLeft="10dp"
+
+            />
+
+        <EditText
+            android:id="@+id/phone_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rectangle_otp"
+            android:hint="RaghavSharma"
+            android:padding="15dp" />
+
+        <Button
+            android:id="@+id/btn_send_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/phone_num"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/rectangle_otp_button"
+            android:text="Set Contag Id"
+            android:textAllCaps="false"
+            android:textColor="#fff" />
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -183,8 +183,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
                                 @Override
                                 public void onRequestSuccess(OTPResponse otpResponse) {
-                                    if(otpResponse.success) {
-                                        if(otpResponse.isNewUser) {
+                                    if (otpResponse.success) {
+                                        if (otpResponse.isNewUser) {
                                             Router.startNewUserActivity(getActivity(), TAG, phoneNum);
                                             getActivity().finish();
                                         } else {

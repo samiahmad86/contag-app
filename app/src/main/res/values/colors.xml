@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- app theme colors -->
+    <color name="primary_color">#5890FF</color>
+    <color name="primary_color_dark">#3e6960</color>
+    <color name="accent_color">#ddd</color>
+
     <!-- common colors -->
     <color name="black">#000000</color>
     <color name="dark_gray">#aaa</color>

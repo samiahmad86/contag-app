@@ -11,6 +11,9 @@ import com.contag.app.config.Router;
 
 public class HomeActivity extends BaseActivity {
 
+
+    private static final String LOG_TAG = HomeActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,9 @@ public class HomeActivity extends BaseActivity {
 
         RecyclerView rv;
         Router.startContactService(this);
+
+        Router.startUserActivity(this,LOG_TAG);
+
     }
 
     @Override

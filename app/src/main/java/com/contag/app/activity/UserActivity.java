@@ -17,7 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import com.contag.app.R;
 import com.contag.app.fragment.UserProfileFragment;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

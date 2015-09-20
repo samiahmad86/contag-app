@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.service.APIService;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
@@ -22,12 +24,28 @@ import com.octo.android.robospice.SpiceManager;
 public abstract class BaseFragment extends Fragment {
 
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
+    protected BaseActivity mBaseActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof BaseActivity) {
+            mBaseActivity = (BaseActivity) activity;
+        }
+    }
+
+    /**
+     * @return the mBaseActivity
+     */
+    public BaseActivity getBaseActivity() {
+        return mBaseActivity;
     }
 
     @Override

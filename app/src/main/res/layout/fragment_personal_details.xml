@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/indicator_padding"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/txt_tab_title"
+        style="@style/Contag.TextAppearance.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_personal_details" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:background="@color/light_gray" />
+
+    <RelativeLayout
+        android:id="@+id/root_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_tab_address"
+            style="@style/Contag.TextAppearance.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:text="@string/label_address" />
+
+        <ImageView
+            android:id="@+id/img_action_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/txt_address"
+            style="@style/Contag.Text.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_tab_address"
+            android:text="Some good address in two lines" />
+
+        <EditText
+            android:id="@+id/edt_address"
+            style="@style/Contag.Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_tab_address"
+            android:hint="cfygvhbkm"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/root_blood_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin">
+
+        <TextView
+            android:id="@+id/txt_blood_group"
+            style="@style/Contag.Text.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_blood_group" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/root_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin">
+
+        <TextView
+            android:id="@+id/txt_birthday"
+            style="@style/Contag.Text.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:text="@string/label_birthday" />
+
+        <TextView
+            android:id="@+id/txt_birthday_value"
+            style="@style/Contag.Text.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:layout_toRightOf="@+id/txt_birthday"
+            android:text=" 23 sep 1993" />
+        <!--<view-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_toRightOf="@+id/txt_birthday"-->
+        <!--android:layout_alignBottom="@+id/txt_birthday_value"-->
+        <!--android:layout_alignLeft="@+id/txt_birthday_value"-->
+        <!--android:layout_alignRight="@+id/txt_birthday_value"-->
+        <!--android:layout_alignTop="@+id/txt_birthday_value" />-->
+
+    </RelativeLayout>
+</LinearLayout>

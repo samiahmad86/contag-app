@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
@@ -47,4 +48,9 @@ public interface APIInterface {
     @POST(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList sendContacts(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                              @Body HashSet<RawContacts> contacts);
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList getContacts(@Header(Constants.Headers.HEADER_TOKEN) String token);
 }

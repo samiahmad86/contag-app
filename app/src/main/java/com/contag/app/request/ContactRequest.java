@@ -6,7 +6,6 @@ import com.contag.app.model.RawContacts;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -15,6 +14,12 @@ import java.util.HashSet;
 public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.ContactList, APIInterface> {
 
     private HashSet<RawContacts> rawContact;
+    private boolean isGetter;
+
+    public ContactRequest() {
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.isGetter = true;
+    }
 
     public ContactRequest(HashSet<RawContacts> mRawContactsArrayList) {
         super(ContactResponse.ContactList.class, APIInterface.class);
@@ -23,6 +28,10 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
     @Override
     public ContactResponse.ContactList loadDataFromNetwork() throws Exception {
-        return getService().sendContacts(PrefUtils.getAuthToken(), rawContact);
+        if (isGetter) {
+            return getService().getContacts(PrefUtils.getAuthToken());
+        } else {
+            return getService().sendContacts(PrefUtils.getAuthToken(), rawContact);
+        }
     }
 }

@@ -43,8 +43,9 @@ public class Router {
         mContext.startActivity(iUsrProf);
     }
 
-    public static void startContactService(Context mContext) {
+    public static void startContactService(Context mContext, boolean sendContacts) {
         Intent iStartContactService = new Intent(mContext, ContactService.class);
+        iStartContactService.putExtra(Constants.Keys.KEY_SEND_CONTACTS, sendContacts);
         mContext.startService(iStartContactService);
     }
 

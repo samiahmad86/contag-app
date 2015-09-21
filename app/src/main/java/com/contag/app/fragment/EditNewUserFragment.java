@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.contag.app.R;
+import com.contag.app.config.Router;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -58,8 +59,8 @@ public class EditNewUserFragment extends BaseFragment {
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-
-
+                                Router.startHomeActivity(EditNewUserFragment.this.getActivity(), TAG);
+                                EditNewUserFragment.this.getActivity().finish();
                                 log(TAG, response.toString());
                             }
                         });

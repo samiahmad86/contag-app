@@ -13,8 +13,14 @@ import android.view.MenuItem;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
+import com.contag.app.model.Contact;
+import com.contag.app.model.ContactDao;
+import com.contag.app.model.DaoSession;
 import com.contag.app.util.PrefUtils;
+
+import java.util.List;
 
 
 public class HomeActivity extends BaseActivity {

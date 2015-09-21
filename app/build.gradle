@@ -31,5 +31,6 @@ dependencies {
         exclude group: 'org.apache.commons', module: 'commons-io'
         exclude group: 'commons-logging', module: 'commons-logging'
     }
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:recyclerview-v7:22.0.0'
     }

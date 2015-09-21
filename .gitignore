@@ -1,6 +1,14 @@
+
+# IDE and build system files
 .gradle
 .idea
-.build
 local.properties
-*.iml
-build
+gradle-app.setting
+
+# generated files
+bin/
+gen/
+build/
+app/app.iml
+contag-android-app.iml
+Contag.iml

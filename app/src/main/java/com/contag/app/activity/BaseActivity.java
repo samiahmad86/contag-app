@@ -69,4 +69,5 @@ public abstract class BaseActivity extends AppCompatActivity {
             Log.d(tag, message);
         }
     }
+
 }

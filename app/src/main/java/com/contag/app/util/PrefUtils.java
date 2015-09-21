@@ -34,4 +34,20 @@ public class PrefUtils {
     public static String getGcmToken() {
         return mSharedPref.getString(Constants.Keys.KEY_GCM_TOKEN, null);
     }
+
+    public static void setContactBookUpdated(boolean val) {
+        mEditor.putBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, val).commit();
+    }
+
+    public static boolean isContactBookUpdated() {
+        return mSharedPref.getBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, false);
+    }
+
+    public static void setContactUpdatedTimestamp(long timestamp) {
+        mEditor.putLong(Constants.Keys.KEY_CONTACTS_UPDATED_TIMESTAMP, timestamp).commit();
+    }
+
+    public static long getContactUpdatedTimestamp() {
+        return mSharedPref.getLong(Constants.Keys.KEY_CONTACTS_UPDATED_TIMESTAMP, 0);
+    }
 }

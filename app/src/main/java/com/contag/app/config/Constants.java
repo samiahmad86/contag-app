@@ -19,6 +19,9 @@ public class Constants {
         public static final String KEY_FB_ACCESS_TOKEN = "fb_access_token";
         public static final String KEY_CONTACT_NAME = "contact_name";
         public static final String KEY_CONTACT_NUMBER = "contact_number";
+        public static final String KEY_SEND_CONTACTS = "send_contact";
+        public static final String KEY_CONTACTS_UPDATED = "contact_fucked";
+        public static final String KEY_CONTACTS_UPDATED_TIMESTAMP = "contact_fucking_timestamp";
     }
 
     public class Headers {
@@ -32,6 +35,7 @@ public class Constants {
     public class Values {
         // Request code for google plus sign in
         public static final int RC_GPLUS_SIGN_IN = 0;
+        public static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     }
 
     public class Types {
@@ -43,7 +47,7 @@ public class Constants {
     }
 
     public class Urls {
-        public static final String BASE_URL = "http://54.255.219.32:7999";
+        public static final String BASE_URL = "http://54.255.219.32:80";
         public static final String URL_LOGIN = "/login/";
         public static final String URL_OTP = "/otp/";
         public static final String URL_USER = "/user/";

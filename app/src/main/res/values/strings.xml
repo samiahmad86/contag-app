@@ -8,6 +8,7 @@
     <!-- intent filters -->
     <string name="intent_filter_sms">com.contag.app.sms</string>
     <string name="intent_filter_contacts_updated">com.contag.app.updated</string>
+    <string name="intent_filter_contacts_request">com.contag.app.request</string>
     <!-- action bar items -->
     <string name="action_settings">Settings</string>
 

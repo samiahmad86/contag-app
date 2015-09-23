@@ -51,12 +51,12 @@ public class ContactAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return ((ContactListItem)getItem(position)).type;
+        return ((ContactListItem) getItem(position)).type;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(getItemViewType(position) == Constants.Types.ITEM_CONTAG) {
+        if (getItemViewType(position) == Constants.Types.ITEM_CONTAG) {
             return getCuntagView(position, convertView, parent);
         } else {
             return getContactView(position, convertView, parent);
@@ -65,7 +65,7 @@ public class ContactAdapter extends BaseAdapter {
 
     private View getCuntagView(int position, View convertView, ViewGroup parent) {
         CuntagViewHolder vhCunt;
-        if(convertView == null) {
+        if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
             vhCunt = new CuntagViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.item_cuntag_contacts, parent, false);
@@ -86,17 +86,18 @@ public class ContactAdapter extends BaseAdapter {
         vhCunt.tvContactId.setText(cuntObject.getContag());
         vhCunt.tvContactName.setText(cuntObject.getName());
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
-        setInterestElseHide(interests.get(0).getName(), vhCunt.tvInterest1);
-        setInterestElseHide(interests.get(1).getName(), vhCunt.tvInterest2);
-        setInterestElseHide(interests.get(2).getName(), vhCunt.tvInterest3);
-        setInterestElseHide(interests.get(3).getName(), vhCunt.tvInterest4);
-
+        if (interests != null && interests.size() > 0) {
+            setInterestElseHide(interests.get(0).getName(), vhCunt.tvInterest1);
+            setInterestElseHide(interests.get(1).getName(), vhCunt.tvInterest2);
+            setInterestElseHide(interests.get(2).getName(), vhCunt.tvInterest3);
+            setInterestElseHide(interests.get(3).getName(), vhCunt.tvInterest4);
+        }
         return convertView;
     }
 
     private View getContactView(int position, View convertView, ViewGroup parent) {
         ContactViewHolder vhContact;
-        if(convertView == null) {
+        if (convertView == null || (convertView.getTag() instanceof CuntagViewHolder)) {
             vhContact = new ContactViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.item_contacts, parent, false);
@@ -106,7 +107,7 @@ public class ContactAdapter extends BaseAdapter {
             vhContact.btnInvite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Contact contact = (Contact)v.getTag();
+                    Contact contact = (Contact) v.getTag();
                     String text = "Yo cunt " + contact.getContactName() + " I am on Cuntag bitches.";
                     ShareUtils.shareText(mContext, text);
                 }
@@ -123,10 +124,9 @@ public class ContactAdapter extends BaseAdapter {
     }
 
     private void setInterestElseHide(String interest, TextView tv) {
-        if(interest == null) {
-            tv.setVisibility(View.GONE);
-        } else {
+        if (interest != null) {
             tv.setText(interest);
+            tv.setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,6 +135,7 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvContactName;
         public TextView tvContactNumber;
         public Button btnInvite;
+
         public ContactViewHolder() {
 
         }

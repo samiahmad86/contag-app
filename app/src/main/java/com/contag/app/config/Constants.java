@@ -55,6 +55,7 @@ public class Constants {
         public static final String KEY_USER_IOS_APP_LINK = "ios_app_link";
         public static final String KEY_USER_AVATAR_URL = "avatar_url";
         public static final String KEY_USER_BLOOD_GROUP = "blood_group";
+        public static final String KEY_USER_FIELD_VISIBILITY = "visibility";
     }
 
     public class Headers {

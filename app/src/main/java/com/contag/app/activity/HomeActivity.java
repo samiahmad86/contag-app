@@ -1,36 +1,29 @@
 package com.contag.app.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.ContactListFragment;
 import com.contag.app.fragment.FeedsFragment;
 import com.contag.app.fragment.NewUserDetailsFragment;
-import com.contag.app.model.Contact;
-import com.contag.app.model.ContactDao;
-import com.contag.app.model.DaoSession;
+import com.contag.app.model.User;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.view.SlidingTabLayout;
-
-import java.util.List;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 
 public class HomeActivity extends BaseActivity {
@@ -51,6 +44,14 @@ public class HomeActivity extends BaseActivity {
         if (savedInstanceState != null) {
             return;
         }
+
+        Gson gson = new Gson();
+        User user = gson.fromJson(PrefUtils.getCurrentUser(), User.class);
+
+        Toolbar tbHome = (Toolbar) findViewById(R.id.tb_home);
+        ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(user.name);
+        ((TextView) tbHome.findViewById(R.id.tv_user_id)).setText(user.contag);
+        Picasso.with(this).load(user.avatarUrl).placeholder(R.drawable.camera_icon).into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
 
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());

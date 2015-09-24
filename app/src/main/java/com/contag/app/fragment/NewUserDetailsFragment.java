@@ -11,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.request.UserRequest;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -29,16 +33,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * Created by tanay on 20/8/15.
- */
 public class NewUserDetailsFragment extends BaseFragment implements  View.OnClickListener{
 
     public static final String TAG = NewUserDetailsFragment.class.getName();
     private CallbackManager cbm;
     private EditText etUserName;
     private String imageUrl;
+    private RadioGroup rgGender;
 
     public static NewUserDetailsFragment newInstance() {
         NewUserDetailsFragment nudf = new NewUserDetailsFragment();
@@ -59,6 +63,9 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         final LoginButton btnFb = (LoginButton) view.findViewById(R.id.btn_fb_sync);
         final View btnProceed = view.findViewById(R.id.btn_proceed);
         final ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.iv_user_photo);
+        etUserName = (EditText) view.findViewById(R.id.et_user_name);
+        rgGender = (RadioGroup) view.findViewById(R.id.rg_gender);
+
         btnProceed.setOnClickListener(this);
         btnFb.setFragment(this);
         log(TAG, "uncle fucker");
@@ -79,8 +86,15 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                                 JSONObject oUser = response.getJSONObject();
                                 try {
                                     imageUrl = "https://graph.facebook.com/" + oUser.getLong("id") + "/picture?type=large";
-
                                     Picasso.with(getActivity()).load(imageUrl).into(ivUserProfilePic);
+                                    etUserName.setText(oUser.getString(Constants.Keys.KEY_USER_NAME));
+                                    String gender = oUser.getString(Constants.Keys.KEY_USER_GENDER);
+                                    if(gender.equalsIgnoreCase("male")) {
+                                        ((RadioButton) view.findViewById(R.id.rb_male)).setChecked(true);
+                                    } else {
+                                        ((RadioButton) view.findViewById(R.id.rb_female)).setChecked(true);
+                                    }
+
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
                                 }
@@ -137,6 +151,43 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 
     @Override
     public void onClick(View v) {
-
+        int id = v.getId();
+        switch (id) {
+            case R.id.btn_proceed: {
+                JSONArray arrUsr = new JSONArray();
+                JSONObject oUsr = new JSONObject();
+                try {
+                    String name = etUserName.getText().toString();
+                    String regexExpression = "^[\\\\p{L} .'-]+$";
+                    Pattern pattern = Pattern.compile(regexExpression);
+                    Matcher matcher = pattern.matcher(name);
+                    if(!matcher.matches()) {
+                        showToast("Enter a valid name");
+                        return;
+                    }
+                    oUsr.put(Constants.Keys.KEY_USER_NAME, name);
+                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    arrUsr.put(oUsr);
+                    oUsr = new JSONObject();
+                    if(rgGender.getCheckedRadioButtonId() == R.id.rb_male) {
+                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "m");
+                    } else {
+                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "f");
+                    }
+                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    arrUsr.put(oUsr);
+                    oUsr = new JSONObject();
+                    if(imageUrl != null) {
+                        oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
+                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                        arrUsr.put(oUsr);
+                    }
+                    Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+                    break;
+            }
+        }
     }
 }

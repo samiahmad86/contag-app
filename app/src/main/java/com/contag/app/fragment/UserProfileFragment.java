@@ -15,7 +15,11 @@ import android.widget.EditText;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
+import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -38,6 +42,17 @@ public class UserProfileFragment extends BaseFragment {
         args.putLong(Constants.Keys.KEY_CONTAG_ID, userId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if(args != null) {
+            int id = args.getInt(Constants.Keys.KEY_CONTAG_ID);
+            DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+            ContagContagDao ccd = session.getContagContagDao();
+            contact = ccd.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+        }
     }
 
     @Override

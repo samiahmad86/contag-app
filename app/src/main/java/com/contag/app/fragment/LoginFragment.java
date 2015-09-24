@@ -8,11 +8,14 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.contag.app.BuildConfig;
 import com.contag.app.R;
@@ -41,13 +44,14 @@ import java.util.HashMap;
  * create an instance of this fragment.
  */
 
-public class LoginFragment extends BaseFragment implements View.OnClickListener, RequestListener<Response> {
+public class LoginFragment extends BaseFragment implements View.OnClickListener,
+        RequestListener<Response>, TextView.OnEditorActionListener {
 
     private OnFragmentInteractionListener mListener;
     private final static String TAG = LoginFragment.class.getName();
     private int mFragmentType;
     private long phoneNum;
-
+    private Button btnLogin;
 
     public static LoginFragment newInstance(int code, long number) {
         LoginFragment fragment = new LoginFragment();
@@ -81,7 +85,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        Button btnLogin = (Button) view.findViewById(R.id.btn_login);
+        btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             ((EditText) view.findViewById(R.id.et_phone_num)).setHint
@@ -106,6 +110,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brSms,
                     new IntentFilter(getActivity().getResources().getString(R.string.intent_filter_sms)));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brUser,
+                    new IntentFilter(getActivity().getResources().getString(R.string.intent_filter_user_received)));
         }
     }
 
@@ -114,6 +120,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         super.onStop();
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brSms);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUser);
         }
     }
 
@@ -183,14 +190,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
                                 @Override
                                 public void onRequestSuccess(OTPResponse otpResponse) {
-                                    if(otpResponse.success) {
-                                        if(otpResponse.isNewUser) {
+                                    if (otpResponse.success) {
+                                        if (otpResponse.isNewUser) {
                                             Router.startNewUserActivity(getActivity(), TAG, phoneNum);
                                             getActivity().finish();
                                         } else {
                                             PrefUtils.setAuthToken(otpResponse.authToken);
-                                            Router.startHomeActivity(getActivity(), TAG);
-                                            getActivity().finish();
+                                            Router.startUserService(getActivity(),
+                                                    Constants.Types.REQUEST_GET, null);
                                         }
                                     } else {
                                         showToast("OTP is incorrect");
@@ -240,4 +247,20 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             }
         }
     };
+
+    private BroadcastReceiver brUser = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Router.startHomeActivity(getActivity(), TAG);
+            getActivity().finish();
+        }
+    };
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onClick(btnLogin);
+        }
+        return false;
+    }
 }

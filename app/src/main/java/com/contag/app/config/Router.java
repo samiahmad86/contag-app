@@ -9,6 +9,7 @@ import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
 import com.contag.app.service.GcmRegisterIntentService;
+import com.contag.app.service.UserService;
 
 /**
  * Created by tanay on 30/7/15.
@@ -53,4 +54,12 @@ public class Router {
         Intent iRegisterGcm = new Intent(context, GcmRegisterIntentService.class);
         context.startService(iRegisterGcm);
     }
+
+    public static void startUserService(Context context, int type, String userArray) {
+        Intent iUser = new Intent(context, UserService.class);
+        iUser.putExtra(Constants.Keys.KEY_REQUEST_TYPE, type);
+        iUser.putExtra(Constants.Keys.KEY_USER_ARRAY, userArray);
+        context.startService(iUser);
+    }
+
 }

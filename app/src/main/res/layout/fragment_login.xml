@@ -15,7 +15,9 @@
         android:background="@drawable/bg_gray_rect"
         android:hint="@string/enter_phone_num"
         android:inputType="number"
+        android:imeOptions="actionDone"
         android:padding="10dp"
+        android:singleLine="true"
         android:layout_marginBottom="-10dp"
         android:textColor="@color/black"
         android:textSize="20sp" />

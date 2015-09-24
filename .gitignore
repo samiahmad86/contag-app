@@ -12,3 +12,4 @@ build/
 app/app.iml
 contag-android-app.iml
 Contag.iml
+*.iml

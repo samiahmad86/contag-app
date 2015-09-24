@@ -2,99 +2,101 @@ package com.contag.app.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
 
-    @SerializedName("id")
+    @SerializedName(Constants.Keys.KEY_USER_ID)
     @Expose
     public long id;
-    @SerializedName("profile_rights")
+    @SerializedName(Constants.Keys.KEY_USER_PROFILE_RIGHTS)
     @Expose
     public List<ProfileRight> profileRights = new ArrayList<ProfileRight>();
-    @SerializedName("social_profile")
+    @SerializedName(Constants.Keys.KEY_USER_SOCIAL_PROFILE)
     @Expose
     public List<String> socialProfile = new ArrayList<String>();
-    @SerializedName("user_interests")
+    @SerializedName(Constants.Keys.KEY_USER_INTERESTS)
     @Expose
     public List<String> userInterests = new ArrayList<String>();
-    @SerializedName("created_on")
+    @SerializedName(Constants.Keys.KEY_USER_CREATED_ON)
     @Expose
     public String createdOn;
-    @SerializedName("updated_on")
+    @SerializedName(Constants.Keys.KEY_USER_UPDATED_ON)
     @Expose
     public String updatedOn;
-    @SerializedName("name")
+    @SerializedName(Constants.Keys.KEY_USER_NAME)
     @Expose
     public String name;
-    @SerializedName("mobile_number")
+    @SerializedName(Constants.Keys.KEY_USER_MOBILE_NUMBER)
     @Expose
     public String mobileNumber;
-    @SerializedName("is_mobile_verified")
+    @SerializedName(Constants.Keys.KEY_USER_IS_MOBILE_VERIFIED)
     @Expose
     public boolean isMobileVerified;
-    @SerializedName("contag")
+    @SerializedName(Constants.Keys.KEY_USER_CONTAG)
     @Expose
     public String contag;
-    @SerializedName("gender")
+    @SerializedName(Constants.Keys.KEY_USER_GENDER)
     @Expose
     public String gender;
-    @SerializedName("status_update")
+    @SerializedName(Constants.Keys.KEY_USER_STATUS_UPDATE)
     @Expose
     public String statusUpdate;
     @SerializedName("landline_number")
     @Expose
     public String landlineNumber;
-    @SerializedName("emergency_contact_number")
+    @SerializedName(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER)
     @Expose
     public String emergencyContactNumber;
-    @SerializedName("personal_email")
+    @SerializedName(Constants.Keys.KEY_USER_PERSONAL_EMAIL)
     @Expose
     public String personalEmail;
-    @SerializedName("address")
+    @SerializedName(Constants.Keys.KEY_USER_ADDRESS)
     @Expose
     public String address;
-    @SerializedName("date_of_birth")
+    @SerializedName(Constants.Keys.KEY_USER_DATE_OF_BIRTH)
     @Expose
     public String dateOfBirth;
-    @SerializedName("marital_status")
+    @SerializedName(Constants.Keys.KEY_USER_MARITAL_STATUS)
     @Expose
     public boolean maritalStatus;
-    @SerializedName("marriage_anniversary")
+    @SerializedName(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY)
     @Expose
     public String marriageAnniversary;
-    @SerializedName("work_email")
+    @SerializedName(Constants.Keys.KEY_USER_WORK_EMAIL)
     @Expose
     public String workEmail;
-    @SerializedName("work_mobile_number")
+    @SerializedName(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER)
     @Expose
     public String workMobileNumber;
-    @SerializedName("work_landline_number")
+    @SerializedName(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER)
     @Expose
     public String workLandlineNumber;
-    @SerializedName("work_address")
+    @SerializedName(Constants.Keys.KEY_USER_WORK_ADDRESS)
     @Expose
     public String workAddress;
-    @SerializedName("website")
+    @SerializedName(Constants.Keys.KEY_USER_WEBSITE)
     @Expose
     public String website;
-    @SerializedName("designation")
+    @SerializedName(Constants.Keys.KEY_USER_DESIGNATION)
     @Expose
     public String designation;
-    @SerializedName("work_facebook_page")
+    @SerializedName(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE)
     @Expose
     public String workFacebookPage;
-    @SerializedName("android_app_link")
+    @SerializedName(Constants.Keys.KEY_USER_ANDROID_APP_LINK)
     @Expose
     public String androidAppLink;
-    @SerializedName("ios_app_link")
+    @SerializedName(Constants.Keys.KEY_USER_IOS_APP_LINK)
     @Expose
     public String iosAppLink;
-    @SerializedName("avatar_url")
+    @SerializedName(Constants.Keys.KEY_USER_AVATAR_URL)
     @Expose
     public String avatarUrl;
-    @SerializedName("blood_group")
+    @SerializedName(Constants.Keys.KEY_USER_BLOOD_GROUP)
     @Expose
     public String bloodGroup;
 }

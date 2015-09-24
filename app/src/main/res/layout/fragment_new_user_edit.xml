@@ -122,4 +122,19 @@
 
     </LinearLayout>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_proceed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_profile_container"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="@string/proceed"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+
 </RelativeLayout>

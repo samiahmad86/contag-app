@@ -23,6 +23,7 @@ import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.ContactListFragment;
 import com.contag.app.fragment.FeedsFragment;
+import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.DaoSession;
@@ -44,8 +45,7 @@ public class HomeActivity extends BaseActivity {
         Intent intent = getIntent();
         String className = intent.getStringExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY);
 
-        final Toolbar tbHome = (Toolbar) findViewById(R.id.tb_home);
-        setSupportActionBar(tbHome);
+        setUpActionBar(R.id.tb_home);
 
         // we do not want to redraw the activity once the orientation changes
         if (savedInstanceState != null) {
@@ -66,8 +66,7 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
-        if (PrefUtils.isContactBookUpdated()) {
-
+        if (PrefUtils.isContactBookUpdated() || className.equalsIgnoreCase(NewUserDetailsFragment.TAG)) {
             Router.startContactService(this, true);
         } else {
             if ((System.currentTimeMillis() - PrefUtils.getContactUpdatedTimestamp()) > Constants.Values.ONE_DAY_IN_MILLISECONDS) {

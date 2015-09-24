@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.fragment.BaseFragment;
-import com.contag.app.fragment.EditNewUserFragment;
+import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.fragment.NewUserFragment;
 
 /**
@@ -21,9 +21,7 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
-
-        setUpActionBar(R.id.tb_user_details);
+        setContentView(R.layout.activity_new_user);
 
         if(savedInstanceState != null) {
             return;
@@ -61,7 +59,7 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
         if(fragmentType == Constants.Types.FRAG_CREATE_USER) {
             ft.add(R.id.fl_user, NewUserFragment.newInstance(args.getLong(Constants.Keys.KEY_NUMBER)));
         } else if(fragmentType == Constants.Types.FRAG_USER_DETAILS) {
-            ft.replace(R.id.fl_user, EditNewUserFragment.newInstance());
+            ft.replace(R.id.fl_user, NewUserDetailsFragment.newInstance());
         }
         ft.commit();
     }

@@ -50,4 +50,12 @@ public class PrefUtils {
     public static long getContactUpdatedTimestamp() {
         return mSharedPref.getLong(Constants.Keys.KEY_CONTACTS_UPDATED_TIMESTAMP, 0);
     }
+
+    public static void setCurrentUser(String user) {
+        mEditor.putString(Constants.Keys.KEY_CURRENT_USER, user).commit();
+    }
+
+    public static String getCurrentUser() {
+        return mSharedPref.getString(Constants.Keys.KEY_CURRENT_USER, null);
+    }
 }

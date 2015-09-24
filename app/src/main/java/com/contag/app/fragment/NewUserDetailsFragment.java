@@ -23,16 +23,16 @@ import java.util.Arrays;
 /**
  * Created by tanay on 20/8/15.
  */
-public class EditNewUserFragment extends BaseFragment {
+public class NewUserDetailsFragment extends BaseFragment {
 
-    private static final String TAG = EditNewUserFragment.class.getName();
+    public static final String TAG = NewUserDetailsFragment.class.getName();
     private CallbackManager cbm;
 
-    public static EditNewUserFragment newInstance() {
-        EditNewUserFragment enuf = new EditNewUserFragment();
+    public static NewUserDetailsFragment newInstance() {
+        NewUserDetailsFragment nudf = new NewUserDetailsFragment();
         Bundle bundle = new Bundle();
-        enuf.setArguments(bundle);
-        return enuf;
+        nudf.setArguments(bundle);
+        return nudf;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class EditNewUserFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_new_user_edit, container, false);
-        LoginButton btnFb = (LoginButton) view.findViewById(R.id.btn_fb_sync);
+        final LoginButton btnFb = (LoginButton) view.findViewById(R.id.btn_fb_sync);
         btnFb.setFragment(this);
         log(TAG, "uncle fucker");
         btnFb.setReadPermissions(Arrays.asList("public_profile"));
@@ -59,8 +59,10 @@ public class EditNewUserFragment extends BaseFragment {
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-                                Router.startHomeActivity(EditNewUserFragment.this.getActivity(), TAG);
-                                EditNewUserFragment.this.getActivity().finish();
+                                btnFb.setVisibility(View.INVISIBLE);
+                                Router.startHomeActivity(NewUserDetailsFragment.this.getActivity(), TAG);
+                                NewUserDetailsFragment.this.getActivity().finish();
+
                                 log(TAG, response.toString());
                             }
                         });

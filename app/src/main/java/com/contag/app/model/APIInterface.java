@@ -2,6 +2,8 @@ package com.contag.app.model;
 
 import com.contag.app.config.Constants;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -10,6 +12,7 @@ import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 
 /**
  * Created by tanay on 7/8/15.
@@ -41,6 +44,21 @@ public interface APIInterface {
                             @Header(Constants.Headers.HEADER_APP_VERSION_ID) String appVersionId,
                             @Header(Constants.Headers.HEADER_TOKEN) String token,
                             @Body NewUser newUser);
+
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @PUT(Constants.Urls.URL_USER)
+    User setUser(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body JSONArray fuckJson);
+
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @PUT(Constants.Urls.URL_USER)
+    User getUser(@Header(Constants.Headers.HEADER_TOKEN) String token);
+
 
     @Headers({
             "Content-Type: application/json"

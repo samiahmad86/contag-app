@@ -21,6 +21,9 @@ public class Constants {
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
         public static final String KEY_CONTACTS_UPDATED = "contact_fucked";
+        public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
+        public static final String KEY_CURRENT_USER = "current_sodomized_user";
+        public static final String KEY_USER_ARRAY = "user_fucked";
         public static final String KEY_CONTACTS_UPDATED_TIMESTAMP = "contact_fucking_timestamp";
     }
 
@@ -39,6 +42,9 @@ public class Constants {
     }
 
     public class Types {
+        public static final int REQUEST_GET = 1;
+        public static final int REQUEST_POST = 2;
+        public static final int REQUEST_PUT = 3;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int FRAG_LOGIN = 0;

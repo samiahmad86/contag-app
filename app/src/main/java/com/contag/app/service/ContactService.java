@@ -71,7 +71,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
             if (intent.getBooleanExtra(Constants.Keys.KEY_SEND_CONTACTS, false)) {
                 clContact.startLoading();
             } else {
-                ContactRequest cr = new ContactRequest();
+                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET);
                 mSpiceManager.execute(cr, this);
             }
         }
@@ -124,7 +124,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
         Gson gson = new Gson();
         Log.d(TAG, "" + contacts.size());
         Log.d(TAG, gson.toJson(contacts).toString());
-        ContactRequest cr = new ContactRequest(contacts);
+        ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_POST, contacts);
         mSpiceManager.execute(cr, this);
     }
 

@@ -40,7 +40,8 @@ public class Constants {
     }
 
     public class Types {
-
+        public static final int ITEM_CONTAG = 0;
+        public static final int ITEM_NON_CONTAG = 1;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;

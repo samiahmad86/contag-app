@@ -5,6 +5,7 @@ import com.contag.app.model.APIInterface;
 import com.contag.app.model.NewUser;
 import com.contag.app.model.NewUserResponse;
 import com.contag.app.model.User;
+import com.contag.app.model.UserRequestModel;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
@@ -18,14 +19,14 @@ import java.util.HashMap;
 public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
 
     private int type;
-    private JSONArray fuckArray;
+    private String fuckArray;
 
     public UserRequest(int type) {
         super(User.class, APIInterface.class);
         this.type = type;
     }
 
-    public UserRequest(int type, JSONArray userArray) {
+    public UserRequest(int type, String userArray) {
         super(User.class, APIInterface.class);
         this.type = type;
         this.fuckArray = userArray;
@@ -36,7 +37,7 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
         if(Constants.Types.REQUEST_GET == type) {
             return getService().getUser(PrefUtils.getAuthToken());
         } else if(Constants.Types.REQUEST_PUT == type) {
-            return getService().setUser(PrefUtils.getAuthToken(), fuckArray);
+            return getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(fuckArray));
         }
         return null;
     }

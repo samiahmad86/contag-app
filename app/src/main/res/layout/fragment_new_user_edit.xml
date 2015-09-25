@@ -131,7 +131,6 @@
         android:background="@drawable/bg_login_btn"
         android:gravity="center"
         android:padding="10dp"
-        android:visibility="gone"
         android:text="@string/proceed"
         android:textColor="@color/white"
         android:textSize="20sp" />

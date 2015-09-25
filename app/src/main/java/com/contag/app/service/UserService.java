@@ -44,15 +44,11 @@ public class UserService extends Service implements RequestListener<User> {
                     mSpiceManager.execute(mUserRequest, this);
                     break;
                 }
-                case Constants.Types.REQUEST_PUT : {
-                    try {
-                        String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
-                        JSONArray userArray = new JSONArray(userArrayStr);
-                        UserRequest mUserRequest = new UserRequest(type, userArray);
-                        mSpiceManager.execute(mUserRequest, this);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                case Constants.Types.REQUEST_PUT: {
+                    String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
+                    UserRequest mUserRequest = new UserRequest(type, userArrayStr);
+                    mSpiceManager.execute(mUserRequest, this);
+                    break;
                 }
             }
         }

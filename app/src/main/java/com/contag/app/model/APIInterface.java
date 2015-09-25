@@ -50,13 +50,13 @@ public interface APIInterface {
             "Content-Type: application/json"
     })
     @PUT(Constants.Urls.URL_USER)
-    User setUser(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body JSONArray fuckJson);
+    User setUser(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body UserRequestModel urm);
 
 
     @Headers({
             "Content-Type: application/json"
     })
-    @PUT(Constants.Urls.URL_USER)
+    @GET(Constants.Urls.URL_USER)
     User getUser(@Header(Constants.Headers.HEADER_TOKEN) String token);
 
 

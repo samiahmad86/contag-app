@@ -62,7 +62,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         final View view = inflater.inflate(R.layout.fragment_new_user_edit, container, false);
         final LoginButton btnFb = (LoginButton) view.findViewById(R.id.btn_fb_sync);
         final View btnProceed = view.findViewById(R.id.btn_proceed);
-        final ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.iv_user_photo);
+        final ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.iv_profile_img);
         etUserName = (EditText) view.findViewById(R.id.et_user_name);
         rgGender = (RadioGroup) view.findViewById(R.id.rg_gender);
 
@@ -81,8 +81,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-                                btnFb.setVisibility(View.INVISIBLE);
-                                btnProceed.setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.ll_fb_container).setVisibility(View.INVISIBLE);
                                 JSONObject oUser = response.getJSONObject();
                                 try {
                                     imageUrl = "https://graph.facebook.com/" + oUser.getLong("id") + "/picture?type=large";
@@ -158,13 +157,12 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                 JSONObject oUsr = new JSONObject();
                 try {
                     String name = etUserName.getText().toString();
-                    String regexExpression = "^[\\\\p{L} .'-]+$";
-                    Pattern pattern = Pattern.compile(regexExpression);
-                    Matcher matcher = pattern.matcher(name);
-                    if(!matcher.matches()) {
-                        showToast("Enter a valid name");
-                        return;
-                    }
+//                    String regexExpression = "^[\\\\p{L} .'-]+$";
+//                    if(!name.matches(regexExpression)) {
+//                        log(TAG, name + "fuckkk");
+//                        showToast("Enter a valid name");
+//                        return;
+//                    }
                     oUsr.put(Constants.Keys.KEY_USER_NAME, name);
                     oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
                     arrUsr.put(oUsr);
@@ -182,6 +180,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                         oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
                         arrUsr.put(oUsr);
                     }
+                    log(TAG, arrUsr.toString());
                     Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
                 } catch (JSONException ex) {
                     ex.printStackTrace();

@@ -82,5 +82,6 @@ public class UserService extends Service implements RequestListener<User> {
         PrefUtils.setCurrentUser(gson.toJson(user).toString());
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent
                 (getResources().getString(R.string.intent_filter_user_received)));
+        this.stopSelf();
     }
 }

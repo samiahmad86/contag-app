@@ -48,7 +48,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         RequestListener<Response>, TextView.OnEditorActionListener {
 
     private OnFragmentInteractionListener mListener;
-    private final static String TAG = LoginFragment.class.getName();
+    public final static String TAG = LoginFragment.class.getName();
     private int mFragmentType;
     private long phoneNum;
     private Button btnLogin;

@@ -27,7 +27,11 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
         if (isUserLoggedIn()) {
-            Router.startHomeActivity(this, TAG);
+            if(PrefUtils.getCurrentUser() != null) {
+                Router.startHomeActivity(this, TAG);
+            } else {
+                Router.startNewUserActivity(this, TAG, 0);
+            }
         } else {
             Router.startGcmRegisterService(this);
         }

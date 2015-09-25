@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.fragment.BaseFragment;
+import com.contag.app.fragment.LoginFragment;
 import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.fragment.NewUserFragment;
 
@@ -23,11 +25,18 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             return;
         }
 
-        onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, getIntent().getExtras());
+        Intent intent = getIntent();
+        String previousClassName = intent.getStringExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY);
+
+        if (previousClassName.equalsIgnoreCase(LoginFragment.TAG)) {
+            onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, intent.getExtras());
+        } else if (previousClassName.equalsIgnoreCase(SplashActivity.TAG)){
+            onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, intent.getExtras());
+        }
     }
 
     @Override
@@ -56,9 +65,9 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
     public void onFragmentInteraction(int fragmentType, Bundle args) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if(fragmentType == Constants.Types.FRAG_CREATE_USER) {
+        if (fragmentType == Constants.Types.FRAG_CREATE_USER) {
             ft.add(R.id.fl_user, NewUserFragment.newInstance(args.getLong(Constants.Keys.KEY_NUMBER)));
-        } else if(fragmentType == Constants.Types.FRAG_USER_DETAILS) {
+        } else if (fragmentType == Constants.Types.FRAG_USER_DETAILS) {
             ft.replace(R.id.fl_user, NewUserDetailsFragment.newInstance());
         }
         ft.commit();

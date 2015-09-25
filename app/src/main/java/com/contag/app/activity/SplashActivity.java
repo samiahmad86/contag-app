@@ -37,12 +37,5 @@ public class SplashActivity extends BaseActivity {
         }
 
     }
-
-    /**
-     * @return boolean denoting if user is logged in.
-     */
-    protected boolean isUserLoggedIn() {
-        return PrefUtils.getAuthToken() != null;
-    }
-
+    
 }

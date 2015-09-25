@@ -32,9 +32,9 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
         Intent intent = getIntent();
         String previousClassName = intent.getStringExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY);
 
-        if (previousClassName.equalsIgnoreCase(LoginFragment.TAG)) {
+        if (previousClassName.equalsIgnoreCase(LoginFragment.TAG) && !isUserLoggedIn()) {
             onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, intent.getExtras());
-        } else if (previousClassName.equalsIgnoreCase(SplashActivity.TAG)){
+        } else {
             onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, intent.getExtras());
         }
     }

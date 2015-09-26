@@ -34,6 +34,7 @@
         </LinearLayout>
         
         <com.contag.app.view.CircularImageView
+            android:id="@+id/iv_user_photo"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@mipmap/ic_launcher"

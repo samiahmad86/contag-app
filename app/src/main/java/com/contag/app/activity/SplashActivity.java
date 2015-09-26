@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.contag.app.R;
+import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.util.PrefUtils;
 
@@ -26,19 +27,18 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
+
         if (isUserLoggedIn()) {
-            Router.startHomeActivity(this, TAG);
+            if(PrefUtils.getCurrentUser() != null) {
+                Router.startHomeActivity(this, TAG);
+            } else {
+                Router.startNewUserActivity(this, TAG, 0);
+            }
         } else {
             Router.startGcmRegisterService(this);
         }
 
     }
-
-    /**
-     * @return boolean denoting if user is logged in.
-     */
-    protected boolean isUserLoggedIn() {
-        return PrefUtils.getAuthToken() != null;
-    }
-
+    
 }

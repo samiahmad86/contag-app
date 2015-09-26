@@ -3,14 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/tb_login"
-        layout="@layout/layout_toolbar" />
-
     <FrameLayout
         android:id="@+id/fl_login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tb_login"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

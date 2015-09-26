@@ -14,9 +14,9 @@ import com.contag.app.fragment.LoginFragment;
  * Created by tanay on 30/7/15.
  * Called by Splash Screen Activity.
  * Logs in user with their phone number.
- * On log in success
+ * On success
  * If the user is first time user then goto {@link NewUserActivity}
- *      via {@link com.contag.app.config.Router#startNewUserActivity(Context, String)}
+ *      via {@link com.contag.app.config.Router#startNewUserActivity(Context, String, long)}
  * else goto {@link HomeActivity}
  *      via {@link com.contag.app.config.Router#startHomeActivity(Context, String)}
  */
@@ -29,8 +29,6 @@ public class LoginActivity extends BaseActivity implements BaseFragment.OnFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        setUpActionBar(R.id.tb_login);
 
         if (savedInstanceState != null) {
             return;

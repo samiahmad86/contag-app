@@ -62,6 +62,15 @@ public class ContagDaoGenerator {
         Property interestToCuntag = interest.addLongProperty("contagUserId").getProperty();
         interest.addToOne(contagContact, interestToCuntag);
 
+        Entity socialProfile = schema.addEntity("SocialProfile");
+        socialProfile.addIdProperty();
+        socialProfile.addStringProperty("social_platform");
+        socialProfile.addStringProperty("platform_id");
+
+        Property socialProfileToCuntag = socialProfile.addLongProperty("contagUserId").getProperty();
+        socialProfile.addToOne(contagContact, socialProfileToCuntag);
+
+
         new DaoGenerator().generateAll(schema, "../app/src/main/java");
     }
  }

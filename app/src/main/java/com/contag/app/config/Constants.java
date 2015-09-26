@@ -22,7 +22,43 @@ public class Constants {
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
         public static final String KEY_CONTACTS_UPDATED = "contact_fucked";
+        public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
+        public static final String KEY_CURRENT_USER = "current_sodomized_user";
+        public static final String KEY_USER_ARRAY = "user_fucked";
+        public static final String KEY_SERVICE_TYPE = "fucking_service_fucker";
+        public static final String KEY_SOCIAL_PLATFORMS = "shut_your_face_uncle_fucker";
         public static final String KEY_CONTACTS_UPDATED_TIMESTAMP = "contact_fucking_timestamp";
+        public static final String KEY_USER_ID = "id";
+        public static final String KEY_USER_PROFILE_RIGHTS = "profile_rights";
+        public static final String KEY_USER_SOCIAL_PROFILE ="social_profile";
+        public static final String KEY_USER_INTERESTS = "user_interests";
+        public static final String KEY_USER_CREATED_ON = "created_on";
+        public static final String KEY_USER_UPDATED_ON = "updated_on";
+        public static final String KEY_USER_NAME = "name";
+        public static final String KEY_USER_MOBILE_NUMBER = "mobile_number";
+        public static final String KEY_USER_IS_MOBILE_VERIFIED = "is_mobile_verified";
+        public static final String KEY_USER_CONTAG = "contag";
+        public static final String KEY_USER_GENDER = "gender";
+        public static final String KEY_USER_STATUS_UPDATE = "status_update";
+        public static final String KEY_USER_LANDLINE_NUMBER = "landline_number";
+        public static final String KEY_USER_EMERGENCY_CONTACT_NUMBER = "emergency_contact_number";
+        public static final String KEY_USER_PERSONAL_EMAIL = "personal_email";
+        public static final String KEY_USER_ADDRESS = "address";
+        public static final String KEY_USER_DATE_OF_BIRTH = "date_of_birth";
+        public static final String KEY_USER_MARITAL_STATUS = "marital_status";
+        public static final String KEY_USER_MARRIAGE_ANNIVERSARY = "marriage_anniversary";
+        public static final String KEY_USER_WORK_EMAIL = "work_email";
+        public static final String KEY_USER_WORK_MOBILE_NUMBER = "work_mobile_number";
+        public static final String KEY_USER_WORK_LANDLINE_NUMBER = "work_landline_number";
+        public static final String KEY_USER_WORK_ADDRESS = "work_address";
+        public static final String KEY_USER_WEBSITE = "website";
+        public static final String KEY_USER_DESIGNATION = "designation";
+        public static final String KEY_USER_WORK_FACEBOOK_PAGE = "work_facebook_page";
+        public static final String KEY_USER_ANDROID_APP_LINK = "android_app_link";
+        public static final String KEY_USER_IOS_APP_LINK = "ios_app_link";
+        public static final String KEY_USER_AVATAR_URL = "avatar_url";
+        public static final String KEY_USER_BLOOD_GROUP = "blood_group";
+        public static final String KEY_USER_FIELD_VISIBILITY = "visibility";
     }
 
     public class Headers {
@@ -40,12 +76,16 @@ public class Constants {
     }
 
     public class Types {
+        public static final int REQUEST_GET = 1;
+        public static final int REQUEST_POST = 2;
+        public static final int REQUEST_PUT = 3;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
         public static final int FRAG_CREATE_USER = 3;
+        public static final int SERVICE_GET_ALL_PLATFORMS = 1;
     }
 
     public class Urls {
@@ -54,6 +94,7 @@ public class Constants {
         public static final String URL_OTP = "/otp/";
         public static final String URL_USER = "/user/";
         public static final String URL_CONTACT = "/contact/";
+        public static final String URL_SOCIAL_PROFILE = "/social_profile/";
     }
 
     public class Regex {

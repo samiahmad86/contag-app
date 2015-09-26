@@ -8,7 +8,9 @@ import com.contag.app.activity.LoginActivity;
 import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
+import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
+import com.contag.app.service.UserService;
 
 /**
  * Created by tanay on 30/7/15.
@@ -52,5 +54,18 @@ public class Router {
     public static void startGcmRegisterService(Context context) {
         Intent iRegisterGcm = new Intent(context, GcmRegisterIntentService.class);
         context.startService(iRegisterGcm);
+    }
+
+    public static void startUserService(Context context, int type, String userArray) {
+        Intent iUser = new Intent(context, UserService.class);
+        iUser.putExtra(Constants.Keys.KEY_REQUEST_TYPE, type);
+        iUser.putExtra(Constants.Keys.KEY_USER_ARRAY, userArray);
+        context.startService(iUser);
+    }
+
+    public static void startCustomService(Context context, int type) {
+        Intent iCustomService = new Intent(context, CustomService.class);
+        iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
+        context.startService(iCustomService);
     }
 }

@@ -39,7 +39,7 @@
         android:padding="10dp"
         android:visibility="gone"
         android:layout_marginBottom="20dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:text="@string/contag_id_not_available"/>
 
 </RelativeLayout>

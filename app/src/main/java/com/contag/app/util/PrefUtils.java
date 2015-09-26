@@ -40,7 +40,7 @@ public class PrefUtils {
     }
 
     public static boolean isContactBookUpdated() {
-        return mSharedPref.getBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, false);
+        return mSharedPref.getBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, true);
     }
 
     public static void setContactUpdatedTimestamp(long timestamp) {
@@ -49,5 +49,21 @@ public class PrefUtils {
 
     public static long getContactUpdatedTimestamp() {
         return mSharedPref.getLong(Constants.Keys.KEY_CONTACTS_UPDATED_TIMESTAMP, 0);
+    }
+
+    public static void setCurrentUser(String user) {
+        mEditor.putString(Constants.Keys.KEY_CURRENT_USER, user).commit();
+    }
+
+    public static String getCurrentUser() {
+        return mSharedPref.getString(Constants.Keys.KEY_CURRENT_USER, null);
+    }
+
+    public static void setSocialPlatforms(String platforms) {
+        mEditor.putString(Constants.Keys.KEY_SOCIAL_PLATFORMS, platforms).commit();
+    }
+
+    public static String getSocialPlatforms() {
+        return mSharedPref.getString(Constants.Keys.KEY_SOCIAL_PLATFORMS, null);
     }
 }

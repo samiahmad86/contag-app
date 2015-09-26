@@ -1,5 +1,6 @@
 package com.contag.app.request;
 
+import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.RawContacts;
@@ -14,24 +15,26 @@ import java.util.HashSet;
 public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.ContactList, APIInterface> {
 
     private HashSet<RawContacts> rawContact;
-    private boolean isGetter;
+    private int type;
 
-    public ContactRequest() {
+    public ContactRequest(int type) {
         super(ContactResponse.ContactList.class, APIInterface.class);
-        this.isGetter = true;
+        this.type = type;
     }
 
-    public ContactRequest(HashSet<RawContacts> mRawContactsArrayList) {
+    public ContactRequest(int type, HashSet<RawContacts> mRawContactsArrayList) {
         super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
         this.rawContact = mRawContactsArrayList;
     }
 
     @Override
     public ContactResponse.ContactList loadDataFromNetwork() throws Exception {
-        if (isGetter) {
+        if (type == Constants.Types.REQUEST_GET) {
             return getService().getContacts(PrefUtils.getAuthToken());
-        } else {
+        } else if(type == Constants.Types.REQUEST_POST) {
             return getService().sendContacts(PrefUtils.getAuthToken(), rawContact);
         }
+        return null;
     }
 }

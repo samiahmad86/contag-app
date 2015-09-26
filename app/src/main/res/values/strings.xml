@@ -9,6 +9,7 @@
     <string name="intent_filter_sms">com.contag.app.sms</string>
     <string name="intent_filter_contacts_updated">com.contag.app.updated</string>
     <string name="intent_filter_contacts_request">com.contag.app.request</string>
+    <string name="intent_filter_user_received">com.contag.app.user.got</string>
     <!-- action bar items -->
     <string name="action_settings">Settings</string>
 
@@ -25,6 +26,11 @@
     <string name="create_user">SUBMIT</string>
     <string name="sync_fb">Sync with facebook</string>
     <string name="invite_to_cunt">INVITE</string>
+    <string name="fb_sync_msg">Allow us to get your details from Facebook</string>
+    <string name="name_hint">eg Remus</string>
+    <string name="name_label">Name</string>
+    <string name="gender_label">Gender</string>
+    <string name="proceed">Proceed</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>

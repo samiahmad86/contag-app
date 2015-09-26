@@ -32,7 +32,6 @@ import com.contag.app.request.OTPRequest;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.util.RegexUtils;
-import com.google.gson.Gson;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 

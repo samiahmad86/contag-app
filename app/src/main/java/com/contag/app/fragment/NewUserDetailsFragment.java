@@ -19,6 +19,7 @@ import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.request.UserRequest;
+import com.contag.app.util.PrefUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;

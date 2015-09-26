@@ -15,6 +15,9 @@ public class ContagContactResponse {
     @SerializedName("user_interest")
     @Expose
     public ArrayList<InterestResponse> userInterest = new ArrayList<>();
+    @Expose
+    @SerializedName("social_profile")
+    public ArrayList<SocialProfileResponse> socialProfile = new ArrayList<>();
     @SerializedName("created_on")
     @Expose
     public String createdOn;

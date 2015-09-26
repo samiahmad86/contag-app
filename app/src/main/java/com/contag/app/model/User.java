@@ -17,10 +17,10 @@ public class User {
     public List<ProfileRight> profileRights = new ArrayList<ProfileRight>();
     @SerializedName(Constants.Keys.KEY_USER_SOCIAL_PROFILE)
     @Expose
-    public List<String> socialProfile = new ArrayList<String>();
+    public List<SocialProfileResponse> socialProfile = new ArrayList<>();
     @SerializedName(Constants.Keys.KEY_USER_INTERESTS)
     @Expose
-    public List<String> userInterests = new ArrayList<String>();
+    public List<InterestResponse> userInterests = new ArrayList<>();
     @SerializedName(Constants.Keys.KEY_USER_CREATED_ON)
     @Expose
     public String createdOn;

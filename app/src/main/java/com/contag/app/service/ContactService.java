@@ -28,6 +28,9 @@ import com.contag.app.model.Interest;
 import com.contag.app.model.InterestDao;
 import com.contag.app.model.InterestResponse;
 import com.contag.app.model.RawContacts;
+import com.contag.app.model.SocialProfile;
+import com.contag.app.model.SocialProfileDao;
+import com.contag.app.model.SocialProfileResponse;
 import com.contag.app.request.ContactRequest;
 import com.contag.app.util.PrefUtils;
 import com.google.gson.Gson;
@@ -195,6 +198,18 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                             interest.setContagUserId(ccResponse.id);
                             interest.setContagContag(cc);
                             interestDao.insertOrReplace(interest);
+                        }
+                    }
+
+                    if(ccResponse.socialProfile != null && ccResponse.socialProfile.size() > 0) {
+                        SocialProfileDao spDao = session.getSocialProfileDao();
+                        for(SocialProfileResponse spr : ccResponse.socialProfile) {
+                            SocialProfile socialProfile = new SocialProfile();
+                            socialProfile.setPlatform_id(spr.platformId);
+                            socialProfile.setSocial_platform(spr.socialPlatform);
+                            socialProfile.setContagContag(cc);
+                            socialProfile.setContagUserId(ccResponse.id);
+                            spDao.insertOrReplace(socialProfile);
                         }
                     }
 

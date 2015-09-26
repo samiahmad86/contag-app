@@ -67,7 +67,7 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
-        if (PrefUtils.isContactBookUpdated() || className.equalsIgnoreCase(NewUserDetailsFragment.TAG)) {
+        if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
         } else {
             if ((System.currentTimeMillis() - PrefUtils.getContactUpdatedTimestamp()) > Constants.Values.ONE_DAY_IN_MILLISECONDS) {

@@ -40,7 +40,7 @@ public class PrefUtils {
     }
 
     public static boolean isContactBookUpdated() {
-        return mSharedPref.getBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, false);
+        return mSharedPref.getBoolean(Constants.Keys.KEY_CONTACTS_UPDATED, true);
     }
 
     public static void setContactUpdatedTimestamp(long timestamp) {

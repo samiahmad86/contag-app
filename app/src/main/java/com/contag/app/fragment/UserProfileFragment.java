@@ -20,6 +20,10 @@ import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.Interest;
+import com.contag.app.model.InterestDao;
+
+import java.util.ArrayList;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -34,7 +38,7 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     ContagContag contact;
-
+    private ArrayList<Interest> userInterests;
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -52,6 +56,9 @@ public class UserProfileFragment extends BaseFragment {
             DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
             ContagContagDao ccd = session.getContagContagDao();
             contact = ccd.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+            InterestDao interestDao = session.getInterestDao();
+            userInterests = (ArrayList<Interest>) interestDao.queryBuilder().
+                    where(InterestDao.Properties.ContagUserId.eq(id)).list();
         }
     }
 

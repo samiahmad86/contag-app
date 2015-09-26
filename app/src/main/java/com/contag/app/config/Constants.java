@@ -24,6 +24,8 @@ public class Constants {
         public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
         public static final String KEY_CURRENT_USER = "current_sodomized_user";
         public static final String KEY_USER_ARRAY = "user_fucked";
+        public static final String KEY_SERVICE_TYPE = "fucking_service_fucker";
+        public static final String KEY_SOCIAL_PLATFORMS = "shut_your_face_uncle_fucker";
         public static final String KEY_CONTACTS_UPDATED_TIMESTAMP = "contact_fucking_timestamp";
         public static final String KEY_USER_ID = "id";
         public static final String KEY_USER_PROFILE_RIGHTS = "profile_rights";
@@ -82,6 +84,7 @@ public class Constants {
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
         public static final int FRAG_CREATE_USER = 3;
+        public static final int SERVICE_GET_ALL_PLATFORMS = 1;
     }
 
     public class Urls {
@@ -90,6 +93,7 @@ public class Constants {
         public static final String URL_OTP = "/otp/";
         public static final String URL_USER = "/user/";
         public static final String URL_CONTACT = "/contact/";
+        public static final String URL_SOCIAL_PROFILE = "/social_profile/";
     }
 
     public class Regex {

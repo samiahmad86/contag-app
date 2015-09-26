@@ -71,4 +71,11 @@ public interface APIInterface {
     })
     @GET(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList getContacts(@Header(Constants.Headers.HEADER_TOKEN) String token);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_SOCIAL_PROFILE)
+    SocialPlatform.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
+
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.contag.app.R;
+import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.util.PrefUtils;
 
@@ -25,6 +26,8 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (isUserLoggedIn()) {
             if(PrefUtils.getCurrentUser() != null) {

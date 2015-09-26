@@ -8,6 +8,7 @@ import com.contag.app.activity.LoginActivity;
 import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
+import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
 import com.contag.app.service.UserService;
 
@@ -62,4 +63,9 @@ public class Router {
         context.startService(iUser);
     }
 
+    public static void startCustomService(Context context, int type) {
+        Intent iCustomService = new Intent(context, CustomService.class);
+        iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
+        context.startService(iCustomService);
+    }
 }

@@ -58,4 +58,12 @@ public class PrefUtils {
     public static String getCurrentUser() {
         return mSharedPref.getString(Constants.Keys.KEY_CURRENT_USER, null);
     }
+
+    public static void setSocialPlatforms(String platforms) {
+        mEditor.putString(Constants.Keys.KEY_SOCIAL_PLATFORMS, platforms).commit();
+    }
+
+    public static String getSocialPlatforms() {
+        return mSharedPref.getString(Constants.Keys.KEY_SOCIAL_PLATFORMS, null);
+    }
 }

@@ -10,13 +10,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
-import com.contag.app.adapter.ProfileListAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.ProfileModel;
@@ -25,17 +29,23 @@ import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by tanay on 28/9/15.
  */
-public class EditProfileDetailsFragment extends BaseFragment {
+public class EditProfileDetailsFragment extends BaseFragment implements View.OnClickListener{
 
     private HashMap<Integer, ProfileModel> hmProfileModel;
-    private ProfileListAdapter pla;
     private int type;
+    private boolean isListDrawn = false;
+    private ArrayList<ViewHolder> viewHolderArrayList;
+    private LinearLayout llViewContainer;
 
     public static EditProfileDetailsFragment newInstance(int type) {
         EditProfileDetailsFragment epdf = new EditProfileDetailsFragment();
@@ -49,12 +59,11 @@ public class EditProfileDetailsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_user, container, false);
         hmProfileModel = new HashMap<>();
+        viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
+        llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         type = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         new LoadUser().execute(type);
-        pla = new ProfileListAdapter(type, hmProfileModel, getActivity());
-        ListView lvProfileDetails = (ListView) view.findViewById(R.id.lv_user_details);
-        lvProfileDetails.setAdapter(pla);
         return view;
     }
 
@@ -69,6 +78,97 @@ public class EditProfileDetailsFragment extends BaseFragment {
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUsr);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.btn_edit : {
+                int tag = (int) v.getTag();
+                ViewHolder vh = viewHolderArrayList.get(tag);
+                if(vh.btnEdit.getText().toString().equalsIgnoreCase("Edit")) {
+                    vh.tvFieldValue.setVisibility(View.INVISIBLE);
+                    vh.etFieldValue.setEnabled(true);
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                    vh.btnEdit.setText("Update");
+                } else {
+                    JSONArray arrUsr = new JSONArray();
+                    JSONObject oUsr = new JSONObject();
+                    try {
+                        oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
+                        arrUsr.put(oUsr);
+                        Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
+                                arrUsr.toString(), type);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    vh.btnEdit.setVisibility(View.INVISIBLE);
+                    vh.pbUpdate.setVisibility(View.VISIBLE);
+                    vh.btnEdit.setEnabled(false);
+                    vh.etFieldValue.setEnabled(false);
+                }
+                break;
+            }
+        }
+    }
+
+
+
+    private void addViews(int size) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        int initialCount = llViewContainer.getChildCount();
+        for(int i = 0; i < size; i++) {
+            View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
+            ViewHolder vh = new ViewHolder();
+            vh.btnEdit = (Button) view.findViewById(R.id.btn_edit);
+            vh.btnEdit.setTag(initialCount + i);
+            vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
+            vh.pbUpdate = (ProgressBar) view.findViewById(R.id.pb_update);
+            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
+            vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
+            view.setTag(vh);
+            viewHolderArrayList.add(vh);
+            llViewContainer.addView(view, initialCount + i);
+        }
+    }
+
+    private void removeViews(int size) {
+        int initialSize = llViewContainer.getChildCount();
+        for(int i = 1; i <= size; i ++) {
+            llViewContainer.removeViewAt(initialSize - i);
+            viewHolderArrayList.remove(initialSize - i);
+        }
+
+    }
+
+    private void setViewContent() {
+        for(int i = 0; i < hmProfileModel.size(); i++) {
+            ViewHolder vh =  viewHolderArrayList.get(i);
+            vh.btnEdit.setEnabled(true);
+            vh.btnEdit.setTag(i);
+            vh.pbUpdate.setVisibility(View.INVISIBLE);
+            vh.etFieldValue.setVisibility(View.INVISIBLE);
+            vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
+            vh.tvFieldValue.setText((String) hmProfileModel.get(i).value);
+        }
+    }
+
+    private String convertKeytoLabel(String key) {
+        String str = key.replace("_", " ");
+        char ch = str.charAt(0);
+        if(ch > 97 && ch < 122) {
+            str = str.replace(ch, (char) (ch - 32));
+        }
+        int position = str.indexOf(" ");
+        while (position != -1) {
+            ch = str.charAt(position + 1);
+            position = str.indexOf(" ", position + 1);
+            if(ch > 97 && ch < 122) {
+                str = str.replace(ch, (char) (ch - 32));
+            }
+        }
+        return str;
     }
 
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
@@ -146,7 +246,23 @@ public class EditProfileDetailsFragment extends BaseFragment {
         protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
             hmProfileModel.clear();
             hmProfileModel.putAll(hm);
-            pla.notifyDataSetChanged();
+            if(!isListDrawn) {
+                addViews(hmProfileModel.size());
+                isListDrawn = true;
+            } else if(hmProfileModel.size() > llViewContainer.getChildCount()) {
+                addViews(hmProfileModel.size() - llViewContainer.getChildCount());
+            } else if(hmProfileModel.size() < llViewContainer.getChildCount()) {
+                removeViews(llViewContainer.getChildCount() - hmProfileModel.size());
+            }
+            setViewContent();
         }
+    }
+
+    private class ViewHolder {
+        public TextView tvFieldLabel;
+        public TextView tvFieldValue;
+        public EditText etFieldValue;
+        public Button btnEdit;
+        public ProgressBar pbUpdate;
     }
 }

@@ -4,7 +4,52 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_field_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="15sp"/>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tv_field_label"
+        android:id="@+id/tv_field_value"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_height="wrap_content" />
 
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_field_value"
+        android:layout_alignRight="@id/tv_field_value"
+        android:visibility="invisible"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:id="@+id/et_field_value"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_edit"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_field_value"
+        android:layout_alignBottom="@id/tv_field_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="@string/edit"
+        android:background="?android:attr/selectableItemBackground"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pb_update"
+        android:layout_alignLeft="@id/btn_edit"
+        android:layout_alignRight="@id/btn_edit"
+        android:layout_alignBottom="@id/btn_edit"
+        android:layout_alignTop="@id/btn_edit"
+        style="?android:attr/progressBarStyleSmall"
+        />
 
 </RelativeLayout>

@@ -16,9 +16,16 @@ import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.adapter.ProfileListAdapter;
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.DaoSession;
 import com.contag.app.model.ProfileModel;
+import com.contag.app.model.SocialPlatform;
+import com.contag.app.model.SocialPlatformDao;
+import com.contag.app.model.SocialProfile;
+import com.contag.app.model.SocialProfileDao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -68,7 +75,7 @@ public class EditProfileDetailsFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
-            if(type == EditProfileDetailsFragment.this.type) {
+            if (type == EditProfileDetailsFragment.this.type) {
                 new LoadUser().execute(type);
             }
         }
@@ -93,7 +100,7 @@ public class EditProfileDetailsFragment extends BaseFragment {
                     hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(), Constants.Types.FIELD_BOOLEAN));
                     break;
                 }
-                case Constants.Types.PROFILE_PROFESSIONAL : {
+                case Constants.Types.PROFILE_PROFESSIONAL: {
                     hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(), Constants.Types.FIELD_STRING));
                     hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(), Constants.Types.FIELD_STRING));
                     hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(), Constants.Types.FIELD_STRING));
@@ -107,7 +114,28 @@ public class EditProfileDetailsFragment extends BaseFragment {
                 }
 
                 case Constants.Types.PROFILE_SOCIAL: {
-
+                    DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+                    SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
+                    SocialProfileDao socialProfileDao = session.getSocialProfileDao();
+                    ArrayList<SocialPlatform> socialPlatforms = (ArrayList<SocialPlatform>) socialPlatformDao.loadAll();
+                    HashMap<String, String> hmReverse = new HashMap<>();
+                    for (SocialPlatform sp : socialPlatforms) {
+                        hmReverse.put(sp.getPlatformName(), sp.getPlatformBaseUrl());
+                    }
+                    ArrayList<SocialProfile> socialProfiles = (ArrayList<SocialProfile>) socialProfileDao.loadAll();
+                    int counter = 0;
+                    for (SocialProfile sp : socialProfiles) {
+                        if (hmReverse.containsKey(sp.getSocial_platform())) {
+                            hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
+                                    hmReverse.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id(), Constants.Types.FIELD_STRING));
+                            hmReverse.remove(sp.getSocial_platform());
+                        }
+                    }
+                    for (SocialPlatform sp : socialPlatforms) {
+                        if (hmReverse.containsKey(sp.getPlatformName())) {
+                            hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/", Constants.Types.FIELD_STRING));
+                        }
+                    }
                     break;
                 }
             }

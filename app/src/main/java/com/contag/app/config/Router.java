@@ -39,9 +39,10 @@ public class Router {
         mContext.startActivity(iNewUserDetails);
     }
 
-    public static void startUserActivity(Context mContext, String className) {
+    public static void startUserActivity(Context mContext, String className, long userID) {
         Intent iUsrProf = new Intent(mContext, UserActivity.class);
         iUsrProf.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iUsrProf.putExtra(Constants.Keys.KEY_CONTAG_ID, userID);
         mContext.startActivity(iUsrProf);
     }
 

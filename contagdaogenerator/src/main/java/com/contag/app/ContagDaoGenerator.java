@@ -71,6 +71,11 @@ public class ContagDaoGenerator {
         socialProfile.addToOne(contagContact, socialProfileToCuntag);
 
 
+        Entity socialPlatform = schema.addEntity("SocialPlatform");
+        socialPlatform.addIdProperty();
+        socialPlatform.addStringProperty("platformName");
+        socialPlatform.addStringProperty("platformBaseUrl");
+
         new DaoGenerator().generateAll(schema, "../app/src/main/java");
     }
  }

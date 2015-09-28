@@ -2,9 +2,6 @@ package com.contag.app.model;
 
 import com.contag.app.config.Constants;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import retrofit.http.Body;
@@ -76,6 +73,6 @@ public interface APIInterface {
             "Content-Type: application/json"
     })
     @GET(Constants.Urls.URL_SOCIAL_PROFILE)
-    SocialPlatform.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
+    SocialPlatformResponse.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
 
 }

@@ -66,4 +66,12 @@ public class PrefUtils {
     public static String getSocialPlatforms() {
         return mSharedPref.getString(Constants.Keys.KEY_SOCIAL_PLATFORMS, null);
     }
+
+    public static void setCurrentUserID(long id) {
+        mEditor.putLong(Constants.Keys.KEY_CURRENT_USER_ID, id).commit();
+    }
+
+    public static long getCurrentUserID() {
+        return mSharedPref.getLong(Constants.Keys.KEY_CURRENT_USER_ID, 0);
+    }
 }

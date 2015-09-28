@@ -80,6 +80,7 @@ public class UserService extends Service implements RequestListener<User> {
     public void onRequestSuccess(User user) {
         Gson gson = new Gson();
         PrefUtils.setCurrentUser(gson.toJson(user).toString());
+        PrefUtils.setCurrentUserID(user.id);
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent
                 (getResources().getString(R.string.intent_filter_user_received)));
         this.stopSelf();

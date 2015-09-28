@@ -24,6 +24,7 @@ import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestDao;
+import com.contag.app.util.PrefUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,8 @@ public class ContactListFragment extends BaseFragment {
             ArrayList<ContactListItem> items = new ArrayList<>();
 
             ContagContagDao mContagContagDao = session.getContagContagDao();
-            List<ContagContag> contagContacts = mContagContagDao.loadAll();
+            List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
+                    where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())).list();
 
             if (contagContacts != null) {
                 for (ContagContag cuntag : contagContacts) {

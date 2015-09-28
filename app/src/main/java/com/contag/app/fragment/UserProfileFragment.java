@@ -1,22 +1,17 @@
 package com.contag.app.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
-import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
@@ -35,7 +30,7 @@ public class UserProfileFragment extends BaseFragment {
     public interface ViewMode {
         int PERSONAL_DETAILS = 0;
         int SOCIAL_DETAILS = 1;
-        int UNKNOWN = 2;
+        int PROFRESSIONAL_DETAILS = 2;
         int TABS_COUNT = 3; // its not a view mode
     }
 
@@ -65,7 +60,7 @@ public class UserProfileFragment extends BaseFragment {
             SocialProfileDao socialProfileDao = session.getSocialProfileDao();
             socialProfiles = (ArrayList<SocialProfile>) socialProfileDao.queryBuilder().
                     where(SocialProfileDao.Properties.ContagUserId.eq(id)).list();
-        }
+          }
     }
 
     @Override
@@ -74,6 +69,7 @@ public class UserProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
         Bundle args = getArguments();
+
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -103,7 +99,7 @@ public class UserProfileFragment extends BaseFragment {
                     fragment = PersonalDetailsFragment.getInstance(contact);
                     break;
                 }
-                case ViewMode.UNKNOWN: {
+                case ViewMode.PROFRESSIONAL_DETAILS: {
                     fragment = PersonalDetailsFragment.getInstance(contact);
                     break;
                 }

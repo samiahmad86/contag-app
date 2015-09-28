@@ -7,6 +7,10 @@ import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
 import com.contag.app.R;
+import com.contag.app.config.ContagApplication;
+import com.contag.app.model.ContagContag;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
 import com.contag.app.model.User;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.service.APIService;
@@ -72,13 +76,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public User getCurrentUser() {
-        Gson gson = new Gson();
-        String str = PrefUtils.getCurrentUser();
-        if (str != null) {
-            return gson.fromJson(PrefUtils.getCurrentUser(), User.class);
-        }
-        return null;
+    public ContagContag getCurrentUser() {
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        ContagContagDao ccDao = session.getContagContagDao();
+        return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).list().get(0);
     }
 
     /**

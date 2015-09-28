@@ -26,6 +26,9 @@ public class SocialPlatformResponse {
     @SerializedName("is_binary")
     @Expose
     public Boolean isBinary;
+    @SerializedName("platform_url")
+    @Expose
+    public String platformUrl;
 
     public static class List extends ArrayList<SocialPlatformResponse> {
 

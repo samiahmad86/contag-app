@@ -59,7 +59,9 @@ public class Constants {
         public static final String KEY_USER_AVATAR_URL = "avatar_url";
         public static final String KEY_USER_BLOOD_GROUP = "blood_group";
         public static final String KEY_USER_FIELD_VISIBILITY = "visibility";
+        public static final String KEY_USER_PROFILE_TYPE = "come_fuck_me";
         public static final String KEY_CURRENT_USER_ID = "fucking_user_id";
+
     }
 
     public class Headers {
@@ -87,6 +89,14 @@ public class Constants {
         public static final int FRAG_USER_DETAILS = 2;
         public static final int FRAG_CREATE_USER = 3;
         public static final int SERVICE_GET_ALL_PLATFORMS = 1;
+        public static final int PROFILE_PERSONAL = 1;
+        public static final int PROFILE_PROFESSIONAL = 2;
+        public static final int PROFILE_SOCIAL = 3;
+        public static final int FIELD_STRING = 1;
+        public static final int FIELD_BOOLEAN = 2;
+        public static final int FIELD_LONG = 3;
+        public static final int FIELD_INT = 4;
+
     }
 
     public class Urls {

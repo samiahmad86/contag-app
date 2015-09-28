@@ -27,10 +27,8 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
-
         if (isUserLoggedIn()) {
-            if(PrefUtils.getCurrentUser() != null) {
+            if(PrefUtils.getCurrentUserID() != 0) {
                 Router.startHomeActivity(this, TAG);
             } else {
                 Router.startNewUserActivity(this, TAG, 0);

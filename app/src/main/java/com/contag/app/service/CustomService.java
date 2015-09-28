@@ -63,8 +63,8 @@ public class CustomService extends Service {
 
                         for(SocialPlatformResponse spr : socialPlatforms) {
                             SocialPlatformDao spDao = session.getSocialPlatformDao();
-                            SocialPlatform sp = new SocialPlatform();
-                            sp.setPlatformBaseUrl(spr.syncType);
+                            SocialPlatform sp = new SocialPlatform(spr.id);
+                            sp.setPlatformBaseUrl(spr.platformUrl);
                             sp.setPlatformName(spr.platformName);
                             spDao.insertOrReplace(sp);
                         }

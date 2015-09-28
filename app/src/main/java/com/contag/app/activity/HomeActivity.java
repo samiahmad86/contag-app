@@ -2,6 +2,7 @@ package com.contag.app.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +19,9 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.ContactListFragment;
 import com.contag.app.fragment.FeedsFragment;
-import com.contag.app.fragment.NewUserDetailsFragment;
-import com.contag.app.model.User;
+import com.contag.app.model.ContagContag;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.view.SlidingTabLayout;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 
@@ -45,14 +44,7 @@ public class HomeActivity extends BaseActivity {
             return;
         }
 
-        Gson gson = new Gson();
-        User user = gson.fromJson(PrefUtils.getCurrentUser(), User.class);
-
-        Toolbar tbHome = (Toolbar) findViewById(R.id.tb_home);
-        ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(user.name);
-        ((TextView) tbHome.findViewById(R.id.tv_user_id)).setText(user.contag);
-        Picasso.with(this).load(user.avatarUrl).placeholder(R.drawable.camera_icon).into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
-
+        new LoadUser().execute();
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());
         vpHome.setAdapter(hpa);
@@ -66,6 +58,8 @@ public class HomeActivity extends BaseActivity {
             }
         });
         stl.setViewPager(vpHome);
+
+        Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
@@ -141,4 +135,20 @@ public class HomeActivity extends BaseActivity {
 
     }
 
+    private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(Void... params) {
+            return HomeActivity.this.getCurrentUser();
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag ccUser) {
+            Toolbar tbHome = (Toolbar) HomeActivity.this.findViewById(R.id.tb_home);
+            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
+            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+            Picasso.with(HomeActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.camera_icon).
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+
+        }
+    }
 }

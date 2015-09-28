@@ -24,7 +24,7 @@
                 android:textSize="16sp" />
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_user_id"
+                android:id="@+id/tv_user_contag_id"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"

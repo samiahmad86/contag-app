@@ -57,12 +57,22 @@ public class Router {
         context.startService(iRegisterGcm);
     }
 
+    public static void startUserService(Context context, int type) {
+        startUserService(context, type, null);
+    }
+
     public static void startUserService(Context context, int type, String userArray) {
+       startUserService(context, type, userArray, 0);
+    }
+
+    public static void startUserService(Context context, int type, String userArray, int profileType) {
         Intent iUser = new Intent(context, UserService.class);
         iUser.putExtra(Constants.Keys.KEY_REQUEST_TYPE, type);
         iUser.putExtra(Constants.Keys.KEY_USER_ARRAY, userArray);
+        iUser.putExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, profileType);
         context.startService(iUser);
     }
+
 
     public static void startCustomService(Context context, int type) {
         Intent iCustomService = new Intent(context, CustomService.class);

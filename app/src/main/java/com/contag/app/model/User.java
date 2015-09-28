@@ -20,7 +20,7 @@ public class User {
     public List<SocialProfileResponse> socialProfile = new ArrayList<>();
     @SerializedName(Constants.Keys.KEY_USER_INTERESTS)
     @Expose
-    public List<InterestResponse> userInterests = new ArrayList<>();
+    public List<InterestResponse> userInterest = new ArrayList<>();
     @SerializedName(Constants.Keys.KEY_USER_CREATED_ON)
     @Expose
     public String createdOn;

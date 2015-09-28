@@ -22,6 +22,7 @@ import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.model.ContagContag;
 import com.contag.app.model.Login;
 import com.contag.app.model.OTP;
 import com.contag.app.model.OTPResponse;
@@ -199,7 +200,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                         } else {
                                             PrefUtils.setAuthToken(otpResponse.authToken);
                                             Router.startUserService(getActivity(),
-                                                    Constants.Types.REQUEST_GET, null);
+                                                    Constants.Types.REQUEST_GET);
                                         }
                                     } else {
                                         showToast("OTP is incorrect");
@@ -253,11 +254,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private BroadcastReceiver brUser = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            User user = ((BaseActivity) getActivity()).getCurrentUser();
-            if (user.name == null || user.name.length() == 0) {
+            ContagContag ccUser = ((BaseActivity) getActivity()).getCurrentUser();
+            if (ccUser.getName() == null || ccUser.getName().length() == 0) {
                 Router.startNewUserActivity(getActivity(), TAG, 0);
             } else {
-                log(TAG, user.name + "fuck");
+                log(TAG, ccUser.getName() + "fuck");
                 Router.startHomeActivity(getActivity(), TAG);
             }
             getActivity().finish();

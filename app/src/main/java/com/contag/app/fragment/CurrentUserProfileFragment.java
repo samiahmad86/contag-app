@@ -18,6 +18,7 @@ import com.contag.app.model.ContagContag;
  */
 public class CurrentUserProfileFragment extends BaseFragment {
 
+    public static final String TAG = CurrentUserProfileFragment.class.getName();
 
     public static CurrentUserProfileFragment newInstance() {
         CurrentUserProfileFragment cupf = new CurrentUserProfileFragment();
@@ -41,8 +42,11 @@ public class CurrentUserProfileFragment extends BaseFragment {
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
-        PersonalDetailsTabsAdapter homeTabsAdapter = new PersonalDetailsTabsAdapter(mBaseActivity.getSupportFragmentManager());
+        PersonalDetailsTabsAdapter homeTabsAdapter = new
+                PersonalDetailsTabsAdapter(getChildFragmentManager());
         pager.setAdapter(homeTabsAdapter);
+
+        log(TAG, "here");
 
         return view;
     }
@@ -51,12 +55,13 @@ public class CurrentUserProfileFragment extends BaseFragment {
 
         public PersonalDetailsTabsAdapter(FragmentManager fm) {
             super(fm);
+            log(TAG, "uncle fucker");
         }
 
 
         @Override
         public Fragment getItem(int position) {
-            Bundle bundle = new Bundle();
+            log(TAG, "fuck");
             Fragment fragment = null;
             switch (position) {
                 case UserProfileFragment.ViewMode.PERSONAL_DETAILS: {
@@ -72,7 +77,6 @@ public class CurrentUserProfileFragment extends BaseFragment {
                     break;
                 }
             }
-            fragment.setArguments(bundle);
             return fragment;
         }
 

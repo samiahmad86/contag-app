@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.contag.app.R;
@@ -36,8 +37,7 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -52,6 +52,7 @@ public class UserService extends Service implements RequestListener<User> {
                 }
                 case Constants.Types.REQUEST_PUT: {
                     String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
+                    Log.d(TAG, "making request");
                     UserRequest mUserRequest = new UserRequest(type, userArrayStr);
                     profileType = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
                     mSpiceManager.execute(mUserRequest, this);
@@ -71,6 +72,7 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "user service being destroyed");
         super.onDestroy();
         if (mSpiceManager.isStarted()) {
             mSpiceManager.shouldStop();
@@ -90,7 +92,6 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public void onRequestSuccess(User user) {
-
         PrefUtils.setCurrentUserID(user.id);
         new SaveUser().execute(user);
     }
@@ -160,11 +161,13 @@ public class UserService extends Service implements RequestListener<User> {
 
         @Override
         protected void onPostExecute(Void result) {
-            Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
+            Log.d(TAG, "on post execute");
             if(profileType != 0) {
+                Log.d(TAG, "sending broadcast");
+                Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
                 intent.putExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, profileType);
+                LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
             }
-            LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
             UserService.this.stopSelf();
         }
     }

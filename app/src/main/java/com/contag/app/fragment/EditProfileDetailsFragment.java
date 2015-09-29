@@ -39,13 +39,14 @@ import java.util.HashMap;
 /**
  * Created by tanay on 28/9/15.
  */
-public class EditProfileDetailsFragment extends BaseFragment implements View.OnClickListener{
+public class EditProfileDetailsFragment extends BaseFragment implements View.OnClickListener {
 
     private HashMap<Integer, ProfileModel> hmProfileModel;
     private int type;
     private boolean isListDrawn = false;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
+    public static final String TAG = EditProfileDetailsFragment.class.getName();
 
     public static EditProfileDetailsFragment newInstance(int type) {
         EditProfileDetailsFragment epdf = new EditProfileDetailsFragment();
@@ -84,11 +85,11 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.btn_edit : {
+            case R.id.btn_edit: {
                 int tag = (int) v.getTag();
                 ViewHolder vh = viewHolderArrayList.get(tag);
-                if(vh.btnEdit.getText().toString().equalsIgnoreCase("Edit")) {
-                    vh.tvFieldValue.setVisibility(View.INVISIBLE);
+                if (vh.btnEdit.getText().toString().equalsIgnoreCase("Edit")) {
+                    vh.tvFieldValue.setVisibility(View.GONE);
                     vh.etFieldValue.setEnabled(true);
                     vh.etFieldValue.setVisibility(View.VISIBLE);
                     vh.btnEdit.setText("Update");
@@ -103,7 +104,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    vh.btnEdit.setVisibility(View.INVISIBLE);
+                    vh.btnEdit.setVisibility(View.GONE);
                     vh.pbUpdate.setVisibility(View.VISIBLE);
                     vh.btnEdit.setEnabled(false);
                     vh.etFieldValue.setEnabled(false);
@@ -114,15 +115,15 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     }
 
 
-
     private void addViews(int size) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int initialCount = llViewContainer.getChildCount();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.btnEdit = (Button) view.findViewById(R.id.btn_edit);
             vh.btnEdit.setTag(initialCount + i);
+            vh.btnEdit.setOnClickListener(this);
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
             vh.pbUpdate = (ProgressBar) view.findViewById(R.id.pb_update);
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
@@ -135,7 +136,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
 
     private void removeViews(int size) {
         int initialSize = llViewContainer.getChildCount();
-        for(int i = 1; i <= size; i ++) {
+        for (int i = 1; i <= size; i++) {
             llViewContainer.removeViewAt(initialSize - i);
             viewHolderArrayList.remove(initialSize - i);
         }
@@ -143,30 +144,32 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     }
 
     private void setViewContent() {
-        for(int i = 0; i < hmProfileModel.size(); i++) {
-            ViewHolder vh =  viewHolderArrayList.get(i);
+        for (int i = 0; i < hmProfileModel.size(); i++) {
+            ViewHolder vh = viewHolderArrayList.get(i);
             vh.btnEdit.setEnabled(true);
             vh.btnEdit.setTag(i);
-            vh.pbUpdate.setVisibility(View.INVISIBLE);
-            vh.etFieldValue.setVisibility(View.INVISIBLE);
+            vh.btnEdit.setText("Edit");
+            vh.btnEdit.setVisibility(View.VISIBLE);
+            vh.tvFieldValue.setVisibility(View.VISIBLE);
+            vh.pbUpdate.setVisibility(View.GONE);
+            vh.etFieldValue.setVisibility(View.GONE);
             vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
-            vh.tvFieldValue.setText((String) hmProfileModel.get(i).value);
+            if (hmProfileModel.get(i).value != null) {
+                vh.tvFieldValue.setText(String.valueOf(hmProfileModel.get(i).value));
+            }
         }
     }
 
     private String convertKeytoLabel(String key) {
         String str = key.replace("_", " ");
+        str = str.toLowerCase();
         char ch = str.charAt(0);
-        if(ch > 97 && ch < 122) {
-            str = str.replace(ch, (char) (ch - 32));
-        }
+        str = ((char) (ch - 32)) + str.substring(1);
         int position = str.indexOf(" ");
         while (position != -1) {
             ch = str.charAt(position + 1);
+            str = str.substring(0, position + 1) + (char) (ch - 32) + str.substring(position + 2);
             position = str.indexOf(" ", position + 1);
-            if(ch > 97 && ch < 122) {
-                str = str.replace(ch, (char) (ch - 32));
-            }
         }
         return str;
     }
@@ -174,8 +177,10 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            log(TAG, "broadcast received");
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == EditProfileDetailsFragment.this.type) {
+                log(TAG, "redrawing views");
                 new LoadUser().execute(type);
             }
         }
@@ -246,12 +251,12 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
         protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
             hmProfileModel.clear();
             hmProfileModel.putAll(hm);
-            if(!isListDrawn) {
+            if (!isListDrawn) {
                 addViews(hmProfileModel.size());
                 isListDrawn = true;
-            } else if(hmProfileModel.size() > llViewContainer.getChildCount()) {
+            } else if (hmProfileModel.size() > llViewContainer.getChildCount()) {
                 addViews(hmProfileModel.size() - llViewContainer.getChildCount());
-            } else if(hmProfileModel.size() < llViewContainer.getChildCount()) {
+            } else if (hmProfileModel.size() < llViewContainer.getChildCount()) {
                 removeViews(llViewContainer.getChildCount() - hmProfileModel.size());
             }
             setViewContent();

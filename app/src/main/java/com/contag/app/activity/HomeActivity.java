@@ -59,6 +59,8 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
+        Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
+
         Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {

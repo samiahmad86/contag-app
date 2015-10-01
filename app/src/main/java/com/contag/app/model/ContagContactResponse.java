@@ -86,7 +86,7 @@ public class ContagContactResponse {
     public String dateOfBirth;
     @SerializedName("marital_status")
     @Expose
-    public boolean maritalStatus;
+    public String maritalStatus;
     @SerializedName("marriage_anniversary")
     @Expose
     public String marriageAnniversary;

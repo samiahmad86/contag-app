@@ -34,7 +34,7 @@ public class ContagContag {
     private String avatarUrl;
     private String bloodGroup;
     private String dateOfBirth;
-    private Boolean maritalStatus;
+    private String maritalStatus;
     private String marriageAnniversary;
     private Long contactId;
 
@@ -55,7 +55,7 @@ public class ContagContag {
         this.id = id;
     }
 
-    public ContagContag(Long id, String createdOn, String updatedOn, String name, String mobileNumber, String registeredWith, String contag, String landLineNumber, String emergencyContactNumber, Boolean isMobileVerified, String gender, String personalEmail, String address, String workEmail, String workMobileNumber, String workLandLineNumber, String workAddress, String website, String designation, String workFacebookPage, String androidAppLink, String iosAppLink, String avatarUrl, String bloodGroup, String dateOfBirth, Boolean maritalStatus, String marriageAnniversary, Long contactId) {
+    public ContagContag(Long id, String createdOn, String updatedOn, String name, String mobileNumber, String registeredWith, String contag, String landLineNumber, String emergencyContactNumber, Boolean isMobileVerified, String gender, String personalEmail, String address, String workEmail, String workMobileNumber, String workLandLineNumber, String workAddress, String website, String designation, String workFacebookPage, String androidAppLink, String iosAppLink, String avatarUrl, String bloodGroup, String dateOfBirth, String maritalStatus, String marriageAnniversary, Long contactId) {
         this.id = id;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
@@ -292,11 +292,11 @@ public class ContagContag {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Boolean getMaritalStatus() {
+    public String getMaritalStatus() {
         return maritalStatus;
     }
 
-    public void setMaritalStatus(Boolean maritalStatus) {
+    public void setMaritalStatus(String maritalStatus) {
         this.maritalStatus = maritalStatus;
     }
 

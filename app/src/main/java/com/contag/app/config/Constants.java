@@ -61,7 +61,8 @@ public class Constants {
         public static final String KEY_USER_FIELD_VISIBILITY = "visibility";
         public static final String KEY_USER_PROFILE_TYPE = "come_fuck_me";
         public static final String KEY_CURRENT_USER_ID = "fucking_user_id";
-
+        public static final String KEY_INTEREST_SUGGESTION_SLUG = "slug";
+        public static final String KEY_INTEREST_SUGGESTION_LIST = "fucking_cock_sucking_list";
     }
 
     public class Headers {
@@ -89,14 +90,13 @@ public class Constants {
         public static final int FRAG_USER_DETAILS = 2;
         public static final int FRAG_CREATE_USER = 3;
         public static final int SERVICE_GET_ALL_PLATFORMS = 1;
+        public static final int SERVICE_GET_INTEREST_SUGGESTIONS = 2;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;
         public static final int FIELD_STRING = 1;
-        public static final int FIELD_BOOLEAN = 2;
-        public static final int FIELD_LONG = 3;
-        public static final int FIELD_INT = 4;
-
+        public static final int FIELD_LIST = 2;
+        public static final int FIELD_DATE = 3;
     }
 
     public class Urls {
@@ -106,6 +106,13 @@ public class Constants {
         public static final String URL_USER = "/user/";
         public static final String URL_CONTACT = "/contact/";
         public static final String URL_SOCIAL_PROFILE = "/social_profile/";
+        public static final String URL_USER_INTEREST = "/interest/";
+    }
+
+    public static class Arrays {
+        public static final String[] USER_GENDER = {"female", "male", "other"};
+        public static final String[] USER_BLOOD_GROUPS = {"O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
+        public static final String[] USER_MARITAL_STATUS = {"Married", "Single"};
     }
 
     public class Regex {

@@ -92,8 +92,10 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public void onRequestSuccess(User user) {
-        PrefUtils.setCurrentUserID(user.id);
-        new SaveUser().execute(user);
+        if(user.name != null) {
+            PrefUtils.setCurrentUserID(user.id);
+            new SaveUser().execute(user);
+        }
     }
 
     private class SaveUser extends AsyncTask<User, Void, Void> {
@@ -162,12 +164,12 @@ public class UserService extends Service implements RequestListener<User> {
         @Override
         protected void onPostExecute(Void result) {
             Log.d(TAG, "on post execute");
+            Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
             if(profileType != 0) {
                 Log.d(TAG, "sending broadcast");
-                Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
                 intent.putExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, profileType);
-                LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
             }
+            LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
             UserService.this.stopSelf();
         }
     }

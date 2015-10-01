@@ -4,20 +4,24 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.InterestSuggestion;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialPlatformResponse;
+import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.request.SocialPlatformRequest;
-import com.contag.app.util.PrefUtils;
-import com.google.gson.Gson;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
 
 /**
  * Created by tanay on 27/9/15.
@@ -47,13 +51,15 @@ public class CustomService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
+            final int serviceID = startId;
             int type = intent.getIntExtra(Constants.Keys.KEY_SERVICE_TYPE, 0);
             if(type == Constants.Types.SERVICE_GET_ALL_PLATFORMS) {
+                Log.d(TAG, "get all social platforms");
                 SocialPlatformRequest spr = new SocialPlatformRequest();
                 mSpiceManager.execute(spr, new RequestListener<SocialPlatformResponse.List>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-
+                        CustomService.this.stopSelf(serviceID);
                     }
 
                     @Override
@@ -69,7 +75,28 @@ public class CustomService extends Service {
                             spDao.insertOrReplace(sp);
                         }
 
-                        CustomService.this.stopSelf();
+                        CustomService.this.stopSelf(serviceID);
+                    }
+                });
+            } else if(type == Constants.Types.SERVICE_GET_INTEREST_SUGGESTIONS) {
+                InterestSuggestionRequest isr = new InterestSuggestionRequest
+                        (intent.getStringExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG));
+                mSpiceManager.execute(isr, new RequestListener<InterestSuggestion.List>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+
+                    }
+
+                    @Override
+                    public void onRequestSuccess(InterestSuggestion.List interestSuggestions) {
+                        ArrayList<String> suggestions = new ArrayList<>();
+                        for(InterestSuggestion is : interestSuggestions) {
+                            suggestions.add(is.name);
+                        }
+                        Intent iSuggestion = new Intent(getResources().getString(R.string.intent_filter_interest_suggestion));
+                        iSuggestion.putExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST, suggestions);
+                        LocalBroadcastManager.getInstance(CustomService.this).sendBroadcast(iSuggestion);
+                        CustomService.this.stopSelf(serviceID);
                     }
                 });
             }

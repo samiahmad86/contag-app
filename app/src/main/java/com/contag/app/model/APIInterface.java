@@ -10,6 +10,7 @@ import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Query;
 
 /**
  * Created by tanay on 7/8/15.
@@ -74,5 +75,13 @@ public interface APIInterface {
     })
     @GET(Constants.Urls.URL_SOCIAL_PROFILE)
     SocialPlatformResponse.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_USER_INTEREST)
+    InterestSuggestion.List getInterestSuggestions(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                   @Query(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG) String slug);
+
 
 }

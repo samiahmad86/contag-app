@@ -49,7 +49,7 @@ public class ContagDaoGenerator {
         contagContact.addStringProperty("avatarUrl");
         contagContact.addStringProperty("bloodGroup");
         contagContact.addStringProperty("dateOfBirth");
-        contagContact.addBooleanProperty("maritalStatus");
+        contagContact.addStringProperty("maritalStatus");
         contagContact.addStringProperty("marriageAnniversary");
 
         Property cuntagToContact = contagContact.addLongProperty("contactId").getProperty();

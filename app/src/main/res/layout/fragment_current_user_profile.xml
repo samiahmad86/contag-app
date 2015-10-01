@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_blue"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/root_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/txt_name"
+            style="@style/Contag.Text.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User name" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/txt_contag_id"
+            style="@style/Contag.TextAppearance.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_name"
+            android:text="User name" />
+
+        <ImageView
+            android:id="@+id/iv_usr_profile_img"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true" />
+
+
+        <include
+            layout="@layout/layout_user_interest_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_contag_id" />
+
+    </RelativeLayout>
+
+
+    <include
+        android:id="@+id/rl_indicator"
+        layout="@layout/layout_profile_indicator" />
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/root_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_indicator"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>

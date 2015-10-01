@@ -5,7 +5,22 @@
     android:padding="10dp"
     android:orientation="vertical">
 
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_profile_type"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/white"/>
+
     <ScrollView
+        android:layout_marginTop="20dp"
         android:id="@+id/sv_user_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

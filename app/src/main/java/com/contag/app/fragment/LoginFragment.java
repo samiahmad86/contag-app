@@ -90,6 +90,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
+        btnLogin.setOnEditorActionListener(this);
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             ((EditText) view.findViewById(R.id.et_phone_num)).setHint
                     (resources().getString(R.string.enter_otp));
@@ -164,6 +165,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                             getActivity().findViewById(R.id.pb_login).setVisibility(View.VISIBLE);
                             phoneNum = Long.parseLong(phNum);
                             Login mLogin = new Login(phoneNum);
+                            log(TAG, "making login request");
                             LoginRequest lr = new LoginRequest(mLogin);
                             getSpiceManager().execute(lr, this);
                             break;
@@ -185,6 +187,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                             hmHeaders.put(Constants.Headers.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getActivity()));
                             OTP objOTP = new OTP(phoneNum, num);
                             OTPRequest or = new OTPRequest(objOTP, hmHeaders);
+                            log(TAG, "executing OTP");
                             getSpiceManager().execute(or, new RequestListener<OTPResponse>() {
                                 @Override
                                 public void onRequestFailure(SpiceException spiceException) {
@@ -211,9 +214,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                         }
                     }
                 }
+                break;
             }
 
             case R.id.btn_resend_otp: {
+                log(TAG, "resend otp called");
                 Login mLogin = new Login(phoneNum);
                 LoginRequest lr = new LoginRequest(mLogin);
                 getSpiceManager().execute(lr, this);
@@ -233,6 +238,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onRequestSuccess(Response response) {
+        log(TAG, "login request done");
         if (response.result && mFragmentType == Constants.Types.FRAG_LOGIN) {
             Bundle bundle = new Bundle();
             bundle.putLong(Constants.Keys.KEY_NUMBER, phoneNum);

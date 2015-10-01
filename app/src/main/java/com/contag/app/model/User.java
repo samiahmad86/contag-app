@@ -62,7 +62,7 @@ public class User {
     public String dateOfBirth;
     @SerializedName(Constants.Keys.KEY_USER_MARITAL_STATUS)
     @Expose
-    public boolean maritalStatus;
+    public String maritalStatus;
     @SerializedName(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY)
     @Expose
     public String marriageAnniversary;

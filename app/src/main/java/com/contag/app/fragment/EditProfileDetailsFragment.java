@@ -36,7 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -67,7 +70,6 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         type = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
-
         TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
 
         switch (type) {
@@ -94,12 +96,15 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).
                 registerReceiver(brUsr, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
+        LocalBroadcastManager.getInstance(getActivity()).
+                registerReceiver(brDatePicked, new IntentFilter(getResources().getString(R.string.intent_filter_date_set)));
     }
 
     @Override
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUsr);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brDatePicked);
     }
 
     @Override
@@ -114,24 +119,37 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                     vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
                     vh.tvFieldValue.setVisibility(View.GONE);
                     vh.etFieldValue.setEnabled(true);
-                    String key = hmProfileModel.get(tag).key;
-                    if (key.equalsIgnoreCase(Constants.Keys.KEY_USER_GENDER) ||
-                            key.equalsIgnoreCase(Constants.Keys.KEY_USER_MARITAL_STATUS) ||
-                            key.equalsIgnoreCase(Constants.Keys.KEY_USER_BLOOD_GROUP)) {
+                    int fieldType = hmProfileModel.get(tag).fieldType;
+                    if (fieldType == Constants.Types.FIELD_LIST) {
                         vh.spFieldValue.setVisibility(View.VISIBLE);
-                    } else {
+                        vh.btnEdit.setText("Update");
+                    } else if (fieldType == Constants.Types.FIELD_STRING) {
                         vh.etFieldValue.setVisibility(View.VISIBLE);
+                        vh.btnEdit.setText("Update");
+                    } else if (fieldType == Constants.Types.FIELD_DATE) {
+                        String date = vh.tvFieldValue.getText().toString();
+                        if (date == null || date.length() == 0) {
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                            Calendar calendar = Calendar.getInstance();
+                            date = dateFormat.format(calendar.getTime()).toString();
+                        }
+                        vh.tvFieldValue.setVisibility(View.VISIBLE);
+                        DateFragment df = DateFragment.newInstance(date, tag, type);
+                        df.show(getChildFragmentManager(), "Date");
                     }
-                    vh.btnEdit.setText("Update");
                 } else {
                     JSONArray arrUsr = new JSONArray();
                     JSONObject oUsr = new JSONObject();
                     try {
-                        if (hmProfileModel.get(tag).fieldType == Constants.Types.FIELD_LIST) {
+                        int fieldType = hmProfileModel.get(tag).fieldType;
+                        if (fieldType == Constants.Types.FIELD_LIST) {
                             oUsr.put(hmProfileModel.get(tag).key,
                                     vh.spFieldValue.getSelectedItem().toString());
-                        } else {
+                            log(TAG, vh.spFieldValue.getSelectedItem().toString());
+                        } else if(fieldType == Constants.Types.FIELD_STRING) {
                             oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
+                        } else if(fieldType == Constants.Types.FIELD_DATE) {
+                            oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                         }
                         arrUsr.put(oUsr);
                         Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
@@ -206,10 +224,9 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                 vh.spFieldValue.setAdapter(spAdapter);
             }
             vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
-            if (hmProfileModel.get(i).value != null) {
+            if (hmProfileModel.get(i).value != null && (String.valueOf(hmProfileModel.get(i).value)).length() != 0) {
                 vh.tvFieldValue.setText(String.valueOf(hmProfileModel.get(i).value));
             } else {
-                log(TAG, "setting to null " + hmProfileModel.get(i).value);
                 vh.tvFieldValue.setVisibility(View.GONE);
                 vh.btnEdit.setText("Add");
             }
@@ -233,11 +250,25 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            log(TAG, "broadcast received");
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == EditProfileDetailsFragment.this.type) {
-                log(TAG, "redrawing views");
                 new LoadUser().execute(type);
+            }
+        }
+    };
+
+    private BroadcastReceiver brDatePicked = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
+                if (type == EditProfileDetailsFragment.this.type) {
+                    int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, 0);
+                    viewHolderArrayList.get(position).tvFieldValue.setVisibility(View.VISIBLE);
+                    viewHolderArrayList.get(position).tvFieldValue.
+                            setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
+                    viewHolderArrayList.get(position).btnEdit.setText("Update");
+                }
             }
         }
     };

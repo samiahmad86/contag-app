@@ -19,6 +19,8 @@ public class Constants {
         public static final String KEY_CONTAG_USER = "contag_user";
         public static final String KEY_FB_ACCESS_TOKEN = "fb_access_token";
         public static final String KEY_CONTACT_NAME = "contact_name";
+        public static final String KEY_DATE_VALUE = "date_set";
+        public static final String KEY_VIEW_POSITION = "view_position";
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
         public static final String KEY_CONTACTS_UPDATED = "contact_fucked";

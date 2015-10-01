@@ -11,6 +11,7 @@
     <string name="intent_filter_contacts_request">com.contag.app.request</string>
     <string name="intent_filter_user_received">com.contag.app.user.got</string>
     <string name="intent_filter_interest_suggestion">com.contag.app.interest.suggestion</string>
+    <string name="intent_filter_date_set">com.contag.app.date.set</string>
     <!-- action bar items -->
     <string name="action_settings">Settings</string>
 

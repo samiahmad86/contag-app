@@ -77,9 +77,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public ContagContag getCurrentUser() {
+        return getUser(PrefUtils.getCurrentUserID());
+    }
+
+    public ContagContag getUser(long id) {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         ContagContagDao ccDao = session.getContagContagDao();
-        return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).list().get(0);
+        return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
     }
 
     /**

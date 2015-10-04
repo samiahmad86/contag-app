@@ -2,73 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/root_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/txt_name"
-            style="@style/Contag.Text.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User name" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/txt_contag_id"
-            style="@style/Contag.TextAppearance.Subhead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_name"
-            android:text="User name" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
+    <include
         android:id="@+id/rl_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/root_header">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
-
-            <View
-                android:id="@+id/v_indicator_1"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:background="@drawable/bg_indicator_transparent" />
-
-            <View
-                android:id="@+id/v_indicator_2"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/bg_indicator_transparent" />
-
-            <View
-                android:id="@+id/v_indicator_3"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/bg_indicator_transparent" />
-
-
-        </LinearLayout>
-
-    </RelativeLayout>
+        layout="@layout/layout_profile_indicator" />
 
 
     <LinearLayout
@@ -78,27 +16,30 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/txt_call"
-            style="@style/Contag.TextAppearance.Subhead"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_call"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/bg_btn_call_usr"
             android:gravity="center"
+            android:textColor="@color/white"
             android:text="call" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/txt_message"
-            style="@style/Contag.TextAppearance.Subhead"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_msg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/btn_msg"
             android:gravity="center"
-            android:text="message" />
+             />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/root_pager"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/root_call_options"

@@ -21,6 +21,7 @@ import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -34,33 +35,25 @@ public class UserProfileFragment extends BaseFragment {
         int TABS_COUNT = 3; // its not a view mode
     }
 
-    ContagContag contact;
-    private ArrayList<Interest> userInterests;
-    private ArrayList<SocialProfile> socialProfiles;
+    private long userID;
+    private HashMap<Integer, View> hmIndicator;
+
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
         Bundle args = new Bundle();
-        args.putLong(Constants.Keys.KEY_CONTAG_ID, userId);
+        args.putLong(Constants.Keys.KEY_USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if(args != null) {
-            int id = args.getInt(Constants.Keys.KEY_CONTAG_ID);
-            DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
-            ContagContagDao ccd = session.getContagContagDao();
-            contact = ccd.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
-            InterestDao interestDao = session.getInterestDao();
-            userInterests = (ArrayList<Interest>) interestDao.queryBuilder().
-                    where(InterestDao.Properties.ContagUserId.eq(id)).list();
-            SocialProfileDao socialProfileDao = session.getSocialProfileDao();
-            socialProfiles = (ArrayList<SocialProfile>) socialProfileDao.queryBuilder().
-                    where(SocialProfileDao.Properties.ContagUserId.eq(id)).list();
-          }
+        if (args != null) {
+            userID = args.getLong(Constants.Keys.KEY_USER_ID);
+        }
     }
 
     @Override
@@ -68,13 +61,36 @@ public class UserProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        Bundle args = getArguments();
+
+        hmIndicator = new HashMap<>();
+        hmIndicator.put(0, view.findViewById(R.id.v_indicator_1));
+        hmIndicator.put(1, view.findViewById(R.id.v_indicator_2));
+        hmIndicator.put(2, view.findViewById(R.id.v_indicator_3));
+
+        hmIndicator.get(0).setBackgroundResource(R.drawable.bg_indicator_white);
 
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
         PersonalDetailsTabsAdapter homeTabsAdapter = new PersonalDetailsTabsAdapter(mBaseActivity.getSupportFragmentManager());
         pager.setAdapter(homeTabsAdapter);
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setIndicator(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return view;
     }
@@ -88,23 +104,21 @@ public class UserProfileFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            Bundle bundle = new Bundle();
             Fragment fragment = null;
             switch (position) {
                 case ViewMode.PERSONAL_DETAILS: {
-                    fragment = PersonalDetailsFragment.getInstance(contact);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
                     break;
                 }
                 case ViewMode.SOCIAL_DETAILS: {
-                    fragment = PersonalDetailsFragment.getInstance(contact);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
                     break;
                 }
                 case ViewMode.PROFRESSIONAL_DETAILS: {
-                    fragment = PersonalDetailsFragment.getInstance(contact);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
                     break;
                 }
             }
-            fragment.setArguments(bundle);
             return fragment;
         }
 
@@ -113,4 +127,13 @@ public class UserProfileFragment extends BaseFragment {
             return ViewMode.TABS_COUNT;
         }
     }
+
+    private void setIndicator(int pos) {
+        for(int i = 0; i < UserProfileFragment.ViewMode.TABS_COUNT; i ++) {
+            hmIndicator.get(i).setBackgroundResource(R.drawable.bg_indicator_transparent);
+        }
+        hmIndicator.get(pos).setBackgroundResource(R.drawable.bg_indicator_white);
+    }
+
+
 }

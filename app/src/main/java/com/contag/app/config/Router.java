@@ -2,6 +2,7 @@ package com.contag.app.config;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.contag.app.activity.HomeActivity;
 import com.contag.app.activity.LoginActivity;
@@ -11,6 +12,7 @@ import com.contag.app.service.ContactService;
 import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
 import com.contag.app.service.UserService;
+import com.google.android.gms.appindexing.Action;
 
 /**
  * Created by tanay on 30/7/15.
@@ -42,7 +44,7 @@ public class Router {
     public static void startUserActivity(Context mContext, String className, long userID) {
         Intent iUsrProf = new Intent(mContext, UserActivity.class);
         iUsrProf.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
-        iUsrProf.putExtra(Constants.Keys.KEY_CONTAG_ID, userID);
+        iUsrProf.putExtra(Constants.Keys.KEY_USER_ID, userID);
         mContext.startActivity(iUsrProf);
     }
 
@@ -78,5 +80,18 @@ public class Router {
         Intent iCustomService = new Intent(context, CustomService.class);
         iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
         context.startService(iCustomService);
+    }
+
+    public static void startProfileRequestService(Context mContext, int type, long id, String fieldName) {
+        Intent iCustomService = new Intent(mContext, CustomService.class);
+        iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
+        iCustomService.putExtra(Constants.Keys.KEY_PROFILE_REQUEST_FOR_USER, id);
+        iCustomService.putExtra(Constants.Keys.KEY_PROFILE_REQUEST_TYPE, fieldName);
+        mContext.startService(iCustomService);
+    }
+
+    public static void openSocialProfile(Context context, String link) {
+        Intent socialIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        context.startActivity(socialIntent);
     }
 }

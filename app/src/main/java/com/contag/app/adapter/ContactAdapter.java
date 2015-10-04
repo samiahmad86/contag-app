@@ -81,7 +81,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCunt = (CuntagViewHolder) convertView.getTag();
         }
         ContagContag cuntObject = ((ContactListItem) getItem(position)).mContagContag;
-        Picasso.with(mContext).load(cuntObject.getAvatarUrl()).placeholder(R.drawable.camera_icon)
+        Picasso.with(mContext).load(cuntObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
                 .into(vhCunt.ivPhoto);
         vhCunt.tvContactId.setText(cuntObject.getContag());
         vhCunt.tvContactName.setText(cuntObject.getName());

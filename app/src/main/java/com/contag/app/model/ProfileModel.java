@@ -22,4 +22,9 @@ public class ProfileModel {
         this.value = value;
         this.fieldType = fieldType;
     }
+
+    public ProfileModel(String key, Object value) {
+        this.key = key;
+        this.value = value;
+    }
 }

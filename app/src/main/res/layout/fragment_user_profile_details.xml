@@ -23,6 +23,7 @@
         android:layout_marginTop="20dp"
         android:id="@+id/sv_user_details"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="match_parent">
 
         <LinearLayout

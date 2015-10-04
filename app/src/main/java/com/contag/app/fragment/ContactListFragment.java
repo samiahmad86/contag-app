@@ -10,12 +10,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.contag.app.R;
 import com.contag.app.adapter.ContactAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.config.Router;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContactListItem;
@@ -54,6 +56,15 @@ public class ContactListFragment extends BaseFragment {
         contactAdapter = new ContactAdapter(contacts, getActivity());
         ListView lvContacts = (ListView) view.findViewById(R.id.lv_contact);
         lvContacts.setAdapter(contactAdapter);
+        lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ContactListItem cli = contacts.get(position);
+                if(cli.type == Constants.Types.ITEM_CONTAG) {
+                    Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, cli.mContagContag.getId());
+                }
+            }
+        });
         new LoadContacts().execute();
         return view;
     }

@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
@@ -89,15 +88,15 @@ public class CurrentUserProfileFragment extends BaseFragment {
             Fragment fragment = null;
             switch (position) {
                 case UserProfileFragment.ViewMode.PERSONAL_DETAILS: {
-                    fragment = EditProfileDetailsFragment.newInstance(Constants.Types.PROFILE_PERSONAL);
+                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL);
                     break;
                 }
                 case UserProfileFragment.ViewMode.SOCIAL_DETAILS: {
-                    fragment = EditProfileDetailsFragment.newInstance(Constants.Types.PROFILE_SOCIAL);
+                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_SOCIAL);
                     break;
                 }
                 case UserProfileFragment.ViewMode.PROFRESSIONAL_DETAILS: {
-                    fragment = EditProfileDetailsFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);
+                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);
                     break;
                 }
             }

@@ -22,15 +22,11 @@ import android.widget.TextView;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
-import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.DaoSession;
 import com.contag.app.model.ProfileModel;
 import com.contag.app.model.SocialPlatform;
-import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialProfile;
-import com.contag.app.model.SocialProfileDao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,17 +41,17 @@ import java.util.HashMap;
 /**
  * Created by tanay on 28/9/15.
  */
-public class EditProfileDetailsFragment extends BaseFragment implements View.OnClickListener {
+public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
 
     private HashMap<Integer, ProfileModel> hmProfileModel;
-    private int type;
+    private int profileType;
     private boolean isListDrawn = false;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
-    public static final String TAG = EditProfileDetailsFragment.class.getName();
+    public static final String TAG = CurrentUserProfileEditFragment.class.getName();
 
-    public static EditProfileDetailsFragment newInstance(int type) {
-        EditProfileDetailsFragment epdf = new EditProfileDetailsFragment();
+    public static CurrentUserProfileEditFragment newInstance(int type) {
+        CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, type);
         epdf.setArguments(args);
@@ -64,15 +60,15 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_edit_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         hmProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
-        type = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
+        profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
 
-        switch (type) {
+        switch (profileType) {
             case Constants.Types.PROFILE_PERSONAL: {
                 tvProfileType.setText("Personal Details");
                 break;
@@ -87,7 +83,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
             }
         }
 
-        new LoadUser().execute(type);
+        new LoadUser().execute();
         return view;
     }
 
@@ -134,7 +130,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                             date = dateFormat.format(calendar.getTime()).toString();
                         }
                         vh.tvFieldValue.setVisibility(View.VISIBLE);
-                        DateFragment df = DateFragment.newInstance(date, tag, type);
+                        DateFragment df = DateFragment.newInstance(date, tag, profileType);
                         df.show(getChildFragmentManager(), "Date");
                     }
                 } else {
@@ -146,14 +142,14 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                             oUsr.put(hmProfileModel.get(tag).key,
                                     vh.spFieldValue.getSelectedItem().toString());
                             log(TAG, vh.spFieldValue.getSelectedItem().toString());
-                        } else if(fieldType == Constants.Types.FIELD_STRING) {
+                        } else if (fieldType == Constants.Types.FIELD_STRING) {
                             oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
-                        } else if(fieldType == Constants.Types.FIELD_DATE) {
+                        } else if (fieldType == Constants.Types.FIELD_DATE) {
                             oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                         }
                         arrUsr.put(oUsr);
                         Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
-                                arrUsr.toString(), type);
+                                arrUsr.toString(), profileType);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -251,7 +247,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
         @Override
         public void onReceive(Context context, Intent intent) {
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
-            if (type == EditProfileDetailsFragment.this.type) {
+            if (type == CurrentUserProfileEditFragment.this.profileType) {
                 new LoadUser().execute(type);
             }
         }
@@ -262,7 +258,7 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
                 int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
-                if (type == EditProfileDetailsFragment.this.type) {
+                if (type == CurrentUserProfileEditFragment.this.profileType) {
                     int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, 0);
                     viewHolderArrayList.get(position).tvFieldValue.setVisibility(View.VISIBLE);
                     viewHolderArrayList.get(position).tvFieldValue.
@@ -276,10 +272,9 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
     private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileModel>> {
         @Override
         protected HashMap<Integer, ProfileModel> doInBackground(Integer... params) {
-            int type = params[0];
-            ContagContag cc = ((BaseActivity) EditProfileDetailsFragment.this.getActivity()).getCurrentUser();
+            ContagContag cc = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).getCurrentUser();
             HashMap<Integer, ProfileModel> hm = new HashMap<>();
-            switch (type) {
+            switch (profileType) {
                 case Constants.Types.PROFILE_PERSONAL: {
                     hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(), Constants.Types.FIELD_STRING));
                     hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
@@ -325,26 +320,25 @@ public class EditProfileDetailsFragment extends BaseFragment implements View.OnC
                 }
 
                 case Constants.Types.PROFILE_SOCIAL: {
-                    DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
-                    SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
-                    SocialProfileDao socialProfileDao = session.getSocialProfileDao();
-                    ArrayList<SocialPlatform> socialPlatforms = (ArrayList<SocialPlatform>) socialPlatformDao.loadAll();
-                    HashMap<String, String> hmReverse = new HashMap<>();
+                    ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).
+                            getSocialPlatforms();
+                    HashMap<String, String> hmNameToUrl = new HashMap<>();
                     for (SocialPlatform sp : socialPlatforms) {
-                        hmReverse.put(sp.getPlatformName(), sp.getPlatformBaseUrl());
+                        hmNameToUrl.put(sp.getPlatformName(), sp.getPlatformBaseUrl());
                     }
-                    ArrayList<SocialProfile> socialProfiles = (ArrayList<SocialProfile>) socialProfileDao.loadAll();
+                    ArrayList<SocialProfile> socialProfiles = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).
+                            getCurrentUserSocialProfiles();
                     int counter = 0;
                     for (SocialProfile sp : socialProfiles) {
-                        if (hmReverse.containsKey(sp.getSocial_platform())) {
+                        if (hmNameToUrl.containsKey(sp.getSocial_platform())) {
                             hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
-                                    hmReverse.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id(),
+                                    hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id(),
                                     Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                            hmReverse.remove(sp.getSocial_platform());
+                            hmNameToUrl.remove(sp.getSocial_platform());
                         }
                     }
                     for (SocialPlatform sp : socialPlatforms) {
-                        if (hmReverse.containsKey(sp.getPlatformName())) {
+                        if (hmNameToUrl.containsKey(sp.getPlatformName())) {
                             hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/", Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
                         }
                     }

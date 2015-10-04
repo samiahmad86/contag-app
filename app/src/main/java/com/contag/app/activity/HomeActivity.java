@@ -59,8 +59,6 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
-        Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
-
         Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {
@@ -70,29 +68,6 @@ public class HomeActivity extends BaseActivity {
                 Router.startContactService(this, false);
             }
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public class HomePagerAdapter extends FragmentPagerAdapter {
@@ -148,7 +123,7 @@ public class HomeActivity extends BaseActivity {
             Toolbar tbHome = (Toolbar) HomeActivity.this.findViewById(R.id.tb_home);
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-            Picasso.with(HomeActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.camera_icon).
+            Picasso.with(HomeActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
 
         }

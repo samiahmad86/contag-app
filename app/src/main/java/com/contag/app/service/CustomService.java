@@ -6,16 +6,20 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.InterestSuggestion;
+import com.contag.app.model.MessageResponse;
+import com.contag.app.model.ProfileRequestModel;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialPlatformResponse;
 import com.contag.app.request.InterestSuggestionRequest;
+import com.contag.app.request.ProfileRequest;
 import com.contag.app.request.SocialPlatformRequest;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -54,7 +58,6 @@ public class CustomService extends Service {
             final int serviceID = startId;
             int type = intent.getIntExtra(Constants.Keys.KEY_SERVICE_TYPE, 0);
             if(type == Constants.Types.SERVICE_GET_ALL_PLATFORMS) {
-                Log.d(TAG, "get all social platforms");
                 SocialPlatformRequest spr = new SocialPlatformRequest();
                 mSpiceManager.execute(spr, new RequestListener<SocialPlatformResponse.List>() {
                     @Override
@@ -96,6 +99,26 @@ public class CustomService extends Service {
                         Intent iSuggestion = new Intent(getResources().getString(R.string.intent_filter_interest_suggestion));
                         iSuggestion.putExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST, suggestions);
                         LocalBroadcastManager.getInstance(CustomService.this).sendBroadcast(iSuggestion);
+                        CustomService.this.stopSelf(serviceID);
+                    }
+                });
+            } else if(type == Constants.Types.SERVICE_MAKE_PROFILE_REQUEST) {
+                ProfileRequestModel prm = new ProfileRequestModel(
+                        intent.getLongExtra(Constants.Keys.KEY_PROFILE_REQUEST_FOR_USER, 0),
+                        intent.getStringExtra(Constants.Keys.KEY_PROFILE_REQUEST_TYPE));
+                ProfileRequest pr = new ProfileRequest(prm);
+                Log.d(TAG, "" + prm.type + " " + prm.id);
+                mSpiceManager.execute(pr, new RequestListener<MessageResponse>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        Toast.makeText(CustomService.this, "There was an error please try again", Toast.LENGTH_LONG).show();
+                        CustomService.this.stopSelf(serviceID);
+                    }
+
+                    @Override
+                    public void onRequestSuccess(MessageResponse messageResponse) {
+                        Log.d(TAG, messageResponse.message);
+                        Toast.makeText(CustomService.this, messageResponse.message, Toast.LENGTH_LONG).show();
                         CustomService.this.stopSelf(serviceID);
                     }
                 });

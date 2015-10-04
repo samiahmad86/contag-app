@@ -2,24 +2,34 @@ package com.contag.app.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
+import com.contag.app.model.ContagContag;
+import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 public class UserActivity extends BaseActivity {
     @Override
@@ -32,8 +42,12 @@ public class UserActivity extends BaseActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
 
+        setUpActionBar(R.id.tb_user);
+
         Intent intent = getIntent();
-        long userID = intent.getLongExtra(Constants.Keys.KEY_CONTAG_ID, 0);
+        long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);
+
+        new LoadUser().execute(userID);
 
         if(userID != PrefUtils.getCurrentUserID()) {
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
@@ -44,4 +58,44 @@ public class UserActivity extends BaseActivity {
             transaction.add(R.id.root_user_fragment, cupf).commit();
         }
     }
+
+    private class LoadUser extends AsyncTask<Long, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(Long... params) {
+            long id = params[0];
+            return UserActivity.this.getUser(id);
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag ccUser) {
+            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
+            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                    into(picaasoTarget);
+
+
+        }
+    }
+
+    private Target picaasoTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Bitmap blurredBitmap = ImageUtils.fastblur(bitmap, 3);
+            ((ImageView) UserActivity.this.findViewById(R.id.iv_bg_usr_img)).setImageBitmap(blurredBitmap);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
 }

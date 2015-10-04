@@ -65,6 +65,8 @@ public class Constants {
         public static final String KEY_CURRENT_USER_ID = "fucking_user_id";
         public static final String KEY_INTEREST_SUGGESTION_SLUG = "slug";
         public static final String KEY_INTEREST_SUGGESTION_LIST = "fucking_cock_sucking_list";
+        public static final String KEY_PROFILE_REQUEST_FOR_USER = "for_user";
+        public static final String KEY_PROFILE_REQUEST_TYPE = "request_type";
     }
 
     public class Headers {
@@ -93,6 +95,7 @@ public class Constants {
         public static final int FRAG_CREATE_USER = 3;
         public static final int SERVICE_GET_ALL_PLATFORMS = 1;
         public static final int SERVICE_GET_INTEREST_SUGGESTIONS = 2;
+        public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;
@@ -109,6 +112,7 @@ public class Constants {
         public static final String URL_CONTACT = "/contact/";
         public static final String URL_SOCIAL_PROFILE = "/social_profile/";
         public static final String URL_USER_INTEREST = "/interest/";
+        public static final String URL_PROFILE_REQUEST = "/profile_request/";
     }
 
     public static class Arrays {

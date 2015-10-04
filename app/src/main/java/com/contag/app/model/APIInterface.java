@@ -84,4 +84,12 @@ public interface APIInterface {
                                                    @Query(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG) String slug);
 
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @POST(Constants.Urls.URL_PROFILE_REQUEST)
+    MessageResponse makeProfileRequest(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                       @Body ProfileRequestModel mProfileRequestModel);
+
+
 }

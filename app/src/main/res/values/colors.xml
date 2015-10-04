@@ -23,6 +23,7 @@
     <color name="c9ca4b4">#9CA4B4</color>
     <color name="c494848">#494848</color>
     <color name="cf9671e">#F9671E</color>
+    <color name="c436cc0">#436CC0</color>
     <!-- view colors -->
     <color name="tb_color">@color/light_gray</color>
     <color name="hint_color">@color/dark_gray</color>
@@ -34,11 +35,15 @@
     <color name="border_rect_contact">@color/caacae1</color>
     <color name="bg_rect_contact">@color/cfaf9f8</color>
     <color name="txt_contact_interest">@color/caacae1</color>
-    <color name="bg_tb_home">@color/light_blue</color>
+    <color name="bg_tb_home">#4c3e69c0</color>
+    <color name="bg_user_activity">#88517bd0</color>
     <color name="bg_view_pager_home">@color/cf3f3f3</color>
     <color name="contact_scrollbar_thumb">@color/c507AD0</color>
     <color name="contact_scrollbar_track">@color/light_gray</color>
+    <color name="profile_scrollbar_thumb">@color/light_gray</color>
+    <color name="profile_scrollbar_track">@color/c507AD0</color>
     <color name="search_border">@color/c9ca4b4</color>
     <color name="bg_login_fragment">@color/c494848</color>
+    <color name="bg_btn_call_usr">@color/c436cc0</color>
     <color name="bg_new_user_activity">@color/c494848</color>
 </resources>

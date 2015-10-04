@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout
-        android:id="@+id/root_user_fragment"
+
+    <ImageView
+        android:id="@+id/iv_bg_usr_img"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_profile_pic"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_user_activity"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/tb_user"
+            layout="@layout/layout_toolbar_home" />
+
+        <FrameLayout
+            android:id="@+id/root_user_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</RelativeLayout>

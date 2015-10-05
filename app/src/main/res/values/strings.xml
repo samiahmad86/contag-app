@@ -53,5 +53,7 @@
     <string name="label_address">Address:</string>
     <string name="label_blood_group">Blood Group:</string>
     <string name="label_birthday">Birthday:</string>
+    <string name="title_activity_linked_in">LinkedInActivity</string>
+    <string name="title_activity_instagram">InstagramActivity</string>
 
 </resources>

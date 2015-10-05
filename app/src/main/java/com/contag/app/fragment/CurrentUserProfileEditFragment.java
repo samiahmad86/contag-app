@@ -27,6 +27,7 @@ import com.contag.app.model.ContagContag;
 import com.contag.app.model.ProfileModel;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialProfile;
+import com.contag.app.util.DeviceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,6 +109,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         int id = v.getId();
         switch (id) {
             case R.id.btn_edit: {
+                if(!DeviceUtils.isInternetConnected(getActivity())) {
+                    showToast("Sorry there is no internet.");
+                    return;
+                }
                 int tag = (int) v.getTag();
                 ViewHolder vh = viewHolderArrayList.get(tag);
                 if (vh.btnEdit.getText().toString().equalsIgnoreCase("Edit") ||

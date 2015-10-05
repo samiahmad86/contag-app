@@ -151,9 +151,19 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ddd081d9b2da73239d08eae430cfd3b1130525ff" />
+
+        <activity
+            android:name=".activity.LinkedInActivity"
+            android:label="@string/title_activity_linked_in" >
+        </activity>
+        <activity
+            android:name=".activity.InstagramActivity"
+            android:label="@string/title_activity_instagram" >
+        </activity>
     </application>
 
 </manifest>

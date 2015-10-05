@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.HomeActivity;
+import com.contag.app.activity.InstagramActivity;
+import com.contag.app.activity.LinkedInActivity;
 import com.contag.app.activity.LoginActivity;
 import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.UserActivity;
@@ -93,5 +96,15 @@ public class Router {
     public static void openSocialProfile(Context context, String link) {
         Intent socialIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         context.startActivity(socialIntent);
+    }
+
+    public static void startLinkendInLoginActivity(Context context, int requestCode) {
+        Intent iLinkedIn = new Intent(context, LinkedInActivity.class);
+        ((BaseActivity)context).startActivityForResult(iLinkedIn, requestCode);
+    }
+
+    public static void startInstagramLoginActivity(Context context, int requestCode) {
+        Intent iInsta = new Intent(context, InstagramActivity.class);
+        ((BaseActivity)context).startActivityForResult(iInsta, requestCode);
     }
 }

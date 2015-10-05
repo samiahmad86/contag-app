@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 import com.contag.app.model.DaoMaster;
 import com.contag.app.model.DaoSession;
 import com.contag.app.util.PrefUtils;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Result;
@@ -32,7 +33,7 @@ public class ContagApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+        Fabric.with(this, new Twitter(authConfig), new Crashlytics());
         PrefUtils.init(this);
         FacebookSdk.sdkInitialize(this);
 

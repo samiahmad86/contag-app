@@ -21,10 +21,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/bg_btn_call_usr"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:text="call" />
+            android:background="@drawable/btn_call"
+            android:gravity="center" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_msg"
@@ -32,18 +30,17 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/btn_msg"
-            android:gravity="center"
-             />
+            android:gravity="center" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/root_pager"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/root_call_options"
         android:layout_below="@+id/rl_indicator"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="5dp" />
 
 </RelativeLayout>

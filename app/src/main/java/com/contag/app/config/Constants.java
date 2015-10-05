@@ -7,6 +7,7 @@ package com.contag.app.config;
 public class Constants {
 
     public class Keys {
+        public static final String KEY_DATA = "fucking_data";
         public static final String KEY_PREVIOUS_ACTIVITY = "previous_activity";
         public static final String KEY_APP_PREFS = "app_prefs";
         public static final String KEY_AUTH_TOKEN = "auth_token";
@@ -80,6 +81,8 @@ public class Constants {
     public class Values {
         // Request code for google plus sign in
         public static final int RC_GPLUS_SIGN_IN = 0;
+        public static final int RC_LINKEDIN = 1;
+        public static final int RC_INSTAGRAM = 2;
         public static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     }
 

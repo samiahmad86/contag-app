@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.Settings;
 import android.renderscript.Allocation;
@@ -26,6 +28,16 @@ public class DeviceUtils {
             mDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         }
         return mDeviceId;
+    }
+
+    public static boolean isInternetConnected(Context context) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        for(NetworkInfo info : mConnectivityManager.getAllNetworkInfo()) {
+            if(info.isConnected()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getDeviceWidth(Context context) {

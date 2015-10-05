@@ -8,15 +8,6 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.util.PrefUtils;
 
-/**
- * Created by tanay on 30/7/15.
- * TODO:
- * 1) Create animation
- * 2) Check if user is logged in,
- * a) if not then start {@link LoginActivity} using {@link Router#startLoginActivity(Context, String, int)}
- * b) else open {@link HomeActivity} using {@link Router#startHomeActivity(Context, String)}
- * 3) Close the activity after corresponding activity is launched.
- */
 
 public class SplashActivity extends BaseActivity {
 

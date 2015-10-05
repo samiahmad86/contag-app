@@ -33,6 +33,7 @@ import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialProfileResponse;
 import com.contag.app.request.ContactRequest;
 import com.contag.app.util.PrefUtils;
+import com.contag.app.util.RegexUtils;
 import com.google.gson.Gson;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -119,8 +120,10 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                 if (phoneNumber.indexOf("0") == 0) {
                     phoneNumber = phoneNumber.substring(1);
                 }
-                contacts.add(new RawContacts(name, phoneNumber));
-                contactIds.add(id);
+                if (RegexUtils.isPhoneNumber(phoneNumber)) {
+                    contacts.add(new RawContacts(name, phoneNumber));
+                    contactIds.add(id);
+                }
             }
         }
         cursor.close();
@@ -201,9 +204,9 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                         }
                     }
 
-                    if(ccResponse.socialProfile != null && ccResponse.socialProfile.size() > 0) {
+                    if (ccResponse.socialProfile != null && ccResponse.socialProfile.size() > 0) {
                         SocialProfileDao spDao = session.getSocialProfileDao();
-                        for(SocialProfileResponse spr : ccResponse.socialProfile) {
+                        for (SocialProfileResponse spr : ccResponse.socialProfile) {
                             SocialProfile socialProfile = new SocialProfile();
                             socialProfile.setPlatform_id(spr.platformId);
                             socialProfile.setSocial_platform(spr.socialPlatform);

@@ -108,7 +108,7 @@ public class ContactAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Contact contact = (Contact) v.getTag();
-                    String text = "Yo cunt " + contact.getContactName() + " I am on Cuntag bitches.";
+                    String text = "Hi " + contact.getContactName() + ", I am on Contag. Download contag at http://www.contag.com";
                     ShareUtils.shareText(mContext, text);
                 }
             });

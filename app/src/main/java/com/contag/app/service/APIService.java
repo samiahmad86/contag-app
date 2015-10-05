@@ -14,12 +14,6 @@ import java.io.File;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
-/**
- * Created by tanay on 5/8/15.
- * TODO:
- * 1) Add base url to be returned in {@link APIService#getServerUrl()}
- * 2) Add retrofit interface in {@link APIService#onCreate()}
- */
 public class APIService extends RetrofitGsonSpiceService {
 
     @Override

@@ -8,8 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.model.ContagContag;
@@ -19,14 +21,17 @@ import com.contag.app.model.Interest;
 import com.contag.app.model.InterestDao;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
+import com.contag.app.util.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.fabric.sdk.android.services.concurrency.AsyncTask;
+
 /**
  * Created by Bedprakash on 9/19/2015.
  */
-public class UserProfileFragment extends BaseFragment {
+public class UserProfileFragment extends BaseFragment implements View.OnClickListener{
 
     public interface ViewMode {
         int PERSONAL_DETAILS = 0;
@@ -37,7 +42,7 @@ public class UserProfileFragment extends BaseFragment {
 
     private long userID;
     private HashMap<Integer, View> hmIndicator;
-
+    private Button btnCall, btnMessage;
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -69,6 +74,12 @@ public class UserProfileFragment extends BaseFragment {
 
         hmIndicator.get(0).setBackgroundResource(R.drawable.bg_indicator_white);
 
+        btnCall = (Button) view.findViewById(R.id.btn_call);
+        btnCall.setOnClickListener(this);
+        btnMessage = (Button) view.findViewById(R.id.btn_msg);
+        btnMessage.setOnClickListener(this);
+
+        new LoadNumber().execute();
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -93,6 +104,27 @@ public class UserProfileFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.btn_call: {
+                String number = (String) v.getTag();
+                if(number != null) {
+                    DeviceUtils.dialNumber(getActivity(), number);
+                }
+                break;
+            }
+            case R.id.btn_msg: {
+                String number = (String) v.getTag();
+                if(number != null) {
+                    DeviceUtils.sendSms(getActivity(), number, null);
+                }
+                break;
+            }
+        }
     }
 
     private class PersonalDetailsTabsAdapter extends FragmentPagerAdapter {
@@ -135,5 +167,18 @@ public class UserProfileFragment extends BaseFragment {
         hmIndicator.get(pos).setBackgroundResource(R.drawable.bg_indicator_white);
     }
 
+    private class LoadNumber extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            ContagContag user = ((BaseActivity) UserProfileFragment.this.getActivity()).getUser(userID);
+            return user.getMobileNumber();
+        }
+
+        @Override
+        protected void onPostExecute(String number) {
+            btnCall.setTag(number);
+            btnMessage.setTag(number);
+        }
+    }
 
 }

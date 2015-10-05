@@ -276,45 +276,46 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             HashMap<Integer, ProfileModel> hm = new HashMap<>();
             switch (profileType) {
                 case Constants.Types.PROFILE_PERSONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(), Constants.Types.FIELD_STRING));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
+                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
+                            Constants.Types.FIELD_STRING));
+                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
+                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
+                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
+                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
+                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
+                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
+                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
+                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
+                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
+                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
+                    hm.put(10, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
                             Constants.Types.FIELD_LIST));
                     break;
                 }
                 case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
+                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
+                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
+                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
+                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
+                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
+                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
+                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
+                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
                     break;
                 }

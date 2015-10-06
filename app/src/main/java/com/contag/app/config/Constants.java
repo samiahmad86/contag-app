@@ -84,6 +84,9 @@ public class Constants {
         public static final int RC_LINKEDIN = 1;
         public static final int RC_INSTAGRAM = 2;
         public static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+        public static final String FILTER_DATE_OF_BIRTH = "DOB";
+        public static final String FILTER_NAME = "Name";
+        public static final String FILTER_BLOOD_GROUP = "Blood Group";
     }
 
     public class Types {
@@ -122,6 +125,7 @@ public class Constants {
         public static final String[] USER_GENDER = {"female", "male", "other"};
         public static final String[] USER_BLOOD_GROUPS = {"O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
         public static final String[] USER_MARITAL_STATUS = {"Married", "Single"};
+        public static final String[] SEARCH_FILTER = {Values.FILTER_NAME, Values.FILTER_BLOOD_GROUP, Values.FILTER_DATE_OF_BIRTH};
     }
 
     public class Regex {

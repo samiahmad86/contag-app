@@ -59,7 +59,7 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
-        Router.startInstagramLoginActivity(this, Constants.Values.RC_INSTAGRAM);
+
         Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {

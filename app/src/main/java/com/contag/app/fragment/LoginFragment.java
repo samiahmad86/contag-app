@@ -91,8 +91,10 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         btnLogin = (Button) view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
         btnLogin.setOnEditorActionListener(this);
+        EditText etPhoneNum = (EditText) view.findViewById(R.id.et_phone_num);
+        etPhoneNum.setOnEditorActionListener(this);
         if (mFragmentType == Constants.Types.FRAG_OTP) {
-            ((EditText) view.findViewById(R.id.et_phone_num)).setHint
+            etPhoneNum.setHint
                     (resources().getString(R.string.enter_otp));
             View btnResendOtp = view.findViewById(R.id.btn_resend_otp);
             btnResendOtp.setVisibility(View.VISIBLE);
@@ -102,7 +104,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         } else {
             TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
             String mPhoneNumber = tMgr.getLine1Number();
-            ((EditText) view.findViewById(R.id.et_phone_num)).setText(mPhoneNumber);
+            etPhoneNum.setText(mPhoneNumber);
         }
         return view;
     }

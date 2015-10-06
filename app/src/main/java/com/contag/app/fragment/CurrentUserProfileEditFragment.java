@@ -282,7 +282,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             switch (profileType) {
                 case Constants.Types.PROFILE_PERSONAL: {
                     hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
-                            Constants.Types.FIELD_STRING));
+                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_PERSON_NAME));
                     hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
                     hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),

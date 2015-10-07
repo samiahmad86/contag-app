@@ -11,48 +11,42 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
-import com.contag.app.model.ContagContag;
 import com.contag.app.model.ProfileModel;
+import com.contag.app.model.SocialPlatform;
+import com.contag.app.model.SocialProfile;
 import com.contag.app.util.DeviceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 /**
  * Created by tanay on 28/9/15.
  */
-public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
+public class CurrentUserSocialProfileEditFragment extends BaseFragment implements View.OnClickListener {
 
     private HashMap<Integer, ProfileModel> hmProfileModel;
-    private int profileType;
     private boolean isListDrawn = false;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
-    public static final String TAG = CurrentUserProfileEditFragment.class.getName();
+    public static final String TAG = CurrentUserSocialProfileEditFragment.class.getName();
 
-    public static CurrentUserProfileEditFragment newInstance(int type) {
-        CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
+    public static CurrentUserSocialProfileEditFragment newInstance() {
+        CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, type);
         epdf.setArguments(args);
         return epdf;
     }
@@ -62,22 +56,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         hmProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
-        Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
-        profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
 
-        switch (profileType) {
-            case Constants.Types.PROFILE_PERSONAL: {
-                tvProfileType.setText("Personal Details");
-                break;
-            }
-            case Constants.Types.PROFILE_PROFESSIONAL: {
-                tvProfileType.setText("Professional Details");
-                break;
-            }
-        }
-
+        tvProfileType.setText("Professional Details");
         new LoadUser().execute();
         return view;
     }
@@ -87,15 +69,12 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).
                 registerReceiver(brUsr, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
-        LocalBroadcastManager.getInstance(getActivity()).
-                registerReceiver(brDatePicked, new IntentFilter(getResources().getString(R.string.intent_filter_date_set)));
     }
 
     @Override
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUsr);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brDatePicked);
     }
 
     @Override
@@ -114,22 +93,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
                 vh.tvFieldValue.setVisibility(View.GONE);
                 int fieldType = hmProfileModel.get(tag).fieldType;
-                if (fieldType == Constants.Types.FIELD_LIST) {
-                    vh.spFieldValue.setVisibility(View.VISIBLE);
-                    vh.btnUpdate.setVisibility(View.VISIBLE);
-                } else if (fieldType == Constants.Types.FIELD_STRING) {
+                if (fieldType == Constants.Types.FIELD_STRING) {
                     vh.etFieldValue.setVisibility(View.VISIBLE);
                     vh.btnUpdate.setVisibility(View.VISIBLE);
-                } else if (fieldType == Constants.Types.FIELD_DATE) {
-                    String date = vh.tvFieldValue.getText().toString();
-                    if (date == null || date.length() == 0) {
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                        Calendar calendar = Calendar.getInstance();
-                        date = dateFormat.format(calendar.getTime()).toString();
-                    }
-                    vh.tvFieldValue.setVisibility(View.VISIBLE);
-                    DateFragment df = DateFragment.newInstance(date, tag, profileType);
-                    df.show(getChildFragmentManager(), "Date");
                 }
                 v.setVisibility(View.GONE);
                 break;
@@ -141,18 +107,12 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 JSONObject oUsr = new JSONObject();
                 try {
                     int fieldType = hmProfileModel.get(tag).fieldType;
-                    if (fieldType == Constants.Types.FIELD_LIST) {
-                        oUsr.put(hmProfileModel.get(tag).key,
-                                vh.spFieldValue.getSelectedItem().toString());
-                        log(TAG, vh.spFieldValue.getSelectedItem().toString());
-                    } else if (fieldType == Constants.Types.FIELD_STRING) {
+                    if (fieldType == Constants.Types.FIELD_STRING) {
                         oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
-                    } else if (fieldType == Constants.Types.FIELD_DATE) {
-                        oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                     }
                     arrUsr.put(oUsr);
                     Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
-                            arrUsr.toString(), profileType);
+                            arrUsr.toString(), Constants.Types.PROFILE_SOCIAL);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -177,7 +137,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.pbUpdate = (ProgressBar) view.findViewById(R.id.pb_update);
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
-            vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnUpdate = (Button) view.findViewById(R.id.btn_update);
             vh.btnUpdate.setOnClickListener(this);
@@ -206,23 +165,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue.setVisibility(View.VISIBLE);
             vh.pbUpdate.setVisibility(View.GONE);
             vh.etFieldValue.setVisibility(View.GONE);
-            vh.spFieldValue.setVisibility(View.GONE);
             vh.btnAdd.setVisibility(View.GONE);
             vh.btnUpdate.setVisibility(View.GONE);
             if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {
                 vh.etFieldValue.setInputType(hmProfileModel.get(i).inputType);
-            } else if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_LIST) {
-                String[] arr = null;
-                if (hmProfileModel.get(i).key.equalsIgnoreCase(Constants.Keys.KEY_USER_GENDER)) {
-                    arr = Constants.Arrays.USER_GENDER;
-                } else if (hmProfileModel.get(i).key.equalsIgnoreCase(Constants.Keys.KEY_USER_MARITAL_STATUS)) {
-                    arr = Constants.Arrays.USER_MARITAL_STATUS;
-                } else if (hmProfileModel.get(i).key.equalsIgnoreCase(Constants.Keys.KEY_USER_BLOOD_GROUP)) {
-                    arr = Constants.Arrays.USER_BLOOD_GROUPS;
-                }
-                ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this.getActivity(),
-                        android.R.layout.simple_spinner_item, arr);
-                vh.spFieldValue.setAdapter(spAdapter);
             }
             vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
             if (hmProfileModel.get(i).value != null && (String.valueOf(hmProfileModel.get(i).value)).length() != 0) {
@@ -253,80 +199,40 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         @Override
         public void onReceive(Context context, Intent intent) {
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
-            if (type == CurrentUserProfileEditFragment.this.profileType) {
-                new LoadUser().execute(type);
+            if (type == Constants.Types.PROFILE_SOCIAL) {
+                new LoadUser().execute();
             }
         }
     };
 
-    private BroadcastReceiver brDatePicked = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
-                if (type == CurrentUserProfileEditFragment.this.profileType) {
-                    int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, 0);
-                    viewHolderArrayList.get(position).tvFieldValue.setVisibility(View.VISIBLE);
-                    viewHolderArrayList.get(position).tvFieldValue.
-                            setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
-                    viewHolderArrayList.get(position).btnUpdate.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
 
     private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileModel>> {
         @Override
         protected HashMap<Integer, ProfileModel> doInBackground(Integer... params) {
-            ContagContag cc = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).getCurrentUser();
             HashMap<Integer, ProfileModel> hm = new HashMap<>();
-            switch (profileType) {
-                case Constants.Types.PROFILE_PERSONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_PERSON_NAME));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
-                            Constants.Types.FIELD_LIST));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
-                            Constants.Types.FIELD_DATE));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
-                            Constants.Types.FIELD_DATE));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
-                            Constants.Types.FIELD_LIST));
-                    hm.put(10, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
-                            Constants.Types.FIELD_LIST));
-                    break;
-                }
-                case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    break;
-                }
-
+            ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
+                    getSocialPlatforms();
+            HashMap<String, String> hmNameToUrl = new HashMap<>();
+            for (SocialPlatform sp : socialPlatforms) {
+                hmNameToUrl.put(sp.getPlatformName(), sp.getPlatformBaseUrl());
             }
+            ArrayList<SocialProfile> socialProfiles = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
+                    getCurrentUserSocialProfiles();
+            int counter = 0;
+            for (SocialProfile sp : socialProfiles) {
+                if (hmNameToUrl.containsKey(sp.getSocial_platform())) {
+                    hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
+                            hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id(),
+                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                    hmNameToUrl.remove(sp.getSocial_platform());
+                }
+            }
+            for (SocialPlatform sp : socialPlatforms) {
+                if (hmNameToUrl.containsKey(sp.getPlatformName())) {
+                    hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/", Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                }
+            }
+
             return hm;
         }
 
@@ -354,6 +260,5 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public Button btnAdd;
         public Button btnUpdate;
         public ProgressBar pbUpdate;
-        public Spinner spFieldValue;
     }
 }

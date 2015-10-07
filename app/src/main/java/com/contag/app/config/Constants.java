@@ -68,6 +68,13 @@ public class Constants {
         public static final String KEY_INTEREST_SUGGESTION_LIST = "fucking_cock_sucking_list";
         public static final String KEY_PROFILE_REQUEST_FOR_USER = "for_user";
         public static final String KEY_PROFILE_REQUEST_TYPE = "request_type";
+        public static final String KEY_SOCIAL_PLATFORM_ID = "social_platform_id";
+        public static final String KEY_PLATFORM_ID = "platform_id";
+        public static final String KEY_PLATFORM_SECRET = "platform_secret";
+        public static final String KEY_PLATFORM_TOKEN = "platform_token";
+        public static final String KEY_PLATFORM_PERMISSION = "platform_permissions";
+        public static final String KEY_PLATFORM_EMAIL_ID = "platform_email";
+        public static final String KEY_BUNDLE = "fucking_bundle";
     }
 
     public class Headers {
@@ -102,6 +109,7 @@ public class Constants {
         public static final int SERVICE_GET_ALL_PLATFORMS = 1;
         public static final int SERVICE_GET_INTEREST_SUGGESTIONS = 2;
         public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
+        public static final int SERVICE_ADD_SOCIAL_PROFILE = 4;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;

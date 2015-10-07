@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.HomeActivity;
@@ -164,5 +165,11 @@ public class Router {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.linkedin.com/profile/view?id=" + linkedInID));
         }
         context.startActivity(intent);
+    }
+
+    public static void updateSocialProfile(Context context, Bundle args) {
+        Intent iSocial = new Intent(context, CustomService.class);
+        iSocial.putExtra(Constants.Keys.KEY_BUNDLE, args);
+        context.startActivity(iSocial);
     }
 }

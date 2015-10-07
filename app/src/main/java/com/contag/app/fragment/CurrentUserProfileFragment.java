@@ -92,7 +92,7 @@ public class CurrentUserProfileFragment extends BaseFragment {
                     break;
                 }
                 case UserProfileFragment.ViewMode.SOCIAL_DETAILS: {
-                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_SOCIAL);
+                    fragment = CurrentUserSocialProfileEditFragment.newInstance();
                     break;
                 }
                 case UserProfileFragment.ViewMode.PROFRESSIONAL_DETAILS: {

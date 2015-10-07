@@ -170,7 +170,7 @@ public class Router {
     public static void updateSocialProfile(Context context, Bundle args) {
         Intent iSocial = new Intent(context, CustomService.class);
         iSocial.putExtra(Constants.Keys.KEY_BUNDLE, args);
-        context.startActivity(iSocial);
+        context.startService(iSocial);
     }
 
 }

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.model.SocialPlatform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -208,7 +210,44 @@ public class InstagramActivity extends BaseActivity {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             log(TAG, jsonObject.toString());
+            new SendData().execute(jsonObject);
+        }
 
+    }
+
+    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(JSONObject... params) {
+            if(params.length > 0) {
+                JSONObject json = params[0];
+                ArrayList<SocialPlatform> socialPlatforms = (ArrayList<SocialPlatform>) InstagramActivity.this.getSocialPlatforms();
+                long id = 0;
+                for(SocialPlatform sp: socialPlatforms) {
+                    if(sp.getPlatformName().toLowerCase().contains("instagram")) {
+                        id = sp.getId();
+                        break;
+                    }
+                }
+                try {
+                    Bundle args = new Bundle();
+                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                    JSONObject usr =json.getJSONObject("user");
+                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, json.getString("access_token"));
+                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
+                    args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
+                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    return args;
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.Keys.KEY_BUNDLE, bundle);
+            setResult(Activity.RESULT_OK,intent);
             finish();
         }
 

@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -174,11 +175,16 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == Constants.Values.RC_INSTAGRAM && resultCode == Activity.RESULT_OK) {
+            Router.updateSocialProfile(CurrentUserSocialProfileEditFragment.this.getActivity(), data.getBundleExtra(Constants.Keys.KEY_BUNDLE));
+        }
     }
 
 
     private void addViews(int size) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+
         int initialCount = llViewContainer.getChildCount();
         for (int i = 0; i < size; i++) {
             View view = inflater.inflate(R.layout.item_profile_social_edit, llViewContainer, false);

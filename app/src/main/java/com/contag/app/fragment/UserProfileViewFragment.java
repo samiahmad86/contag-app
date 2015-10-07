@@ -18,6 +18,7 @@ import com.contag.app.model.ContagContag;
 import com.contag.app.model.ProfileModel;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialProfile;
+import com.contag.app.util.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,9 +80,11 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             View view = inflater.inflate(R.layout.item_profile_view, llViewContainer, false);
             llViewContainer.addView(view, i);
             ViewHolder vh = new ViewHolder();
+            vh.btnSocialGo = (Button) view.findViewById(R.id.btn_social_go);
             vh.btnRequestField = (Button) view.findViewById(R.id.btn_request);
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
+            vh.tvFieldValue.setOnClickListener(this);
             viewHolderArrayList.add(vh);
         }
     }
@@ -93,11 +96,18 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             ProfileModel pm = hmProfileModel.get(i);
             vh.tvFieldLabel.setText(convertKeyToLabel(pm.key));
             vh.btnRequestField.setTag(pm.key);
+            vh.tvFieldValue.setOnClickListener(this);
             String value = (String) pm.value;
             if (profileType == Constants.Types.PROFILE_SOCIAL) {
                 if (value.lastIndexOf("/") != (value.length() - 1)) {
                     vh.tvFieldValue.setText((String) pm.value);
-                    vh.tvFieldValue.setOnClickListener(this);
+                    String keyLowerCase = pm.key.toLowerCase();
+                    if (keyLowerCase.contains("facebook") || keyLowerCase.contains("google") || keyLowerCase.contains("twitter")
+                            || keyLowerCase.contains("instagram") || keyLowerCase.contains("linkedin")) {
+                        vh.btnSocialGo.setTag(i);
+                        vh.btnSocialGo.setVisibility(View.VISIBLE);
+                        vh.btnSocialGo.setOnClickListener(this);
+                    }
                 } else {
                     vh.btnRequestField.setVisibility(View.VISIBLE);
                     vh.btnRequestField.setOnClickListener(this);
@@ -140,8 +150,28 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 break;
             }
             case R.id.tv_field_value: {
-                String link = (String) ((TextView) v).getText();
-                Router.openSocialProfile(getActivity(), link);
+                String text = (String) ((TextView) v).getText();
+                DeviceUtils.copyToClipboard(getActivity(), text);
+                showToast("copied to clipboard");
+                break;
+            }
+            case R.id.btn_social_go: {
+                int pos = (Integer) v.getTag();
+                String name = convertKeyToLabel(hmProfileModel.get(pos).key);
+                if (name.equalsIgnoreCase("facebook")) {
+                    Router.openFacebookProfile(getActivity(), viewHolderArrayList.get(pos).tvFieldValue.getText().toString());
+                } else if (name.equalsIgnoreCase("twitter")) {
+                    String twitterProfile = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
+                    Router.openTwitterProfile(getActivity(), twitterProfile.substring(twitterProfile.lastIndexOf("/") + 1));
+                } else if (name.contains("google")) {
+                    Router.openGooglePlusProfile(getActivity(), viewHolderArrayList.get(pos).tvFieldValue.getText().toString());
+                } else if(name.contains("instagram")) {
+                    String instagramUsername = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
+                    Router.openInstagramProfile(getActivity(), instagramUsername.substring(instagramUsername.lastIndexOf("/") + 1));
+                } else if(name.contains("linkedin")) {
+                    String linkedInUsername = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
+                    Router.openLinkedInProfile(getActivity(), linkedInUsername.substring(linkedInUsername.lastIndexOf("/") + 1));
+                }
                 break;
             }
         }
@@ -227,6 +257,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         protected TextView tvFieldValue;
         protected TextView tvFieldLabel;
         protected Button btnRequestField;
+        protected Button btnSocialGo;
 
         public ViewHolder() {
 

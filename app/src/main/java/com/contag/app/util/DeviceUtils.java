@@ -1,5 +1,7 @@
 package com.contag.app.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +16,8 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.Display;
 import android.view.WindowManager;
+
+import com.contag.app.activity.BaseActivity;
 
 /**
  * Created by tanay on 5/8/15.
@@ -65,5 +69,12 @@ public class DeviceUtils {
         Uri num = Uri.parse("tel:" + number);
         Intent callIntent = new Intent(Intent.ACTION_DIAL, num);
         context.startActivity(callIntent);
+    }
+
+    public static void copyToClipboard(Context context, String text) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText("copied to clipboard", text);
+        cm.setPrimaryClip(data);
+
     }
 }

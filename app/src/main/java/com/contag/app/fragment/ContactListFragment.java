@@ -39,9 +39,6 @@ import com.contag.app.util.PrefUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tanay on 20/9/15.
- */
 public class ContactListFragment extends BaseFragment implements TextWatcher, TextView.OnEditorActionListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = ContactListFragment.class.getName();
@@ -50,7 +47,6 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     private ContactAdapter contactAdapter;
     private SearchContacts mSearchContacts;
     private String searchFilter;
-    private EditText etSearchBox;
 
     public static ContactListFragment newInstance() {
         ContactListFragment clf = new ContactListFragment();
@@ -81,9 +77,10 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                 android.R.layout.simple_spinner_item, Constants.Arrays.SEARCH_FILTER);
         spFilters.setAdapter(spAdapter);
         spFilters.setOnItemSelectedListener(this);
-        etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
+        EditText etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
         etSearchBox.setOnEditorActionListener(this);
         etSearchBox.addTextChangedListener(this);
+        pbContacts.setVisibility(View.VISIBLE);
         searchFilter = Constants.Arrays.SEARCH_FILTER[0];
         new LoadContacts().execute();
         return view;
@@ -231,7 +228,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
                 ArrayList<ContactListItem> items = new ArrayList<>();
 
-                String query = "%" + params[0] + "%";
+                String query = params[0];
                 String filter = params[1];
                 switch (filter) {
                     case Constants.Values.FILTER_NAME: {
@@ -264,6 +261,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                         break;
                     }
                     case Constants.Values.FILTER_BLOOD_GROUP: {
+                        query = query + "%";
                         ContagContagDao mContagContagDao = session.getContagContagDao();
                         List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                                 where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())

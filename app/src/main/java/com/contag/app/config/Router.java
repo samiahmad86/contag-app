@@ -1,7 +1,10 @@
 package com.contag.app.config;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
 import com.contag.app.activity.BaseActivity;
@@ -16,6 +19,8 @@ import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
 import com.contag.app.service.UserService;
 import com.google.android.gms.appindexing.Action;
+
+import java.util.List;
 
 /**
  * Created by tanay on 30/7/15.
@@ -106,5 +111,58 @@ public class Router {
     public static void startInstagramLoginActivity(Context context, int requestCode) {
         Intent iInsta = new Intent(context, InstagramActivity.class);
         ((BaseActivity)context).startActivityForResult(iInsta, requestCode);
+    }
+
+    public static void openFacebookProfile(Context context, String facebookUrl) {
+        try {
+            int versionCode = context.getPackageManager().getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) {
+                Uri uri = Uri.parse("fb://facewebmodal/f?href=" + facebookUrl);
+                context.startActivity(new Intent(Intent.ACTION_VIEW, uri));;
+            } else {
+                // open the Facebook app using the old method (fb://profile/id or fb://page/id)
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
+                        ("fb://page/" + facebookUrl.substring(facebookUrl.lastIndexOf("/") + 1))));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // Facebook is not installed. Open the browser
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl)));
+        }
+    }
+
+    public static void openTwitterProfile(Context context, String twitterUserName) {
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + twitterUserName)));
+        }catch (Exception e) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/" + twitterUserName)));
+        }
+    }
+
+    public static void openGooglePlusProfile(Context context, String gPlusId) {
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(gPlusId)));
+    }
+
+    public static void openInstagramProfile(Context context, String userName) {
+        Uri uri = Uri.parse("http://instagram.com/_u/" + userName);
+        Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+        likeIng.setPackage("com.instagram.android");
+
+        try {
+            context.startActivity(likeIng);
+        } catch (ActivityNotFoundException e) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://instagram.com/" + userName)));
+        }
+    }
+
+    public static void openLinkedInProfile(Context context, String linkedInID) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("linkedin://profile/" + linkedInID));
+        final PackageManager packageManager = context.getPackageManager();
+        final List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (list.isEmpty()) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.linkedin.com/profile/view?id=" + linkedInID));
+        }
+        context.startActivity(intent);
     }
 }

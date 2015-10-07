@@ -108,61 +108,62 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
+            case R.id.btn_add: {
+            }
             case R.id.btn_edit: {
-                if(!DeviceUtils.isInternetConnected(getActivity())) {
+                if (!DeviceUtils.isInternetConnected(getActivity())) {
                     showToast("Sorry there is no internet.");
                     return;
                 }
                 int tag = (int) v.getTag();
                 ViewHolder vh = viewHolderArrayList.get(tag);
-                if (vh.btnEdit.getText().toString().equalsIgnoreCase("Edit") ||
-                        vh.btnEdit.getText().toString().equalsIgnoreCase("Add")) {
-                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
-                    vh.tvFieldValue.setVisibility(View.GONE);
-                    vh.etFieldValue.setEnabled(true);
+                vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                vh.tvFieldValue.setVisibility(View.GONE);
+                int fieldType = hmProfileModel.get(tag).fieldType;
+                if (fieldType == Constants.Types.FIELD_LIST) {
+                    vh.spFieldValue.setVisibility(View.VISIBLE);
+                    vh.btnUpdate.setVisibility(View.VISIBLE);
+                } else if (fieldType == Constants.Types.FIELD_STRING) {
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                    vh.btnUpdate.setVisibility(View.VISIBLE);
+                } else if (fieldType == Constants.Types.FIELD_DATE) {
+                    String date = vh.tvFieldValue.getText().toString();
+                    if (date == null || date.length() == 0) {
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                        Calendar calendar = Calendar.getInstance();
+                        date = dateFormat.format(calendar.getTime()).toString();
+                    }
+                    vh.tvFieldValue.setVisibility(View.VISIBLE);
+                    DateFragment df = DateFragment.newInstance(date, tag, profileType);
+                    df.show(getChildFragmentManager(), "Date");
+                }
+                v.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.btn_update: {
+                int tag = (int) v.getTag();
+                ViewHolder vh = viewHolderArrayList.get(tag);
+                JSONArray arrUsr = new JSONArray();
+                JSONObject oUsr = new JSONObject();
+                try {
                     int fieldType = hmProfileModel.get(tag).fieldType;
                     if (fieldType == Constants.Types.FIELD_LIST) {
-                        vh.spFieldValue.setVisibility(View.VISIBLE);
-                        vh.btnEdit.setText("Update");
+                        oUsr.put(hmProfileModel.get(tag).key,
+                                vh.spFieldValue.getSelectedItem().toString());
+                        log(TAG, vh.spFieldValue.getSelectedItem().toString());
                     } else if (fieldType == Constants.Types.FIELD_STRING) {
-                        vh.etFieldValue.setVisibility(View.VISIBLE);
-                        vh.btnEdit.setText("Update");
+                        oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
                     } else if (fieldType == Constants.Types.FIELD_DATE) {
-                        String date = vh.tvFieldValue.getText().toString();
-                        if (date == null || date.length() == 0) {
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                            Calendar calendar = Calendar.getInstance();
-                            date = dateFormat.format(calendar.getTime()).toString();
-                        }
-                        vh.tvFieldValue.setVisibility(View.VISIBLE);
-                        DateFragment df = DateFragment.newInstance(date, tag, profileType);
-                        df.show(getChildFragmentManager(), "Date");
+                        oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                     }
-                } else {
-                    JSONArray arrUsr = new JSONArray();
-                    JSONObject oUsr = new JSONObject();
-                    try {
-                        int fieldType = hmProfileModel.get(tag).fieldType;
-                        if (fieldType == Constants.Types.FIELD_LIST) {
-                            oUsr.put(hmProfileModel.get(tag).key,
-                                    vh.spFieldValue.getSelectedItem().toString());
-                            log(TAG, vh.spFieldValue.getSelectedItem().toString());
-                        } else if (fieldType == Constants.Types.FIELD_STRING) {
-                            oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
-                        } else if (fieldType == Constants.Types.FIELD_DATE) {
-                            oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
-                        }
-                        arrUsr.put(oUsr);
-                        Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
-                                arrUsr.toString(), profileType);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    vh.btnEdit.setVisibility(View.GONE);
-                    vh.pbUpdate.setVisibility(View.VISIBLE);
-                    vh.btnEdit.setEnabled(false);
-                    vh.etFieldValue.setEnabled(false);
+                    arrUsr.put(oUsr);
+                    Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
+                            arrUsr.toString(), profileType);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                vh.btnEdit.setVisibility(View.GONE);
+                vh.pbUpdate.setVisibility(View.VISIBLE);
                 break;
             }
         }
@@ -183,7 +184,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
-            view.setTag(vh);
+            vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
+            vh.btnUpdate = (Button) view.findViewById(R.id.btn_update);
+            vh.btnUpdate.setOnClickListener(this);
+            vh.btnAdd.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view, initialCount + i);
         }
@@ -201,14 +205,16 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private void setViewContent() {
         for (int i = 0; i < hmProfileModel.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
-            vh.btnEdit.setEnabled(true);
             vh.btnEdit.setTag(i);
-            vh.btnEdit.setText("Edit");
+            vh.btnUpdate.setTag(i);
+            vh.btnAdd.setTag(i);
             vh.btnEdit.setVisibility(View.VISIBLE);
             vh.tvFieldValue.setVisibility(View.VISIBLE);
             vh.pbUpdate.setVisibility(View.GONE);
             vh.etFieldValue.setVisibility(View.GONE);
             vh.spFieldValue.setVisibility(View.GONE);
+            vh.btnAdd.setVisibility(View.GONE);
+            vh.btnUpdate.setVisibility(View.GONE);
             if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {
                 vh.etFieldValue.setInputType(hmProfileModel.get(i).inputType);
             } else if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_LIST) {
@@ -229,7 +235,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 vh.tvFieldValue.setText(String.valueOf(hmProfileModel.get(i).value));
             } else {
                 vh.tvFieldValue.setVisibility(View.GONE);
-                vh.btnEdit.setText("Add");
+                vh.btnEdit.setVisibility(View.GONE);
+                vh.btnAdd.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -268,7 +275,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     viewHolderArrayList.get(position).tvFieldValue.setVisibility(View.VISIBLE);
                     viewHolderArrayList.get(position).tvFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
-                    viewHolderArrayList.get(position).btnEdit.setText("Update");
+                    viewHolderArrayList.get(position).btnUpdate.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -375,6 +382,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public TextView tvFieldValue;
         public EditText etFieldValue;
         public Button btnEdit;
+        public Button btnAdd;
+        public Button btnUpdate;
         public ProgressBar pbUpdate;
         public Spinner spFieldValue;
     }

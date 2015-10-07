@@ -38,6 +38,11 @@
     <string name="request">Request</string>
     <string name="filter">Apply filter</string>
     <string name="update">Update</string>
+    <string name="sync_gplus">Sync with Google</string>
+    <string name="sync_twitter">Sync with twitter</string>
+    <string name="sync_instagram">Sync with Instagram</string>
+    <string name="sync_linkedin">Sync with LinkedIn</string>
+    <string name="sync_facebook">Sync with Facebook</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>

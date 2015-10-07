@@ -55,7 +55,17 @@ public class UserActivity extends BaseActivity {
             transaction.commit();
         } else {
             CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
-            transaction.add(R.id.root_user_fragment, cupf).commit();
+            transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
+                findFragmentByTag(CurrentUserProfileFragment.TAG);
+        if(lf != null) {
+            lf.onActivityResult(requestCode, resultCode, data);
         }
     }
 

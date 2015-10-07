@@ -208,6 +208,7 @@ public class InstagramActivity extends BaseActivity {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             log(TAG, jsonObject.toString());
+
             finish();
         }
 

@@ -1,5 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp">
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_field_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_field_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_field_label"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_edit_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_field_label"
+        android:layout_marginTop="20dp">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/et_field_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_g_plus_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_g_plus_btn"
+            android:drawableLeft="@drawable/tw__ic_logo_default"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:text="@string/sync_gplus"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_twitter_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_twitter_btn"
+            android:drawableLeft="@drawable/tw__ic_logo_default"
+            android:visibility="gone"
+            android:padding="5dp"
+            android:text="@string/sync_twitter"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_linkedin_login"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_linkedin_btn"
+            android:drawableLeft="@drawable/tw__ic_logo_default"
+            android:padding="5dp"
+            android:text="@string/sync_linkedin"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_instagram_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_insta_btn"
+            android:drawableLeft="@drawable/tw__ic_logo_default"
+            android:padding="5dp"
+            android:text="@string/sync_instagram"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_facebook_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_insta_btn"
+            android:drawableLeft="@drawable/tw__ic_logo_default"
+            android:padding="5dp"
+            android:text="@string/sync_facebook"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_edit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_field_label"
+        android:background="@drawable/btn_edit_pencil" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_field_label"
+        android:background="@drawable/btn_add"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/rl_edit_container"
+        android:background="@drawable/bg_btn_profile_update"
+        android:text="@string/update"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+
+    <ProgressBar
+        android:id="@+id/pb_update"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@id/btn_update"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/btn_update"
+        android:visibility="gone" />
 </RelativeLayout>

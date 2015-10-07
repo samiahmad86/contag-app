@@ -59,7 +59,6 @@ public class HomeActivity extends BaseActivity {
         });
         stl.setViewPager(vpHome);
 
-        Router.startLinkendInLoginActivity(this, Constants.Values.RC_LINKEDIN);
         Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {

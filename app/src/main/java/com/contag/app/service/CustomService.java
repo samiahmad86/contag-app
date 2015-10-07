@@ -184,5 +184,14 @@ public class CustomService extends Service {
             }
             return false;
         }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
+            intent.putExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, Constants.Types.PROFILE_SOCIAL);
+            LocalBroadcastManager.getInstance(CustomService.this).sendBroadcast(intent);
+            CustomService.this.stopSelf();
+
+        }
     }
 }

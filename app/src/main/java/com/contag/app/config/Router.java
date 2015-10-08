@@ -169,6 +169,7 @@ public class Router {
 
     public static void updateSocialProfile(Context context, Bundle args) {
         Intent iSocial = new Intent(context, CustomService.class);
+        iSocial.putExtra(Constants.Keys.KEY_SERVICE_TYPE, Constants.Types.SERVICE_ADD_SOCIAL_PROFILE);
         iSocial.putExtra(Constants.Keys.KEY_BUNDLE, args);
         context.startService(iSocial);
     }

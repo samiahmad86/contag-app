@@ -31,6 +31,7 @@ import com.contag.app.request.ProfileRequest;
 import com.contag.app.request.SocialPlatformRequest;
 import com.contag.app.request.SocialProfileRequest;
 import com.contag.app.util.PrefUtils;
+import com.google.gson.Gson;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -138,6 +139,8 @@ public class CustomService extends Service {
                         args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
                         args.getInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1));
+                Gson gson =  new Gson();
+                Log.d(TAG, gson.toJson(srm).toString());
                 SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srm);
                 mSpiceManager.execute(socialProfileRequest, new RequestListener<Response>() {
                     @Override
@@ -175,6 +178,10 @@ public class CustomService extends Service {
                         list().get(0);
                 socialProfile.setContagContag(cc);
                 SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
+                ArrayList<SocialPlatform> fuck = (ArrayList<SocialPlatform>) socialPlatformDao.loadAll();
+                for(SocialPlatform uncle : fuck) {
+                    Log.d(TAG, uncle.getPlatformName());
+                }
                 String socialPlatformName = socialPlatformDao.queryBuilder().
                         where(SocialPlatformDao.Properties.Id.eq(srm.socialPlatformId)).list().get(0).getPlatformName();
                 socialProfile.setSocial_platform(socialPlatformName);
@@ -187,7 +194,8 @@ public class CustomService extends Service {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
+            Log.d(TAG, "socialProfileUpdated");
+            Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_social));
             intent.putExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, Constants.Types.PROFILE_SOCIAL);
             LocalBroadcastManager.getInstance(CustomService.this).sendBroadcast(intent);
             CustomService.this.stopSelf();

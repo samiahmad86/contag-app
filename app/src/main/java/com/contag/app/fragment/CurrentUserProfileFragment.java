@@ -81,6 +81,7 @@ public class CurrentUserProfileFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        log(TAG, "fuck bro");
 
         List<Fragment> fragments = getChildFragmentManager().getFragments();
         if (fragments != null) {

@@ -32,6 +32,9 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class UserActivity extends BaseActivity {
+
+    private static final String TAG = UserActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +68,7 @@ public class UserActivity extends BaseActivity {
         CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
                 findFragmentByTag(CurrentUserProfileFragment.TAG);
         if(lf != null) {
+            log(TAG, "fuck bro");
             lf.onActivityResult(requestCode, resultCode, data);
         }
     }

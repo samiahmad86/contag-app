@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -34,7 +35,16 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +68,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public static final String TAG = CurrentUserSocialProfileEditFragment.class.getName();
     private CallbackManager mCallbackManager;
     private boolean isGoogleSync = false, isFbSync = false;
+    private TwitterAuthClient mTwitterAuthClient;
+    private GoogleApiClient mGoogleApiClient;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
         CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
@@ -71,6 +83,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         super.onCreate(savedInstanceState);
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, this);
+        mTwitterAuthClient = new TwitterAuthClient();
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .addScope(new Scope(Scopes.PLUS_LOGIN))
+                .build();
     }
 
     @Override
@@ -95,6 +115,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     @Override
     public void onStop() {
         super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUsr);
     }
 
@@ -162,18 +185,30 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             case R.id.btn_facebook_login: {
                 log(TAG, "facebook login");
                 String text = ((Button) v).getText().toString();
-                if(!getActivity().getResources().getString(R.string.fb_unsync_msg).equalsIgnoreCase(text)) {
+                if (!getActivity().getResources().getString(R.string.fb_unsync_msg).equalsIgnoreCase(text)) {
+                    isFbSync = true;
                     LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
                 }
                 break;
             }
 
             case R.id.btn_g_plus_login: {
+                mGoogleApiClient.connect();
                 break;
             }
 
             case R.id.btn_twitter_login: {
+                mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
+                    @Override
+                    public void success(Result<TwitterSession> result) {
+                        new SendTwitterData().execute(result.data);
+                    }
 
+                    @Override
+                    public void failure(TwitterException e) {
+
+                    }
+                });
                 break;
             }
 
@@ -197,10 +232,22 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 Router.updateSocialProfile(CurrentUserSocialProfileEditFragment.this.getActivity(),
                         data.getBundleExtra(Constants.Keys.KEY_BUNDLE));
             }
-        } else {
+        } else if (requestCode == Constants.Values.RC_LINKEDIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                Router.updateSocialProfile(CurrentUserSocialProfileEditFragment.this.getActivity(),
+                        data.getBundleExtra(Constants.Keys.KEY_BUNDLE));
+            }
+        } else if (requestCode == Constants.Values.RC_GPLUS_SIGN_IN) {
+            if (resultCode == Activity.RESULT_OK) {
+                mGoogleApiClient.connect();
+            }
+        } else if (isFbSync) {
             log(TAG, "fuck bro revenge");
             super.onActivityResult(requestCode, resultCode, data);
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+            mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -319,7 +366,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                new SendGooglePlusData().execute();
+        }
     }
 
     @Override
@@ -329,7 +378,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(getActivity(), Constants.Values.RC_GPLUS_SIGN_IN);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+                mGoogleApiClient.connect();
+            }
+        }
     }
 
     @Override
@@ -352,9 +408,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     @Override
     public void onCompleted(JSONObject object, GraphResponse response) {
         log(TAG, object.toString() + " uck");
-        isFbSync = true;
-        new SendData().execute(object);
-
+        new SendFacebookData().execute(object);
     }
 
 
@@ -380,6 +434,10 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                         if (keyLowerCase.contains("google")) {
                             hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
                                     hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id() + "/posts",
+                                    Constants.Types.FIELD_SOCIAL));
+                        } else if (keyLowerCase.contains("linkedin")) {
+                            hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
+                                    hmNameToUrl.get(sp.getSocial_platform()) + sp.getPlatform_id(),
                                     Constants.Types.FIELD_SOCIAL));
                         } else {
                             hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
@@ -425,27 +483,16 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
-    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
+    private class SendFacebookData extends AsyncTask<JSONObject, Void, Bundle> {
         @Override
         protected Bundle doInBackground(JSONObject... params) {
-            if(params.length > 0) {
+            if (params.length > 0) {
                 JSONObject object = params[0];
                 ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
                 long id = 0;
-                for(SocialPlatform sp: socialPlatforms) {
-                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
+                for (SocialPlatform sp : socialPlatforms) {
+                    if (sp.getPlatformName().toLowerCase().contains("facebook")) {
                         id = sp.getId();
-                        if(isFbSync) {
-                            isFbSync = false;
-                            break;
-                        }
-                    }
-                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
-                        id = sp.getId();
-                        if(isGoogleSync) {
-                            isGoogleSync = false;
-                            break;
-                        }
                     }
                 }
                 try {
@@ -455,6 +502,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
+                    isFbSync = false;
                     return args;
                 } catch (JSONException ex) {
                     ex.printStackTrace();
@@ -462,11 +510,75 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Bundle bundle) {
             Router.updateSocialProfile(getActivity(), bundle);
         }
 
+    }
+
+    private class SendTwitterData extends AsyncTask<TwitterSession, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(TwitterSession... params) {
+            if (params.length > 0) {
+                TwitterSession session = params[0];
+                ArrayList<SocialPlatform> socialPlatforms = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                        .getSocialPlatforms();
+                long id = 0;
+                for (SocialPlatform sp : socialPlatforms) {
+                    if (sp.getPlatformName().toLowerCase().contains("twitter")) {
+                        id = sp.getId();
+                        break;
+                    }
+                }
+                Bundle args = new Bundle();
+                args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
+                args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
+                args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
+                return args;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Router.updateSocialProfile(getActivity(), bundle);
+        }
+    }
+
+    private class SendGooglePlusData extends AsyncTask<Void, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(Void... params) {
+            ArrayList<SocialPlatform> socialPlatforms = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                    .getSocialPlatforms();
+            long id = 0;
+            for (SocialPlatform sp : socialPlatforms) {
+                if (sp.getPlatformName().toLowerCase().contains("google")) {
+                    id = sp.getId();
+                    break;
+                }
+            }
+            Bundle args = new Bundle();
+            args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+            args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+            if(currentPerson != null) {
+                log(TAG, currentPerson.getDisplayName());
+                args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
+            }
+            String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            if(email != null) {
+                args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, email);
+            }
+            return args;
+        }
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Router.updateSocialProfile(getActivity(), bundle);
+        }
     }
 
 
@@ -478,7 +590,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public Button btnAdd;
         public Button btnUpdate;
         public Button btnFb;
-//        public LoginButton btnFb;
+        //        public LoginButton btnFb;
         public Button btnGplus;
         public Button btnInstagram;
         public Button btnLinkedIn;

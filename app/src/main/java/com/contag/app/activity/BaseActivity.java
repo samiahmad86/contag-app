@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
+    private static ArrayList<SocialPlatform> socialPlatforms = null;
 
     @Override
     protected void onStart() {
@@ -117,9 +118,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public ArrayList<SocialPlatform> getSocialPlatforms() {
-        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
-        SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
-        return (ArrayList<SocialPlatform>) socialPlatformDao.loadAll();
+        if (socialPlatforms == null) {
+            DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+            SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
+            socialPlatforms = (ArrayList<SocialPlatform>) socialPlatformDao.loadAll();
+        }
+        return socialPlatforms;
     }
 
     /**

@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
+import com.contag.app.model.SocialPlatform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -64,6 +67,7 @@ public class LinkedInActivity extends BaseActivity {
 
     private WebView webView;
     private ProgressBar pb;
+    private String accessToken = null, accessSecret = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,7 @@ public class LinkedInActivity extends BaseActivity {
                     Log.i("Authorize", "Auth token received: " + authorizationToken);
 
                     //Generate URL for requesting Access Token
+                    accessSecret = authorizationToken;
                     String accessTokenUrl = getAccessTokenUrl(authorizationToken);
                     //We make the request in a AsyncTask
                     new AccessTokenRequest().execute(accessTokenUrl);
@@ -223,6 +228,7 @@ public class LinkedInActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String accessToken) {
             if (accessToken != null) {
+                LinkedInActivity.this.accessToken = accessToken;
                 new ProfileRequest().execute(getProfileUrl(accessToken));
             }
         }
@@ -280,14 +286,57 @@ public class LinkedInActivity extends BaseActivity {
             if (data != null) {
                 pb.setVisibility(View.GONE);
                 log(TAG, data.toString());
-                Intent intent = new Intent();
-                intent.putExtra(Constants.Keys.KEY_DATA, data.toString());
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                try {
+                    new SendData().execute(data.getJSONObject("siteStandardProfileRequest"));
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
             } else {
                 log(TAG, "something went wrong");
             }
         }
+    }
+
+    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(JSONObject... params) {
+            if(params.length > 0) {
+                JSONObject object = params[0];
+                ArrayList<SocialPlatform> socialPlatforms = (LinkedInActivity.this).getSocialPlatforms();
+                long id = 0;
+                for(SocialPlatform sp: socialPlatforms) {
+                    if(sp.getPlatformName().toLowerCase().contains("linkedin")) {
+                        id = sp.getId();
+                            break;
+                    }
+                }
+                try {
+                    Bundle args = new Bundle();
+                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    String url = object.getString("url");
+                    int idStartIndex = url.indexOf("id=");
+                    int idEndIndex = url.indexOf("&", idStartIndex);
+
+                    args.putString(Constants.Keys.KEY_PLATFORM_ID, url.substring(idStartIndex + 3, idEndIndex));
+                    args.putString(Constants.Keys.KEY_PLATFORM_SECRET, accessSecret);
+                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, accessToken);
+                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
+                    return args;
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.Keys.KEY_BUNDLE, bundle);
+            setResult(Activity.RESULT_OK,intent);
+            finish();
+        }
+
     }
 
 

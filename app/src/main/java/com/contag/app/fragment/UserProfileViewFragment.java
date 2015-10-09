@@ -2,7 +2,6 @@ package com.contag.app.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,8 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             vh.tvFieldValue.setOnClickListener(this);
             String value = (String) pm.value;
             if (profileType == Constants.Types.PROFILE_SOCIAL) {
-                if (value.lastIndexOf("/") != (value.length() - 1)) {
+                int length = value.length();
+                if (value.lastIndexOf("/") != (length - 1) && value.lastIndexOf("id=") != (length - 3)) {
                     vh.tvFieldValue.setText((String) pm.value);
                     String keyLowerCase = pm.key.toLowerCase();
                     if (keyLowerCase.contains("facebook") || keyLowerCase.contains("google") || keyLowerCase.contains("twitter")
@@ -157,20 +157,23 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             }
             case R.id.btn_social_go: {
                 int pos = (Integer) v.getTag();
-                String name = convertKeyToLabel(hmProfileModel.get(pos).key);
-                if (name.equalsIgnoreCase("facebook")) {
-                    Router.openFacebookProfile(getActivity(), viewHolderArrayList.get(pos).tvFieldValue.getText().toString());
-                } else if (name.equalsIgnoreCase("twitter")) {
-                    String twitterProfile = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
+                String name = convertKeyToLabel(hmProfileModel.get(pos).key).toLowerCase();
+                log(TAG, name);
+                if (name.contains("facebook")) {
+                    Router.openFacebookProfile(getActivity(), hmProfileModel.get(pos).value.toString());
+                } else if (name.contains("twitter")) {
+                    String twitterProfile = hmProfileModel.get(pos).value.toString();
                     Router.openTwitterProfile(getActivity(), twitterProfile.substring(twitterProfile.lastIndexOf("/") + 1));
                 } else if (name.contains("google")) {
-                    Router.openGooglePlusProfile(getActivity(), viewHolderArrayList.get(pos).tvFieldValue.getText().toString());
-                } else if(name.contains("instagram")) {
-                    String instagramUsername = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
+                    Router.openGooglePlusProfile(getActivity(), hmProfileModel.get(pos).value.toString());
+                } else if (name.contains("instagram")) {
+                    String instagramUsername = hmProfileModel.get(pos).value.toString();
                     Router.openInstagramProfile(getActivity(), instagramUsername.substring(instagramUsername.lastIndexOf("/") + 1));
-                } else if(name.contains("linkedin")) {
-                    String linkedInUsername = viewHolderArrayList.get(pos).tvFieldValue.getText().toString();
-                    Router.openLinkedInProfile(getActivity(), linkedInUsername.substring(linkedInUsername.lastIndexOf("/") + 1));
+                } else if (name.contains("linkedin")) {
+                    String linkedInUsername = hmProfileModel.get(pos).value.toString();
+                    linkedInUsername = linkedInUsername.substring(linkedInUsername.indexOf("id=") + 3);
+                    log(TAG, linkedInUsername);
+                    Router.openLinkedInProfile(getActivity(), linkedInUsername);
                 }
                 break;
             }
@@ -225,16 +228,21 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                             getSocialProfiles(userId);
                     int counter = 0;
                     for (SocialProfile sp : socialProfiles) {
+
                         if (hmNameToUrl.containsKey(sp.getSocial_platform())) {
-                            hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
-                                    hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id(),
-                                    Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                            if (sp.getSocial_platform().contains("linkedin")) {
+                                hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
+                                        hmNameToUrl.get(sp.getSocial_platform()) + sp.getPlatform_id()));
+                            } else {
+                                hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
+                                        hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id()));
+                            }
                             hmNameToUrl.remove(sp.getSocial_platform());
                         }
                     }
                     for (SocialPlatform sp : socialPlatforms) {
                         if (hmNameToUrl.containsKey(sp.getPlatformName())) {
-                            hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/", Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                            hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/"));
                         }
                     }
                     break;

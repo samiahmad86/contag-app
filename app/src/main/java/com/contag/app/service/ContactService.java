@@ -120,7 +120,9 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                 if (phoneNumber.indexOf("0") == 0) {
                     phoneNumber = phoneNumber.substring(1);
                 }
-                if (RegexUtils.isPhoneNumber(phoneNumber)) {
+                char firstCharacter = phoneNumber.charAt(0);
+                if (RegexUtils.isPhoneNumber(phoneNumber) && (firstCharacter == '9' ||
+                        firstCharacter == '8' || firstCharacter == '7')) {
                     contacts.add(new RawContacts(name, phoneNumber));
                     contactIds.add(id);
                 }

@@ -126,7 +126,6 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                 }
             }
         }
-        cursor.close();
         Gson gson = new Gson();
         Log.d(TAG, "" + contacts.size());
         Log.d(TAG, gson.toJson(contacts).toString());

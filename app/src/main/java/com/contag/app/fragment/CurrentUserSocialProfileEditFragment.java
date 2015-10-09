@@ -566,7 +566,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
             if(currentPerson != null) {
-                log(TAG, currentPerson.getDisplayName());
+                log(TAG, currentPerson.getId());
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);

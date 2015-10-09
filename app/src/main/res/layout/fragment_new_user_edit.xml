@@ -15,7 +15,7 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fb_sync_msg"
+            android:text="@string/fb_unsync_msg"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

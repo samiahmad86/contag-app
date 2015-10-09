@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -16,8 +17,10 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.model.SocialPlatform;
 import com.contag.app.request.UserRequest;
 import com.contag.app.util.PrefUtils;
 import com.facebook.CallbackManager;
@@ -33,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,7 +74,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         btnProceed.setOnClickListener(this);
         btnFb.setFragment(this);
         log(TAG, "uncle fucker");
-        btnFb.setReadPermissions(Arrays.asList("public_profile"));
+        btnFb.setReadPermissions(Arrays.asList("public_profile, email"));
         btnFb.registerCallback(cbm, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -82,6 +86,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
+                                new SendData().execute(object);
                                 view.findViewById(R.id.ll_fb_container).setVisibility(View.INVISIBLE);
                                 JSONObject oUser = response.getJSONObject();
                                 try {
@@ -102,7 +107,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,gender");
+                parameters.putString("fields", "id,name,gender,email");
                 request.setParameters(parameters);
                 request.executeAsync();
             }
@@ -190,4 +195,39 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
             }
         }
     }
+
+    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(JSONObject... params) {
+            if(params.length > 0) {
+                JSONObject object = params[0];
+                ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
+                long id = 0;
+                for(SocialPlatform sp: socialPlatforms) {
+                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
+                        id = sp.getId();
+                        break;
+                    }
+                }
+                try {
+                    Bundle args = new Bundle();
+                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
+                    args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
+                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
+                    return args;
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Router.updateSocialProfile(getActivity(), bundle);
+        }
+
+    }
+
 }

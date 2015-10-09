@@ -147,6 +147,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         searchFilter = Constants.Arrays.SEARCH_FILTER[position];
+        new LoadContacts().execute();
     }
 
     @Override

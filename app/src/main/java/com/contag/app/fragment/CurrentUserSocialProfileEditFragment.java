@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -59,6 +57,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private LinearLayout llViewContainer;
     public static final String TAG = CurrentUserSocialProfileEditFragment.class.getName();
     private CallbackManager mCallbackManager;
+    private boolean isGoogleSync = false, isFbSync = false;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
         CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
@@ -68,14 +67,19 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         hmProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, this);
         tvProfileType.setText("Professional Details");
         new LoadUser().execute();
         return view;
@@ -157,7 +161,10 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
             case R.id.btn_facebook_login: {
                 log(TAG, "facebook login");
-//                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+                String text = ((Button) v).getText().toString();
+                if(!getActivity().getResources().getString(R.string.fb_unsync_msg).equalsIgnoreCase(text)) {
+                    LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+                }
                 break;
             }
 
@@ -214,10 +221,10 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
-            vh.btnFb = (LoginButton) view.findViewById(R.id.btn_facebook_login);
-            vh.btnFb.setFragment(this);
-            vh.btnFb.setReadPermissions(Arrays.asList("public_profile"));
-            vh.btnFb.registerCallback(mCallbackManager, this);
+            vh.btnFb = (Button) view.findViewById(R.id.btn_facebook_login);
+//            vh.btnFb.setFragment(this);
+//            vh.btnFb.setReadPermissions(Arrays.asList("public_profile"));
+//            vh.btnFb.registerCallback(mCallbackManager, this);
             vh.btnGplus = (Button) view.findViewById(R.id.btn_g_plus_login);
             vh.btnInstagram = (Button) view.findViewById(R.id.btn_instagram_login);
             vh.btnLinkedIn = (Button) view.findViewById(R.id.btn_linkedin_login);
@@ -228,7 +235,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnTwitter.setOnClickListener(this);
             vh.btnGplus.setOnClickListener(this);
             vh.btnInstagram.setOnClickListener(this);
-//            vh.btnFb.setOnClickListener(this);
+            vh.btnFb.setOnClickListener(this);
             vh.btnLinkedIn.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view, initialCount + i);
@@ -345,6 +352,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     @Override
     public void onCompleted(JSONObject object, GraphResponse response) {
         log(TAG, object.toString() + " uck");
+        isFbSync = true;
+        new SendData().execute(object);
+
     }
 
 
@@ -415,6 +425,51 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
+    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(JSONObject... params) {
+            if(params.length > 0) {
+                JSONObject object = params[0];
+                ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
+                long id = 0;
+                for(SocialPlatform sp: socialPlatforms) {
+                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
+                        id = sp.getId();
+                        if(isFbSync) {
+                            isFbSync = false;
+                            break;
+                        }
+                    }
+                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
+                        id = sp.getId();
+                        if(isGoogleSync) {
+                            isGoogleSync = false;
+                            break;
+                        }
+                    }
+                }
+                try {
+                    Bundle args = new Bundle();
+                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
+                    args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
+                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
+                    return args;
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Router.updateSocialProfile(getActivity(), bundle);
+        }
+
+    }
+
+
     private class ViewHolder {
         public TextView tvFieldLabel;
         public TextView tvFieldValue;
@@ -422,7 +477,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public Button btnEdit;
         public Button btnAdd;
         public Button btnUpdate;
-        public LoginButton btnFb;
+        public Button btnFb;
+//        public LoginButton btnFb;
         public Button btnGplus;
         public Button btnInstagram;
         public Button btnLinkedIn;

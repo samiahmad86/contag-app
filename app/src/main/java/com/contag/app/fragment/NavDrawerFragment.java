@@ -1,6 +1,8 @@
 package com.contag.app.fragment;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.contag.app.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -24,8 +28,7 @@ import java.util.ArrayList;
  */
 public class NavDrawerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
-
-    public static final String KEY_NAV_DRAWER_LIST = "nav_drawer_list";
+    private static String headerImg = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -33,10 +36,9 @@ public class NavDrawerFragment extends Fragment {
      *
      * @return A new instance of fragment NavDrawerFragment.
      */
-    public static NavDrawerFragment newInstance(ArrayList<NavDrawerItem> navDrawerItems) {
+    public static NavDrawerFragment newInstance() {
         NavDrawerFragment fragment = new NavDrawerFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(KEY_NAV_DRAWER_LIST, navDrawerItems);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +58,8 @@ public class NavDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nav_drawer, container, false);
+        View view =  inflater.inflate(R.layout.fragment_nav_drawer, container, false);
+        return view;
     }
 
 
@@ -91,59 +94,21 @@ public class NavDrawerFragment extends Fragment {
         public void onFragmentInteraction(int value);
     }
 
-    ////////////////////////////////// Navigation drawer Adapter //////////////////////////
-    public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerViewHolder>{
-
-
+    Target headerTarget = new Target() {
         @Override
-        public NavDrawerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(NavDrawerViewHolder navDrawerViewHolder, int i) {
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
         }
 
         @Override
-        public int getItemCount() {
-            return 0;
-        }
-    }
+        public void onBitmapFailed(Drawable errorDrawable) {
 
-    ////////////////////////// Nav Drawer View Holder /////////////////////////////
-    public  class NavDrawerViewHolder extends RecyclerView.ViewHolder{
-
-        public NavDrawerViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    ////////////////////////////// Nav Drawer item model /////////////////////////////
-    public static class NavDrawerItem implements Parcelable {
-
-        @Override
-        public int describeContents() {
-            return 0;
         }
 
         @Override
-        public void writeToParcel(Parcel parcel, int i) {
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
         }
-
-        public static final Parcelable.Creator<NavDrawerItem> CREATOR = new Parcelable.Creator<NavDrawerItem>() {
-
-            @Override
-            public NavDrawerItem createFromParcel(Parcel parcel) {
-                return null;
-            }
-
-            @Override
-            public NavDrawerItem[] newArray(int i) {
-                return new NavDrawerItem[0];
-            }
-        };
-    }
+    };
 
 }

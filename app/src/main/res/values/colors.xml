@@ -27,6 +27,7 @@
     <color name="cd14130">#D14130</color>
     <color name="c88c9f9">#88C9F9</color>
     <color name="c326c93">#326C93</color>
+    <color name="c3e69c0">#3e69c0</color>
     <!-- view colors -->
     <color name="tb_color">@color/light_gray</color>
     <color name="hint_color">@color/dark_gray</color>
@@ -53,4 +54,5 @@
     <color name="bg_twitter_btn">@color/c88c9f9</color>
     <color name="bg_insta_btn">@color/c326c93</color>
     <color name="bg_new_user_activity">@color/c494848</color>
+    <color name="bg_block_list">@color/c3e69c0</color>
 </resources>

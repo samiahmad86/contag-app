@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:scrollbars="none"
     tools:context="com.contag.app.fragment.NavDrawerFragment">
 
     <LinearLayout
@@ -19,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_profile_pic" />
+                android:background="@drawable/default_profile_pic" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_usr_name"
@@ -44,7 +45,6 @@
             android:id="@+id/rl_notification_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:background="@color/light_blue"
             android:padding="10dp">
 
@@ -53,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
                 android:text="@string/notification"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
@@ -62,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/tv_notification_txt"
                 android:background="@drawable/bg_indicator_white" />
 
@@ -81,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/block_list"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <include
                 android:id="@+id/ll_blocked_usr_1"
@@ -101,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
                 android:text="@string/see_more"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -109,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/mute_list"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <include
                 android:id="@+id/ll_muted_usr_1"
@@ -129,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
                 android:text="@string/see_more"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -146,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_rate_us"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/white"
                 android:text="@string/rate_cuntag"

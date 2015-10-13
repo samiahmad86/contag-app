@@ -12,7 +12,7 @@
         android:layout_weight="2"
         android:padding="5dp"
         android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_unblock"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_weight="1"
-        android:textSize="15sp"
+        android:textSize="12sp"
+        android:padding="5dp"
         android:background="@drawable/bg_block_button"
         android:text="@string/unblock_user"
         android:textColor="@color/white" />

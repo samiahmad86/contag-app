@@ -1,5 +1,8 @@
 package com.contag.app.activity;
 
+import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -8,6 +11,8 @@ import android.widget.Toast;
 import com.contag.app.BuildConfig;
 import com.contag.app.R;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.model.Contact;
+import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
@@ -25,6 +30,8 @@ import com.octo.android.robospice.SpiceManager;
 
 import java.util.ArrayList;
 
+import de.greenrobot.dao.Property;
+
 /**
  * Created by tanay on 30/7/15.
  */
@@ -32,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
     private static ArrayList<SocialPlatform> socialPlatforms = null;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onStart() {
@@ -47,6 +55,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mDrawerToggle != null) {
+            // Sync the toggle state after onRestoreInstanceState has occurred.
+            mDrawerToggle.syncState();
+        }
+    }
+
     /**
      * Setup {@link Toolbar}
      *
@@ -55,6 +72,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setUpActionBar(int id) {
         final Toolbar tb = (Toolbar) findViewById(id);
         setSupportActionBar(tb);
+    }
+
+    protected void setUpDrawer(int drawerID, int toolbarID) {
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(drawerID);
+        Toolbar tb = (Toolbar) findViewById(toolbarID);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, tb,
+                R.string.hello_world, R.string.hello_world);
+        mDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_hamburger);
     }
 
     /**
@@ -106,7 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ArrayList<Interest> getUserInterests(long id) {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         InterestDao interestDao = session.getInterestDao();
-       return (ArrayList<Interest>) interestDao.queryBuilder().
+        return (ArrayList<Interest>) interestDao.queryBuilder().
                 where(InterestDao.Properties.ContagUserId.eq(id)).list();
     }
 
@@ -125,6 +154,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return socialPlatforms;
     }
+
+    public ArrayList<Contact> getBlockedUsers() {
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        ContactDao cDao = session.getContactDao();
+        return (ArrayList<Contact>) cDao.queryBuilder().
+                where(ContactDao.Properties.IsBlocked.eq(true)).list();
+    }
+
+    public ArrayList<Contact> getMutedUsers() {
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        ContactDao cDao = session.getContactDao();
+        return (ArrayList<Contact>) cDao.queryBuilder().
+                where(ContactDao.Properties.IsMuted.eq(true)).list();
+    }
+
 
     /**
      * @return boolean denoting if user is logged in.

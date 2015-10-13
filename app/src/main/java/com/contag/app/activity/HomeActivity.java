@@ -19,13 +19,14 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.ContactListFragment;
 import com.contag.app.fragment.FeedsFragment;
+import com.contag.app.fragment.NavDrawerFragment;
 import com.contag.app.model.ContagContag;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.view.SlidingTabLayout;
 import com.squareup.picasso.Picasso;
 
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFragmentInteractionListener {
 
     public static final String TAG = HomeActivity.class.getName();
 
@@ -43,6 +44,8 @@ public class HomeActivity extends BaseActivity {
         if (savedInstanceState != null) {
             return;
         }
+
+        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         new LoadUser().execute();
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
@@ -91,6 +94,11 @@ public class HomeActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(int value) {
+
     }
 
     public class HomePagerAdapter extends FragmentPagerAdapter {

@@ -1,34 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeActivity">
-
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/rl_tb_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_user_activity">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/tb_home"
-            layout="@layout/layout_toolbar_home" />
+
+        <RelativeLayout
+            android:id="@+id/rl_tb_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_user_activity">
+
+            <include
+                android:id="@+id/tb_home"
+                layout="@layout/layout_toolbar_home" />
+        </RelativeLayout>
+
+        <com.contag.app.view.SlidingTabLayout
+            android:id="@+id/stl_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_tb_container"
+            android:background="@color/light_blue" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/stl_home"
+            android:background="@color/bg_view_pager_home" />
+
+
     </RelativeLayout>
 
-    <com.contag.app.view.SlidingTabLayout
-        android:id="@+id/stl_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_tb_container"
-        android:background="@color/light_blue" />
+    <fragment
+        android:name="com.contag.app.fragment.NavDrawerFragment"
+        android:layout_gravity="start"
+        android:layout_width="300dp"
+        android:layout_height="match_parent" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/stl_home"
-        android:background="@color/bg_view_pager_home"/>
-
-
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

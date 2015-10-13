@@ -26,20 +26,20 @@
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_user_contag_id"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="@string/abc_action_bar_home_description"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
-        
+
         <com.contag.app.view.CircularImageView
             android:id="@+id/iv_user_photo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/default_profile_pic_small"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/default_profile_pic_small" />
 
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

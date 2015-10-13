@@ -117,6 +117,8 @@ public class Constants {
         public static final int FIELD_LIST = 2;
         public static final int FIELD_DATE = 3;
         public static final int FIELD_SOCIAL = 4;
+        public static final int LIST_BLOCKED_USERS = 1;
+        public static final int LIST_MUTED_USERS = 2;
     }
 
     public class Urls {

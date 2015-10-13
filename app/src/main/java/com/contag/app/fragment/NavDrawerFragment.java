@@ -6,16 +6,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -162,7 +158,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
             Picasso.with(getActivity()).load(ccUser.getAvatarUrl()).
-                    placeholder(R.drawable.default_profile_pic_small).into(ivHeader);
+                    placeholder(R.drawable.default_profile_pic_small).into(headerTarget);
             tvUsrName.setText(ccUser.getName());
             tvUsrCuntId.setText(ccUser.getContag());
         }
@@ -187,17 +183,20 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         @Override
         protected void onPostExecute(ArrayList<Contact> contacts) {
             View view1, view2, view3;
+            String text;
             if (contacts != null) {
                 if (listType == Constants.Types.LIST_BLOCKED_USERS) {
                     view1 = llBlockedUsr1;
                     view2 = llBlockedUsr2;
                     view3 = llBlockedUsr3;
                     btnSeeMoreBlockedUsers.setVisibility(View.GONE);
+                    text = "UNBLOCK";
                 } else {
                     view1 = llMutedUsr1;
                     view2 = llMutedUsr2;
                     view3 = llMutedUsr3;
                     btnSeeMoreMutedUsers.setVisibility(View.GONE);
+                    text = "UNMUTE";
                 }
                 int listSize = contacts.size();
                 if (listSize >= 3) {
@@ -209,30 +208,50 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
                         }
                     }
                     ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    view1.findViewById(R.id.btn_unblock).setTag(contacts.get(0).getId());
-                    view1.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
+                    btn1.setTag(text);
+                    btn1.setTag(contacts.get(0).getId());
+                    btn1.setOnClickListener(NavDrawerFragment.this);
+
                     ((TextView) view2.findViewById(R.id.tv_blocked_name)).setText(contacts.get(1).getContactName());
-                    view2.findViewById(R.id.btn_unblock).setTag(contacts.get(1).getId());
-                    view2.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn2 = (Button) view2.findViewById(R.id.btn_unblock);
+                    btn2.setText(text);
+                    btn2.setTag(contacts.get(1).getId());
+                    btn2.setOnClickListener(NavDrawerFragment.this);
+
                     ((TextView) view3.findViewById(R.id.tv_blocked_name)).setText(contacts.get(2).getContactName());
-                    view3.findViewById(R.id.btn_unblock).setTag(contacts.get(2).getId());
-                    view3.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn3 = (Button) view3.findViewById(R.id.btn_unblock);
+                    btn2.setText(text);
+                    btn3.setTag(contacts.get(2).getId());
+                    btn3.setOnClickListener(NavDrawerFragment.this);
                 } else if (listSize == 2) {
                     ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    view1.findViewById(R.id.btn_unblock).setTag(contacts.get(0).getId());
-                    view1.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
+                    btn1.setTag(text);
+                    btn1.setTag(contacts.get(0).getId());
+                    btn1.setOnClickListener(NavDrawerFragment.this);
+
                     ((TextView) view2.findViewById(R.id.tv_blocked_name)).setText(contacts.get(1).getContactName());
-                    view2.findViewById(R.id.btn_unblock).setTag(contacts.get(1).getId());
-                    view2.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn2 = (Button) view2.findViewById(R.id.btn_unblock);
+                    btn2.setText(text);
+                    btn2.setTag(contacts.get(1).getId());
+                    btn2.setOnClickListener(NavDrawerFragment.this);
                     view3.setVisibility(View.GONE);
                 } else if (listSize == 1) {
                     ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    view1.findViewById(R.id.btn_unblock).setTag(contacts.get(0).getId());
-                    view1.findViewById(R.id.btn_unblock).setOnClickListener(NavDrawerFragment.this);
+                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
+                    btn1.setTag(text);
+                    btn1.setTag(contacts.get(0).getId());
+                    btn1.setOnClickListener(NavDrawerFragment.this);
                     view2.setVisibility(View.GONE);
                     view3.setVisibility(View.GONE);
                 } else {
-                    view1.setVisibility(View.GONE);
+                    if (listType == Constants.Types.LIST_BLOCKED_USERS) {
+                        ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText("You have not blocked any of your contacts");
+                    } else {
+                        ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText("You have not muted any of your contacts");
+                    }
+                    view1.findViewById(R.id.btn_unblock).setVisibility(View.GONE);
                     view2.setVisibility(View.GONE);
                     view3.setVisibility(View.GONE);
                 }

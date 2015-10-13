@@ -12,6 +12,12 @@ public class FeedsResponse {
     @SerializedName("id")
     @Expose
     public long id;
+    @SerializedName("contag_id")
+    @Expose
+    public String contagId;
+    @SerializedName("name")
+    @Expose
+    public String name;
     @SerializedName("created_on")
     @Expose
     public String createdOn;
@@ -33,7 +39,7 @@ public class FeedsResponse {
     @SerializedName("from_user")
     @Expose
     public long fromUser;
-
+    
     public static class FeedList extends ArrayList<FeedsResponse> {
 
     }

@@ -75,6 +75,8 @@ public class Constants {
         public static final String KEY_PLATFORM_PERMISSION = "platform_permissions";
         public static final String KEY_PLATFORM_EMAIL_ID = "platform_email";
         public static final String KEY_BUNDLE = "fucking_bundle";
+        public static final String KEY_FEEDS_START_INDEX = "start_index";
+        public static final String KEY_FEEDS_END_INDEX = "end_index";
     }
 
     public class Headers {

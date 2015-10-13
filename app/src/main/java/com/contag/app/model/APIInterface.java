@@ -98,5 +98,12 @@ public interface APIInterface {
     MessageResponse makeProfileRequest(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                        @Body ProfileRequestModel mProfileRequestModel);
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_FEEDS)
+    FeedsResponse.FeedList getFeeds(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                    @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
+                                    @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
 
 }

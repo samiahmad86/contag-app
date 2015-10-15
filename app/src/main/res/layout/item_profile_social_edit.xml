@@ -43,10 +43,10 @@
             android:background="@color/bg_g_plus_btn"
             android:drawableLeft="@drawable/tw__ic_logo_default"
             android:padding="5dp"
-            android:visibility="gone"
             android:text="@string/sync_gplus"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_twitter_login"
@@ -54,15 +54,14 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_twitter_btn"
             android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:visibility="gone"
             android:padding="5dp"
             android:text="@string/sync_twitter"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_linkedin_login"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bg_linkedin_btn"
@@ -70,7 +69,8 @@
             android:padding="5dp"
             android:text="@string/sync_linkedin"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_instagram_login"
@@ -80,9 +80,9 @@
             android:drawableLeft="@drawable/tw__ic_logo_default"
             android:padding="5dp"
             android:text="@string/sync_instagram"
-            android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="gone" />
 
         <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
             android:id="@+id/btn_facebook_login"
@@ -91,19 +91,19 @@
             android:layout_marginTop="10dp"
             fb:login_text="@string/sync_fb"
             fb:logout_text="@string/fb_unsync_msg" />
-<!--
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_facebook_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_insta_btn"
-            android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:padding="5dp"
-            android:text="@string/sync_facebook"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            android:textSize="13sp" />
--->
+        <!--
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_facebook_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bg_insta_btn"
+                    android:drawableLeft="@drawable/tw__ic_logo_default"
+                    android:padding="5dp"
+                    android:text="@string/sync_facebook"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+        -->
     </RelativeLayout>
 
     <android.support.v7.widget.AppCompatButton
@@ -123,12 +123,19 @@
         android:background="@drawable/btn_add"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/rl_share_container"
+        layout="@layout/layout_share_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_edit_container" />
+
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/rl_edit_container"
+        android:layout_below="@id/rl_share_container"
         android:background="@drawable/bg_btn_profile_update"
         android:text="@string/update"
         android:textColor="@color/white"

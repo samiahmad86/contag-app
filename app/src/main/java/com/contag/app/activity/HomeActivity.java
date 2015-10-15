@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +27,7 @@ import com.contag.app.view.SlidingTabLayout;
 import com.squareup.picasso.Picasso;
 
 
-public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFragmentInteractionListener {
+public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     public static final String TAG = HomeActivity.class.getName();
 
@@ -46,6 +47,8 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());
         vpHome.setAdapter(hpa);
+
+        findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
         SlidingTabLayout stl = (SlidingTabLayout) findViewById(R.id.stl_home);
         stl.setDistributeEvenly(true);
@@ -68,32 +71,21 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit) {
-            Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onFragmentInteraction(int value) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.iv_user_photo: {
+                Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
+                break;
+            }
+        }
     }
 
     public class HomePagerAdapter extends FragmentPagerAdapter {

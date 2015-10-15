@@ -100,12 +100,9 @@ public class CustomService extends Service {
 
                     @Override
                     public void onRequestSuccess(InterestSuggestion.List interestSuggestions) {
-                        ArrayList<String> suggestions = new ArrayList<>();
-                        for(InterestSuggestion is : interestSuggestions) {
-                            suggestions.add(is.name);
-                        }
+                        Gson gson = new Gson();
                         Intent iSuggestion = new Intent(getResources().getString(R.string.intent_filter_interest_suggestion));
-                        iSuggestion.putExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST, suggestions);
+                        iSuggestion.putExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST, gson.toJson(interestSuggestions));
                         LocalBroadcastManager.getInstance(CustomService.this).sendBroadcast(iSuggestion);
                         CustomService.this.stopSelf(serviceID);
                     }
@@ -113,7 +110,8 @@ public class CustomService extends Service {
             } else if(type == Constants.Types.SERVICE_MAKE_PROFILE_REQUEST) {
                 ProfileRequestModel prm = new ProfileRequestModel(
                         intent.getLongExtra(Constants.Keys.KEY_PROFILE_REQUEST_FOR_USER, 0),
-                        intent.getStringExtra(Constants.Keys.KEY_PROFILE_REQUEST_TYPE));
+                        intent.getStringExtra(Constants.Keys.KEY_PROFILE_REQUEST_TYPE),
+                        intent.getStringExtra(Constants.Keys.KEY_FIELD_TYPE));
                 ProfileRequest pr = new ProfileRequest(prm);
                 Log.d(TAG, "" + prm.type + " " + prm.id);
                 mSpiceManager.execute(pr, new RequestListener<MessageResponse>() {

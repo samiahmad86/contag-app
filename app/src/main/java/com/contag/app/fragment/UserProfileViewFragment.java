@@ -130,7 +130,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         switch (id) {
             case R.id.btn_request: {
                 Router.startProfileRequestService(getActivity(), Constants.Types.SERVICE_MAKE_PROFILE_REQUEST,
-                        userId, (String) v.getTag());
+                        userId, (String) v.getTag(), profileType + "");
                 break;
             }
             case R.id.tv_field_value: {

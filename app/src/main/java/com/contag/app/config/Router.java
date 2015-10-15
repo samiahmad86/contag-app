@@ -91,11 +91,12 @@ public class Router {
         context.startService(iCustomService);
     }
 
-    public static void startProfileRequestService(Context mContext, int type, long id, String fieldName) {
+    public static void startProfileRequestService(Context mContext, int type, long id, String fieldName, String fieldType) {
         Intent iCustomService = new Intent(mContext, CustomService.class);
         iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
         iCustomService.putExtra(Constants.Keys.KEY_PROFILE_REQUEST_FOR_USER, id);
         iCustomService.putExtra(Constants.Keys.KEY_PROFILE_REQUEST_TYPE, fieldName);
+        iCustomService.putExtra(Constants.Keys.KEY_FIELD_TYPE, fieldType);
         mContext.startService(iCustomService);
     }
 

@@ -17,8 +17,14 @@ public class ProfileRequestModel {
     @SerializedName(Constants.Keys.KEY_PROFILE_REQUEST_TYPE)
     public String type;
 
-    public ProfileRequestModel(long id, String type) {
+    @Expose
+    @SerializedName(Constants.Keys.KEY_FIELD_TYPE)
+    public String fieldType;
+
+
+    public ProfileRequestModel(long id, String type, String fieldType) {
         this.id = id;
         this.type = type;
+        this.fieldType = fieldType;
     }
 }

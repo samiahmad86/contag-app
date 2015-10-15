@@ -15,6 +15,7 @@ public class Constants {
         public static final String KEY_FRAGMENT_TYPE = "fragment_type";
         public static final String KEY_NEW_USER = "is_new_user";
         public static final String KEY_OTP = "otp";
+        public static final String KEY_FIELD_TYPE = "field_type";
         public static final String KEY_NUMBER = "number";
         public static final String KEY_CONTAG_ID = "contag_id";
         public static final String KEY_CONTAG_USER = "contag_user";
@@ -140,6 +141,7 @@ public class Constants {
         public static final String[] USER_BLOOD_GROUPS = {"O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
         public static final String[] USER_MARITAL_STATUS = {"Married", "Single"};
         public static final String[] SEARCH_FILTER = {Values.FILTER_NAME, Values.FILTER_BLOOD_GROUP, Values.FILTER_DATE_OF_BIRTH};
+        public static final String[] SHARE_WITH = {"Private", "Public"};
     }
 
     public class Regex {

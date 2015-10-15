@@ -211,7 +211,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             contacts.clear();
             contacts.addAll(contactListItems);
             contactAdapter.notifyDataSetChanged();
-            pbContacts.setVisibility(View.GONE);
+            if(contactListItems.size() > 0) {
+                pbContacts.setVisibility(View.GONE);
+            }
         }
     }
 

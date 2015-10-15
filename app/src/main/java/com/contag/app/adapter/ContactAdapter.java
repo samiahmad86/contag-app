@@ -1,6 +1,7 @@
 package com.contag.app.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class ContactAdapter extends BaseAdapter {
 
     private ArrayList<ContactListItem> items;
     private Context mContext;
+    private static final String TAG = ContactAdapter.class.getName();
 
     public ContactAdapter(ArrayList<ContactListItem> contactListItems, Context context) {
         this.mContext = context;
@@ -87,10 +89,15 @@ public class ContactAdapter extends BaseAdapter {
         vhCunt.tvContactName.setText(cuntObject.getName());
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
         if (interests != null && interests.size() > 0) {
-            setInterestElseHide(interests.get(0).getName(), vhCunt.tvInterest1);
-            setInterestElseHide(interests.get(1).getName(), vhCunt.tvInterest2);
-            setInterestElseHide(interests.get(2).getName(), vhCunt.tvInterest3);
-            setInterestElseHide(interests.get(3).getName(), vhCunt.tvInterest4);
+            Log.d(TAG, "fuck");
+            try {
+                setInterestElseHide(interests.get(0), vhCunt.tvInterest1);
+                setInterestElseHide(interests.get(1), vhCunt.tvInterest2);
+                setInterestElseHide(interests.get(2), vhCunt.tvInterest3);
+                setInterestElseHide(interests.get(3), vhCunt.tvInterest4);
+            } catch (IndexOutOfBoundsException ex) {
+                ex.printStackTrace();
+            }
         }
         return convertView;
     }
@@ -123,9 +130,10 @@ public class ContactAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void setInterestElseHide(String interest, TextView tv) {
+    private void setInterestElseHide(Interest interest, TextView tv) {
+
         if (interest != null) {
-            tv.setText(interest);
+            tv.setText(interest.getName());
             tv.setVisibility(View.VISIBLE);
         }
     }

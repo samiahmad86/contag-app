@@ -12,7 +12,7 @@ public class ContagContactResponse {
 
     @Expose
     public long id;
-    @SerializedName("user_interest")
+    @SerializedName("user_interests")
     @Expose
     public ArrayList<InterestResponse> userInterest = new ArrayList<>();
     @Expose

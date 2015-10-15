@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -101,6 +102,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 ViewHolder vh = viewHolderArrayList.get(tag);
                 vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
                 vh.tvFieldValue.setVisibility(View.GONE);
+                vh.rlShare.setVisibility(View.VISIBLE);
                 int fieldType = hmProfileModel.get(tag).fieldType;
                 if (fieldType == Constants.Types.FIELD_LIST) {
                     vh.spFieldValue.setVisibility(View.VISIBLE);
@@ -138,7 +140,12 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     } else if (fieldType == Constants.Types.FIELD_DATE) {
                         oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                     }
-                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
+                    String visibility = vh.spShare.getSelectedItem().toString();
+                    if(visibility.equals(Constants.Arrays.SHARE_WITH[0])) {
+                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "0");
+                    } else {
+                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
+                    }
                     arrUsr.put(oUsr);
                     log(TAG, arrUsr.toString());
                     Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
@@ -168,6 +175,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
+            vh.spShare = (Spinner) view.findViewById(R.id.sp_share);
+            vh.rlShare = (RelativeLayout) view.findViewById(R.id.rl_share_container);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnUpdate = (Button) view.findViewById(R.id.btn_update);
             vh.btnUpdate.setOnClickListener(this);
@@ -194,11 +203,15 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.btnAdd.setTag(i);
             vh.btnEdit.setVisibility(View.VISIBLE);
             vh.tvFieldValue.setVisibility(View.VISIBLE);
-            vh.pbUpdate.setVisibility(View.GONE);
             vh.etFieldValue.setVisibility(View.GONE);
+            vh.pbUpdate.setVisibility(View.GONE);
             vh.spFieldValue.setVisibility(View.GONE);
             vh.btnAdd.setVisibility(View.GONE);
             vh.btnUpdate.setVisibility(View.GONE);
+            vh.rlShare.setVisibility(View.GONE);
+            ArrayAdapter<String> spShareAdapter = new ArrayAdapter<>(this.getActivity(),
+                    android.R.layout.simple_spinner_item, Constants.Arrays.SHARE_WITH);
+            vh.spShare.setAdapter(spShareAdapter);
             if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {
                 vh.etFieldValue.setInputType(hmProfileModel.get(i).inputType);
             } else if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_LIST) {
@@ -348,5 +361,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public Button btnUpdate;
         public ProgressBar pbUpdate;
         public Spinner spFieldValue;
+        public Spinner spShare;
+        public RelativeLayout rlShare;
     }
 }

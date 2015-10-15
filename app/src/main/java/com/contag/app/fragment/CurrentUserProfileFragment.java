@@ -1,6 +1,7 @@
 package com.contag.app.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.view.SlidingTabLayout;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +24,6 @@ import java.util.List;
 public class CurrentUserProfileFragment extends BaseFragment {
 
     public static final String TAG = CurrentUserProfileFragment.class.getName();
-    private HashMap<Integer, View> hmIndicator;
 
     public static CurrentUserProfileFragment newInstance() {
         CurrentUserProfileFragment cupf = new CurrentUserProfileFragment();
@@ -42,14 +43,6 @@ public class CurrentUserProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_current_user_profile, container, false);
-        Bundle args = getArguments();
-
-        hmIndicator = new HashMap<>();
-        hmIndicator.put(0, view.findViewById(R.id.v_indicator_1));
-        hmIndicator.put(1, view.findViewById(R.id.v_indicator_2));
-        hmIndicator.put(2, view.findViewById(R.id.v_indicator_3));
-
-        hmIndicator.get(0).setBackgroundResource(R.drawable.bg_indicator_white);
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -57,22 +50,15 @@ public class CurrentUserProfileFragment extends BaseFragment {
                 PersonalDetailsTabsAdapter(getChildFragmentManager());
         pager.setAdapter(homeTabsAdapter);
 
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        SlidingTabLayout stl = (SlidingTabLayout) view.findViewById(R.id.stl_current_user);
+        stl.setDistributeEvenly(true);
+        stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                setIndicator(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public int getIndicatorColor(int position) {
+                return Color.parseColor("#ffffff");
             }
         });
+        stl.setViewPager(pager);
 
 
         return view;
@@ -112,7 +98,7 @@ public class CurrentUserProfileFragment extends BaseFragment {
                     fragment = CurrentUserSocialProfileEditFragment.newInstance();
                     break;
                 }
-                case UserProfileFragment.ViewMode.PROFRESSIONAL_DETAILS: {
+                case UserProfileFragment.ViewMode.PROFESSIONAL_DETAILS: {
                     fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);
                     break;
                 }
@@ -124,14 +110,24 @@ public class CurrentUserProfileFragment extends BaseFragment {
         public int getCount() {
             return UserProfileFragment.ViewMode.TABS_COUNT;
         }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0: {
+                    return "Personal";
+                }
+                case 1: {
+                    return "Social";
+                }
+                case 2: {
+                    return "Professional";
+                }
+            }
+            return null;
+        }
+
     }
 
-    private void setIndicator(int pos) {
-        for(int i = 0; i < UserProfileFragment.ViewMode.TABS_COUNT; i ++) {
-            log(TAG, "" + i + " " + (hmIndicator.get(i) == null));
-            hmIndicator.get(i).setBackgroundResource(R.drawable.bg_indicator_transparent);
-        }
-        hmIndicator.get(pos).setBackgroundResource(R.drawable.bg_indicator_white);
-    }
 
 }

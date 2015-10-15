@@ -51,6 +51,7 @@ public class ContagDaoGenerator {
         contagContact.addStringProperty("dateOfBirth");
         contagContact.addStringProperty("maritalStatus");
         contagContact.addStringProperty("marriageAnniversary");
+        contagContact.addStringProperty("status_update");
 
         Property cuntagToContact = contagContact.addLongProperty("contactId").getProperty();
         contagContact.addToOne(contact, cuntagToContact);

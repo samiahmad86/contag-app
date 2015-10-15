@@ -1,5 +1,7 @@
 package com.contag.app.fragment;
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,20 +15,11 @@ import android.widget.Button;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
-import com.contag.app.config.ContagApplication;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.ContagContagDao;
-import com.contag.app.model.DaoSession;
-import com.contag.app.model.Interest;
-import com.contag.app.model.InterestDao;
-import com.contag.app.model.SocialProfile;
-import com.contag.app.model.SocialProfileDao;
 import com.contag.app.util.DeviceUtils;
+import com.contag.app.view.SlidingTabLayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -36,12 +29,11 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
     public interface ViewMode {
         int PERSONAL_DETAILS = 0;
         int SOCIAL_DETAILS = 1;
-        int PROFRESSIONAL_DETAILS = 2;
+        int PROFESSIONAL_DETAILS = 2;
         int TABS_COUNT = 3; // its not a view mode
     }
 
     private long userID;
-    private HashMap<Integer, View> hmIndicator;
     private Button btnCall, btnMessage;
 
     public static UserProfileFragment newInstance(long userId) {
@@ -67,12 +59,6 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        hmIndicator = new HashMap<>();
-        hmIndicator.put(0, view.findViewById(R.id.v_indicator_1));
-        hmIndicator.put(1, view.findViewById(R.id.v_indicator_2));
-        hmIndicator.put(2, view.findViewById(R.id.v_indicator_3));
-
-        hmIndicator.get(0).setBackgroundResource(R.drawable.bg_indicator_white);
 
         btnCall = (Button) view.findViewById(R.id.btn_call);
         btnCall.setOnClickListener(this);
@@ -86,22 +72,16 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         PersonalDetailsTabsAdapter homeTabsAdapter = new PersonalDetailsTabsAdapter(mBaseActivity.getSupportFragmentManager());
         pager.setAdapter(homeTabsAdapter);
 
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        SlidingTabLayout stl = (SlidingTabLayout) view.findViewById(R.id.stl_user);
+        stl.setDistributeEvenly(true);
+        stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                setIndicator(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public int getIndicatorColor(int position) {
+                return Color.parseColor("#ffffff");
             }
         });
+        stl.setViewPager(pager);
+
 
         return view;
     }
@@ -146,7 +126,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
                     fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
                     break;
                 }
-                case ViewMode.PROFRESSIONAL_DETAILS: {
+                case ViewMode.PROFESSIONAL_DETAILS: {
                     fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
                     break;
                 }
@@ -158,13 +138,22 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         public int getCount() {
             return ViewMode.TABS_COUNT;
         }
-    }
 
-    private void setIndicator(int pos) {
-        for(int i = 0; i < UserProfileFragment.ViewMode.TABS_COUNT; i ++) {
-            hmIndicator.get(i).setBackgroundResource(R.drawable.bg_indicator_transparent);
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0: {
+                    return "Personal";
+                }
+                case 1: {
+                    return "Social";
+                }
+                case 2: {
+                    return "Professional";
+                }
+            }
+            return null;
         }
-        hmIndicator.get(pos).setBackgroundResource(R.drawable.bg_indicator_white);
     }
 
     private class LoadNumber extends AsyncTask<Void, Void, String> {

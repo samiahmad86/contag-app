@@ -169,6 +169,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 where(ContactDao.Properties.IsMuted.eq(true)).list();
     }
 
+    public SocialPlatform getPlatformFromName(String name) {
+        name = "%" + name + "%";
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
+        return socialPlatformDao.queryBuilder().where(SocialPlatformDao.Properties.PlatformName.like(name)).list().get(0);
+    }
 
     /**
      * @return boolean denoting if user is logged in.

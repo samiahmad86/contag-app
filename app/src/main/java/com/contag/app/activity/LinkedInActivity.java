@@ -302,18 +302,13 @@ public class LinkedInActivity extends BaseActivity {
         protected Bundle doInBackground(JSONObject... params) {
             if(params.length > 0) {
                 JSONObject object = params[0];
-                ArrayList<SocialPlatform> socialPlatforms = (LinkedInActivity.this).getSocialPlatforms();
                 long id = 0;
-                for(SocialPlatform sp: socialPlatforms) {
-                    if(sp.getPlatformName().toLowerCase().contains("linkedin")) {
-                        id = sp.getId();
-                            break;
-                    }
-                }
+                SocialPlatform sp = LinkedInActivity.this.getPlatformFromName("linkedin");
+                id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     String url = object.getString("url");
                     int idStartIndex = url.indexOf("id=");
                     int idEndIndex = url.indexOf("&", idStartIndex);

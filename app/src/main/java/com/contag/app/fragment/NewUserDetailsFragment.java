@@ -170,20 +170,20 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 //                        return;
 //                    }
                     oUsr.put(Constants.Keys.KEY_USER_NAME, name);
-                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     arrUsr.put(oUsr);
                     oUsr = new JSONObject();
                     if(rgGender.getCheckedRadioButtonId() == R.id.rb_male) {
-                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "m");
+                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "male");
                     } else {
-                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "f");
+                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "female");
                     }
-                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     arrUsr.put(oUsr);
                     oUsr = new JSONObject();
                     if(imageUrl != null) {
                         oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
-                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                         arrUsr.put(oUsr);
                     }
                     log(TAG, arrUsr.toString());
@@ -201,18 +201,14 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         protected Bundle doInBackground(JSONObject... params) {
             if(params.length > 0) {
                 JSONObject object = params[0];
-                ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
                 long id = 0;
-                for(SocialPlatform sp: socialPlatforms) {
-                    if(sp.getPlatformName().toLowerCase().contains("facebook")) {
-                        id = sp.getId();
-                        break;
-                    }
-                }
+                SocialPlatform sp = (NewUserDetailsFragment.this.getBaseActivity())
+                        .getPlatformFromName("facebook");
+                id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");

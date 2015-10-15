@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/rl_indicator"
-        layout="@layout/layout_profile_indicator" />
+    <!--<include-->
+        <!--android:id="@+id/rl_indicator"-->
+        <!--layout="@layout/layout_profile_indicator" />-->
 
 
     <LinearLayout
@@ -33,12 +33,20 @@
             android:gravity="center" />
     </LinearLayout>
 
+
+    <com.contag.app.view.SlidingTabLayout
+        android:id="@+id/stl_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_tb_home" />
+
+
     <android.support.v4.view.ViewPager
         android:id="@+id/root_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/root_call_options"
-        android:layout_below="@+id/rl_indicator"
+        android:layout_below="@id/stl_user"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp" />

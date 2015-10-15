@@ -40,11 +40,6 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
 
         setUpActionBar(R.id.tb_home);
 
-        // we do not want to redraw the activity once the orientation changes
-        if (savedInstanceState != null) {
-            return;
-        }
-
         setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         new LoadUser().execute();

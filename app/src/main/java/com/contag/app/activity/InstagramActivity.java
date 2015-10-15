@@ -34,9 +34,11 @@ public class InstagramActivity extends BaseActivity {
 
     private static final String TAG = InstagramActivity.class.getName();
 
-    /****
+    /**
+     * *
      * YOUR LINKEDIN APP INFO HERE
-     *********/
+     * *******
+     */
     private static final String CLIENT_ID = "25a23d669c6e4bbbb9e1d1d16f04e8e6";
     private static final String CLIENT_SECRET = "be587b07228b46afac85c18bdb032801";
     //This is any string we want to use. This will be used for avoid CSRF attacks. You can generate one here: http://strongpasswordgenerator.com/
@@ -47,7 +49,9 @@ public class InstagramActivity extends BaseActivity {
     private static final String OAUTH_ACCESS_TOKEN_PARAM = "oauth2_access_token";
 
     private static final String SCOPES = "basic";
-    /*********************************************/
+    /**
+     * *****************************************
+     */
 
     //These are constants used for build the urls
     private static final String INSTAGRAM_AUTHORIZATION_URL = "https://api.instagram.com/oauth/authorize/";
@@ -218,24 +222,20 @@ public class InstagramActivity extends BaseActivity {
     private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
         @Override
         protected Bundle doInBackground(JSONObject... params) {
-            if(params.length > 0) {
+            if (params.length > 0) {
                 JSONObject json = params[0];
-                ArrayList<SocialPlatform> socialPlatforms = (ArrayList<SocialPlatform>) InstagramActivity.this.getSocialPlatforms();
                 long id = 0;
-                for(SocialPlatform sp: socialPlatforms) {
-                    if(sp.getPlatformName().toLowerCase().contains("instagram")) {
-                        id = sp.getId();
-                        break;
-                    }
-                }
+                SocialPlatform sp = InstagramActivity.this
+                        .getPlatformFromName("instagram");
+                id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    JSONObject usr =json.getJSONObject("user");
+                    JSONObject usr = json.getJSONObject("user");
                     args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, json.getString("access_token"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
-                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     return args;
                 } catch (JSONException ex) {
                     ex.printStackTrace();
@@ -243,11 +243,12 @@ public class InstagramActivity extends BaseActivity {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Bundle bundle) {
             Intent intent = new Intent();
             intent.putExtra(Constants.Keys.KEY_BUNDLE, bundle);
-            setResult(Activity.RESULT_OK,intent);
+            setResult(Activity.RESULT_OK, intent);
             finish();
         }
 

@@ -65,18 +65,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
-        TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
-
-        switch (profileType) {
-            case Constants.Types.PROFILE_PERSONAL: {
-                tvProfileType.setText("Personal Details");
-                break;
-            }
-            case Constants.Types.PROFILE_PROFESSIONAL: {
-                tvProfileType.setText("Professional Details");
-                break;
-            }
-        }
 
         new LoadUser().execute();
         return view;
@@ -150,7 +138,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     } else if (fieldType == Constants.Types.FIELD_DATE) {
                         oUsr.put(hmProfileModel.get(tag).key, vh.tvFieldValue.getText().toString());
                     }
+                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     arrUsr.put(oUsr);
+                    log(TAG, arrUsr.toString());
                     Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
                             arrUsr.toString(), profileType);
                 } catch (JSONException e) {
@@ -284,26 +274,29 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 case Constants.Types.PROFILE_PERSONAL: {
                     hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_PERSON_NAME));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
+                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_STATUS_UPDATE, cc.getStatus_update(),
+                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
+                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
+                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
+                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
+                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
+                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
+                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
+                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
+                    hm.put(10, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(10, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
+                    hm.put(11, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
                             Constants.Types.FIELD_LIST));
+
                     break;
                 }
                 case Constants.Types.PROFILE_PROFESSIONAL: {

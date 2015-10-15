@@ -99,8 +99,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         hmProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
-        TextView tvProfileType = (TextView) view.findViewById(R.id.tv_profile_type);
-        tvProfileType.setText("Professional Details");
         new LoadUser().execute();
         return view;
     }
@@ -164,19 +162,17 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             case R.id.btn_update: {
                 int tag = (int) v.getTag();
                 ViewHolder vh = viewHolderArrayList.get(tag);
-                JSONArray arrUsr = new JSONArray();
-                JSONObject oUsr = new JSONObject();
-                try {
-                    int fieldType = hmProfileModel.get(tag).fieldType;
-                    if (fieldType == Constants.Types.FIELD_STRING) {
-                        oUsr.put(hmProfileModel.get(tag).key, vh.etFieldValue.getText().toString());
-                    }
-                    arrUsr.put(oUsr);
-                    Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT,
-                            arrUsr.toString(), Constants.Types.PROFILE_SOCIAL);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                String value = vh.etFieldValue.getText().toString();
+                int index = value.lastIndexOf("/");
+                if (index == -1 || index == value.length() - 1) {
+                    showToast("Enter a valid id");
+                    return;
                 }
+                Bundle args = new Bundle();
+                args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
+                args.putString(Constants.Keys.KEY_PLATFORM_ID, value.substring(index + 1));
+                args.putString(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, vh.tvFieldLabel.getText().toString());
+                new SendSocialNetworkData().execute(args);
                 vh.btnEdit.setVisibility(View.GONE);
                 vh.pbUpdate.setVisibility(View.VISIBLE);
                 break;
@@ -367,7 +363,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     @Override
     public void onConnected(Bundle bundle) {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                new SendGooglePlusData().execute();
+            new SendGooglePlusData().execute();
         }
     }
 
@@ -488,17 +484,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected Bundle doInBackground(JSONObject... params) {
             if (params.length > 0) {
                 JSONObject object = params[0];
-                ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
                 long id = 0;
-                for (SocialPlatform sp : socialPlatforms) {
-                    if (sp.getPlatformName().toLowerCase().contains("facebook")) {
-                        id = sp.getId();
-                    }
-                }
+                SocialPlatform sp = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                        .getPlatformFromName("facebook");
+                id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
@@ -523,18 +516,13 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected Bundle doInBackground(TwitterSession... params) {
             if (params.length > 0) {
                 TwitterSession session = params[0];
-                ArrayList<SocialPlatform> socialPlatforms = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
-                        .getSocialPlatforms();
                 long id = 0;
-                for (SocialPlatform sp : socialPlatforms) {
-                    if (sp.getPlatformName().toLowerCase().contains("twitter")) {
-                        id = sp.getId();
-                        break;
-                    }
-                }
+                SocialPlatform sp = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                        .getPlatformFromName("twitter");
+                id = sp.getId();
                 Bundle args = new Bundle();
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+                args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
@@ -552,28 +540,46 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private class SendGooglePlusData extends AsyncTask<Void, Void, Bundle> {
         @Override
         protected Bundle doInBackground(Void... params) {
-            ArrayList<SocialPlatform> socialPlatforms = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
-                    .getSocialPlatforms();
             long id = 0;
-            for (SocialPlatform sp : socialPlatforms) {
-                if (sp.getPlatformName().toLowerCase().contains("google")) {
-                    id = sp.getId();
-                    break;
-                }
-            }
+            SocialPlatform sp = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                    .getPlatformFromName("google");
+            id = sp.getId();
             Bundle args = new Bundle();
             args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-            args.putInt(Constants.Keys.KEY_USER_FIELD_VISIBILITY, 1);
+            args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            if(currentPerson != null) {
+            if (currentPerson != null) {
                 log(TAG, currentPerson.getId());
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-            if(email != null) {
+            if (email != null) {
                 args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, email);
             }
             return args;
+        }
+
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            Router.updateSocialProfile(getActivity(), bundle);
+        }
+    }
+
+    private class SendSocialNetworkData extends AsyncTask<Bundle, Void, Bundle> {
+        @Override
+        protected Bundle doInBackground(Bundle... params) {
+            if(params.length > 0) {
+                Bundle args = params[0];
+                String platformName = args.getString(Constants.Keys.KEY_SOCIAL_PLATFORM_ID);
+                long id = 0;
+                SocialPlatform sp = (CurrentUserSocialProfileEditFragment.this.getBaseActivity())
+                        .getPlatformFromName(platformName);
+                id = sp.getId();
+                args.remove(Constants.Keys.KEY_SOCIAL_PLATFORM_ID);
+                args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
+                return args;
+            }
+            return null;
         }
         @Override
         protected void onPostExecute(Bundle bundle) {

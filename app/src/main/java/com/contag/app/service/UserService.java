@@ -131,6 +131,7 @@ public class UserService extends Service implements RequestListener<User> {
             cc.setMarriageAnniversary(user.marriageAnniversary);
             cc.setPersonalEmail(user.personalEmail);
             cc.setWorkAddress(user.workAddress);
+            cc.setStatus_update(user.statusUpdate);
 
             if (user.userInterest != null && user.userInterest.size() > 0) {
                 InterestDao interestDao = session.getInterestDao();

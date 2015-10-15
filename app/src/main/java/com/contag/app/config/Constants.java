@@ -78,6 +78,7 @@ public class Constants {
         public static final String KEY_BUNDLE = "fucking_bundle";
         public static final String KEY_FEEDS_START_INDEX = "start_index";
         public static final String KEY_FEEDS_END_INDEX = "end_index";
+        public static final String KEY_INTEREST_IDS = "interest_ids";
     }
 
     public class Headers {

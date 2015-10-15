@@ -90,6 +90,14 @@ public interface APIInterface {
     InterestSuggestion.List getInterestSuggestions(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                                    @Query(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG) String slug);
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @POST(Constants.Urls.URL_USER_INTEREST)
+    Response addUserInterests(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                              @Body InterestPost mInterestPost);
+
+
 
     @Headers({
             "Content-Type: application/json"

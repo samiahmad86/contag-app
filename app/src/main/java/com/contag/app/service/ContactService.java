@@ -193,7 +193,6 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                     cc.setWorkAddress(ccResponse.workAddress);
 
                     ContagContagDao ccDao = session.getContagContagDao();
-                    Log.d(TAG, ccResponse.name);
                     if (ccResponse.userInterest != null && ccResponse.userInterest.size() > 0) {
                         InterestDao interestDao = session.getInterestDao();
                         for (InterestResponse ir : ccResponse.userInterest) {

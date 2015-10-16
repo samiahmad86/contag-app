@@ -5,8 +5,8 @@
     android:orientation="vertical">
 
     <!--<include-->
-        <!--android:id="@+id/rl_indicator"-->
-        <!--layout="@layout/layout_profile_indicator" />-->
+    <!--android:id="@+id/rl_indicator"-->
+    <!--layout="@layout/layout_profile_indicator" />-->
 
 
     <LinearLayout
@@ -34,10 +34,24 @@
     </LinearLayout>
 
 
+    <RelativeLayout
+        android:id="@+id/rl_interest_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:background="@color/bg_tb_home"
+        android:paddingRight="20dp">
+
+        <include
+            android:id="@+id/ll_interest_container"
+            layout="@layout/layout_user_interest" />
+    </RelativeLayout>
+
     <com.contag.app.view.SlidingTabLayout
         android:id="@+id/stl_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rl_interest_container"
         android:background="@color/bg_tb_home" />
 
 

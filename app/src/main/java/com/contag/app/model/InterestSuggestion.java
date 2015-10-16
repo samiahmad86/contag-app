@@ -18,7 +18,6 @@ public class InterestSuggestion {
     @SerializedName("interest")
     public String name;
 
-    public class List extends ArrayList<InterestSuggestion> {
-
+    public static class List extends ArrayList<InterestSuggestion> {
     }
 }

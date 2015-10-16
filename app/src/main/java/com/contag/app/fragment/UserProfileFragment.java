@@ -11,20 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.Interest;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.SlidingTabLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by Bedprakash on 9/19/2015.
  */
-public class UserProfileFragment extends BaseFragment implements View.OnClickListener{
+public class UserProfileFragment extends BaseFragment implements View.OnClickListener {
 
     public interface ViewMode {
         int PERSONAL_DETAILS = 0;
@@ -35,6 +38,9 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
 
     private long userID;
     private Button btnCall, btnMessage;
+    private static final int[] INTEREST_TV_IDS = {R.id.tv_user_interest_1, R.id.tv_user_interest_2,
+            R.id.tv_user_interest_3, R.id.tv_user_interest_4};
+    private TextView[] tvInterests = new TextView[4];
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -65,7 +71,12 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         btnMessage = (Button) view.findViewById(R.id.btn_msg);
         btnMessage.setOnClickListener(this);
 
+        for (int i = 0; i < 4; i ++) {
+            tvInterests[i] = (TextView) view.findViewById(INTEREST_TV_IDS[i]);
+        }
+
         new LoadNumber().execute();
+        new LoadInterests().execute();
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -92,14 +103,14 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         switch (id) {
             case R.id.btn_call: {
                 String number = (String) v.getTag();
-                if(number != null) {
+                if (number != null) {
                     DeviceUtils.dialNumber(getActivity(), number);
                 }
                 break;
             }
             case R.id.btn_msg: {
                 String number = (String) v.getTag();
-                if(number != null) {
+                if (number != null) {
                     DeviceUtils.sendSms(getActivity(), number, null);
                 }
                 break;
@@ -167,6 +178,26 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         protected void onPostExecute(String number) {
             btnCall.setTag(number);
             btnMessage.setTag(number);
+        }
+    }
+
+    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
+        @Override
+        protected ArrayList<Interest> doInBackground(Void... params) {
+            return ((BaseActivity) UserProfileFragment.this.getActivity()).getUserInterests(userID);
+        }
+        @Override
+        protected void onPostExecute(ArrayList<Interest> userInterests) {
+            int size = userInterests.size();
+            for(int i = 0; i < size; i ++) {
+                tvInterests[i].setVisibility(View.VISIBLE);
+                if(i % 2 == 0) {
+                    tvInterests[i+1].setVisibility(View.INVISIBLE);
+                }
+                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
+                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
+                tvInterests[i].setText(userInterests.get(i).getName());
+            }
         }
     }
 

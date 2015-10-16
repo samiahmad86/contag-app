@@ -6,7 +6,7 @@ import com.contag.app.model.Response;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-git/**
+/**
  * Created by varunj on 15/10/15.
  */
 public class InterestRequest extends RetrofitSpiceRequest<Response, APIInterface> {

@@ -13,27 +13,27 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_1"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_interest_1"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_2"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_interest_2"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
@@ -48,26 +48,26 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_3"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_interest_3"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_4"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_interest_4"
-            style="@style/UserInterestTextBoxStyle"
+            style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:visibility="gone" />
 

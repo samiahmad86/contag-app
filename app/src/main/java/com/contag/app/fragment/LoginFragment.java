@@ -101,10 +101,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             btnResendOtp.setOnClickListener(this);
             view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
             btnLogin.setText("SUBMIT");
-        } else {
-            TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumber = tMgr.getLine1Number();
-            etPhoneNum.setText(mPhoneNumber);
         }
         return view;
     }

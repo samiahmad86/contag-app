@@ -79,6 +79,7 @@ public class Constants {
         public static final String KEY_FEEDS_START_INDEX = "start_index";
         public static final String KEY_FEEDS_END_INDEX = "end_index";
         public static final String KEY_INTEREST_IDS = "interest_ids";
+
     }
 
     public class Headers {
@@ -114,6 +115,7 @@ public class Constants {
         public static final int SERVICE_GET_INTEREST_SUGGESTIONS = 2;
         public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
         public static final int SERVICE_ADD_SOCIAL_PROFILE = 4;
+        public static final int SERVICE_POST_INTERESTS = 5;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;

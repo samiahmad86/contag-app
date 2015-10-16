@@ -5,16 +5,28 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_user_interest_upper"
+        android:id="@+id/ll_current_user_interests_upper_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/actv_user_interest_1"
+            style="@style/InterestAutoCompleteStyle"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"/>
+
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/actv_user_interest_2"
+            android:layout_marginLeft="10dp"
+            style="@style/InterestAutoCompleteStyle"
+            android:visibility="gone"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_1"
             style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
+            android:drawableRight="@drawable/btn_edit_pencil"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatTextView
@@ -22,21 +34,35 @@
             style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:drawableRight="@drawable/btn_edit_pencil"/>
+
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_user_interest_lower"
+        android:id="@+id/ll_current_user_interests_lower_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/actv_user_interest_3"
+            style="@style/InterestAutoCompleteStyle"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"/>
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/actv_user_interest_4"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            style="@style/InterestAutoCompleteStyle" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_3"
             style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
+            android:drawableRight="@drawable/btn_edit_pencil"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatTextView
@@ -44,9 +70,9 @@
             style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:drawableRight="@drawable/btn_edit_pencil"/>
 
     </LinearLayout>
-
 
 </LinearLayout>

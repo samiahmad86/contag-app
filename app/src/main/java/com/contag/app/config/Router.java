@@ -175,4 +175,20 @@ public class Router {
         context.startService(iSocial);
     }
 
+    public static void getInterestSuggestions(Context context, String slug, int viewPosition, int type) {
+        Intent iSuggestions = new Intent(context, CustomService.class);
+        iSuggestions.putExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG, slug);
+        iSuggestions.putExtra(Constants.Keys.KEY_VIEW_POSITION, viewPosition);
+        iSuggestions.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
+        context.startService(iSuggestions);
+    }
+
+    public static void postInterestSuggestions(Context context, String interestIds, int type, int viewPosition) {
+        Intent iPostSuggestions = new Intent(context, CustomService.class);
+        iPostSuggestions.putExtra(Constants.Keys.KEY_INTEREST_IDS, interestIds);
+        iPostSuggestions.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
+        iPostSuggestions.putExtra(Constants.Keys.KEY_VIEW_POSITION, viewPosition);
+        context.startService(iPostSuggestions);
+    }
+
 }

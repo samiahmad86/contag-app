@@ -166,7 +166,11 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                     cc.setContact(mContact);
                     cc.setCreatedOn(ccResponse.createdOn);
                     cc.setUpdatedOn(ccResponse.updatedOn);
-                    cc.setName(ccResponse.name);
+                    if(ccResponse.name != null) {
+                        cc.setName(ccResponse.name);
+                    } else {
+                        cc.setName(response.contactName);
+                    }
                     cc.setRegisteredWith(ccResponse.registeredWith);
                     cc.setMobileNumber(ccResponse.mobileNumber);
                     cc.setContag(ccResponse.contag);

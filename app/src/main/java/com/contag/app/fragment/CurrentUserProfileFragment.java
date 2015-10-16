@@ -124,6 +124,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
         for (int i = 0; i < 4; i++) {
             tvInterests[i] = (TextView) view.findViewById(INTEREST_TV_IDS[i]);
+            tvInterests[i].setVisibility(View.GONE);
             tvInterests[i].setOnClickListener(this);
             actvInterests[i] = (AutoCompleteTextView) view.findViewById(INTEREST_ET_IDS[i]);
 //            actvInterests[i].setOnTouchListener(this);
@@ -347,22 +348,22 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         @Override
         protected void onPostExecute(ArrayList<Interest> userInterests) {
             int size = userInterests.size();
-            if (size == 0) {
-                tvInterests[0].setVisibility(View.VISIBLE);
-                tvInterests[1].setVisibility(View.VISIBLE);
-                tvInterests[2].setVisibility(View.VISIBLE);
-                tvInterests[3].setVisibility(View.INVISIBLE);
-                return;
-            }
-            for (int i = 0; i < size; i++) {
-                tvInterests[i].setVisibility(View.VISIBLE);
-                if (i % 2 == 0) {
-                    tvInterests[i + 1].setVisibility(View.INVISIBLE);
-                }
-                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
-                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
-                tvInterests[i].setText(userInterests.get(i).getName());
-            }
+//            if (size == 0) {
+//                tvInterests[0].setVisibility(View.VISIBLE);
+//                tvInterests[1].setVisibility(View.VISIBLE);
+//                tvInterests[2].setVisibility(View.VISIBLE);
+//                tvInterests[3].setVisibility(View.INVISIBLE);
+//                return;
+//            }
+//            for (int i = 0; i < size; i++) {
+//                tvInterests[i].setVisibility(View.VISIBLE);
+//                if (i % 2 == 0) {
+//                    tvInterests[i + 1].setVisibility(View.INVISIBLE);
+//                }
+//                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
+//                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
+//                tvInterests[i].setText(userInterests.get(i).getName());
+//            }
         }
     }
 

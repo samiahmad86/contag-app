@@ -114,4 +114,11 @@ public interface APIInterface {
                                     @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
                                     @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_NOTIFICATIONS)
+    NotificationsResponse.NotificationList getNotifications(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                    @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
+                                    @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
 }

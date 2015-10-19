@@ -47,6 +47,7 @@
         android:id="@+id/lv_contact"
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="match_parent"
         android:layout_below="@id/et_contact_search"
         android:layout_margin="10dp"

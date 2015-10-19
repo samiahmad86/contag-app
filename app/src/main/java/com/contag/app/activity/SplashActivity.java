@@ -8,7 +8,9 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.util.PrefUtils;
 
-
+/**
+ *
+ */
 public class SplashActivity extends BaseActivity {
 
     public static final String TAG = SplashActivity.class.getName();

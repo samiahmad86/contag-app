@@ -14,12 +14,12 @@ import com.contag.app.activity.InstagramActivity;
 import com.contag.app.activity.LinkedInActivity;
 import com.contag.app.activity.LoginActivity;
 import com.contag.app.activity.NewUserActivity;
+import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
 import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
 import com.contag.app.service.UserService;
-import com.google.android.gms.appindexing.Action;
 
 import java.util.List;
 
@@ -57,6 +57,12 @@ public class Router {
         mContext.startActivity(iUsrProf);
     }
 
+    public static void startNotificationsActivity(Context mContext, String className) {
+        Intent userNotifications = new Intent(mContext, NotificationsActivity.class) ;
+        userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className) ;
+        mContext.startActivity(userNotifications) ;
+    }
+
     public static void startContactService(Context mContext, boolean sendContacts) {
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_SEND_CONTACTS, sendContacts);
@@ -85,7 +91,7 @@ public class Router {
     }
 
 
-    public static void startCustomService(Context context, int type) {
+    public static void getSocialPlatforms(Context context, int type) {
         Intent iCustomService = new Intent(context, CustomService.class);
         iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);
         context.startService(iCustomService);

@@ -9,8 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,7 +58,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         });
         stl.setViewPager(vpHome);
 
-        Router.startCustomService(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
+        Router.getSocialPlatforms(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
 
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
@@ -82,6 +80,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         int id = v.getId();
         switch (id) {
             case R.id.iv_user_photo: {
+
                 Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
                 break;
             }

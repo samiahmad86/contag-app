@@ -32,8 +32,8 @@
         <activity
             android:name=".activity.HomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
@@ -164,6 +164,10 @@
         <activity
             android:name=".activity.InstagramActivity"
             android:label="@string/title_activity_instagram" >
+        </activity>
+        <activity
+            android:name=".activity.NotificationsActivity"
+            android:label="@string/title_activity_notifications" >
         </activity>
     </application>
 

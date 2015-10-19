@@ -137,6 +137,7 @@ public class Constants {
         public static final String URL_SOCIAL_PROFILE = "/social_profile/";
         public static final String URL_USER_INTEREST = "/interest/";
         public static final String URL_PROFILE_REQUEST = "/profile_request/";
+        public static final String URL_NOTIFICATIONS = "/notification/" ;
     }
 
     public static class Arrays {

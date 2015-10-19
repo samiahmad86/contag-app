@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContagContag;
 import com.contag.app.util.ImageUtils;
@@ -38,7 +40,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     private ImageView ivHeader;
     private View llBlockedUsr1, llBlockedUsr2, llBlockedUsr3;
     private View llMutedUsr1, llMutedUsr2, llMutedUsr3;
-    private TextView tvUsrName, tvUsrCuntId;
+    private TextView tvUsrName, tvUsrCuntId, notificationTxt;
     private Button btnSeeMoreBlockedUsers, btnSeeMoreMutedUsers;
 
     /**
@@ -77,6 +79,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         llMutedUsr1 = view.findViewById(R.id.ll_muted_usr_1);
         llMutedUsr2 = view.findViewById(R.id.ll_muted_usr_2);
         llMutedUsr3 = view.findViewById(R.id.ll_muted_usr_3);
+        notificationTxt = (TextView) view.findViewById(R.id.tv_notification_txt) ;
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
         btnSeeMoreBlockedUsers = (Button) view.findViewById(R.id.btn_see_blocked_usr);
@@ -84,6 +87,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         new LoadUser().execute();
         new BlockedList().execute(Constants.Types.LIST_BLOCKED_USERS);
         new BlockedList().execute(Constants.Types.LIST_MUTED_USERS);
+        notificationTxt.setOnClickListener(this);
         return view;
     }
 
@@ -108,10 +112,17 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         switch (id) {
             case R.id.btn_unblock: {
-
+             break ;
             }
+            case R.id.tv_notification_txt: {
+                //Log.d("NavDrawer", "Notification") ;
+                Router.startNotificationsActivity(getActivity(), "navDrawer");
+                break ;
+            }
+
         }
     }
 

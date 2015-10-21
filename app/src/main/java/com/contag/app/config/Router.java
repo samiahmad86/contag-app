@@ -90,6 +90,15 @@ public class Router {
         context.startService(iUser);
     }
 
+    public static void startGmailApp(Context context){
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setType("plain/text");
+        sendIntent.setData(Uri.parse("team@contagapp.com"));
+        sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
+        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "team@contagapp.com" });
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for contag");
+        context.startActivity(sendIntent);
+    }
 
     public static void getSocialPlatforms(Context context, int type) {
         Intent iCustomService = new Intent(context, CustomService.class);

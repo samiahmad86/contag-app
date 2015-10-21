@@ -5,26 +5,29 @@
     android:background="@color/bg_feeds_items"
     android:padding="10dp">
 
-    <com.contag.app.view.CircularImageView
-        android:id="@+id/iv_feeds_usr_img"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/default_profile_pic" />
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_feeds_usr_img"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/iv_feeds_usr_img"
         android:orientation="vertical">
+
+        <com.contag.app.view.CircularImageView
+            android:id="@+id/iv_feeds_usr_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/default_profile_pic" />
+
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_feeds_usr_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/hello_world"
+            android:layout_toRightOf="@id/iv_feeds_usr_img"
             android:textColor="@color/feeds_usr_name"
             android:textSize="16sp" />
 
@@ -32,7 +35,10 @@
             android:id="@+id/tv_feeds_usr_cunt_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/tv_feeds_usr_name"
+            android:layout_toRightOf="@id/iv_feeds_usr_img"
             android:text="@string/hello_world"
             android:textColor="@color/feeds_usr_name"
             android:textSize="14sp" />
@@ -43,10 +49,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/hello_world"
+            android:layout_below="@id/tv_feeds_usr_cunt_id"
+            android:layout_toRightOf="@id/iv_feeds_usr_img"
             android:textColor="@color/feeds_story"
             android:textSize="14sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

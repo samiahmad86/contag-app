@@ -22,15 +22,11 @@ import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
-import com.contag.app.model.User;
-import com.contag.app.util.PrefUtils;
 import com.contag.app.service.APIService;
-import com.google.gson.Gson;
+import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
 
 import java.util.ArrayList;
-
-import de.greenrobot.dao.Property;
 
 /**
  * Created by tanay on 30/7/15.
@@ -182,6 +178,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean isUserLoggedIn() {
         return PrefUtils.getAuthToken() != null;
     }
+
+
+
 
 
 }

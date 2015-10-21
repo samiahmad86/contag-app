@@ -1,23 +1,14 @@
 package com.contag.app.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +37,9 @@ public class UserActivity extends BaseActivity {
         FragmentTransaction transaction = manager.beginTransaction();
 
         setUpActionBar(R.id.tb_user);
+
+        View toolbar =  findViewById(R.id.tb_user) ;
+        toolbar.setBackgroundResource(R.color.bg_tb_home);
 
         Intent intent = getIntent();
         long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);

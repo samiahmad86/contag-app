@@ -1,9 +1,11 @@
 package com.contag.app.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
@@ -40,7 +41,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     private ImageView ivHeader;
     private View llBlockedUsr1, llBlockedUsr2, llBlockedUsr3;
     private View llMutedUsr1, llMutedUsr2, llMutedUsr3;
-    private TextView tvUsrName, tvUsrCuntId, notificationTxt;
+    private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt;
     private Button btnSeeMoreBlockedUsers, btnSeeMoreMutedUsers;
 
     /**
@@ -73,21 +74,25 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_nav_drawer, container, false);
         ivHeader = (ImageView) view.findViewById(R.id.iv_nav_drawer_header);
-        llBlockedUsr1 = view.findViewById(R.id.ll_blocked_usr_1);
-        llBlockedUsr2 = view.findViewById(R.id.ll_blocked_usr_2);
-        llBlockedUsr3 = view.findViewById(R.id.ll_blocked_usr_3);
-        llMutedUsr1 = view.findViewById(R.id.ll_muted_usr_1);
-        llMutedUsr2 = view.findViewById(R.id.ll_muted_usr_2);
-        llMutedUsr3 = view.findViewById(R.id.ll_muted_usr_3);
+//        llBlockedUsr1 = view.findViewById(R.id.ll_blocked_usr_1);
+//        llBlockedUsr2 = view.findViewById(R.id.ll_blocked_usr_2);
+//        llBlockedUsr3 = view.findViewById(R.id.ll_blocked_usr_3);
+//        llMutedUsr1 = view.findViewById(R.id.ll_muted_usr_1);
+//        llMutedUsr2 = view.findViewById(R.id.ll_muted_usr_2);
+//        llMutedUsr3 = view.findViewById(R.id.ll_muted_usr_3);
         notificationTxt = (TextView) view.findViewById(R.id.tv_notification_txt) ;
+        feedbackTxt = (TextView) view.findViewById(R.id.tv_feedback_txt) ;
+        rateTxt = (TextView) view.findViewById(R.id.tv_rate_txt) ;
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
-        btnSeeMoreBlockedUsers = (Button) view.findViewById(R.id.btn_see_blocked_usr);
-        btnSeeMoreMutedUsers = (Button) view.findViewById(R.id.btn_see_muted_usr);
+//        btnSeeMoreBlockedUsers = (Button) view.findViewById(R.id.btn_see_blocked_usr);
+//        btnSeeMoreMutedUsers = (Button) view.findViewById(R.id.btn_see_muted_usr);
         new LoadUser().execute();
-        new BlockedList().execute(Constants.Types.LIST_BLOCKED_USERS);
-        new BlockedList().execute(Constants.Types.LIST_MUTED_USERS);
+        //new BlockedList().execute(Constants.Types.LIST_BLOCKED_USERS);
+        //new BlockedList().execute(Constants.Types.LIST_MUTED_USERS);
         notificationTxt.setOnClickListener(this);
+        feedbackTxt.setOnClickListener(this);
+        rateTxt.setOnClickListener(this);
         return view;
     }
 
@@ -114,12 +119,18 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         int id = v.getId();
 
         switch (id) {
-            case R.id.btn_unblock: {
-             break ;
-            }
             case R.id.tv_notification_txt: {
                 //Log.d("NavDrawer", "Notification") ;
                 Router.startNotificationsActivity(getActivity(), "navDrawer");
+                break ;
+            }
+            case R.id.tv_feedback_txt: {
+                Router.startGmailApp(getActivity());
+                break ;
+            }
+            case R.id.tv_rate_txt: {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=com.android.contag")));
                 break ;
             }
 

@@ -22,10 +22,10 @@
 
                 <ImageView
                     android:id="@+id/iv_nav_drawer_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:background="@drawable/default_profile_pic"
-                    android:scaleType="fitXY" />
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,106 +72,148 @@
                     android:clickable="true"
                     android:textSize="20sp" />
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/tv_notification_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/tv_notification_txt"
-                    android:background="@drawable/bg_indicator_white" />
+                <!--<android.support.v7.widget.AppCompatTextView-->
+                    <!--android:id="@+id/tv_notification_count"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_toRightOf="@id/tv_notification_txt"-->
+                    <!--android:background="@drawable/bg_indicator_white" />-->
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/rl_extras"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bg_block_list"
-                android:orientation="vertical"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:paddingTop="10dp">
+                android:padding="15dp">
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/block_list"
+                <TextView
+                    android:id="@+id/tv_feedback_txt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/feedback"
+                    android:gravity="left"
                     android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:onClick="onClick"
+                    android:clickable="true"
+                    android:textSize="20sp" />
 
-                <include
-                    android:id="@+id/ll_blocked_usr_1"
-                    layout="@layout/item_block_list" />
-
-                <include
-                    android:id="@+id/ll_blocked_usr_2"
-                    layout="@layout/item_block_list" />
-
-                <include
-                    android:id="@+id/ll_blocked_usr_3"
-                    layout="@layout/item_block_list" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_see_blocked_usr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
-                    android:text="@string/see_more"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mute_list"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <include
-                    android:id="@+id/ll_muted_usr_1"
-                    layout="@layout/item_block_list" />
-
-                <include
-                    android:id="@+id/ll_muted_usr_2"
-                    layout="@layout/item_block_list" />
-
-                <include
-                    android:id="@+id/ll_muted_usr_3"
-                    layout="@layout/item_block_list" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_see_muted_usr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
-                    android:text="@string/see_more"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/tv_rate_txt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/bg_logout"
-                    android:text="@string/logout"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@id/tv_feedback_txt"
+                    android:text="@string/rate_contag"
+                    android:gravity="left"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:onClick="onClick"
+                    android:clickable="true"
+                    android:textSize="20sp" />
+
+                <!--<android.support.v7.widget.AppCompatTextView-->
+                <!--android:id="@+id/tv_notification_count"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_toRightOf="@id/tv_notification_txt"-->
+                <!--android:background="@drawable/bg_indicator_white" />-->
+
+            </RelativeLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@color/bg_block_list"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingLeft="30dp"-->
+                <!--android:paddingRight="30dp"-->
+                <!--android:paddingTop="10dp">-->
+
+                <!--<android.support.v7.widget.AppCompatTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/block_list"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="15sp" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_blocked_usr_1"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_blocked_usr_2"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_blocked_usr_3"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn_see_blocked_usr"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="?android:selectableItemBackground"-->
+                    <!--android:text="@string/see_more"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:visibility="gone" />-->
+
+                <!--<android.support.v7.widget.AppCompatTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/mute_list"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="15sp" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_muted_usr_1"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_muted_usr_2"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<include-->
+                    <!--android:id="@+id/ll_muted_usr_3"-->
+                    <!--layout="@layout/item_block_list" />-->
+
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn_see_muted_usr"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="?android:selectableItemBackground"-->
+                    <!--android:text="@string/see_more"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:visibility="gone" />-->
+
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn_logout"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="@drawable/bg_logout"-->
+                    <!--android:text="@string/logout"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="12sp" />-->
 
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_rate_us"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="?android:selectableItemBackground"
-                    android:text="@string/rate_cuntag"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn_rate_us"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="?android:selectableItemBackground"-->
+                    <!--android:text="@string/rate_cuntag"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="15sp" />-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>

@@ -50,7 +50,8 @@
     <string name="unblock_user">Unblock</string>
     <string name="unmute_user">Unmute</string>
     <string name="notification">Notifications</string>
-    <string name="rate_cuntag">Rate Us</string>
+    <string name="feedback">Feedback</string>
+    <string name="rate_contag">Rate Us</string>
     <string name="block_list">Block List</string>
     <string name="mute_list">Mute List</string>
     <string name="see_more">See more</string>

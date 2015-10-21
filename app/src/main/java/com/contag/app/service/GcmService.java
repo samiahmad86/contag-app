@@ -11,6 +11,7 @@ import com.contag.app.R;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /**
@@ -22,17 +23,14 @@ public class GcmService extends GcmListenerService {
 
         Log.d(TAG, "GCM received") ;
         String notification_type = data.getString("notification_type") ;
+        Log.d(TAG, notification_type) ;
         Intent intent ;
 
         switch(notification_type){
             case "new_user": {
-                // TODO
-                intent = new Intent(this, UserActivity.class) ;
-                intent.putExtra(Constants.Keys.KEY_USER_ID, data.getString("object_id"));
-                break ;
-            }
-            case "profile_request": {
-                intent = new Intent(this, NotificationsActivity.class) ;
+                //Start contact service to fetch records from the server and update the same on local
+                Router.startContactService(this, false);
+                intent = null ;
                 break ;
             }
             case "request_granted": {
@@ -41,32 +39,35 @@ public class GcmService extends GcmListenerService {
                 break ;
             }
             default: {
+                // Takes care of profile request add/share cases
                 intent = new Intent(this, NotificationsActivity.class) ;
                 break ;
             }
         }
 
+        if(intent != null) {
+            PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+            // build notification
+            // the addAction re-use the same intent to keep the example short
+            NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(GcmService.this);
 
-       // build notification
-       // the addAction re-use the same intent to keep the example short
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(GcmService.this);
-
-        Log.d(TAG, "Building notification") ;
-        notifBuilder.setContentTitle(data.getString("heading"))
+            Log.d(TAG, "Building notification");
+            notifBuilder.setContentTitle(data.getString("heading"))
                     .setContentText(data.getString("text"))
                     .setContentIntent(pIntent)
+                    .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.ic_launcher);
 
-        Log.d(TAG, data.getString("text")) ;
+            Log.d(TAG, data.getString("text"));
 
-        Log.d(TAG, "Notification manager got") ;
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Log.d(TAG, "Notification manager got");
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        Log.d(TAG, "notification sent") ;
-        notificationManager.notify(0, notifBuilder.build());
+            Log.d(TAG, "notification sent");
+            notificationManager.notify(0, notifBuilder.build());
+        }
 
     }
 

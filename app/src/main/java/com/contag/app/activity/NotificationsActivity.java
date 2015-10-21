@@ -1,23 +1,34 @@
 package com.contag.app.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.adapter.NotificationsAdapter;
+import com.contag.app.config.Router;
+import com.contag.app.fragment.NavDrawerFragment;
+import com.contag.app.model.ContagContag;
 import com.contag.app.model.NotificationsResponse;
 import com.contag.app.request.NotificationsRequest;
+import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class NotificationsActivity extends BaseActivity  implements AdapterView.OnItemClickListener, RequestListener<NotificationsResponse.NotificationList>{
+public class NotificationsActivity extends BaseActivity  implements AdapterView.OnItemClickListener,
+        NavDrawerFragment.OnFragmentInteractionListener, View.OnClickListener,
+        RequestListener<NotificationsResponse.NotificationList>{
 
     public static final String TAG = NotificationsActivity.class.getName();
     private boolean isLoading = false;
@@ -29,6 +40,13 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
+        setUpActionBar(R.id.tb_home);
+
+        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
+
+        new LoadUser().execute();
+
+        findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
         lvNotifications = (ListView) findViewById(R.id.lv_notifications);
         notifications = new ArrayList<>();
@@ -93,5 +111,39 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
       // Router.startUserActivity(this, TAG, Long.parseLong(notifications.get(position).objectId, 10));
+    }
+
+    @Override
+    public void onFragmentInteraction(int value) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.iv_user_photo: {
+
+                Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
+                break;
+            }
+        }
+    }
+
+    private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(Void... params) {
+            return NotificationsActivity.this.getCurrentUser();
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag ccUser) {
+            Toolbar tbHome = (Toolbar) NotificationsActivity.this.findViewById(R.id.tb_home);
+            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
+            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+            Picasso.with(NotificationsActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+
+        }
     }
 }

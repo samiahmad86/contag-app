@@ -4,17 +4,33 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/interests_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/item_interest_new"/>
+        <include layout="@layout/item_interest_display_with_remove_btn"/>
+        <include layout="@layout/item_interest_display_with_remove_btn"/>
+        <include layout="@layout/item_interest_edit"/>
+        <include layout="@layout/item_interest_display_with_remove_btn"/>
+        <include layout="@layout/item_interest_display_with_remove_btn"/>
+        <include layout="@layout/item_interest_display_with_remove_btn"/>
+
+    </org.apmem.tools.layouts.FlowLayout>
+
     <LinearLayout
         android:id="@+id/ll_current_user_interests_upper_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/actv_user_interest_1"
             style="@style/InterestAutoCompleteStyle"
             android:layout_marginLeft="10dp"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/actv_user_interest_2"
@@ -27,14 +43,14 @@
             style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:drawableRight="@drawable/btn_edit_pencil"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_2"
             style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
-            android:visibility="gone"
+            android:visibility="visible"
             android:drawableRight="@drawable/btn_edit_pencil"/>
 
 
@@ -45,7 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/actv_user_interest_3"
@@ -63,14 +80,14 @@
             style="@style/ContactInterestTextBoxStyle"
             android:text="@string/abc_action_bar_home_description"
             android:drawableRight="@drawable/btn_edit_pencil"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_interest_4"
             style="@style/ContactInterestTextBoxStyle"
             android:layout_marginLeft="10dp"
             android:text="@string/abc_action_bar_home_description"
-            android:visibility="gone"
+            android:visibility="visible"
             android:drawableRight="@drawable/btn_edit_pencil"/>
 
     </LinearLayout>

@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -347,7 +348,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
         @Override
         protected void onPostExecute(ArrayList<Interest> userInterests) {
-            int size = userInterests.size();
+//            int size = userInterests.size();
 //            if (size == 0) {
 //                tvInterests[0].setVisibility(View.VISIBLE);
 //                tvInterests[1].setVisibility(View.VISIBLE);

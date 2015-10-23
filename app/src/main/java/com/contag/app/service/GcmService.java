@@ -57,7 +57,7 @@ public class GcmService extends GcmListenerService {
                     .setContentText(data.getString("text"))
                     .setContentIntent(pIntent)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.mipmap.ic_launcher);
+                    .setSmallIcon(R.drawable.contag_logo);
 
             Log.d(TAG, data.getString("text"));
 

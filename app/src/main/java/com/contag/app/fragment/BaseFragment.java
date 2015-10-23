@@ -1,10 +1,12 @@
 package com.contag.app.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
@@ -120,5 +122,9 @@ public abstract class BaseFragment extends Fragment {
         void onFragmentInteraction(int fragmentType, Bundle args);
     }
 
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
 
 }

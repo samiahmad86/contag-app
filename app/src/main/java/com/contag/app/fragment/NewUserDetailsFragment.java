@@ -14,15 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.contag.app.R;
-import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.model.SocialPlatform;
-import com.contag.app.request.UserRequest;
-import com.contag.app.util.PrefUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -36,10 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NewUserDetailsFragment extends BaseFragment implements  View.OnClickListener{
 
@@ -119,7 +112,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 
             @Override
             public void onError(FacebookException e) {
-                log(TAG, "error");
+                showToast("Sorry! It seems like we are facing some issue with facebook login at the moment.");
                 e.printStackTrace();
             }
         });
@@ -186,7 +179,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                         oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                         arrUsr.put(oUsr);
                     }
-                    log(TAG, arrUsr.toString());
+                    log("NewFubar", arrUsr.toString());
                     Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
                 } catch (JSONException ex) {
                     ex.printStackTrace();

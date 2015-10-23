@@ -1,5 +1,7 @@
 package com.contag.app.request;
 
+import android.util.Log;
+
 import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
 import com.contag.app.model.NewUser;
@@ -24,6 +26,8 @@ public class NewUserRequest extends RetrofitSpiceRequest<NewUserResponse, APIInt
 
     @Override
     public NewUserResponse loadDataFromNetwork() throws Exception {
+        Log.d("Login", "Here in loadDatafromnetwork for login") ;
+
         return getService().newUser(headers.get(Constants.Headers.HEADER_DEVICE_ID),
                 headers.get(Constants.Headers.HEADER_PUSH_ID),
                 headers.get(Constants.Headers.HEADER_DEVICE_TYPE),

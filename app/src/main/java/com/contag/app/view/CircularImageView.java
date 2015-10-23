@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class CircularImageView extends ImageView {
@@ -44,14 +45,17 @@ public class CircularImageView extends ImageView {
 
         int w = getWidth(), h = getHeight();
 
-
+        Log.d("CircleImage", String.valueOf(w)) ;
         Bitmap roundBitmap =  getCroppedBitmap(bitmap, w);
-        canvas.drawBitmap(roundBitmap, 0,0, null);
+        canvas.drawBitmap(roundBitmap, 0, 0, null);
+
 
     }
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
+        Log.d("CircleImage", String.valueOf(bmp.getWidth())) ;
+        Log.d("CircleImage", String.valueOf(bmp.getHeight())) ;
         if(bmp.getWidth() != radius || bmp.getHeight() != radius)
             sbmp = Bitmap.createScaledBitmap(bmp, radius, radius, false);
         else

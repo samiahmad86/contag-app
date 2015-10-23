@@ -5,6 +5,7 @@ import com.contag.app.config.Constants;
 import java.util.HashSet;
 
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
@@ -31,6 +32,12 @@ public interface APIInterface {
                     @Header(Constants.Headers.HEADER_DEVICE_TYPE) String deviceType,
                     @Header(Constants.Headers.HEADER_APP_VERSION_ID) String appVersionId,
                     @Body OTP otp);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @DELETE(Constants.Urls.URL_LOGOUT)
+    Response logout();
 
     @Headers({
             "Content-Type: application/json"

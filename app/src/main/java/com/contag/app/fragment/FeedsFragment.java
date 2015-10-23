@@ -1,6 +1,11 @@
 package com.contag.app.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +26,8 @@ import java.util.ArrayList;
 /**
  * Created by tanay on 23/9/15.
  */
-public class FeedsFragment extends BaseFragment implements AdapterView.OnItemClickListener, RequestListener<FeedsResponse.FeedList> {
+public class FeedsFragment extends BaseFragment implements AdapterView.OnItemClickListener,
+        RequestListener<FeedsResponse.FeedList> {
 
     private static final String TAG = FeedsFragment.class.getName();
 
@@ -64,6 +70,23 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         });
         return view;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brContactsUpdated,
+                new IntentFilter(getResources().getString(R.string.intent_filter_contacts_updated)));
+
+    }
+    private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            FeedsRequest fr = new FeedsRequest(0, 10);
+            getSpiceManager().execute(fr, FeedsFragment.this);
+            isLoading = true;
+        }
+    };
+
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
@@ -29,10 +30,11 @@ public class LoginActivity extends BaseActivity implements BaseFragment.OnFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        Log.d("logout", "Here") ;
         if (savedInstanceState != null) {
             return;
         }
+        Log.d("logout", "not returing") ;
 
         onFragmentInteraction(Constants.Types.FRAG_LOGIN, null);
     }

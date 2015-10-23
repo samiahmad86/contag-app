@@ -70,7 +70,7 @@ public class ContactAdapter extends BaseAdapter {
         if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
             vhCunt = new CuntagViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.item_cuntag_contacts, parent, false);
+            convertView = inflater.inflate(R.layout.item_contag_contacts, parent, false);
             vhCunt.ivPhoto = (ImageView) convertView.findViewById(R.id.iv_user_photo);
             vhCunt.tvContactId = (TextView) convertView.findViewById(R.id.tv_contact_id);
             vhCunt.tvContactName = (TextView) convertView.findViewById(R.id.tv_contact_name);
@@ -87,9 +87,10 @@ public class ContactAdapter extends BaseAdapter {
                 .into(vhCunt.ivPhoto);
         vhCunt.tvContactId.setText(cuntObject.getContag());
         vhCunt.tvContactName.setText(cuntObject.getName());
+        Log.d("Con", cuntObject.getName()) ;
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
         if (interests != null && interests.size() > 0) {
-            Log.d(TAG, "fuck");
+            Log.d("ConAdap", "Interests not null");
             try {
                 setInterestElseHide(interests.get(0), vhCunt.tvInterest1);
                 setInterestElseHide(interests.get(1), vhCunt.tvInterest2);
@@ -98,6 +99,13 @@ public class ContactAdapter extends BaseAdapter {
             } catch (IndexOutOfBoundsException ex) {
                 ex.printStackTrace();
             }
+        } else {
+            Log.d("ConAdap", "Interests are null") ;
+            vhCunt.tvInterest1.setVisibility(View.GONE);
+            vhCunt.tvInterest2.setVisibility(View.GONE);
+            vhCunt.tvInterest3.setVisibility(View.GONE);
+            vhCunt.tvInterest4.setVisibility(View.GONE);
+
         }
         return convertView;
     }
@@ -133,8 +141,13 @@ public class ContactAdapter extends BaseAdapter {
     private void setInterestElseHide(Interest interest, TextView tv) {
 
         if (interest != null) {
+            Log.d("ConAdap", "Interest is not null") ;
             tv.setText(interest.getName());
             tv.setVisibility(View.VISIBLE);
+        } else
+        {
+            Log.d("ConAdap", "Interest is null") ;
+            tv.setVisibility(View.GONE);
         }
     }
 

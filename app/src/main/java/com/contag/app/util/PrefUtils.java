@@ -74,4 +74,11 @@ public class PrefUtils {
     public static long getCurrentUserID() {
         return mSharedPref.getLong(Constants.Keys.KEY_CURRENT_USER_ID, 0);
     }
+
+    public static void clearForLogout(){
+        mSharedPref.edit().remove(Constants.Keys.KEY_AUTH_TOKEN).commit();
+        mSharedPref.edit().remove(Constants.Keys.KEY_CURRENT_USER).commit();
+        mSharedPref.edit().remove(Constants.Keys.KEY_SOCIAL_PLATFORMS).commit();
+
+    }
 }

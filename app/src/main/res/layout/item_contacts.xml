@@ -18,7 +18,7 @@
         android:layout_below="@id/tv_contact_name"
         android:id="@+id/tv_contact_num"
         style="@style/ContactIdStyle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:text="@string/abc_action_bar_home_description"/>
 
     <android.support.v7.widget.AppCompatButton

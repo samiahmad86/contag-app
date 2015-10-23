@@ -6,8 +6,16 @@
 
     <FrameLayout
         android:id="@+id/fl_user"
-        android:background="@color/bg_new_user_activity"
+        android:background="@drawable/contag_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/contag_logo"/>
 
 </RelativeLayout>

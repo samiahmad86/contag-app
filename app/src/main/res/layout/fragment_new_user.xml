@@ -4,24 +4,54 @@
     android:layout_height="match_parent"
     android:padding="20dp">
 
+    <TextView
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_hint_text"
+        android:layout_marginTop="60dp"
+        android:textColor="@color/white"
+        android:text="Create your unique Contag id using four alphabets and four numbers"/>
+
 
     <android.support.v7.widget.AppCompatEditText
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:padding="10dp"
         android:textSize="15sp"
-        android:hint="@string/contag_id"
-        android:id="@+id/et_contag_id"
+        android:maxLength="4"
+        android:hint="Alphabets Only"
+        android:layout_below="@id/tv_hint_text"
+        android:layout_marginTop="10dp"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:id="@+id/et_contag_id_char"
+        android:background="@drawable/bg_gray_rect"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hint_color"/>
+
+
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_toRightOf="@id/et_contag_id_char"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:maxLength="4"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="15sp"
+        android:hint="Numbers Only"
+        android:inputType="number"
+        android:layout_below="@id/tv_hint_text"
+        android:id="@+id/et_contag_id_number"
         android:background="@drawable/bg_gray_rect"
         android:textColor="@color/black"
         android:textColorHint="@color/hint_color"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_contag_id"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_contag_id"
+        android:layout_below="@id/et_contag_id_number"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_login_btn"
         android:gravity="center"
@@ -30,16 +60,5 @@
         android:textColor="@color/white"
         android:textSize="15sp" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_error_msg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/et_contag_id"
-        android:textSize="15sp"
-        android:padding="10dp"
-        android:visibility="gone"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/white"
-        android:text="@string/contag_id_not_available"/>
 
 </RelativeLayout>

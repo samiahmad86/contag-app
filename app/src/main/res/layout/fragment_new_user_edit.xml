@@ -12,12 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fb_unsync_msg"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
 
         <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
             android:id="@+id/btn_fb_sync"
@@ -25,7 +19,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             fb:login_text="@string/sync_fb"
-            fb:logout_text="" />
+            fb:logout_text="Unsync your facebook account" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,7 +58,7 @@
                     android:layout_marginLeft="5dp"
                     android:background="@android:color/transparent"
                     android:hint="@string/name_hint"
-                    android:textColor="@color/white"
+                    android:textColor="@color/material_blue_grey_800"
                     android:textColorHint="@color/light_gray"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -101,6 +95,7 @@
                         android:checked="true"
                         android:gravity="center"
                         android:paddingBottom="5dp"
+                        android:layout_marginLeft="10dp"
                         android:paddingTop="5dp"
                         android:text="Male" />
 

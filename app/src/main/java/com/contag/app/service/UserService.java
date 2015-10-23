@@ -52,7 +52,7 @@ public class UserService extends Service implements RequestListener<User> {
                 }
                 case Constants.Types.REQUEST_PUT: {
                     String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
-                    Log.d(TAG, "making request");
+                    Log.d("NewFubar", "making request");
                     UserRequest mUserRequest = new UserRequest(type, userArrayStr);
                     profileType = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
                     mSpiceManager.execute(mUserRequest, this);

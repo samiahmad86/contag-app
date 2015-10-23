@@ -4,23 +4,33 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context="com.contag.app.fragment.LoginFragment"
-    android:background="@color/bg_login_fragment">
+    android:background="@drawable/contag_screen">
+
+    <ImageView
+        android:id="@+id/iv_contag_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/contag_logo"/>
 
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_phone_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/iv_contag_logo"
         android:background="@drawable/bg_gray_rect"
         android:hint="@string/enter_phone_num"
         android:inputType="number"
         android:imeOptions="actionDone"
         android:padding="10dp"
+        android:layout_marginTop="20dp"
         android:singleLine="true"
         android:layout_marginBottom="-10dp"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="14sp" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_otp_msg"
@@ -41,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_phone_num"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_login_btn"
+        android:background="@color/filter_selection"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/login"

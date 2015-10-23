@@ -53,7 +53,8 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return Color.parseColor("#ffffff");
+                return Color.parseColor("#8787ea");
+
             }
         });
         stl.setViewPager(vpHome);
@@ -145,4 +146,5 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
 
         }
     }
+
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import android.widget.TextView;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.DaoSession;
 import com.contag.app.util.ImageUtils;
+import com.contag.app.util.PrefUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -41,8 +45,11 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     private ImageView ivHeader;
     private View llBlockedUsr1, llBlockedUsr2, llBlockedUsr3;
     private View llMutedUsr1, llMutedUsr2, llMutedUsr3;
-    private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt;
+    private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt, logoutTxt;
     private Button btnSeeMoreBlockedUsers, btnSeeMoreMutedUsers;
+    private Boolean isLoading ;
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -83,6 +90,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         notificationTxt = (TextView) view.findViewById(R.id.tv_notification_txt) ;
         feedbackTxt = (TextView) view.findViewById(R.id.tv_feedback_txt) ;
         rateTxt = (TextView) view.findViewById(R.id.tv_rate_txt) ;
+        logoutTxt = (TextView) view.findViewById(R.id.tv_logout_txt) ;
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
 //        btnSeeMoreBlockedUsers = (Button) view.findViewById(R.id.btn_see_blocked_usr);
@@ -93,6 +101,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         notificationTxt.setOnClickListener(this);
         feedbackTxt.setOnClickListener(this);
         rateTxt.setOnClickListener(this);
+        logoutTxt.setOnClickListener(this);
         return view;
     }
 
@@ -133,9 +142,55 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
                         Uri.parse("market://details?id=com.android.contag")));
                 break ;
             }
+            case R.id.tv_logout_txt: {
+                Log.d("logout", "Logout called") ;
+                    logout() ;
+                break ;
+            }
 
         }
     }
+
+    private void logout(){
+//        SpiceManager mSpiceManager = new SpiceManager(APIService.class);
+//        mSpiceManager.start(getActivity());
+//        LogoutRequest lt = new LogoutRequest() ;
+//        mSpiceManager.execute(lt, nr) ;
+//                , new RequestListener<MessageResponse>(){
+//            @Override
+//            public void onRequestFailure(SpiceException spiceException) {
+//                Toast.makeText(getActivity(), "There was an error please try again", Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onRequestSuccess(MessageResponse messageResponse) {
+//
+//
+//            }
+//        }) ;
+        Log.d("logout", "going to clear pref utils");
+        PrefUtils.clearForLogout();
+        DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+        session.clear();
+        Router.startLoginActivity(getActivity(), "NavDrawer", Constants.Types.FRAG_LOGIN);
+        isLoading = true ;
+    }
+//
+//    RequestListener<MessageResponse> nr = new RequestListener<>({
+//
+//
+//        @Override
+//        public void onRequestFailure (SpiceException spiceException){
+//
+//    }
+//
+//        @Override
+//        public void onRequestSuccess (MessageResponse messageResponse){
+//        Log.d("NavDrawer", messageResponse.message);
+//        isLoading = false;
+//    }
+//    })  ;
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -155,9 +210,9 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             Bitmap blurredBitmap = ImageUtils.fastblur(bitmap, 3);
-//            ivHeader.setImageBitmap(blurredBitmap);
             Drawable bg = new BitmapDrawable(getActivity().getResources(), blurredBitmap);
-            ivHeader.setBackgroundDrawable(bg);
+            ivHeader.setImageDrawable(bg);
+
         }
 
         @Override
@@ -170,6 +225,8 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
 
         }
     };
+
+
 
     private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
         @Override

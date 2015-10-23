@@ -27,13 +27,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <com.contag.app.view.CircularImageView
             android:id="@+id/iv_user_photo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/default_profile_pic_small" />

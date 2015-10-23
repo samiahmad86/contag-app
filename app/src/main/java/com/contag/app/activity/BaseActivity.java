@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
@@ -25,6 +26,7 @@ import com.contag.app.model.SocialProfileDao;
 import com.contag.app.service.APIService;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -80,6 +82,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_hamburger);
+
+        ImageView iv = (ImageView) findViewById(R.id.iv_header_pic) ;
+        Picasso.with(this).load(this.getCurrentUser().getAvatarUrl()).
+                placeholder(R.drawable.default_profile_pic_small).into(iv);
     }
 
     /**

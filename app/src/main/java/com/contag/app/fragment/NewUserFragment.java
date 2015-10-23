@@ -2,6 +2,7 @@ package com.contag.app.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,18 +88,17 @@ public class NewUserFragment extends BaseFragment implements View.OnClickListene
             case R.id.btn_contag_id: {
                 View v = getView();
                 if (v != null) {
-                    String contagID = ((EditText) v.findViewById(R.id.et_contag_id)).getText().toString();
-                    if (contagID.length() != 8) {
-                        showToast("Your CONTAG ID has to be 8 character in length.");
+                    String contagIDChar = ((EditText) v.findViewById(R.id.et_contag_id_char)).getText().toString();
+                    String contagIDNum = ((EditText) v.findViewById(R.id.et_contag_id_number)).getText().toString();
+                    if (contagIDChar.length() != 4) {
+                        showToast("Please create your Contag id using at least 4 alphabets.");
                         return;
-                    } else {
-                        for (int i = 0; i < 8; i++) {
-                            if (!Character.isLetterOrDigit(contagID.charAt(i))) {
-                                showToast("Contag Id can contain only numbers and alphabets");
-                                return;
-                            }
-                        }
+                    } else if (contagIDNum.length() != 4) {
+                        showToast("Please create your Contag id using at least 4 numbers.");
+                        return;
                     }
+                    String contagID = contagIDChar + contagIDNum ;
+                    Log.d("Login", "Requesting with contag id: " +  contagID) ;
                     NewUser mNewUser = new NewUser(phoneNumber, contagID);
                     HashMap<String, String> hmHeaders = new HashMap<>();
                     hmHeaders.put(Constants.Headers.HEADER_APP_VERSION_ID, "" + BuildConfig.VERSION_CODE);
@@ -116,17 +116,18 @@ public class NewUserFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-
+        Log.d("Login", "Request failed") ;
     }
 
     @Override
     public void onRequestSuccess(NewUserResponse newUserResponse) {
+        Log.d("Login", "Request response: " + newUserResponse.success) ;
+        if(newUserResponse.authToken == null)
+          Log.d("Login", "Auth token is null") ;
         if(!newUserResponse.success) {
-            View v = getView();
-            if(v != null) {
-                v.findViewById(R.id.tv_error_msg).setVisibility(View.VISIBLE);
-            }
+            showToast("Another user with this Contag id already exists!");
         } else {
+            Log.d("Login", "Setting the auth token") ;
             PrefUtils.setAuthToken(newUserResponse.authToken);
             mListener.onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, null);
             log(TAG, PrefUtils.getAuthToken());

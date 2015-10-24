@@ -22,17 +22,25 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.model.FeedsResponse;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestSuggestion;
+import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.view.SlidingTabLayout;
 import com.google.gson.Gson;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,55 +53,37 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     public static final String TAG = CurrentUserProfileFragment.class.getName();
 
-    private static final int[] INTEREST_TV_IDS = {R.id.tv_user_interest_1, R.id.tv_user_interest_2,
-            R.id.tv_user_interest_3, R.id.tv_user_interest_4};
-    private static final int[] INTEREST_ET_IDS = {R.id.actv_user_interest_1, R.id.actv_user_interest_2,
-            R.id.actv_user_interest_3, R.id.actv_user_interest_4};
+    private FlowLayout interestsBoxFlowLayout;
 
-    private TextView[] tvInterests = new TextView[4];
-    private AutoCompleteTextView[] actvInterests = new AutoCompleteTextView[4];
-    private ArrayAdapter<String> actvAdapter1, actvAdapter2, actvAdapter3;
-    private ArrayList<String> actvDataset1, actvDataset2, actvDataset3;
-    private HashMap<String, Long> hmNameToID1, hmNameToID2, hmNameToID3;
+//    private class InterestsData {
+//        public InterestSuggestion newInterestSuggestion;
+//
+//        public void setNewInterestSuggestion(InterestSuggestion suggestion) {
+//            newInterestSuggestion = suggestion;
+//        }
+//
+//        public void clear() {
+//            newInterestSuggestion = null;
+//        }
+//    };
+//
+//    private final InterestsData interestsData = new InterestsData();
+
+    private class Data<T> {
+        private T val;
+        public void set(T newVal) { val = newVal; }
+        public T get() { return val; }
+        public void clear() { val = null; }
+    }
 
     private BroadcastReceiver brSuggestions = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            log(TAG, "fuck");
             int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, -1);
             if (position != -1) {
                 String list = intent.getStringExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST);
                 Gson gson = new Gson();
                 ArrayList<InterestSuggestion> suggestionArrayList = gson.fromJson(list, InterestSuggestion.List.class);
-                if (position == 0) {
-                    log(TAG, "here");
-                    actvDataset1= new ArrayList<>();
-                    hmNameToID1.clear();
-                    for (InterestSuggestion is : suggestionArrayList) {
-                        actvDataset1.add(is.name);
-                        hmNameToID1.put(is.name, is.id);
-                    }
-                    log(TAG, actvDataset1.size() + "");
-                    actvAdapter1 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, actvDataset1);
-                    actvInterests[0].setAdapter(actvAdapter1);
-                    actvAdapter1.notifyDataSetChanged();
-                } else if (position == 1) {
-                    actvDataset2.clear();
-                    hmNameToID2.clear();
-                    for (InterestSuggestion is : suggestionArrayList) {
-                        actvDataset2.add(is.name);
-                        hmNameToID2.put(is.name, is.id);
-                    }
-                    actvAdapter2.notifyDataSetChanged();
-                } else {
-                    actvDataset3.clear();
-                    hmNameToID3.clear();
-                    for (InterestSuggestion is : suggestionArrayList) {
-                        actvDataset3.add(is.name);
-                        hmNameToID3.put(is.name, is.id);
-                    }
-                    actvAdapter3.notifyDataSetChanged();
-                }
             }
         }
     };
@@ -123,85 +113,6 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
                 PersonalDetailsTabsAdapter(getChildFragmentManager());
         pager.setAdapter(homeTabsAdapter);
 
-        for (int i = 0; i < 4; i++) {
-            tvInterests[i] = (TextView) view.findViewById(INTEREST_TV_IDS[i]);
-            tvInterests[i].setVisibility(View.GONE);
-            tvInterests[i].setOnClickListener(this);
-            actvInterests[i] = (AutoCompleteTextView) view.findViewById(INTEREST_ET_IDS[i]);
-//            actvInterests[i].setOnTouchListener(this);
-        }
-
-        actvDataset1 = new ArrayList<>();
-        actvDataset2 = new ArrayList<>();
-        actvDataset3 = new ArrayList<>();
-
-        hmNameToID1 = new HashMap<>();
-        hmNameToID2 = new HashMap<>();
-        hmNameToID3 = new HashMap<>();
-
-        actvAdapter1 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, actvDataset1);
-        actvAdapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, actvDataset2);
-        actvAdapter3 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, actvDataset3);
-
-        actvInterests[0].setThreshold(2);
-        actvInterests[1].setThreshold(2);
-        actvInterests[2].setThreshold(2);
-
-        actvInterests[0].setAdapter(actvAdapter1);
-        actvInterests[1].setAdapter(actvAdapter2);
-        actvInterests[2].setAdapter(actvAdapter3);
-
-        actvInterests[0].addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getSuggestionList(0, s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        actvInterests[1].addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getSuggestionList(1, s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        actvInterests[2].addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getSuggestionList(2, s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
         SlidingTabLayout stl = (SlidingTabLayout) view.findViewById(R.id.stl_current_user);
         stl.setDistributeEvenly(true);
         stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -212,14 +123,19 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         });
         stl.setViewPager(pager);
 
-        new LoadInterests().execute();
+        // interests specific setup
+        interestsBoxFlowLayout = (FlowLayout) view.findViewById(R.id.interests_box);
+        RelativeLayout newInterestView = (RelativeLayout) view.findViewById(R.id.new_interest);
+
+        setupNewInterestView(newInterestView);
+        setupEditableInterests();
+
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        log(TAG, "fuck bro");
 
         List<Fragment> fragments = getChildFragmentManager().getFragments();
         if (fragments != null) {
@@ -265,30 +181,162 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.tv_user_interest_1: {
-                actvInterests[0].setVisibility(View.VISIBLE);
-                v.setVisibility(View.GONE);
-                break;
-            }
-            case R.id.tv_user_interest_2: {
-                actvInterests[1].setVisibility(View.VISIBLE);
-                v.setVisibility(View.GONE);
-                break;
-            }
-            case R.id.tv_user_interest_3: {
-                actvInterests[2].setVisibility(View.VISIBLE);
-                v.setVisibility(View.GONE);
-                break;
-            }
-        }
+
     }
 
-    private void getSuggestionList(int postion, String slug) {
-        Router.getInterestSuggestions(getActivity(), slug, postion,
-                Constants.Types.SERVICE_GET_INTEREST_SUGGESTIONS);
+    /////////////////////////
+
+    private void setupNewInterestView(RelativeLayout newInterestView) {
+        final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
+        final EditText interestText = (EditText) newInterestView.findViewById(R.id.interest_text);
+        final ImageView addNewInterestBtn = (ImageView) newInterestView.findViewById(R.id.btn_add);
+
+        final Data<InterestSuggestion> interestSuggestion = new Data<>();
+        final String hintPlaceholder = "New Interest";
+
+        interestHint.setText(hintPlaceholder);
+        interestText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String interestTextStr = interestText.getText().toString();
+                getSpiceManager().execute(
+                        new InterestSuggestionRequest(interestTextStr),
+                        new RequestListener<InterestSuggestion.List>() {
+                            @Override
+                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
+                                if (suggestions.size() > 0) {
+                                    InterestSuggestion suggestion = suggestions.get(0);
+                                    interestSuggestion.set(suggestion);
+                                    interestHint.setText(suggestion.name);
+                                } else {
+                                    interestSuggestion.clear();
+                                    if (interestTextStr.length() == 0) {
+                                        interestHint.setText(hintPlaceholder);
+                                    } else {
+                                        interestHint.setText("");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {}
+                        }
+                );
+            }
+        });
+
+        addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (interestSuggestion.get() != null) {
+                    // here, send the new interest suggestion to the endpoint
+                } else {
+                    String newInterestName = interestText.getText().toString();
+                    // do things with newInterestName here
+                }
+
+                // whichever way, you need to get a new interest object, and then call setupEditableInterestView(interest)
+            }
+        });
     }
+
+    private void setupEditableInterests() {
+        new AsyncTask<Void, Void, ArrayList<Interest>>() {
+            @Override
+            protected ArrayList<Interest> doInBackground(Void... params) {
+                return ((BaseActivity) CurrentUserProfileFragment.this.getActivity()).getUserInterests(PrefUtils.getCurrentUserID());
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Interest> userInterests) {
+                for(Interest userInterest : userInterests) {
+                    CurrentUserProfileFragment.this.setupEditableInterestView(userInterest);
+                }
+            }
+        }.execute();
+    }
+
+    private void setupEditableInterestView(Interest interest) {
+        final RelativeLayout editInterestView = (RelativeLayout) View.inflate(getActivity(), R.layout.item_interest_edit, null);
+
+        final EditText interestHint = (EditText) editInterestView.findViewById(R.id.interest_hint);
+        final EditText interestText = (EditText) editInterestView.findViewById(R.id.interest_text);
+        final ImageView updateBtn = (ImageView) editInterestView.findViewById(R.id.btn_update);
+        final ImageView removeBtn = (ImageView) editInterestView.findViewById(R.id.remove_interest_btn);
+
+        final Data<InterestSuggestion> interestSuggestion = new Data<>();
+        final String hintPlaceholder = interest.getName();
+
+        interestHint.setText(hintPlaceholder);
+        interestText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String interestTextStr = interestText.getText().toString();
+                getSpiceManager().execute(
+                        new InterestSuggestionRequest(interestTextStr),
+                        new RequestListener<InterestSuggestion.List>() {
+                            @Override
+                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
+                                if (suggestions.size() > 0) {
+                                    InterestSuggestion suggestion = suggestions.get(0);
+                                    interestSuggestion.set(suggestion);
+                                    interestHint.setText(suggestion.name);
+                                } else {
+                                    interestSuggestion.clear();
+                                    if (interestTextStr.length() == 0) {
+                                        interestHint.setText(hintPlaceholder);
+                                    } else {
+                                        interestHint.setText("");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {
+                            }
+                        }
+                );
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (interestSuggestion.get() != null) {
+                    // here, send the new interest suggestion to the endpoint
+                } else {
+                    String newInterestName = interestText.getText().toString();
+                    // do things with newInterestName here
+                }
+            }
+        });
+
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // make the api call to detach the interest here
+                // and remove the view from interestsBox
+            }
+        });
+
+        interestsBoxFlowLayout.addView(editInterestView);
+    }
+
+    //////////////////////////
 
     private class PersonalDetailsTabsAdapter extends FragmentPagerAdapter {
 
@@ -338,34 +386,6 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             return null;
         }
 
-    }
-
-    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
-        @Override
-        protected ArrayList<Interest> doInBackground(Void... params) {
-            return ((BaseActivity) CurrentUserProfileFragment.this.getActivity()).getUserInterests(PrefUtils.getCurrentUserID());
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Interest> userInterests) {
-//            int size = userInterests.size();
-//            if (size == 0) {
-//                tvInterests[0].setVisibility(View.VISIBLE);
-//                tvInterests[1].setVisibility(View.VISIBLE);
-//                tvInterests[2].setVisibility(View.VISIBLE);
-//                tvInterests[3].setVisibility(View.INVISIBLE);
-//                return;
-//            }
-//            for (int i = 0; i < size; i++) {
-//                tvInterests[i].setVisibility(View.VISIBLE);
-//                if (i % 2 == 0) {
-//                    tvInterests[i + 1].setVisibility(View.INVISIBLE);
-//                }
-//                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
-//                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
-//                tvInterests[i].setText(userInterests.get(i).getName());
-//            }
-        }
     }
 
 

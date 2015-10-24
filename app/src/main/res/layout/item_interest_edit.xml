@@ -42,7 +42,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/btn_add"
+        android:id="@+id/btn_update"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_toRightOf="@+id/item_container"

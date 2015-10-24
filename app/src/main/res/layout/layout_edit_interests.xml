@@ -9,13 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/item_interest_new"/>
-        <include layout="@layout/item_interest_display_with_remove_btn"/>
-        <include layout="@layout/item_interest_display_with_remove_btn"/>
-        <include layout="@layout/item_interest_edit"/>
-        <include layout="@layout/item_interest_display_with_remove_btn"/>
-        <include layout="@layout/item_interest_display_with_remove_btn"/>
-        <include layout="@layout/item_interest_display_with_remove_btn"/>
+        <include layout="@layout/item_interest_new" android:id="@+id/new_interest"/>
 
     </org.apmem.tools.layouts.FlowLayout>
 

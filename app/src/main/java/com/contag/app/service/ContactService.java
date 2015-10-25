@@ -73,8 +73,10 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getBooleanExtra(Constants.Keys.KEY_SEND_CONTACTS, false)) {
+                Log.d("Condev", "ContactService: Going to send the contacts to the server") ;
                 clContact.startLoading();
             } else {
+                Log.d("Condev", "ContactService: Going to fetch the contacts from the server") ;
                 ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET);
                 mSpiceManager.execute(cr, this);
             }
@@ -110,6 +112,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
     public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
         HashSet<RawContacts> contacts = new HashSet<>();
         ArrayList<Integer> contactIds = new ArrayList<>();
+        Log.d("Condev", "Currently loading your contact book") ;
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
             if (!contactIds.contains(id)) {
@@ -131,22 +134,23 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
             }
         }
         Gson gson = new Gson();
-        Log.d(TAG, "" + contacts.size());
-        Log.d(TAG, gson.toJson(contacts).toString());
+        Log.d("Condev", "Contacts loaded from contact book. Time to make the request");
+        Log.d("Condev", "Requesting the server with " + String.valueOf(contacts.size()) + " contacts");
         ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_POST, contacts);
         mSpiceManager.execute(cr, this);
     }
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-
+        spiceException.printStackTrace();
+        Log.d("Condev", "Contact upload request failed on server side: " + spiceException.getCause()) ;
     }
 
     @Override
     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
         Gson gson = new Gson();
-        Log.d(TAG, "fuck you" + contactResponses.size());
-        Log.d(TAG, "fuck" + gson.toJson(contactResponses.get(28)) + gson.toJson(contactResponses.get(29)));
+        //Log.d("Condev", "Server request successful with a response of " + String.valueOf(contactResponses.size()) + "contacts") ;
+
         new InsertContact().execute(contactResponses);
     }
 
@@ -154,9 +158,10 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
         @Override
         protected Boolean doInBackground(ContactResponse.ContactList... params) {
+            Log.d("Condev", "Loading the returned contacts into dao") ;
             DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
             ContactDao mContactDao = session.getContactDao();
-            Log.d(TAG, "fuck" + mContactDao.loadAll().size());
+            Log.d("Condev", "Current Dao size: " + mContactDao.loadAll().size());
             for (ContactResponse response : params[0]) {
                 Contact mContact = new Contact(response.id, response.createdOn, response.updatedOn, response.contactName,
                         response.contactNumber, response.invitedOn, response.isOnContag, response.isMuted, response.isBlocked,
@@ -225,8 +230,8 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
                     ccDao.insertOrReplace(cc);
                 }
-                Log.d(TAG, "" + mContact.getId() + " " + response.id);
-                Log.d(TAG, "" + mContact.getContactName() + " " + response.contactName);
+                Log.d("Condev", "" + mContact.getId() + " " + response.id);
+                Log.d("Condevs", "" + mContact.getContactName() + " " + response.contactName);
                 try {
                     mContactDao.insertOrReplace(mContact);
                     PrefUtils.setContactBookUpdated(false);
@@ -241,6 +246,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
         @Override
         protected void onPostExecute(Boolean value) {
+            Log.d("Condev", "Local dao updated successfully. Going to broadcast the same") ;
             Intent iContactUpdated = new Intent(getResources().getString(R.string.intent_filter_contacts_updated));
             LocalBroadcastManager.getInstance(ContactService.this).sendBroadcast(iContactUpdated);
         }

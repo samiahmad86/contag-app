@@ -21,8 +21,8 @@
     <string name="action_edit_profile">Edit Profile</string>
 
     <!-- ui elements -->
-    <string name="login">LOGIN</string>
-    <string name="enter_phone_num">Enter your 10 digit phone number</string>
+    <string name="login">Proceed</string>
+    <string name="enter_phone_num">Enter your 10 digit phone number to proceed</string>
     <string name="enter_otp">Enter otp</string>
     <string name="otp_msg">We have sent an OTP to your number, please enter it to proceed.</string>
     <string name="hello_world">Hello world!</string>
@@ -34,7 +34,7 @@
     <string name="sync_fb">Sync with facebook</string>
     <string name="invite_to_cunt">INVITE</string>
     <string name="fb_unsync_msg">remove facebook</string>
-    <string name="name_hint">eg Remus</string>
+    <string name="name_hint">Rohit Sharma</string>
     <string name="name_label">Name</string>
     <string name="gender_label">Gender</string>
     <string name="proceed">Proceed</string>

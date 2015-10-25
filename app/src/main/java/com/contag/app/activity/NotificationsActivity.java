@@ -3,6 +3,7 @@ package com.contag.app.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,11 +41,11 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
-        setUpActionBar(R.id.tb_home);
+        setUpActionBar(R.id.tb_home_notifications);
 
-        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
+        //setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
-        new LoadUser().execute();
+        //new LoadUser().execute();
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
@@ -101,6 +102,7 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
     @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
+        Log.d("Nof", String.valueOf(notificationsResponses.size())) ;
         if(notificationsResponses.size() != 0) {
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();

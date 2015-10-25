@@ -1,6 +1,5 @@
 package com.contag.app.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.contag.app.R;
@@ -27,6 +26,7 @@ public class SplashActivity extends BaseActivity {
                 Router.startNewUserActivity(this, TAG, 0);
             }
         } else {
+            Router.getSocialPlatforms(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
             Router.startGcmRegisterService(this);
         }
 

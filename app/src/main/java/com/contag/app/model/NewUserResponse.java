@@ -14,4 +14,5 @@ public class NewUserResponse {
     @Expose
     @SerializedName(Constants.Keys.KEY_AUTH_TOKEN)
     public String authToken;
+
 }

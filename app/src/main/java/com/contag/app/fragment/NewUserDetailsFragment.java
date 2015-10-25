@@ -17,7 +17,10 @@ import android.widget.RadioGroup;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
 import com.contag.app.model.SocialPlatform;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -63,10 +66,11 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         final ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.iv_profile_img);
         etUserName = (EditText) view.findViewById(R.id.et_user_name);
         rgGender = (RadioGroup) view.findViewById(R.id.rg_gender);
+        DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+        ContagContagDao ccDao = session.getContagContagDao();
 
         btnProceed.setOnClickListener(this);
         btnFb.setFragment(this);
-        log(TAG, "uncle fucker");
         btnFb.setReadPermissions(Arrays.asList("public_profile, email"));
         btnFb.registerCallback(cbm, new FacebookCallback<LoginResult>() {
             @Override

@@ -81,9 +81,11 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            FeedsRequest fr = new FeedsRequest(0, 10);
-            getSpiceManager().execute(fr, FeedsFragment.this);
-            isLoading = true;
+            if(feeds.size() == 0) {
+                FeedsRequest fr = new FeedsRequest(0, 10);
+                getSpiceManager().execute(fr, FeedsFragment.this);
+                isLoading = true;
+            }
         }
     };
 

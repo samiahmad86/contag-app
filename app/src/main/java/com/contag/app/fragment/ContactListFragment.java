@@ -156,18 +156,21 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                     searchFilter = Constants.Arrays.SEARCH_FILTER[0] ;
                     toggleFilterSelection(selectedFilter, 0) ;
                     new LoadContacts().execute() ;
+                    filterDropDown.dismiss();
                     break ;
                 }
                 case R.id.tv_filter_platform: {
                     searchFilter = Constants.Arrays.SEARCH_FILTER[1];
                     toggleFilterSelection(selectedFilter, 1) ;
                     new LoadContacts().execute() ;
+                    filterDropDown.dismiss();
                     break ;
                 }
                 case R.id.tv_filter_blood: {
                     searchFilter = Constants.Arrays.SEARCH_FILTER[2];
                     toggleFilterSelection(selectedFilter, 2) ;
                     new LoadContacts().execute() ;
+                    filterDropDown.dismiss();
                     break ;
 
                 }
@@ -188,6 +191,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("Condev", "Broadcast received for contacts updated") ;
             new LoadContacts().execute();
         }
     };
@@ -195,6 +199,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     private BroadcastReceiver brContactRequestMade = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("Condev", "Contact request made broadcast receiver") ;
 
         }
     };
@@ -250,7 +255,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         @Override
         protected void onPreExecute() {
+
             pbContacts.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -264,7 +271,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             ContagContagDao mContagContagDao = session.getContagContagDao();
             List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                     where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())).list();
-
+            Log.d("Condev", "ContactListFrag - Size of contacts: " + String.valueOf(contagContacts.size())) ;
             if (contagContacts != null) {
                 for (ContagContag cuntag : contagContacts) {
                     InterestDao mInterestDao = session.getInterestDao();
@@ -284,7 +291,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                 items.add(new ContactListItem(contact, Constants.Types.ITEM_NON_CONTAG));
             }
 
-            log(TAG, contacts.size() + " contacts");
+            log("Condev", "Size of contacts fetched from contact cursor:" + contacts.size() + " contacts");
             return items;
         }
 
@@ -292,9 +299,14 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
             contacts.clear();
             contacts.addAll(contactListItems);
-            contactAdapter.notifyDataSetChanged();
-            if(contactListItems.size() > 0) {
-                pbContacts.setVisibility(View.GONE);
+
+            Log.d("Condev", "ContactListFragment: In post execure with list item size: " + String.valueOf(contactListItems.size())) ;
+            pbContacts.setVisibility(View.GONE);
+
+            if(contactListItems.size() == 0) {
+                Log.d("Condev", "Going to notify data set changed") ;
+
+                contactAdapter.notifyDataSetChanged();
             }
         }
     }

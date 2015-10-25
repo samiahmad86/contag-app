@@ -2,7 +2,6 @@ package com.contag.app.request;
 
 import com.contag.app.model.APIInterface;
 import com.contag.app.model.SocialPlatformResponse;
-import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
@@ -16,6 +15,6 @@ public class SocialPlatformRequest extends RetrofitSpiceRequest<SocialPlatformRe
 
     @Override
     public SocialPlatformResponse.List loadDataFromNetwork() throws Exception {
-        return getService().getAllSocialPlatforms(PrefUtils.getAuthToken());
+        return getService().getAllSocialPlatforms("Anon");
     }
 }

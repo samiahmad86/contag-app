@@ -19,7 +19,7 @@
         android:background="@color/bg_user_activity">
 
         <include
-            android:id="@+id/tb_home"
+            android:id="@+id/tb_home_notifications"
             layout="@layout/layout_toolbar_home" />
     </RelativeLayout>
 

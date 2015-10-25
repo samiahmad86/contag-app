@@ -1,6 +1,7 @@
 package com.contag.app.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class NotificationsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d("Nof", "Inside get view of notifications adapter") ;
         ViewHolder vh;
         NotificationsResponse notification = (NotificationsResponse) getItem(position);
         final Long objectID = Long.parseLong(notification.objectId, 10) ;

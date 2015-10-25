@@ -59,7 +59,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         });
         stl.setViewPager(vpHome);
 
-        Router.getSocialPlatforms(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
+
 
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);

@@ -127,7 +127,7 @@ public class NewUserFragment extends BaseFragment implements View.OnClickListene
         if(!newUserResponse.success) {
             showToast("Another user with this Contag id already exists!");
         } else {
-            Log.d("Login", "Setting the auth token") ;
+
             PrefUtils.setAuthToken(newUserResponse.authToken);
             mListener.onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, null);
             log(TAG, PrefUtils.getAuthToken());

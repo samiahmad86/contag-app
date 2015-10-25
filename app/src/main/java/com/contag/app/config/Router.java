@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.HomeActivity;
@@ -64,6 +65,7 @@ public class Router {
     }
 
     public static void startContactService(Context mContext, boolean sendContacts) {
+        Log.d("Condev", "In router: Call received to start contact service");
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_SEND_CONTACTS, sendContacts);
         mContext.startService(iStartContactService);

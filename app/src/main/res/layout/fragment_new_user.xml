@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:padding="20dp">
 
+
     <TextView
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/tv_hint_text"
-        android:layout_marginTop="60dp"
+        android:layout_below="@id/iv_contag_logo"
+        android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:text="Create your unique Contag id using four alphabets and four numbers"/>
 
@@ -53,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_contag_id_number"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_login_btn"
+        android:background="@color/filter_selection"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/create_user"

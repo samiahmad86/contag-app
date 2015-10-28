@@ -1,7 +1,11 @@
 package com.contag.app.request;
 
+import android.util.Log;
+
 import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
+import com.contag.app.model.Contact;
+import com.contag.app.model.ContactResponse;
 import com.contag.app.model.User;
 import com.contag.app.model.UserRequestModel;
 import com.contag.app.util.PrefUtils;
@@ -20,6 +24,8 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
         this.type = type;
     }
 
+
+
     public UserRequest(int type, String userArray) {
         super(User.class, APIInterface.class);
         this.type = type;
@@ -28,9 +34,10 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
 
     @Override
     public User loadDataFromNetwork() throws Exception {
-        if(Constants.Types.REQUEST_GET == type) {
+        Log.d("SearchFilter", "In load data from network") ;
+        if(Constants.Types.REQUEST_GET_APP_USER == type) {
             return getService().getUser(PrefUtils.getAuthToken());
-        } else if(Constants.Types.REQUEST_PUT == type) {
+        }else if(Constants.Types.REQUEST_PUT == type) {
             return getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray));
         }
         return null;

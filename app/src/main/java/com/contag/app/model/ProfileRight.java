@@ -14,7 +14,11 @@ public class ProfileRight {
     @SerializedName("is_public")
     @Expose
     public boolean isPublic;
-    @SerializedName("visible_for")
-    @Expose
-    public String visibleFor;
+//    @SerializedName("is_private")
+//    @Expose
+//    public boolean isPrivate;
+//    @SerializedName("is_custom")
+//    @Expose
+//    public boolean is;
+
 }

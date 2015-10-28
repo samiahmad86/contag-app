@@ -25,7 +25,9 @@ public class Constants {
         public static final String KEY_VIEW_POSITION = "view_position";
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
-        public static final String KEY_CONTACTS_UPDATED = "contact_fucked";
+        public static final String KEY_ADD_CONTACT = "add_contact";
+        public static final String KEY_CONTACTS_UPDATED = "contacts_updated";
+        public static final String KEY_CONTACT_BY_CONTAG_ID = "contact_contag_id" ;
         public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
         public static final String KEY_CURRENT_USER = "current_sodomized_user";
         public static final String KEY_USER_ARRAY = "user_fucked";
@@ -102,11 +104,15 @@ public class Constants {
     }
 
     public class Types {
-        public static final int REQUEST_GET = 1;
-        public static final int REQUEST_POST = 2;
-        public static final int REQUEST_PUT = 3;
+        public static final int REQUEST_GET_APP_USER = 1;
+        public static final int REQUEST_GET_USER_BY_ID = 2 ;
+        public static final int REQUEST_GET_USER_BY_CONTAG_ID = 3 ;
+        public static final int REQUEST_POST = 4;
+        public static final int REQUEST_PUT = 5;
+        public static final int REQUEST_PUT_ADD_USER = 6 ;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
+        public static final int ITEM_ADD_CONTAG = 2 ;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
@@ -151,5 +157,6 @@ public class Constants {
 
     public class Regex {
         public static final String PHONE_NUM = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$";
+        public static final String CONTAG_ID = "^[a-zA-Z]{4}[0-9]{4}$";
     }
 }

@@ -30,6 +30,7 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/filter_icon" />
 
+
     <ListView
         android:id="@+id/lv_contact"
         style="@style/ContactScrollBarStyle"

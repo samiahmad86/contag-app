@@ -45,7 +45,7 @@ public class UserService extends Service implements RequestListener<User> {
         if (intent != null) {
             int type = intent.getIntExtra(Constants.Keys.KEY_REQUEST_TYPE, 0);
             switch (type) {
-                case Constants.Types.REQUEST_GET: {
+                case Constants.Types.REQUEST_GET_APP_USER: {
                     UserRequest mUserRequest = new UserRequest(type);
                     mSpiceManager.execute(mUserRequest, this);
                     break;

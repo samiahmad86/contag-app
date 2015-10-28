@@ -29,6 +29,14 @@
             android:layout_marginLeft="5dp"
             android:layout_height="wrap_content" />
 
+        <Button
+            android:id="@+id/btn_add_contag"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="Add"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"/>
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_contact_id"
             style="@style/ContactIdStyle"

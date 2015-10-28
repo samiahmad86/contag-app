@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
@@ -16,6 +17,7 @@ import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.Interest;
+import com.contag.app.util.ContactUtils;
 import com.contag.app.util.ShareUtils;
 import com.squareup.picasso.Picasso;
 
@@ -58,61 +60,78 @@ public class ContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (getItemViewType(position) == Constants.Types.ITEM_CONTAG) {
-            return getCuntagView(position, convertView, parent);
+        int type = getItemViewType(position) ;
+        if (type == Constants.Types.ITEM_CONTAG || type == Constants.Types.ITEM_ADD_CONTAG) {
+            return getCuntagView(position, convertView, parent, type);
         } else {
             return getContactView(position, convertView, parent);
         }
     }
 
-    private View getCuntagView(int position, View convertView, ViewGroup parent) {
-        CuntagViewHolder vhCunt;
+    private View getCuntagView(int position, View convertView, ViewGroup parent, int type) {
+        ContagViewHolder vhCont;
         if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
-            vhCunt = new CuntagViewHolder();
+            vhCont = new ContagViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.item_contag_contacts, parent, false);
-            vhCunt.ivPhoto = (ImageView) convertView.findViewById(R.id.iv_user_photo);
-            vhCunt.tvContactId = (TextView) convertView.findViewById(R.id.tv_contact_id);
-            vhCunt.tvContactName = (TextView) convertView.findViewById(R.id.tv_contact_name);
-            vhCunt.tvInterest1 = (TextView) convertView.findViewById(R.id.tv_user_interest_1);
-            vhCunt.tvInterest2 = (TextView) convertView.findViewById(R.id.tv_user_interest_2);
-            vhCunt.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
-            vhCunt.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
-            convertView.setTag(vhCunt);
+            vhCont.ivPhoto = (ImageView) convertView.findViewById(R.id.iv_user_photo);
+            vhCont.tvContactId = (TextView) convertView.findViewById(R.id.tv_contact_id);
+            vhCont.tvContactName = (TextView) convertView.findViewById(R.id.tv_contact_name);
+            vhCont.tvInterest1 = (TextView) convertView.findViewById(R.id.tv_user_interest_1);
+            vhCont.tvInterest2 = (TextView) convertView.findViewById(R.id.tv_user_interest_2);
+            vhCont.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
+            vhCont.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
+            vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
+            convertView.setTag(vhCont);
         } else {
-            vhCunt = (CuntagViewHolder) convertView.getTag();
+            vhCont = (ContagViewHolder) convertView.getTag();
         }
-        ContagContag cuntObject = ((ContactListItem) getItem(position)).mContagContag;
-        Picasso.with(mContext).load(cuntObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
-                .into(vhCunt.ivPhoto);
-        vhCunt.tvContactId.setText(cuntObject.getContag());
-        vhCunt.tvContactName.setText(cuntObject.getName());
-        Log.d("Con", cuntObject.getName()) ;
+
+        ContagContag contObject = ((ContactListItem) getItem(position)).mContagContag;
+        Picasso.with(mContext).load(contObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
+                .into(vhCont.ivPhoto);
+        vhCont.tvContactId.setText(contObject.getContag());
+        vhCont.tvContactName.setText(contObject.getName());
+
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
         if (interests != null && interests.size() > 0) {
-            Log.d("ConAdap", "Interests not null");
             try {
-                setInterestElseHide(interests.get(0), vhCunt.tvInterest1);
-                setInterestElseHide(interests.get(1), vhCunt.tvInterest2);
-                setInterestElseHide(interests.get(2), vhCunt.tvInterest3);
-                setInterestElseHide(interests.get(3), vhCunt.tvInterest4);
+                setInterestElseHide(interests.get(0), vhCont.tvInterest1);
+                setInterestElseHide(interests.get(1), vhCont.tvInterest2);
+                setInterestElseHide(interests.get(2), vhCont.tvInterest3);
+                setInterestElseHide(interests.get(3), vhCont.tvInterest4);
             } catch (IndexOutOfBoundsException ex) {
                 ex.printStackTrace();
             }
         } else {
-            Log.d("ConAdap", "Interests are null") ;
-            vhCunt.tvInterest1.setVisibility(View.GONE);
-            vhCunt.tvInterest2.setVisibility(View.GONE);
-            vhCunt.tvInterest3.setVisibility(View.GONE);
-            vhCunt.tvInterest4.setVisibility(View.GONE);
+            vhCont.tvInterest1.setVisibility(View.GONE);
+            vhCont.tvInterest2.setVisibility(View.GONE);
+            vhCont.tvInterest3.setVisibility(View.GONE);
+            vhCont.tvInterest4.setVisibility(View.GONE);
 
+        }
+
+        if(type == Constants.Types.ITEM_ADD_CONTAG) {
+            if(ContactUtils.isExistingContact(contObject.getId(), mContext.getApplicationContext())) {
+                vhCont.btnAdd.setVisibility(View.VISIBLE);
+                final ContactListItem item = (ContactListItem) getItem(position) ;
+                vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ContactUtils.addContag(mContext, item);
+                        Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }else {
+            vhCont.btnAdd.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }
 
     private View getContactView(int position, View convertView, ViewGroup parent) {
         ContactViewHolder vhContact;
-        if (convertView == null || (convertView.getTag() instanceof CuntagViewHolder)) {
+        if (convertView == null || (convertView.getTag() instanceof ContagViewHolder)) {
             vhContact = new ContactViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.item_contacts, parent, false);
@@ -162,7 +181,7 @@ public class ContactAdapter extends BaseAdapter {
         }
     }
 
-    public static class CuntagViewHolder {
+    public static class ContagViewHolder {
 
         public TextView tvContactName;
         public TextView tvContactId;
@@ -171,8 +190,9 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest3;
         public TextView tvInterest4;
         public ImageView ivPhoto;
+        public Button btnAdd ;
 
-        public CuntagViewHolder() {
+        public ContagViewHolder() {
 
         }
 

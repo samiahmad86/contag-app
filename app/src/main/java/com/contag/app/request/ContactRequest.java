@@ -2,6 +2,7 @@ package com.contag.app.request;
 
 import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
+import com.contag.app.model.AddContactRequest;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.RawContacts;
 import com.contag.app.util.PrefUtils;
@@ -16,6 +17,8 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
     private HashSet<RawContacts> rawContact;
     private int type;
+    private String contagID ;
+    private AddContactRequest contact ;
 
     public ContactRequest(int type) {
         super(ContactResponse.ContactList.class, APIInterface.class);
@@ -28,12 +31,36 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
         this.rawContact = mRawContactsArrayList;
     }
 
+    public ContactRequest(int type, String contagID) {
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
+        this.contagID = contagID ;
+    }
+
+    public ContactRequest(int type, AddContactRequest contact){
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
+        this.contact = contact ;
+    }
+
     @Override
     public ContactResponse.ContactList loadDataFromNetwork() throws Exception {
-        if (type == Constants.Types.REQUEST_GET) {
+        if (type == Constants.Types.REQUEST_GET_APP_USER) {
+
             return getService().getContacts(PrefUtils.getAuthToken());
-        } else if(type == Constants.Types.REQUEST_POST) {
+
+        } else if (type == Constants.Types.REQUEST_PUT_ADD_USER){
+
+            return getService().addContagUser(PrefUtils.getAuthToken(), contact) ;
+        }
+        else if(type == Constants.Types.REQUEST_POST) {
+
             return getService().sendContacts(PrefUtils.getAuthToken(), rawContact);
+
+        } else if (Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID == type){
+
+            return getService().getUserByContagID(PrefUtils.getAuthToken(), contagID);
+
         }
         return null;
     }

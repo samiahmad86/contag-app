@@ -236,8 +236,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-            Log.d("PostExecure", "Loading image") ;
-            Log.d("PostExecure", ccUser.getAvatarUrl());
+
             Picasso.with(getActivity()).load(ccUser.getAvatarUrl()).
                     placeholder(R.drawable.default_profile_pic_small).into(headerTarget);
             tvUsrName.setText(ccUser.getName());

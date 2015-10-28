@@ -71,6 +71,14 @@ public class Router {
         mContext.startService(iStartContactService);
     }
 
+    public static void addContagUser(Context mContext, Long userID){
+        Log.d("conadd", "Adding this user to server") ;
+        Intent iStartContactService = new Intent(mContext, ContactService.class);
+        iStartContactService.putExtra(Constants.Keys.KEY_ADD_CONTACT, true);
+        iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID) ;
+        mContext.startService(iStartContactService);
+    }
+
     public static void startGcmRegisterService(Context context) {
         Intent iRegisterGcm = new Intent(context, GcmRegisterIntentService.class);
         context.startService(iRegisterGcm);

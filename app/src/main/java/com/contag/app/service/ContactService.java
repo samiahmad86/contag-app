@@ -16,22 +16,11 @@ import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.config.ContagApplication;
-import com.contag.app.model.Contact;
-import com.contag.app.model.ContactDao;
+import com.contag.app.model.AddContactRequest;
 import com.contag.app.model.ContactResponse;
-import com.contag.app.model.ContagContactResponse;
-import com.contag.app.model.ContagContag;
-import com.contag.app.model.ContagContagDao;
-import com.contag.app.model.DaoSession;
-import com.contag.app.model.Interest;
-import com.contag.app.model.InterestDao;
-import com.contag.app.model.InterestResponse;
 import com.contag.app.model.RawContacts;
-import com.contag.app.model.SocialProfile;
-import com.contag.app.model.SocialProfileDao;
-import com.contag.app.model.SocialProfileResponse;
 import com.contag.app.request.ContactRequest;
+import com.contag.app.util.ContactUtils;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.util.RegexUtils;
 import com.google.gson.Gson;
@@ -75,9 +64,27 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
             if (intent.getBooleanExtra(Constants.Keys.KEY_SEND_CONTACTS, false)) {
                 Log.d("Condev", "ContactService: Going to send the contacts to the server") ;
                 clContact.startLoading();
-            } else {
+            } else if(intent.getBooleanExtra(Constants.Keys.KEY_ADD_CONTACT, false)) {
+                Log.d("conadd", "Going to make that call") ;
+                long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0l);
+                Log.d("conadd", "" + userID) ;
+                AddContactRequest addContact = new AddContactRequest(userID)  ;
+                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_PUT_ADD_USER, addContact);
+                mSpiceManager.execute(cr, new RequestListener<ContactResponse.ContactList>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        Log.d("conadd", "request failed") ;
+                    }
+
+                    @Override
+                    public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                        Log.d("conadd", "User added on server") ;
+                    }
+                }) ;
+            }
+            else {
                 Log.d("Condev", "ContactService: Going to fetch the contacts from the server") ;
-                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET);
+                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET_APP_USER);
                 mSpiceManager.execute(cr, this);
             }
         }
@@ -159,94 +166,15 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
         @Override
         protected Boolean doInBackground(ContactResponse.ContactList... params) {
             Log.d("Condev", "Loading the returned contacts into dao") ;
-            DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
-            ContactDao mContactDao = session.getContactDao();
-            Log.d("Condev", "Current Dao size: " + mContactDao.loadAll().size());
-            for (ContactResponse response : params[0]) {
-                Contact mContact = new Contact(response.id, response.createdOn, response.updatedOn, response.contactName,
-                        response.contactNumber, response.invitedOn, response.isOnContag, response.isMuted, response.isBlocked,
-                        response.isBlocked);
-
-                if (mContact.getIsOnContag()) {
-                    ContagContactResponse ccResponse = response.contactContagUser;
-                    ContagContag cc = new ContagContag(ccResponse.id);
-                    cc.setContact(mContact);
-                    cc.setCreatedOn(ccResponse.createdOn);
-                    cc.setUpdatedOn(ccResponse.updatedOn);
-                    if(ccResponse.name != null) {
-                        cc.setName(ccResponse.name);
-                    } else {
-                        cc.setName(response.contactName);
-                    }
-                    cc.setRegisteredWith(ccResponse.registeredWith);
-                    cc.setMobileNumber(ccResponse.mobileNumber);
-                    cc.setContag(ccResponse.contag);
-                    cc.setLandLineNumber(ccResponse.landlineNumber);
-                    cc.setEmergencyContactNumber(ccResponse.emergencyContactNumber);
-                    cc.setIsMobileVerified(ccResponse.isMobileVerified);
-                    cc.setGender(ccResponse.gender);
-                    cc.setAddress(ccResponse.address);
-                    cc.setWorkEmail(ccResponse.workEmail);
-                    cc.setWorkMobileNumber(ccResponse.workMobileNumber);
-                    cc.setWorkLandLineNumber(ccResponse.workLandlineNumber);
-                    cc.setWebsite(ccResponse.website);
-                    cc.setDesignation(ccResponse.designation);
-                    cc.setWorkFacebookPage(ccResponse.workFacebookPage);
-                    cc.setAndroidAppLink(ccResponse.androidAppLink);
-                    cc.setIosAppLink(ccResponse.iosAppLink);
-                    cc.setAvatarUrl(ccResponse.avatarUrl);
-                    cc.setBloodGroup(ccResponse.bloodGroup);
-                    cc.setDateOfBirth(ccResponse.dateOfBirth);
-                    cc.setIsMobileVerified(ccResponse.isMobileVerified);
-                    cc.setMaritalStatus(ccResponse.maritalStatus);
-                    cc.setMarriageAnniversary(ccResponse.marriageAnniversary);
-                    cc.setPersonalEmail(ccResponse.personalEmail);
-                    cc.setWorkAddress(ccResponse.workAddress);
-
-                    ContagContagDao ccDao = session.getContagContagDao();
-                    if (ccResponse.userInterest != null && ccResponse.userInterest.size() > 0) {
-                        InterestDao interestDao = session.getInterestDao();
-                        for (InterestResponse ir : ccResponse.userInterest) {
-                            Log.d(TAG, ir.name);
-                            Interest interest = new Interest(ir.id);
-                            interest.setName(ir.name);
-                            interest.setContagUserId(ccResponse.id);
-                            interest.setContagContag(cc);
-                            interestDao.insertOrReplace(interest);
-                        }
-                    }
-
-                    if (ccResponse.socialProfile != null && ccResponse.socialProfile.size() > 0) {
-                        SocialProfileDao spDao = session.getSocialProfileDao();
-                        for (SocialProfileResponse spr : ccResponse.socialProfile) {
-                            SocialProfile socialProfile = new SocialProfile();
-                            socialProfile.setPlatform_id(spr.platformId);
-                            socialProfile.setSocial_platform(spr.socialPlatform);
-                            socialProfile.setContagContag(cc);
-                            socialProfile.setContagUserId(ccResponse.id);
-                            spDao.insertOrReplace(socialProfile);
-                        }
-                    }
-
-                    ccDao.insertOrReplace(cc);
-                }
-                Log.d("Condev", "" + mContact.getId() + " " + response.id);
-                Log.d("Condevs", "" + mContact.getContactName() + " " + response.contactName);
-                try {
-                    mContactDao.insertOrReplace(mContact);
-                    PrefUtils.setContactBookUpdated(false);
-                    PrefUtils.setContactUpdatedTimestamp(System.currentTimeMillis());
-                } catch (Exception ex) {
-                    // TODO : handle this
-                    ex.printStackTrace();
-                }
-            }
+            ContactUtils.saveContact(getApplicationContext(), params[0]) ;
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean value) {
             Log.d("Condev", "Local dao updated successfully. Going to broadcast the same") ;
+            PrefUtils.setContactBookUpdated(false);
+            PrefUtils.setContactUpdatedTimestamp(System.currentTimeMillis());
             Intent iContactUpdated = new Intent(getResources().getString(R.string.intent_filter_contacts_updated));
             LocalBroadcastManager.getInstance(ContactService.this).sendBroadcast(iContactUpdated);
         }

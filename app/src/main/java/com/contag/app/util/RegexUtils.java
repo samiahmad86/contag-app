@@ -13,4 +13,9 @@ public class RegexUtils {
         Pattern pattern = Pattern.compile(Constants.Regex.PHONE_NUM);
         return pattern.matcher(phNum).matches();
     }
+
+    public static boolean isContagId(String contagID){
+        Pattern pattern = Pattern.compile(Constants.Regex.CONTAG_ID) ;
+        return pattern.matcher(contagID).matches() ;
+    }
 }

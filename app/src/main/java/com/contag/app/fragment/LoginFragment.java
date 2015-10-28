@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.contag.app.model.Login;
 import com.contag.app.model.OTP;
 import com.contag.app.model.OTPResponse;
 import com.contag.app.model.Response;
-import com.contag.app.model.User;
 import com.contag.app.request.LoginRequest;
 import com.contag.app.request.OTPRequest;
 import com.contag.app.util.DeviceUtils;
@@ -201,7 +199,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                         } else {
                                             PrefUtils.setAuthToken(otpResponse.authToken);
                                             Router.startUserService(getActivity(),
-                                                    Constants.Types.REQUEST_GET);
+                                                    Constants.Types.REQUEST_GET_APP_USER);
                                         }
                                     } else {
                                         showToast("OTP is incorrect");

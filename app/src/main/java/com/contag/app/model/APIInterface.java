@@ -65,6 +65,8 @@ public interface APIInterface {
     User getUser(@Header(Constants.Headers.HEADER_TOKEN) String token);
 
 
+
+
     @Headers({
             "Content-Type: application/json"
     })
@@ -76,6 +78,21 @@ public interface APIInterface {
     })
     @GET(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList getContacts(@Header(Constants.Headers.HEADER_TOKEN) String token);
+
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList getUserByContagID(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                  @Query(Constants.Keys.KEY_CONTAG_ID) String contagID);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @PUT(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList addContagUser(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                              @Body AddContactRequest userID);
 
     @Headers({
             "Content-Type: application/json"

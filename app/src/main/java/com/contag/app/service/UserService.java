@@ -123,7 +123,7 @@ public class UserService extends Service implements RequestListener<User> {
             cc.setWorkFacebookPage(user.workFacebookPage);
             cc.setAndroidAppLink(user.androidAppLink);
             cc.setIosAppLink(user.iosAppLink);
-            cc.setAvatarUrl(user.avatarUrl);
+            cc.setAvatarUrl(Constants.Urls.BASE_URL + user.avatarUrl);
             cc.setBloodGroup(user.bloodGroup);
             cc.setDateOfBirth(user.dateOfBirth);
             cc.setIsMobileVerified(user.isMobileVerified);

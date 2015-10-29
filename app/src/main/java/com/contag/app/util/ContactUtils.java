@@ -171,7 +171,7 @@ public class ContactUtils {
         cc.setWorkFacebookPage(ccResponse.workFacebookPage);
         cc.setAndroidAppLink(ccResponse.androidAppLink);
         cc.setIosAppLink(ccResponse.iosAppLink);
-        cc.setAvatarUrl(ccResponse.avatarUrl);
+        cc.setAvatarUrl(Constants.Urls.BASE_URL + ccResponse.avatarUrl);
         cc.setBloodGroup(ccResponse.bloodGroup);
         cc.setDateOfBirth(ccResponse.dateOfBirth);
         cc.setIsMobileVerified(ccResponse.isMobileVerified);

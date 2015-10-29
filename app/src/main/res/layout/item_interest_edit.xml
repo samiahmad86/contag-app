@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/item_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curved_border_bg_transparent"
+        android:layout_margin="5dp"
+        android:paddingRight="30dp">
+
+        <EditText
+            android:id="@+id/interest_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Programming"
+            android:textSize="15sp"
+            android:textColor="#aaa"
+            android:minWidth="90dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignTop="@+id/interest_text"
+            android:layout_alignLeft="@+id/interest_text"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false" />
+
+        <EditText
+            android:id="@+id/interest_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="90dp"
+            android:textSize="15sp"
+            android:text="Program"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/btn_update"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_toRightOf="@+id/item_container"
+        android:src="@drawable/btn_add"
+        android:layout_marginLeft="-40dp"
+        android:layout_marginTop="10dp"/>
+
+    <ImageView
+        android:id="@+id/remove_interest_btn"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/btn_add"
+        android:layout_toRightOf="@+id/item_container"
+        android:layout_marginLeft="-18dp"/>
+
+
+</RelativeLayout>

@@ -18,7 +18,7 @@
 
         <include
             android:id="@+id/tb_user"
-            layout="@layout/layout_toolbar_home" />
+            layout="@layout/layout_toolbar_profile" />
 
         <FrameLayout
             android:id="@+id/root_user_fragment"

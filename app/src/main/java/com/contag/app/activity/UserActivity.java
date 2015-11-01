@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,15 +46,13 @@ public class UserActivity extends BaseActivity {
     private static final String TAG = UserActivity.class.getName();
     private FlowLayout interestsBoxFlowLayout ;
     private ImageView ivEditIcon ;
-    private static int[] interestsID = {R.id.tv_user_interest_1, R.id.tv_user_interest_2,
-            R.id.tv_user_interest_3} ;
-    private static int[] rlEditInterestsID = {R.id.rl_add_interest_1, R.id.rl_add_interest_2,
-            R.id.rl_add_interest_3}  ;
-    private static int[] editTextInterestsID = {R.id.et_user_interest_1, R.id.et_user_interest_2,
-            R.id.et_user_interest_3}  ;
-    private static int[] buttonRemoveInterestsID = { R.id.btn_add_interest_1, R.id.btn_add_interest_2,
-            R.id.btn_add_interest_3
-    } ;
+    private static int[] interestContainer = {R.id.rl_interest_one, R.id.rl_interest_two,
+            R.id.rl_interest_three} ;
+    private static int[] interestText = {R.id.tv_user_interest_one, R.id.tv_user_interest_two,
+            R.id.tv_user_interest_three} ;
+    private static int[] rmInterest = {R.id.btn_rm_interest_one, R.id.btn_rm_interest_two,
+            R.id.btn_rm_interest_three}  ;
+
 
 
     @Override
@@ -132,13 +131,14 @@ public class UserActivity extends BaseActivity {
             protected void onPostExecute(ArrayList<Interest> userInterests) {
                 int i = 0 ;
                 for(Interest userInterest : userInterests) {
-                    ((TextView) findViewById(interestsID[i])).setText(userInterest.getName()) ;
-                    //(findViewById(interestsID[i])).setVisibility(View.VISIBLE);
-                    //((TextView) findViewById(editTextInterestsID[i])).setText(userInterest.getName()) ;
-                    (findViewById(rlEditInterestsID[i])).setVisibility(View.VISIBLE);
+                    // Set interest on the text views
+                    ((TextView) findViewById(interestText[i])).setText(userInterest.getName()) ;
+                    Log.d("interest", userInterest.getName());
+                    // make the interest boxes visible
+                    (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
                     i++ ;
-
                 }
+
             }
         }.execute();
 
@@ -156,11 +156,12 @@ public class UserActivity extends BaseActivity {
                 int i = 0 ;
 
                 for(Interest userInterest : userInterests) {
-                    (findViewById(buttonRemoveInterestsID[i])).setVisibility(View.VISIBLE);
-                   // (findViewById(interestsID[i])).setVisibility(View.GONE);
-                    //((TextView) findViewById(editTextInterestsID[i])).setText(userInterest.getName()) ;
-                    //(findViewById(rlEditInterestsID[i])).setVisibility(View.VISIBLE);
+                    (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
+                    (findViewById(rmInterest[i])).setTag(i) ;
                     i++ ;
+                }
+                if(i < 4){
+                    (findViewById(R.id.rl_add_interest)).setVisibility(View.VISIBLE);
                 }
             }
         }.execute();

@@ -45,13 +45,13 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iv_edit_profile"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:id="@+id/iv_edit_profile"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/ll_user_name_container"
-                android:visibility="gone"
-                android:layout_centerVertical="true"/>
-            
+                android:visibility="gone" />
+
             <com.contag.app.view.CircularImageView
                 android:id="@+id/iv_user_photo"
                 android:layout_width="62dp"
@@ -177,7 +177,6 @@
                     android:background="@drawable/btn_add" />
 
             </RelativeLayout>
-
 
         </org.apmem.tools.layouts.FlowLayout>
 

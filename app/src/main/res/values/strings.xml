@@ -79,4 +79,6 @@
     <string name="title_activity_instagram">InstagramActivity</string>
     <string name="title_activity_notifications">NotificationsActivity</string>
 
+    <string name="add_interest">Add Interest</string>
+
 </resources>

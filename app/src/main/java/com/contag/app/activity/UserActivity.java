@@ -189,7 +189,7 @@ public class UserActivity extends BaseActivity {
     };
 
     private void setupNewInterestView() {
-        //final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
+        final EditText interestHint = (EditText) findViewById(R.id.interest_hint);
         final EditText interestText = (EditText) findViewById(R.id.interest_text);
         final ImageView addNewInterestBtn = (ImageView) findViewById(R.id.btn_add);
 
@@ -220,7 +220,7 @@ public class UserActivity extends BaseActivity {
                                     if (suggestions.size() > 0) {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
-                                        interestText.setTag(1, suggestion.id) ;
+                                        interestText.setTag(R.id.btn_add, suggestion.id) ;
                                         interestText.setText(suggestion.name);
 
                                     } else {
@@ -239,7 +239,7 @@ public class UserActivity extends BaseActivity {
         addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("ID of interest is: " + interestText.getTag(1));
+                showToast("ID of interest is: " + interestText.getTag(R.id.btn_add));
 //                if (interestSuggestion.get() != null) {
 //                    // here, send the new interest suggestion to the endpoint
 //

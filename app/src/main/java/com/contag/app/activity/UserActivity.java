@@ -1,15 +1,23 @@
 package com.contag.app.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -17,14 +25,36 @@ import com.contag.app.config.Constants;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.Interest;
+import com.contag.app.model.InterestSuggestion;
+import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
+import com.google.gson.Gson;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import org.apmem.tools.layouts.FlowLayout;
+
+import java.util.ArrayList;
 
 public class UserActivity extends BaseActivity {
 
     private static final String TAG = UserActivity.class.getName();
+    private FlowLayout interestsBoxFlowLayout ;
+    private ImageView ivEditIcon ;
+    private static int[] interestsID = {R.id.tv_user_interest_1, R.id.tv_user_interest_2,
+            R.id.tv_user_interest_3} ;
+    private static int[] rlEditInterestsID = {R.id.rl_add_interest_1, R.id.rl_add_interest_2,
+            R.id.rl_add_interest_3}  ;
+    private static int[] editTextInterestsID = {R.id.et_user_interest_1, R.id.et_user_interest_2,
+            R.id.et_user_interest_3}  ;
+    private static int[] buttonRemoveInterestsID = { R.id.btn_add_interest_1, R.id.btn_add_interest_2,
+            R.id.btn_add_interest_3
+    } ;
+    private boolean isEditModeOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +76,305 @@ public class UserActivity extends BaseActivity {
 
         new LoadUser().execute(userID);
 
+        setUpInterests();
+
         if(userID != PrefUtils.getCurrentUserID()) {
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
             transaction.add(R.id.root_user_fragment, userFragment);
             transaction.commit();
         } else {
+            // interests specific setup
+            //interestsBoxFlowLayout = (FlowLayout) findViewById(R.id.interests_box);
+            //RelativeLayout newInterestView = (RelativeLayout) findViewById(R.id.new_interest);
+
+            //setupNewInterestView(newInterestView);
+            //setupEditableInterests();
+            final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
+            final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
+            final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
+            final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
+            ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile) ;
+            ivEditIcon.setVisibility(View.VISIBLE);
+            ivEditIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!isEditModeOn) {
+                        Intent iEditModeToggle = new Intent
+                                (UserActivity.this.getResources().getString(R.string.intent_filter_edit_mode));
+                        iEditModeToggle.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+                        LocalBroadcastManager.getInstance(UserActivity.this).sendBroadcast(iEditModeToggle);
+                        setupEditableInterests();
+                        ivEditIcon.setImageResource(R.drawable.btn_add);
+                        etUserName.setText(tvUserName.getText().toString());
+                        etUserStatus.setText(tvUserStatus.getText().toString());
+                        tvUserName.setVisibility(View.GONE);
+                        tvUserStatus.setVisibility(View.GONE);
+                        isEditModeOn = true;
+                    } else {
+                        Intent iEditModeToggle = new Intent
+                                (UserActivity.this.getResources().getString(R.string.intent_filter_edit_mode));
+                        iEditModeToggle.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+                        iEditModeToggle.putExtra(Constants.Keys.KEY_USER_NAME, etUserName.getText().toString());
+                        iEditModeToggle.putExtra(Constants.Keys.KEY_USER_STATUS_UPDATE, etUserStatus.getText().toString());
+                        LocalBroadcastManager.getInstance(UserActivity.this).sendBroadcast(iEditModeToggle);
+                        ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
+                        isEditModeOn = false;
+                    }
+                }
+            });
+
             CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
             transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(brSuggestions, new IntentFilter(getResources().getString(R.string.intent_filter_interest_suggestion)));
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(brToggleEdit, new IntentFilter(getResources().getString(R.string.intent_filter_edit_button_toggle)));
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(brUserUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(brSuggestions);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(brToggleEdit);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(brUserUpdated);
+    }
+
+
+    /////////////////////////
+
+
+    // Show a user's interests
+    private void setUpInterests() {
+        new AsyncTask<Void, Void, ArrayList<Interest>>() {
+            @Override
+            protected ArrayList<Interest> doInBackground(Void... params) {
+                return getUserInterests(PrefUtils.getCurrentUserID());
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Interest> userInterests) {
+                int i = 0 ;
+                for(Interest userInterest : userInterests) {
+                    ((TextView) findViewById(interestsID[i])).setText(userInterest.getName()) ;
+                    //(findViewById(interestsID[i])).setVisibility(View.VISIBLE);
+                    //((TextView) findViewById(editTextInterestsID[i])).setText(userInterest.getName()) ;
+                    (findViewById(rlEditInterestsID[i])).setVisibility(View.VISIBLE);
+                    i++ ;
+
+                }
+            }
+        }.execute();
+
+    }
+
+    private void setupEditableInterests() {
+        new AsyncTask<Void, Void, ArrayList<Interest>>() {
+            @Override
+            protected ArrayList<Interest> doInBackground(Void... params) {
+                return getUserInterests(PrefUtils.getCurrentUserID());
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Interest> userInterests) {
+                int i = 0 ;
+
+                for(Interest userInterest : userInterests) {
+                    (findViewById(buttonRemoveInterestsID[i])).setVisibility(View.VISIBLE);
+                   // (findViewById(interestsID[i])).setVisibility(View.GONE);
+                    //((TextView) findViewById(editTextInterestsID[i])).setText(userInterest.getName()) ;
+                    //(findViewById(rlEditInterestsID[i])).setVisibility(View.VISIBLE);
+                    i++ ;
+                }
+            }
+        }.execute();
+    }
+
+    private class Data<T> {
+        private T val;
+        public void set(T newVal) { val = newVal; }
+        public T get() { return val; }
+        public void clear() { val = null; }
+    }
+
+    private BroadcastReceiver brSuggestions = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, -1);
+            if (position != -1) {
+                String list = intent.getStringExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST);
+                Gson gson = new Gson();
+                ArrayList<InterestSuggestion> suggestionArrayList = gson.fromJson(list, InterestSuggestion.List.class);
+            }
+        }
+    };
+
+    private BroadcastReceiver brToggleEdit = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setupEditableInterests();
+            ivEditIcon.setImageResource(R.drawable.btn_add);
+            isEditModeOn = true;
+        }
+    };
+
+    private BroadcastReceiver brUserUpdated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            findViewById(R.id.tv_user_name).setVisibility(View.VISIBLE);
+            findViewById(R.id.tv_user_status).setVisibility(View.VISIBLE);
+            findViewById(R.id.et_user_name).setVisibility(View.GONE);
+            findViewById(R.id.et_user_status).setVisibility(View.GONE);
+            new LoadUser().execute(PrefUtils.getCurrentUserID());
+        }
+    };
+
+    private void setupNewInterestView(RelativeLayout newInterestView) {
+        final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
+        final EditText interestText = (EditText) newInterestView.findViewById(R.id.interest_text);
+        final ImageView addNewInterestBtn = (ImageView) newInterestView.findViewById(R.id.btn_add);
+
+        final Data<InterestSuggestion> interestSuggestion = new Data<>();
+        final String hintPlaceholder = "New Interest";
+
+        interestHint.setText(hintPlaceholder);
+        interestText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String interestTextStr = interestText.getText().toString();
+                getSpiceManager().execute(
+                        new InterestSuggestionRequest(interestTextStr),
+                        new RequestListener<InterestSuggestion.List>() {
+                            @Override
+                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
+                                if (suggestions.size() > 0) {
+                                    InterestSuggestion suggestion = suggestions.get(0);
+                                    interestSuggestion.set(suggestion);
+                                    interestHint.setText(suggestion.name);
+                                } else {
+                                    interestSuggestion.clear();
+                                    if (interestTextStr.length() == 0) {
+                                        interestHint.setText(hintPlaceholder);
+                                    } else {
+                                        interestHint.setText("");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {}
+                        }
+                );
+            }
+        });
+
+        addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (interestSuggestion.get() != null) {
+                    // here, send the new interest suggestion to the endpoint
+                } else {
+                    String newInterestName = interestText.getText().toString();
+                    // do things with newInterestName here
+                }
+
+                // whichever way, you need to get a new interest object, and then call setupEditableInterestView(interest)
+            }
+        });
+    }
+
+
+
+    private void setupEditableInterestView(Interest interest) {
+        final RelativeLayout editInterestView = (RelativeLayout) View.inflate(this, R.layout.item_interest_edit, null);
+
+        final EditText interestHint = (EditText) editInterestView.findViewById(R.id.interest_hint);
+        final EditText interestText = (EditText) editInterestView.findViewById(R.id.interest_text);
+        final ImageView updateBtn = (ImageView) editInterestView.findViewById(R.id.btn_update);
+        final ImageView removeBtn = (ImageView) editInterestView.findViewById(R.id.remove_interest_btn);
+
+        final Data<InterestSuggestion> interestSuggestion = new Data<>();
+        final String hintPlaceholder = interest.getName();
+
+        interestHint.setText(hintPlaceholder);
+        interestText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String interestTextStr = interestText.getText().toString();
+                getSpiceManager().execute(
+                        new InterestSuggestionRequest(interestTextStr),
+                        new RequestListener<InterestSuggestion.List>() {
+                            @Override
+                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
+                                if (suggestions.size() > 0) {
+                                    InterestSuggestion suggestion = suggestions.get(0);
+                                    interestSuggestion.set(suggestion);
+                                    interestHint.setText(suggestion.name);
+                                } else {
+                                    interestSuggestion.clear();
+                                    if (interestTextStr.length() == 0) {
+                                        interestHint.setText(hintPlaceholder);
+                                    } else {
+                                        interestHint.setText("");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {
+                            }
+                        }
+                );
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (interestSuggestion.get() != null) {
+                    // here, send the new interest suggestion to the endpoint
+                } else {
+                    String newInterestName = interestText.getText().toString();
+                    // do things with newInterestName here
+                }
+            }
+        });
+
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // make the api call to detach the interest here
+                // and remove the view from interestsBox
+            }
+        });
+
+        interestsBoxFlowLayout.addView(editInterestView);
+    }
+
+    //////////////////////////
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,6 +399,7 @@ public class UserActivity extends BaseActivity {
             Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+            ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
             Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
             Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).

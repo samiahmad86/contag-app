@@ -133,11 +133,13 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
         @Override
         protected ContagContag doInBackground(Void... params) {
+            log(TAG, "wtf");
             return HomeActivity.this.getCurrentUser();
         }
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
+            log(TAG, "wtf2");
             Toolbar tbHome = (Toolbar) HomeActivity.this.findViewById(R.id.tb_home);
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());

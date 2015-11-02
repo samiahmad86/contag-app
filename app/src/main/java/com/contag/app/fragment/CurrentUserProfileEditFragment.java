@@ -21,9 +21,14 @@ import android.widget.TextView;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ProfileModel;
 import com.contag.app.util.DeviceUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -89,6 +94,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     return;
                 }
                 openEditMode();
+                Intent intent = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_button_toggle));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                 break;
             }
         }
@@ -104,6 +111,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
+            vh.btnShare = (Button) view.findViewById(R.id.btn_share);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnAdd.setOnClickListener(this);
             viewHolderArrayList.add(vh);
@@ -128,19 +136,20 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 vh.spFieldValue.setAdapter(spAdapter);
             } else if (fieldType == Constants.Types.FIELD_DATE) {
                 final int position = i;
-                vh.etFieldValue.setOnClickListener(new View.OnClickListener() {
+                vh.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        ViewHolder vh = viewHolderArrayList.get(position);
-                        String date = vh.tvFieldValue.getText().toString();
-                        if (date == null || date.length() == 0) {
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                            Calendar calendar = Calendar.getInstance();
-                            date = dateFormat.format(calendar.getTime()).toString();
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus) {
+                            ViewHolder vh = viewHolderArrayList.get(position);
+                            String date = vh.tvFieldValue.getText().toString();
+                            if (date == null || date.length() == 0) {
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                                Calendar calendar = Calendar.getInstance();
+                                date = dateFormat.format(calendar.getTime()).toString();
+                            }
+                            DateFragment df = DateFragment.newInstance(date, position, profileType);
+                            df.show(getChildFragmentManager(), "Date");
                         }
-                        vh.tvFieldValue.setVisibility(View.VISIBLE);
-                        DateFragment df = DateFragment.newInstance(date, position, profileType);
-                        df.show(getChildFragmentManager(), "Date");
                     }
                 });
             }
@@ -148,6 +157,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             String value = String.valueOf(hmProfileModel.get(i).value);
             if (value != null && value.length() != 0) {
                 vh.tvFieldValue.setText(value);
+                vh.btnShare.setVisibility(View.VISIBLE);
             } else {
                 vh.tvFieldValue.setVisibility(View.GONE);
                 vh.btnAdd.setVisibility(View.VISIBLE);
@@ -182,6 +192,31 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 }
             }
             vh.tvFieldValue.setVisibility(View.GONE);
+        }
+    }
+
+    private void sendData(String name) {
+        JSONArray aUser = new JSONArray();
+        JSONObject oUser = new JSONObject();
+        try {
+            oUser.put(Constants.Keys.KEY_USER_NAME, name);
+            aUser.put(oUser);
+            for(int i = 0; i < hmProfileModel.size(); i++) {
+                oUser = new JSONObject();
+                ProfileModel pm  = hmProfileModel.get(i);
+                ViewHolder vh = viewHolderArrayList.get(i);
+                int fieldType = pm.fieldType;
+                if(fieldType == Constants.Types.FIELD_LIST) {
+                    oUser.put(pm.key, vh.spFieldValue.getSelectedItem().toString());
+                } else {
+                    oUser.put(pm.key, vh.etFieldValue.getText().toString());
+                }
+                aUser.put(oUser);
+            }
+            log(TAG, aUser.toString());
+            Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -231,6 +266,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     ViewHolder vh = viewHolderArrayList.get(position);
                     vh.etFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
+
                 }
             }
         }
@@ -243,6 +279,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 boolean toggle = intent.getBooleanExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
                 if (toggle) {
                     openEditMode();
+                } else {
+                    sendData(intent.getStringExtra(Constants.Keys.KEY_USER_NAME));
                 }
             }
         }
@@ -255,29 +293,25 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             HashMap<Integer, ProfileModel> hm = new HashMap<>();
             switch (profileType) {
                 case Constants.Types.PROFILE_PERSONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_NAME, cc.getName(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_PERSON_NAME));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_STATUS_UPDATE, cc.getStatus_update(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
+                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
+                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
+                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
+                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
+                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
+                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
+                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
+                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
                             Constants.Types.FIELD_DATE));
-                    hm.put(10, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
+                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST));
-                    hm.put(11, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
+                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
                             Constants.Types.FIELD_LIST));
 
                     break;
@@ -312,7 +346,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             hmProfileModel.putAll(hm);
             if (!isListDrawn) {
                 addViews();
+                log(TAG, "drawing list");
                 isListDrawn = true;
+            } else {
+                log(TAG, "list not drawn");
             }
             setViewContent();
         }

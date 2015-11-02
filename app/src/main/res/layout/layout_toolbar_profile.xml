@@ -46,11 +46,14 @@
 
             <ImageView
                 android:id="@+id/iv_edit_profile"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_centerVertical="true"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignTop="@id/ll_user_name_container"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/ll_user_name_container"
-                android:visibility="gone" />
+                android:src="@drawable/edit_pencil_contag"
+                android:visibility="invisible" />
 
             <com.contag.app.view.CircularImageView
                 android:id="@+id/iv_user_photo"
@@ -66,7 +69,8 @@
             android:id="@+id/tv_user_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
@@ -74,106 +78,118 @@
             android:id="@+id/et_user_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone" />
 
         <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/fl_interests_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_user_interest_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/bg_white_border_transparent_rect"
-                android:text="@string/abc_action_bar_home_description"
-                android:textSize="14sp" />
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
 
             <RelativeLayout
                 android:id="@+id/rl_add_interest_1"
+                style="@style/ProfileInterestTextBoxStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_user_interest_1"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_user_interest_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_interest"
-                    android:textSize="14sp" />
+                    android:textColor="@color/white" />
+
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_add_interest_1"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_toRightOf="@id/et_user_interest_1"
-                    android:background="@drawable/btn_add" />
+                    android:layout_toRightOf="@id/tv_user_interest_1"
+                    android:background="@drawable/btn_add"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_user_interest_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/bg_white_border_transparent_rect"
-                android:text="@string/abc_action_bar_home_description"
-                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/rl_add_interest_2"
+                style="@style/ProfileInterestTextBoxStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_user_interest_2"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_user_interest_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_interest"
-                    android:textSize="14sp" />
+                    android:textColor="@color/white" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_add_interest_2"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_toRightOf="@id/et_user_interest_2"
-                    android:background="@drawable/btn_add" />
+                    android:layout_toRightOf="@id/tv_user_interest_2"
+                    android:background="@drawable/btn_add"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_user_interest_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/bg_white_border_transparent_rect"
-                android:text="@string/abc_action_bar_home_description"
-                android:textSize="14sp" />
-
             <RelativeLayout
                 android:id="@+id/rl_add_interest_3"
+                style="@style/ProfileInterestTextBoxStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_user_interest_3"
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_user_interest_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_interest"
-                    android:textSize="14sp" />
+                    android:textColor="@color/white" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_add_interest_3"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_toRightOf="@id/et_user_interest_3"
+                    android:layout_toRightOf="@id/tv_user_interest_3"
+                    android:background="@drawable/btn_add"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_add_interest"
+                style="@style/ProfileInterestTextBoxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:visibility="gone">
+
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_user_interest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_add_interest"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_toRightOf="@id/et_user_interest"
                     android:background="@drawable/btn_add" />
 
             </RelativeLayout>

@@ -4,31 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <!--<include-->
-    <!--android:id="@+id/rl_indicator"-->
-    <!--layout="@layout/layout_profile_indicator" />-->
-
-
-    <RelativeLayout
-        android:id="@+id/rl_interest_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_tb_home"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-
-        <include
-            android:id="@+id/ll_interest_container"
-            layout="@layout/layout_edit_interests" />
-    </RelativeLayout>
-
-
     <com.contag.app.view.SlidingTabLayout
         android:id="@+id/stl_current_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_interest_container"
         android:background="@color/bg_tb_home" />
 
 

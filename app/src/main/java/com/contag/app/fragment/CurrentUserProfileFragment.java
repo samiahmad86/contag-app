@@ -1,49 +1,22 @@
 package com.contag.app.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.contag.app.R;
-import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
-import com.contag.app.config.Router;
-import com.contag.app.model.FeedsResponse;
-import com.contag.app.model.Interest;
-import com.contag.app.model.InterestSuggestion;
-import com.contag.app.request.InterestSuggestionRequest;
-import com.contag.app.util.PrefUtils;
 import com.contag.app.view.SlidingTabLayout;
-import com.google.gson.Gson;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.apmem.tools.layouts.FlowLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,40 +26,6 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     public static final String TAG = CurrentUserProfileFragment.class.getName();
 
-    private FlowLayout interestsBoxFlowLayout;
-
-//    private class InterestsData {
-//        public InterestSuggestion newInterestSuggestion;
-//
-//        public void setNewInterestSuggestion(InterestSuggestion suggestion) {
-//            newInterestSuggestion = suggestion;
-//        }
-//
-//        public void clear() {
-//            newInterestSuggestion = null;
-//        }
-//    };
-//
-//    private final InterestsData interestsData = new InterestsData();
-
-    private class Data<T> {
-        private T val;
-        public void set(T newVal) { val = newVal; }
-        public T get() { return val; }
-        public void clear() { val = null; }
-    }
-
-    private BroadcastReceiver brSuggestions = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, -1);
-            if (position != -1) {
-                String list = intent.getStringExtra(Constants.Keys.KEY_INTEREST_SUGGESTION_LIST);
-                Gson gson = new Gson();
-                ArrayList<InterestSuggestion> suggestionArrayList = gson.fromJson(list, InterestSuggestion.List.class);
-            }
-        }
-    };
 
     public static CurrentUserProfileFragment newInstance() {
         CurrentUserProfileFragment cupf = new CurrentUserProfileFragment();
@@ -123,12 +62,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         });
         stl.setViewPager(pager);
 
-        // interests specific setup
-        interestsBoxFlowLayout = (FlowLayout) view.findViewById(R.id.interests_box);
-        RelativeLayout newInterestView = (RelativeLayout) view.findViewById(R.id.new_interest);
 
-        setupNewInterestView(newInterestView);
-        setupEditableInterests();
 
         return view;
     }
@@ -147,18 +81,6 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        LocalBroadcastManager.getInstance(getActivity()).
-                registerReceiver(brSuggestions, new IntentFilter(getResources().getString(R.string.intent_filter_interest_suggestion)));
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brSuggestions);
-    }
 
 
     @Override
@@ -184,159 +106,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     }
 
-    /////////////////////////
 
-    private void setupNewInterestView(RelativeLayout newInterestView) {
-        final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
-        final EditText interestText = (EditText) newInterestView.findViewById(R.id.interest_text);
-        final ImageView addNewInterestBtn = (ImageView) newInterestView.findViewById(R.id.btn_add);
-
-        final Data<InterestSuggestion> interestSuggestion = new Data<>();
-        final String hintPlaceholder = "New Interest";
-
-        interestHint.setText(hintPlaceholder);
-        interestText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                final String interestTextStr = interestText.getText().toString();
-                getSpiceManager().execute(
-                        new InterestSuggestionRequest(interestTextStr),
-                        new RequestListener<InterestSuggestion.List>() {
-                            @Override
-                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
-                                if (suggestions.size() > 0) {
-                                    InterestSuggestion suggestion = suggestions.get(0);
-                                    interestSuggestion.set(suggestion);
-                                    interestHint.setText(suggestion.name);
-                                } else {
-                                    interestSuggestion.clear();
-                                    if (interestTextStr.length() == 0) {
-                                        interestHint.setText(hintPlaceholder);
-                                    } else {
-                                        interestHint.setText("");
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onRequestFailure(SpiceException spiceException) {}
-                        }
-                );
-            }
-        });
-
-        addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (interestSuggestion.get() != null) {
-                    // here, send the new interest suggestion to the endpoint
-                } else {
-                    String newInterestName = interestText.getText().toString();
-                    // do things with newInterestName here
-                }
-
-                // whichever way, you need to get a new interest object, and then call setupEditableInterestView(interest)
-            }
-        });
-    }
-
-    private void setupEditableInterests() {
-        new AsyncTask<Void, Void, ArrayList<Interest>>() {
-            @Override
-            protected ArrayList<Interest> doInBackground(Void... params) {
-                return ((BaseActivity) CurrentUserProfileFragment.this.getActivity()).getUserInterests(PrefUtils.getCurrentUserID());
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<Interest> userInterests) {
-                for(Interest userInterest : userInterests) {
-                    CurrentUserProfileFragment.this.setupEditableInterestView(userInterest);
-                }
-            }
-        }.execute();
-    }
-
-    private void setupEditableInterestView(Interest interest) {
-        final RelativeLayout editInterestView = (RelativeLayout) View.inflate(getActivity(), R.layout.item_interest_edit, null);
-
-        final EditText interestHint = (EditText) editInterestView.findViewById(R.id.interest_hint);
-        final EditText interestText = (EditText) editInterestView.findViewById(R.id.interest_text);
-        final ImageView updateBtn = (ImageView) editInterestView.findViewById(R.id.btn_update);
-        final ImageView removeBtn = (ImageView) editInterestView.findViewById(R.id.remove_interest_btn);
-
-        final Data<InterestSuggestion> interestSuggestion = new Data<>();
-        final String hintPlaceholder = interest.getName();
-
-        interestHint.setText(hintPlaceholder);
-        interestText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                final String interestTextStr = interestText.getText().toString();
-                getSpiceManager().execute(
-                        new InterestSuggestionRequest(interestTextStr),
-                        new RequestListener<InterestSuggestion.List>() {
-                            @Override
-                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
-                                if (suggestions.size() > 0) {
-                                    InterestSuggestion suggestion = suggestions.get(0);
-                                    interestSuggestion.set(suggestion);
-                                    interestHint.setText(suggestion.name);
-                                } else {
-                                    interestSuggestion.clear();
-                                    if (interestTextStr.length() == 0) {
-                                        interestHint.setText(hintPlaceholder);
-                                    } else {
-                                        interestHint.setText("");
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onRequestFailure(SpiceException spiceException) {
-                            }
-                        }
-                );
-            }
-        });
-
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (interestSuggestion.get() != null) {
-                    // here, send the new interest suggestion to the endpoint
-                } else {
-                    String newInterestName = interestText.getText().toString();
-                    // do things with newInterestName here
-                }
-            }
-        });
-
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // make the api call to detach the interest here
-                // and remove the view from interestsBox
-            }
-        });
-
-        interestsBoxFlowLayout.addView(editInterestView);
-    }
-
-    //////////////////////////
 
     private class PersonalDetailsTabsAdapter extends FragmentPagerAdapter {
 

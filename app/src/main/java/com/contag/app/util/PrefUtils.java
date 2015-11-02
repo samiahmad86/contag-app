@@ -72,7 +72,7 @@ public class PrefUtils {
     }
 
     public static long getCurrentUserID() {
-        return mSharedPref.getLong(Constants.Keys.KEY_CURRENT_USER_ID, 0);
+        return mSharedPref.getLong(Constants.Keys.KEY_CURRENT_USER_ID, 0l);
     }
 
     public static void clearForLogout(){

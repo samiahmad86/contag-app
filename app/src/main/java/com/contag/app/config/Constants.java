@@ -68,7 +68,7 @@ public class Constants {
         public static final String KEY_USER_PROFILE_TYPE = "come_fuck_me";
         public static final String KEY_CURRENT_USER_ID = "fucking_user_id";
         public static final String KEY_INTEREST_SUGGESTION_SLUG = "slug";
-        public static final String KEY_INTEREST_SUGGESTION_LIST = "fucking_cock_sucking_list";
+        public static final String KEY_INTEREST_SUGGESTION_LIST = "interest_suggestion_list";
         public static final String KEY_PROFILE_REQUEST_FOR_USER = "for_user";
         public static final String KEY_PROFILE_REQUEST_TYPE = "request_type";
         public static final String KEY_SOCIAL_PLATFORM_ID = "social_platform_id";
@@ -81,6 +81,7 @@ public class Constants {
         public static final String KEY_FEEDS_START_INDEX = "start_index";
         public static final String KEY_FEEDS_END_INDEX = "end_index";
         public static final String KEY_INTEREST_IDS = "interest_ids";
+        public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
 
     }
 
@@ -110,6 +111,7 @@ public class Constants {
         public static final int REQUEST_POST = 4;
         public static final int REQUEST_PUT = 5;
         public static final int REQUEST_PUT_ADD_USER = 6 ;
+        public static final int REQUEST_UPDATE_USER_INTEREST = 7 ;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int ITEM_ADD_CONTAG = 2 ;
@@ -131,6 +133,7 @@ public class Constants {
         public static final int FIELD_SOCIAL = 4;
         public static final int LIST_BLOCKED_USERS = 1;
         public static final int LIST_MUTED_USERS = 2;
+
     }
 
     public class Urls {

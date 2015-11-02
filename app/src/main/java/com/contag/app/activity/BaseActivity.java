@@ -120,9 +120,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         return getUser(PrefUtils.getCurrentUserID());
     }
 
-    public ArrayList<Interest> getCurrentUserInterests() {
-        return getUserInterests(PrefUtils.getCurrentUserID());
-    }
 
     public ArrayList<SocialProfile> getCurrentUserSocialProfiles() {
         return getSocialProfiles(PrefUtils.getCurrentUserID());

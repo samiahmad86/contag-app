@@ -23,11 +23,11 @@
         android:textSize="13sp" />
 
     <RelativeLayout
+        android:id="@+id/rl_edit_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rl_edit_container"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/tv_field_label">
+        android:layout_below="@id/tv_field_label"
+        android:layout_marginTop="20dp">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_field_value"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="13sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/sp_field_value"
@@ -46,52 +46,62 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_edit"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/tv_field_label"
-        android:background="@drawable/btn_edit_pencil" />
+    <!--<android.support.v7.widget.AppCompatButton-->
+    <!--android:id="@+id/btn_edit"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignTop="@id/tv_field_label"-->
+    <!--android:background="@drawable/btn_edit_pencil" />-->
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_add"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
         android:layout_alignTop="@id/tv_field_label"
-        android:background="@drawable/btn_add" />
-
-
-    <include
-        android:id="@+id/rl_share_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_edit_container"
-        layout="@layout/layout_share_container"/>
+        android:background="@drawable/btn_add"
+        android:visibility="gone" />
 
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="@string/update"
-        android:textSize="13sp"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        android:layout_below="@id/rl_share_container"
-        android:background="@drawable/bg_btn_profile_update" />
-
-
-    <ProgressBar
-        android:id="@+id/pb_update"
-        style="?android:attr/progressBarStyleSmall"
+        android:id="@+id/btn_share"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/btn_update"
-        android:layout_alignTop="@id/btn_update"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_field_label"
+        android:background="@drawable/share_icon"
         android:visibility="gone" />
+
+
+    <!--<include-->
+    <!--android:id="@+id/rl_share_container"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/rl_edit_container"-->
+    <!--layout="@layout/layout_share_container"/>-->
+
+
+    <!--<android.support.v7.widget.AppCompatButton-->
+    <!--android:id="@+id/btn_update"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:text="@string/update"-->
+    <!--android:textSize="13sp"-->
+    <!--android:visibility="gone"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:layout_below="@id/rl_share_container"-->
+    <!--android:background="@drawable/bg_btn_profile_update" />-->
+
+
+    <!--<ProgressBar-->
+    <!--android:id="@+id/pb_update"-->
+    <!--style="?android:attr/progressBarStyleSmall"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_toLeftOf="@id/btn_update"-->
+    <!--android:layout_alignTop="@id/btn_update"-->
+    <!--android:visibility="gone" />-->
 </RelativeLayout>

@@ -176,6 +176,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                 showToast("Enter valid otp");
                                 return;
                             }
+                            getActivity().findViewById(R.id.pb_login).setVisibility(View.VISIBLE);
                             HashMap<String, String> hmHeaders = new HashMap<>();
                             hmHeaders.put(Constants.Headers.HEADER_APP_VERSION_ID, "" + BuildConfig.VERSION_CODE);
                             hmHeaders.put(Constants.Headers.HEADER_DEVICE_TYPE, "android");

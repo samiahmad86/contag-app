@@ -100,6 +100,14 @@ public class Router {
         context.startService(iUser);
     }
 
+    public static void startInterestUpdateService(Context context, String interestList){
+        Log.d("iList", "Starting service") ;
+        Intent iInterest = new Intent(context, UserService.class) ;
+        iInterest.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_UPDATE_USER_INTEREST) ;
+        iInterest.putExtra(Constants.Keys.KEY_INTEREST_IDS, interestList) ;
+        context.startService(iInterest) ;
+    }
+
     public static void startGmailApp(Context context){
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.setType("plain/text");

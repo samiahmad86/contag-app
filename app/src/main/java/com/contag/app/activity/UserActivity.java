@@ -198,7 +198,7 @@ public class UserActivity extends BaseActivity {
         interestText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("interest", "before text: "+  s)  ;
+                Log.d("coninterest", "before text: "+  s)  ;
             }
 
             @Override
@@ -208,29 +208,40 @@ public class UserActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 final String interestTextStr = interestText.getText().toString();
 
-
+                if(interestTextStr.length() > 0) {
+                    Log.d("coninterest", "Going to search for: " + interestTextStr) ;
                     getSpiceManager().execute(
                             new InterestSuggestionRequest(interestTextStr),
                             new RequestListener<InterestSuggestion.List>() {
                                 @Override
                                 public void onRequestSuccess(InterestSuggestion.List suggestions) {
-
+                                    Log.d("coninterest", "Current top suggestion" + suggestions.get(0).name);
                                     if (suggestions.size() > 0) {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
-                                        interestText.setTag(R.id.btn_add, suggestion.id) ;
+                                        interestText.setTag(R.id.btn_add, suggestion.id);
                                         interestHint.setText(suggestion.name);
 
                                     } else {
                                         interestSuggestion.clear();
-                                        interestText.setText("");
+                                        interestHint.setText("");
+//                                        if (interestTextStr.length() == 0) {
+//                                            //interestHint.setText("Add interest");
+//                                        } else {
+//
+//                                        }
                                     }
                                 }
 
                                 @Override
-                                public void onRequestFailure(SpiceException spiceException) {}
+                                public void onRequestFailure(SpiceException spiceException) {
+                                }
                             }
                     );
+                } else {
+                    Log.d("coninterest", "no text here") ;
+                    interestHint.setText("");
+                }
             }
         });
 

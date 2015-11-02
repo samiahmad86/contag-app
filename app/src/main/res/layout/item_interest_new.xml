@@ -12,6 +12,23 @@
         android:paddingRight="30dp">
 
 
+
+        <EditText
+            android:id="@+id/interest_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Interest"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:minWidth="60dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignTop="@+id/interest_text"
+            android:layout_alignLeft="@+id/interest_text"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false" />
+
+
         <EditText
             android:id="@+id/interest_text"
             android:layout_width="wrap_content"
@@ -23,6 +40,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"/>
+
+
 
 
     </RelativeLayout>

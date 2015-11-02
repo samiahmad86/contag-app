@@ -208,20 +208,18 @@ public class UserActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 final String interestTextStr = interestText.getText().toString();
 
-                if(!interestTextStr.equals(interestText.getTag()))
+
                     getSpiceManager().execute(
                             new InterestSuggestionRequest(interestTextStr),
                             new RequestListener<InterestSuggestion.List>() {
                                 @Override
                                 public void onRequestSuccess(InterestSuggestion.List suggestions) {
 
-                                    interestText.setTag(interestTextStr)  ;
-
                                     if (suggestions.size() > 0) {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         interestText.setTag(R.id.btn_add, suggestion.id) ;
-                                        interestText.setText(suggestion.name);
+                                        interestHint.setText(suggestion.name);
 
                                     } else {
                                         interestSuggestion.clear();

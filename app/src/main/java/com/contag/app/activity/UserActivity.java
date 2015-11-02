@@ -107,6 +107,8 @@ public class UserActivity extends BaseActivity {
                         ivEditIcon.setImageResource(R.drawable.btn_add);
                         etUserName.setText(tvUserName.getText().toString());
                         etUserStatus.setText(tvUserStatus.getText().toString());
+                        etUserName.setVisibility(View.VISIBLE);
+                        etUserStatus.setVisibility(View.VISIBLE);
                         tvUserName.setVisibility(View.GONE);
                         tvUserStatus.setVisibility(View.GONE);
                         isEditModeOn = true;
@@ -117,8 +119,6 @@ public class UserActivity extends BaseActivity {
                         iEditModeToggle.putExtra(Constants.Keys.KEY_USER_NAME, etUserName.getText().toString());
                         iEditModeToggle.putExtra(Constants.Keys.KEY_USER_STATUS_UPDATE, etUserStatus.getText().toString());
                         LocalBroadcastManager.getInstance(UserActivity.this).sendBroadcast(iEditModeToggle);
-                        ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
-                        isEditModeOn = false;
                     }
                 }
             });
@@ -232,6 +232,8 @@ public class UserActivity extends BaseActivity {
             findViewById(R.id.tv_user_status).setVisibility(View.VISIBLE);
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
+            ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
+            isEditModeOn = false;
             new LoadUser().execute(PrefUtils.getCurrentUserID());
         }
     };

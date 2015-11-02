@@ -34,11 +34,14 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
 
     @Override
     public User loadDataFromNetwork() throws Exception {
-        Log.d("SearchFilter", "In load data from network") ;
+        Log.d("UserService", "In load data from network") ;
         if(Constants.Types.REQUEST_GET_APP_USER == type) {
             return getService().getUser(PrefUtils.getAuthToken());
         }else if(Constants.Types.REQUEST_PUT == type) {
-            return getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray));
+            Log.d("UserService", "put request type");
+            User user = getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray));
+            Log.d("UserService", user.name);
+            return user;
         }
         return null;
     }

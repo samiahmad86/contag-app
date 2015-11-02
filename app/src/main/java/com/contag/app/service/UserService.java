@@ -52,7 +52,7 @@ public class UserService extends Service implements RequestListener<User> {
                 }
                 case Constants.Types.REQUEST_PUT: {
                     String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
-                    Log.d("NewFubar", "making request");
+                    Log.d(TAG, "making request " + userArrayStr);
                     UserRequest mUserRequest = new UserRequest(type, userArrayStr);
                     profileType = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
                     mSpiceManager.execute(mUserRequest, this);
@@ -82,6 +82,7 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
+        Log.d(TAG, "failure");
         Toast.makeText(this, "There was an error in updating your profile", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getResources().getString(R.string.intent_filter_user_received));
         if(profileType != 0) {
@@ -92,6 +93,7 @@ public class UserService extends Service implements RequestListener<User> {
 
     @Override
     public void onRequestSuccess(User user) {
+        Log.d(TAG, "success");
         if(user.name != null) {
             PrefUtils.setCurrentUserID(user.id);
             new SaveUser().execute(user);
@@ -101,6 +103,7 @@ public class UserService extends Service implements RequestListener<User> {
     private class SaveUser extends AsyncTask<User, Void, Void> {
         @Override
         protected Void doInBackground(User... params) {
+            Log.d(TAG, "doInBackground");
             User user = params[0];
             DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
             ContagContagDao ccDao = session.getContagContagDao();

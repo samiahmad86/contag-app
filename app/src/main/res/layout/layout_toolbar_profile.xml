@@ -206,37 +206,46 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_add_interest"
-                android:background="@drawable/bg_white_border_rect_transparent"
+            <include
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginRight="8dp"
                 android:layout_marginLeft="2dp"
-                android:gravity="center"
-                android:singleLine="true"
-                android:padding="2dp"
-                android:layout_marginBottom="7dp"
-                android:visibility="visible">
+                layout="@layout/item_interest_new"
+                android:id="@+id/add_new_interest"/>
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/rl_add_interest"-->
+                <!--android:background="@drawable/bg_white_border_rect_transparent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:gravity="center"-->
+                <!--android:singleLine="true"-->
+                <!--android:padding="2dp"-->
+                <!--android:layout_marginBottom="7dp"-->
+                <!--android:visibility="visible">-->
 
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_user_interest"
-                    android:hint="@string/add_interest"
-                    android:textSize="14sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white" />
+                <!--<android.support.v7.widget.AppCompatEditText-->
+                    <!--android:id="@+id/et_user_interest"-->
+                    <!--android:hint="@string/add_interest"-->
+                    <!--android:textSize="14sp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/white" />-->
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_add_interest"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_toRightOf="@id/et_user_interest"
-                    android:background="@drawable/btn_add" />
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn_add_interest"-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:layout_marginLeft="2dp"-->
+                    <!--android:layout_marginTop="3dp"-->
+                    <!--android:layout_toRightOf="@id/et_user_interest"-->
+                    <!--android:background="@drawable/btn_add" />-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
 
         </org.apmem.tools.layouts.FlowLayout>

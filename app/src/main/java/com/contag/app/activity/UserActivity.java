@@ -158,10 +158,12 @@ public class UserActivity extends BaseActivity {
                 for(Interest userInterest : userInterests) {
                     (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
                     (findViewById(rmInterest[i])).setTag(i) ;
+                    //(findViewById(rmInterest[i])).setTag(i) ;
                     i++ ;
                 }
-                if(i < 4){
-                    (findViewById(R.id.rl_add_interest)).setVisibility(View.VISIBLE);
+                if(userInterests.size() < 5){
+                    (findViewById(R.id.add_new_interest)).setVisibility(View.VISIBLE);
+                    setupNewInterestView();
                 }
             }
         }.execute();
@@ -186,18 +188,18 @@ public class UserActivity extends BaseActivity {
         }
     };
 
-    private void setupNewInterestView(RelativeLayout newInterestView) {
-        final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
-        final EditText interestText = (EditText) newInterestView.findViewById(R.id.interest_text);
-        final ImageView addNewInterestBtn = (ImageView) newInterestView.findViewById(R.id.btn_add);
+    private void setupNewInterestView() {
+        //final EditText interestHint = (EditText) newInterestView.findViewById(R.id.interest_hint);
+        final EditText interestText = (EditText) findViewById(R.id.interest_text);
+        final ImageView addNewInterestBtn = (ImageView) findViewById(R.id.btn_add);
 
         final Data<InterestSuggestion> interestSuggestion = new Data<>();
-        final String hintPlaceholder = "New Interest";
 
-        interestHint.setText(hintPlaceholder);
         interestText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d("interest", "before text: "+  s)  ;
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -205,41 +207,46 @@ public class UserActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 final String interestTextStr = interestText.getText().toString();
-                getSpiceManager().execute(
-                        new InterestSuggestionRequest(interestTextStr),
-                        new RequestListener<InterestSuggestion.List>() {
-                            @Override
-                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
-                                if (suggestions.size() > 0) {
-                                    InterestSuggestion suggestion = suggestions.get(0);
-                                    interestSuggestion.set(suggestion);
-                                    interestHint.setText(suggestion.name);
-                                } else {
-                                    interestSuggestion.clear();
-                                    if (interestTextStr.length() == 0) {
-                                        interestHint.setText(hintPlaceholder);
+
+                if(!interestTextStr.equals(interestText.getTag()))
+                    getSpiceManager().execute(
+                            new InterestSuggestionRequest(interestTextStr),
+                            new RequestListener<InterestSuggestion.List>() {
+                                @Override
+                                public void onRequestSuccess(InterestSuggestion.List suggestions) {
+
+                                    interestText.setTag(interestTextStr)  ;
+
+                                    if (suggestions.size() > 0) {
+                                        InterestSuggestion suggestion = suggestions.get(0);
+                                        interestSuggestion.set(suggestion);
+                                        interestText.setTag(1, suggestion.id) ;
+                                        interestText.setText(suggestion.name);
+
                                     } else {
-                                        interestHint.setText("");
+                                        interestSuggestion.clear();
+                                        interestText.setText("");
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onRequestFailure(SpiceException spiceException) {}
-                        }
-                );
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {}
+                            }
+                    );
             }
         });
 
         addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (interestSuggestion.get() != null) {
-                    // here, send the new interest suggestion to the endpoint
-                } else {
-                    String newInterestName = interestText.getText().toString();
-                    // do things with newInterestName here
-                }
+                showToast("ID of interest is: " + interestText.getTag(1));
+//                if (interestSuggestion.get() != null) {
+//                    // here, send the new interest suggestion to the endpoint
+//
+//                } else {
+//                    String newInterestName = interestText.getText().toString();
+//                    // do things with newInterestName here
+//                }
 
                 // whichever way, you need to get a new interest object, and then call setupEditableInterestView(interest)
             }

@@ -40,7 +40,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
     private HashMap<Integer, ProfileModel> hmProfileModel;
     private int profileType;
-    private boolean isListDrawn = false;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     public static final String TAG = CurrentUserProfileEditFragment.class.getName();
@@ -57,6 +56,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         hmProfileModel = new HashMap<>();
+        log(TAG, "array list being initialized");
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
@@ -103,6 +103,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
 
     private void addViews() {
+        llViewContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         for (int i = 0; i < hmProfileModel.size(); i++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
@@ -278,6 +279,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private BroadcastReceiver brEditModeToggle = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            log(TAG, "broadcast received3");
             if (intent != null) {
                 boolean toggle = intent.getBooleanExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
                 if (toggle) {
@@ -347,13 +349,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
             hmProfileModel.clear();
             hmProfileModel.putAll(hm);
-            if (!isListDrawn) {
-                addViews();
-                log(TAG, "drawing list");
-                isListDrawn = true;
-            } else {
-                log(TAG, "list not drawn");
-            }
+            addViews();
             setViewContent();
         }
     }

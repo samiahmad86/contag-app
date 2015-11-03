@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    style="@style/NotificationsButtonStyle"
+    >
+
+    <TextView
+        android:id="@+id/tv_share_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        />
+    
+    <Button
+        android:id="@+id/btn_share_public"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_share_text"
+        android:text="Public"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btn_share_custom"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_share_text"
+        android:layout_toRightOf="@id/btn_share_public"
+        android:text="Custom"
+        android:textColor="@color/black"/>
+
+    <ListView
+        android:id="@+id/lv_share_list"
+        android:layout_below="@id/btn_share_public"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:scrollbars="none"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp" />
+
+    <Button
+        android:id="@+id/btn_share_done"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_share_custom"
+        android:text="Done"
+        android:textColor="@color/black"/>
+
+</RelativeLayout>

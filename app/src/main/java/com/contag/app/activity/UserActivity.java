@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -91,12 +90,7 @@ public class UserActivity extends BaseActivity {
             transaction.add(R.id.root_user_fragment, userFragment);
             transaction.commit();
         } else {
-            // interests specific setup
-            //interestsBoxFlowLayout = (FlowLayout) findViewById(R.id.interests_box);
-            //RelativeLayout newInterestView = (RelativeLayout) findViewById(R.id.new_interest);
 
-            //setupNewInterestView(newInterestView);
-            //setupEditableInterests();
             final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
@@ -392,82 +386,6 @@ public class UserActivity extends BaseActivity {
 
             }
         });
-    }
-
-
-
-    private void setupEditableInterestView(Interest interest) {
-        final RelativeLayout editInterestView = (RelativeLayout) View.inflate(this, R.layout.item_interest_edit, null);
-
-        final EditText interestHint = (EditText) editInterestView.findViewById(R.id.interest_hint);
-        final EditText interestText = (EditText) editInterestView.findViewById(R.id.interest_text);
-        final ImageView updateBtn = (ImageView) editInterestView.findViewById(R.id.btn_update);
-        final ImageView removeBtn = (ImageView) editInterestView.findViewById(R.id.remove_interest_btn);
-
-        final Data<InterestSuggestion> interestSuggestion = new Data<>();
-        final String hintPlaceholder = interest.getName();
-
-        interestHint.setText(hintPlaceholder);
-        interestText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                final String interestTextStr = interestText.getText().toString();
-                getSpiceManager().execute(
-                        new InterestSuggestionRequest(interestTextStr),
-                        new RequestListener<InterestSuggestion.List>() {
-                            @Override
-                            public void onRequestSuccess(InterestSuggestion.List suggestions) {
-                                if (suggestions.size() > 0) {
-                                    InterestSuggestion suggestion = suggestions.get(0);
-                                    interestSuggestion.set(suggestion);
-                                    interestHint.setText(suggestion.name);
-                                } else {
-                                    interestSuggestion.clear();
-                                    if (interestTextStr.length() == 0) {
-                                        interestHint.setText(hintPlaceholder);
-                                    } else {
-                                        interestHint.setText("");
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onRequestFailure(SpiceException spiceException) {
-                            }
-                        }
-                );
-            }
-        });
-
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (interestSuggestion.get() != null) {
-                    // here, send the new interest suggestion to the endpoint
-                } else {
-                    String newInterestName = interestText.getText().toString();
-                    // do things with newInterestName here
-                }
-            }
-        });
-
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // make the api call to detach the interest here
-                // and remove the view from interestsBox
-            }
-        });
-
-        interestsBoxFlowLayout.addView(editInterestView);
     }
 
     //////////////////////////

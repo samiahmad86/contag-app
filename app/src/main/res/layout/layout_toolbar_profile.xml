@@ -46,11 +46,11 @@
 
             <ImageView
                 android:id="@+id/iv_edit_profile"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_alignTop="@id/ll_user_name_container"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:layout_toRightOf="@id/ll_user_name_container"
                 android:src="@drawable/edit_pencil_contag"
                 android:visibility="invisible" />
@@ -72,7 +72,9 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="0dp"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_marginBottom="15dp"
+            />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_status"
@@ -88,7 +90,7 @@
             android:id="@+id/fl_interests_box"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            >
 
             <RelativeLayout
 

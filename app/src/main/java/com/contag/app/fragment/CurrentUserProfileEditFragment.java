@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -111,6 +112,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 }
                 break;
             }
+            case R.id.btn_share: {
+                DialogFragment d = new DialogFragment() ;
+                break ;
+            }
         }
     }
 
@@ -127,6 +132,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
+            vh.btnShare.setOnClickListener(this);
             vh.btnAdd.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);

@@ -105,15 +105,16 @@ public class User {
 
 
     public static void saveUserInterest(DaoSession session, ArrayList<Interest> interestList){
+        InterestDao interestDao = session.getInterestDao();
+        interestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(PrefUtils.getCurrentUserID())).buildDelete().executeDeleteWithoutDetachingEntities();
+        session.clear() ;
+        Log.d("iList", "Deleted interests") ;
 
-        Log.d("iList", "Saving user interest") ;
         if (interestList != null && interestList.size() > 0) {
-            InterestDao interestDao = session.getInterestDao();
-            interestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(PrefUtils.getCurrentUserID())).buildDelete() ;
-            Log.d("iList", "Deleted interests") ;
+            Log.d("iList", "Saving user interest") ;
             for (Interest interest : interestList) {
                 interestDao.insertOrReplace(interest);
-                Log.d("iList", "Interest inserted") ;
+                Log.d("iList", "Interest inserted: "+  interest.getName()) ;
             }
         }
     }

@@ -83,4 +83,6 @@
 
     <string name="add_interest">Add Interest</string>
 
+    <item type="id" name="INTEREST_POSITION"/>
+    <item type="id" name="INTEREST_OBJECT" />
 </resources>

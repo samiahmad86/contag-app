@@ -103,7 +103,7 @@ public class UserActivity extends BaseActivity {
             ivEditIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!isEditModeOn) {
+                    if (!isEditModeOn) {
                         Intent iEditModeToggle = new Intent
                                 (UserActivity.this.getResources().getString(R.string.intent_filter_edit_mode));
                         iEditModeToggle.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
@@ -127,6 +127,8 @@ public class UserActivity extends BaseActivity {
                     }
                 }
             });
+
+
 
             CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
             transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
@@ -185,6 +187,8 @@ public class UserActivity extends BaseActivity {
     private void showInterests(ArrayList<Interest> userInterests){
         int i = 0 ; //hideInterest();
         for(Interest userInterest : userInterests) {
+            if(i >= 3)
+                return ;
             // Set interest on the text views
             ((TextView) findViewById(interestText[i])).setText(userInterest.getName()) ;
             Log.d("interest", userInterest.getName());
@@ -192,15 +196,18 @@ public class UserActivity extends BaseActivity {
             (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
             i++ ;
         }
+        Log.d("iList", "Number of interestes: " + i) ;
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests){
         int i = 0 ;
 
         for(Interest userInterest : userInterests) {
-
+            if(i >= 3)
+                return ;
             (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
-            (findViewById(rmInterest[i])).setTag(i) ;
+            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_POSITION, i) ;
+            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest) ;
             (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
             i++ ;
         }
@@ -225,10 +232,16 @@ public class UserActivity extends BaseActivity {
     private View.OnClickListener removeInterestListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int i = (int) v.getTag() ;
-            ((TextView) findViewById(interestText[i])).setText("") ;
-            (findViewById(interestContainer[i])).setVisibility(View.GONE);
-            interests.remove(i) ;
+            int position = (int) v.getTag(R.id.INTEREST_POSITION) ;
+            Interest interestObject = (Interest) v.getTag(R.id.INTEREST_OBJECT) ;
+
+                    ((TextView) findViewById(interestText[position])).setText("") ;
+            (findViewById(interestContainer[position])).setVisibility(View.GONE);
+            try {
+                interests.remove(interestObject) ;
+            } catch (Exception e){
+                Log.d("iList", "Exception occured while removing: " + interestObject.getName()) ;
+            }
             setupNewInterestView();
             saveInterests();
 
@@ -236,7 +249,7 @@ public class UserActivity extends BaseActivity {
     } ;
 
     private void saveInterests(){
-        Log.d("iList", "About to save the interest list") ;
+        Log.d("iList", "Going to save the interest list") ;
         String interestList = "" ;
         int i = 0 ;
         for(Interest interest: interests){
@@ -247,7 +260,7 @@ public class UserActivity extends BaseActivity {
 
             i++ ;
         }
-        Log.d("iList", interestList) ;
+        Log.d("iList", "Interests List: " + interestList) ;
 
         Router.startInterestUpdateService(this, interestList) ;
     }

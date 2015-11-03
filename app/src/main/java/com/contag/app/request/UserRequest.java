@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
-import com.contag.app.model.Contact;
-import com.contag.app.model.ContactResponse;
 import com.contag.app.model.User;
 import com.contag.app.model.UserRequestModel;
 import com.contag.app.util.PrefUtils;

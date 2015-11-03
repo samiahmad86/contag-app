@@ -1,11 +1,14 @@
 package com.contag.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
 import com.contag.app.config.Constants;
+import com.contag.app.util.PrefUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -99,4 +102,20 @@ public class User {
     @SerializedName(Constants.Keys.KEY_USER_BLOOD_GROUP)
     @Expose
     public String bloodGroup;
+
+
+    public static void saveUserInterest(DaoSession session, ArrayList<Interest> interestList){
+        InterestDao interestDao = session.getInterestDao();
+        interestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(PrefUtils.getCurrentUserID())).buildDelete().executeDeleteWithoutDetachingEntities();
+        session.clear() ;
+        Log.d("iList", "Deleted interests") ;
+
+        if (interestList != null && interestList.size() > 0) {
+            Log.d("iList", "Saving user interest") ;
+            for (Interest interest : interestList) {
+                interestDao.insertOrReplace(interest);
+                Log.d("iList", "Interest inserted: "+  interest.getName()) ;
+            }
+        }
+    }
 }

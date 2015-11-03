@@ -16,11 +16,14 @@ import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestDao;
+import com.contag.app.model.InterestPost;
 import com.contag.app.model.InterestResponse;
+import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialProfileResponse;
 import com.contag.app.model.User;
+import com.contag.app.request.InterestRequest;
 import com.contag.app.request.UserRequest;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
@@ -57,6 +60,26 @@ public class UserService extends Service implements RequestListener<User> {
                     profileType = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
                     mSpiceManager.execute(mUserRequest, this);
                     break;
+                }
+                case Constants.Types.REQUEST_UPDATE_USER_INTEREST:{
+                    Log.d("iList", "About to start service") ;
+                    String interestList = intent.getStringExtra(Constants.Keys.KEY_INTEREST_IDS) ;
+                    InterestPost interestIDList = new InterestPost(interestList) ;
+                    InterestRequest interestRequest = new InterestRequest(interestIDList) ;
+                    mSpiceManager.execute(interestRequest, new RequestListener<Response>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            Log.d("iList", "request failed") ;
+                        }
+
+                        @Override
+                        public void onRequestSuccess(Response response) {
+                            Log.d("iList", response.toString()) ;
+                            Intent intent = new Intent(getResources().getString(R.string.intent_filter_interest_updated));
+                            LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
+                        }
+                    });
+                    break ;
                 }
             }
         }

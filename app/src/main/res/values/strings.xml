@@ -11,6 +11,7 @@
     <string name="intent_filter_contacts_request">com.contag.app.request</string>
     <string name="intent_filter_user_received">com.contag.app.user.got</string>
     <string name="intent_filter_interest_suggestion">com.contag.app.interest.suggestion</string>
+    <string name="intent_filter_interest_updated">com.contag.app.interest.updated</string>
     <string name="intent_filter_date_set">com.contag.app.date.set</string>
     <string name="intent_filter_user_social">com.contag.app.social.updated</string>
     <string name="intent_filter_custom_share">com.contag.app.custom.share</string>
@@ -82,4 +83,6 @@
 
     <string name="add_interest">Add Interest</string>
 
+    <item type="id" name="INTEREST_POSITION"/>
+    <item type="id" name="INTEREST_OBJECT" />
 </resources>

@@ -195,11 +195,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         }
     }
 
-    private void sendData(String name) {
+    private void sendData(String name, String status) {
         JSONArray aUser = new JSONArray();
         JSONObject oUser = new JSONObject();
         try {
             oUser.put(Constants.Keys.KEY_USER_NAME, name);
+            aUser.put(oUser);
+            oUser = new JSONObject();
+            oUser.put(Constants.Keys.KEY_USER_STATUS_UPDATE, status);
             aUser.put(oUser);
             for(int i = 0; i < hmProfileModel.size(); i++) {
                 oUser = new JSONObject();
@@ -280,7 +283,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 if (toggle) {
                     openEditMode();
                 } else {
-                    sendData(intent.getStringExtra(Constants.Keys.KEY_USER_NAME));
+                    sendData(intent.getStringExtra(Constants.Keys.KEY_USER_NAME), intent.getStringExtra(Constants.Keys.KEY_USER_STATUS_UPDATE));
                 }
             }
         }

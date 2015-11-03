@@ -9,6 +9,7 @@ import com.contag.app.model.ContactResponse;
 import com.contag.app.model.User;
 import com.contag.app.model.UserRequestModel;
 import com.contag.app.util.PrefUtils;
+import com.google.gson.Gson;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
@@ -39,8 +40,11 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
             return getService().getUser(PrefUtils.getAuthToken());
         }else if(Constants.Types.REQUEST_PUT == type) {
             Log.d("UserService", "put request type");
+            Log.d("UserService", PrefUtils.getAuthToken());
             User user = getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray));
-            Log.d("UserService", user.name);
+            Gson gson  = new Gson();
+            Log.d("UserService", gson.toJson(new UserRequestModel(newUserArray)).toString());
+            Log.d("UserService", gson.toJson(user).toString());
             return user;
         }
         return null;

@@ -66,6 +66,7 @@ public class UserService extends Service implements RequestListener<User> {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "spicemanager started");
         mSpiceManager.start(this);
     }
 

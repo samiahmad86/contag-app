@@ -41,6 +41,9 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -104,10 +107,6 @@ public class UserActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (!isEditModeOn) {
-                        Intent iEditModeToggle = new Intent
-                                (UserActivity.this.getResources().getString(R.string.intent_filter_edit_mode));
-                        iEditModeToggle.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
-                        LocalBroadcastManager.getInstance(UserActivity.this).sendBroadcast(iEditModeToggle);
                         setupEditableInterests();
                         ivEditIcon.setImageResource(R.drawable.btn_add);
                         etUserName.setText(tvUserName.getText().toString());
@@ -118,12 +117,8 @@ public class UserActivity extends BaseActivity {
                         tvUserStatus.setVisibility(View.GONE);
                         isEditModeOn = true;
                     } else {
-                        Intent iEditModeToggle = new Intent
-                                (UserActivity.this.getResources().getString(R.string.intent_filter_edit_mode));
-                        iEditModeToggle.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
-                        iEditModeToggle.putExtra(Constants.Keys.KEY_USER_NAME, etUserName.getText().toString());
-                        iEditModeToggle.putExtra(Constants.Keys.KEY_USER_STATUS_UPDATE, etUserStatus.getText().toString());
-                        LocalBroadcastManager.getInstance(UserActivity.this).sendBroadcast(iEditModeToggle);
+                        Log.d(TAG, "sending name");
+                        sendNameAndStatus(etUserName.getText().toString(), etUserStatus.getText().toString());
                     }
                 }
             });
@@ -141,8 +136,6 @@ public class UserActivity extends BaseActivity {
         LocalBroadcastManager.getInstance(this).
                 registerReceiver(brSuggestions, new IntentFilter(getResources().getString(R.string.intent_filter_interest_suggestion)));
         LocalBroadcastManager.getInstance(this).
-                registerReceiver(brToggleEdit, new IntentFilter(getResources().getString(R.string.intent_filter_edit_button_toggle)));
-        LocalBroadcastManager.getInstance(this).
                 registerReceiver(brUserUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
         LocalBroadcastManager.getInstance(this).
                 registerReceiver(brInterestUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_interest_updated)));
@@ -152,10 +145,25 @@ public class UserActivity extends BaseActivity {
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brSuggestions);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(brToggleEdit);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(brInterestUpdated);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brUserUpdated);
     }
 
+
+    private void sendNameAndStatus(String name, String status) {
+        try {
+            JSONArray aUser = new JSONArray();
+            JSONObject oUser = new JSONObject();
+            oUser.put(Constants.Keys.KEY_USER_STATUS_UPDATE, status);
+            aUser.put(oUser);
+            oUser = new JSONObject();
+            oUser.put(Constants.Keys.KEY_USER_NAME, name);
+            aUser.put(oUser);
+            Router.startUserService(this, Constants.Types.REQUEST_PUT, aUser.toString(), Constants.Types.PROFILE_STATUS);
+        }catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /////////////////////////
 
@@ -286,15 +294,6 @@ public class UserActivity extends BaseActivity {
     };
 
 
-    private BroadcastReceiver brToggleEdit = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setupEditableInterests();
-            ivEditIcon.setImageResource(R.drawable.btn_add);
-            isEditModeOn = true;
-        }
-    };
-
     private BroadcastReceiver brUserUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -303,7 +302,6 @@ public class UserActivity extends BaseActivity {
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
             ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
-            isEditModeOn = false;
             new LoadUser().execute(PrefUtils.getCurrentUserID());
         }
     };
@@ -504,8 +502,7 @@ public class UserActivity extends BaseActivity {
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
             Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                     into(picaasoTarget);
-
-
+            isEditModeOn = false;
         }
     }
 

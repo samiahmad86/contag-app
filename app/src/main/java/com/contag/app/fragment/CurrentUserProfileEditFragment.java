@@ -42,7 +42,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private int profileType;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
+    private boolean isEditModeOn = false;
     public static final String TAG = CurrentUserProfileEditFragment.class.getName();
+    private Button btnEditProfile;
+    private View pbProfileUpdate;
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
@@ -56,11 +59,13 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         hmProfileModel = new HashMap<>();
-        log(TAG, "array list being initialized");
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
+        btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
+        pbProfileUpdate = view.findViewById(R.id.pb_edit_profile);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
+        btnEditProfile.setOnClickListener(this);
         new LoadUser().execute();
         return view;
     }
@@ -72,8 +77,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 registerReceiver(brUsr, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
         LocalBroadcastManager.getInstance(getActivity()).
                 registerReceiver(brDatePicked, new IntentFilter(getResources().getString(R.string.intent_filter_date_set)));
-        LocalBroadcastManager.getInstance(getActivity()).
-                registerReceiver(brEditModeToggle, new IntentFilter(getResources().getString(R.string.intent_filter_edit_mode)));
     }
 
     @Override
@@ -81,7 +84,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brUsr);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brDatePicked);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brEditModeToggle);
     }
 
     @Override
@@ -94,8 +96,19 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     return;
                 }
                 openEditMode();
-                Intent intent = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_button_toggle));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                break;
+            }
+            case R.id.btn_edit_profile: {
+                if (!DeviceUtils.isInternetConnected(getActivity())) {
+                    showToast("Sorry there is no internet.");
+                    return;
+                }
+                if (isEditModeOn) {
+                    btnEditProfile.setEnabled(false);
+                    sendData();
+                } else {
+                    openEditMode();
+                }
                 break;
             }
         }
@@ -121,7 +134,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     }
 
     private void setViewContent() {
-        log(TAG, "Profile Type: " + profileType) ;
+        log(TAG, "Profile Type: " + profileType);
         for (int i = 0; i < hmProfileModel.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
             vh.btnAdd.setTag(i);
@@ -141,7 +154,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 vh.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        if(hasFocus) {
+                        if (hasFocus) {
                             ViewHolder vh = viewHolderArrayList.get(position);
                             String date = vh.tvFieldValue.getText().toString();
                             if (date.equals("null") || date.length() == 0) {
@@ -155,7 +168,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     }
                 });
             }
-            vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
+            vh.tvFieldLabel.setText(convertKeyToLabel(hmProfileModel.get(i).key));
             String value = String.valueOf(hmProfileModel.get(i).value);
             log(TAG, value);
             if (!value.equals("null") && value.length() != 0) {
@@ -177,11 +190,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             String value = vh.tvFieldValue.getText().toString();
             if (pm.fieldType == Constants.Types.FIELD_LIST) {
                 vh.spFieldValue.setVisibility(View.VISIBLE);
-                if(value.length() != 0) {
+                if (value.length() != 0) {
                     int position = -1;
                     String[] arr = getSpinnerArray(pm.key);
-                    for(int j = 0; j < arr.length; j ++) {
-                        if(arr[j].equalsIgnoreCase(value)) {
+                    for (int j = 0; j < arr.length; j++) {
+                        if (arr[j].equalsIgnoreCase(value)) {
                             position = j;
                             break;
                         }
@@ -190,29 +203,26 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 }
             } else {
                 vh.etFieldValue.setVisibility(View.VISIBLE);
-                if(value.length() != 0 && value != null) {
+                if (value.length() != 0 && value != null) {
                     vh.etFieldValue.setText(value);
                 }
             }
             vh.tvFieldValue.setVisibility(View.GONE);
         }
+        isEditModeOn = true;
+        btnEditProfile.setBackgroundResource(R.drawable.btn_add);
     }
 
-    private void sendData(String name, String status) {
+    private void sendData() {
         JSONArray aUser = new JSONArray();
-        JSONObject oUser = new JSONObject();
+        JSONObject oUser;
         try {
-            oUser.put(Constants.Keys.KEY_USER_NAME, name);
-            aUser.put(oUser);
-            oUser = new JSONObject();
-            oUser.put(Constants.Keys.KEY_USER_STATUS_UPDATE, status);
-            aUser.put(oUser);
-            for(int i = 0; i < hmProfileModel.size(); i++) {
+            for (int i = 0; i < hmProfileModel.size(); i++) {
                 oUser = new JSONObject();
-                ProfileModel pm  = hmProfileModel.get(i);
+                ProfileModel pm = hmProfileModel.get(i);
                 ViewHolder vh = viewHolderArrayList.get(i);
                 int fieldType = pm.fieldType;
-                if(fieldType == Constants.Types.FIELD_LIST) {
+                if (fieldType == Constants.Types.FIELD_LIST) {
                     oUser.put(pm.key, vh.spFieldValue.getSelectedItem().toString());
                 } else {
                     oUser.put(pm.key, vh.etFieldValue.getText().toString());
@@ -220,13 +230,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 aUser.put(oUser);
             }
             log(TAG, aUser.toString());
+            pbProfileUpdate.setVisibility(View.VISIBLE);
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
 
-    private String convertKeytoLabel(String key) {
+    private String convertKeyToLabel(String key) {
         String str = key.replace("_", " ");
         str = str.toLowerCase();
         char ch = str.charAt(0);
@@ -255,7 +266,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            log(TAG, "Broadcast received") ;
+            log(TAG, "Broadcast received");
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == CurrentUserProfileEditFragment.this.profileType) {
                 new LoadUser().execute(type);
@@ -274,21 +285,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     vh.etFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
 
-                }
-            }
-        }
-    };
-
-    private BroadcastReceiver brEditModeToggle = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            log(TAG, "broadcast received3");
-            if (intent != null) {
-                boolean toggle = intent.getBooleanExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
-                if (toggle) {
-                    openEditMode();
-                } else {
-                    sendData(intent.getStringExtra(Constants.Keys.KEY_USER_NAME), intent.getStringExtra(Constants.Keys.KEY_USER_STATUS_UPDATE));
                 }
             }
         }
@@ -352,8 +348,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
             hmProfileModel.clear();
             hmProfileModel.putAll(hm);
-            addViews();
+            if (viewHolderArrayList.size() != hmProfileModel.size()) {
+                addViews();
+            }
             setViewContent();
+            btnEditProfile.setEnabled(true);
+            pbProfileUpdate.setVisibility(View.GONE);
+            btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
+            isEditModeOn = false;
         }
     }
 

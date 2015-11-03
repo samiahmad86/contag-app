@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,6 +75,13 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     @Override
     public void onFragmentInteraction(int value) {
 
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.closeDrawers();
     }
 
     @Override

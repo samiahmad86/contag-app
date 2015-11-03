@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,6 +131,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         switch (id) {
             case R.id.tv_notification_txt: {
                 //Log.d("NavDrawer", "Notification") ;
+
                 Router.startNotificationsActivity(getActivity(), "navDrawer");
                 break ;
             }

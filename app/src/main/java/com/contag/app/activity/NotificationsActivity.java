@@ -4,11 +4,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,26 +33,29 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
     public static final String TAG = NotificationsActivity.class.getName();
     private boolean isLoading = false;
     private ArrayList<NotificationsResponse> notifications;
-    private ListView lvNotifications;
     private NotificationsAdapter notificationsAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
-        setUpActionBar(R.id.tb_home_notifications);
+        setUpActionBar(R.id.tb_home);
 
-        //setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
-        //new LoadUser().execute();
+        new LoadUser().execute();
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
-        lvNotifications = (ListView) findViewById(R.id.lv_notifications);
+        Button btnBack = (Button) findViewById(R.id.btn_back) ;
+
+
+        ListView lvNotifications = (ListView) findViewById(R.id.lv_notifications);
         notifications = new ArrayList<>();
         notificationsAdapter = new NotificationsAdapter(this, notifications);
         lvNotifications.setAdapter(notificationsAdapter);
         lvNotifications.setOnItemClickListener(this);
+        btnBack.setOnClickListener(this);
         lvNotifications.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -73,27 +75,6 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_notifications, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
@@ -129,6 +110,10 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
                 Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
                 break;
             }
+            case R.id.btn_back: {
+                this.finish() ;
+                break ;
+            }
         }
     }
 
@@ -140,11 +125,21 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
+
             Toolbar tbHome = (Toolbar) NotificationsActivity.this.findViewById(R.id.tb_home);
+
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-            Picasso.with(NotificationsActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+
+            Picasso.with(NotificationsActivity.this)
+                    .load(ccUser.getAvatarUrl())
+                    .placeholder(R.drawable.default_profile_pic_small)
+                    .into(((ImageView) tbHome.findViewById(R.id.iv_user_photo))) ;
+
+            Picasso.with(NotificationsActivity.this)
+                    .load(ccUser.getAvatarUrl())
+                    .placeholder(R.drawable.default_profile_pic_small)
+                    .into((ImageView) findViewById(R.id.iv_header_pic)) ;
 
         }
     }

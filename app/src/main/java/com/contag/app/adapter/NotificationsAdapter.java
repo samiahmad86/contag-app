@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,7 +57,7 @@ public class NotificationsAdapter extends BaseAdapter {
                     inflate(R.layout.items_notifications, parent, false);
             vh.ivUsrProfilePic = (ImageView) convertView.findViewById(R.id.iv_notifications_usr_img);
             vh.tvNotificationsTxt = (TextView) convertView.findViewById(R.id.tv_notifications_txt);
-            vh.shareButton = (TextView) convertView.findViewById(R.id.btn_share) ;
+            vh.shareButton = (Button) convertView.findViewById(R.id.btn_share) ;
             //vh.tvUsrName = (TextView) convertView.findViewById(R.id.tv_notifications_usr_name);
             convertView.setTag(vh);
         } else {
@@ -100,6 +101,6 @@ public class NotificationsAdapter extends BaseAdapter {
         //protected TextView tvUsrName;
         protected TextView tvNotificationsTxt;
         protected ImageView ivUsrProfilePic;
-        protected TextView shareButton ;
+        protected Button shareButton ;
     }
 }

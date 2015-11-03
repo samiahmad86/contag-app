@@ -28,23 +28,19 @@
             android:textColor="@color/notifications_story"
             android:textSize="14sp" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <Button
             android:id="@+id/btn_share"
             style="@style/NotificationsButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_toRightOf="@id/tv_notifications_txt"
-            android:text="Hello"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="12dp"
-            android:paddingLeft="12dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
             android:textSize="14sp"
             android:visibility="visible"
-            android:clickable="true"
              />
 
     </RelativeLayout>

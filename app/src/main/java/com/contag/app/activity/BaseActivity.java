@@ -81,7 +81,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_hamburger);
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.btn_back);
 
         ImageView iv = (ImageView) findViewById(R.id.iv_header_pic) ;
         Picasso.with(this).load(this.getCurrentUser().getAvatarUrl()).

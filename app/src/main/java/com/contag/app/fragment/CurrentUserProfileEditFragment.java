@@ -120,6 +120,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     }
 
     private void setViewContent() {
+        log(TAG, "Profile Type: " + profileType) ;
         for (int i = 0; i < hmProfileModel.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
             vh.btnAdd.setTag(i);
@@ -142,7 +143,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                         if(hasFocus) {
                             ViewHolder vh = viewHolderArrayList.get(position);
                             String date = vh.tvFieldValue.getText().toString();
-                            if (date == null || date.length() == 0) {
+                            if (date.equals("null") || date.length() == 0) {
                                 DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
                                 Calendar calendar = Calendar.getInstance();
                                 date = dateFormat.format(calendar.getTime()).toString();
@@ -155,7 +156,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             }
             vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
             String value = String.valueOf(hmProfileModel.get(i).value);
-            if (value != null && value.length() != 0) {
+            log(TAG, value);
+            if (!value.equals("null") && value.length() != 0) {
                 vh.tvFieldValue.setText(value);
                 vh.btnShare.setVisibility(View.VISIBLE);
             } else {
@@ -187,7 +189,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 }
             } else {
                 vh.etFieldValue.setVisibility(View.VISIBLE);
-                if(value.length() != 0) {
+                if(value.length() != 0 && value != null) {
                     vh.etFieldValue.setText(value);
                 }
             }
@@ -252,6 +254,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            log(TAG, "Broadcast received") ;
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == CurrentUserProfileEditFragment.this.profileType) {
                 new LoadUser().execute(type);

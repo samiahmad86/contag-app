@@ -122,4 +122,119 @@ public class User {
             }
         }
     }
+
+    public static ContagContag getContagContagObject(User user){
+
+        ContagContag cc = new ContagContag(user.id);
+        cc.setCreatedOn(user.createdOn);
+        cc.setUpdatedOn(user.updatedOn);
+        cc.setName(user.name);
+        cc.setMobileNumber(user.mobileNumber);
+        cc.setContag(user.contag);
+        cc.setLandLineNumber(user.landlineNumber);
+        cc.setEmergencyContactNumber(user.emergencyContactNumber);
+        cc.setIsMobileVerified(user.isMobileVerified);
+        cc.setGender(user.gender);
+        cc.setAddress(user.address);
+        cc.setWorkEmail(user.workEmail);
+        cc.setWorkMobileNumber(user.workMobileNumber);
+        cc.setWorkLandLineNumber(user.workLandlineNumber);
+        cc.setWebsite(user.website);
+        cc.setDesignation(user.designation);
+        cc.setWorkFacebookPage(user.workFacebookPage);
+        cc.setAndroidAppLink(user.androidAppLink);
+        cc.setIosAppLink(user.iosAppLink);
+        cc.setAvatarUrl(Constants.Urls.BASE_URL + user.avatarUrl);
+        cc.setBloodGroup(user.bloodGroup);
+        cc.setDateOfBirth(user.dateOfBirth);
+        cc.setIsMobileVerified(user.isMobileVerified);
+        cc.setMaritalStatus(user.maritalStatus);
+        cc.setMarriageAnniversary(user.marriageAnniversary);
+        cc.setPersonalEmail(user.personalEmail);
+        cc.setWorkAddress(user.workAddress);
+        cc.setStatus_update(user.statusUpdate);
+
+        return cc ;
+    }
+
+    public static ArrayList<Interest> getInterestList(List<InterestResponse> interests,
+                                                       User user, ContagContag cc){
+        ArrayList<Interest> mInterest = new ArrayList<>() ;
+        for (InterestResponse ir : interests) {
+            Interest interest = new Interest(ir.id);
+            interest.setName(ir.name);
+            interest.setContagUserId(user.id);
+            interest.setContagContag(cc);
+            mInterest.add(interest) ;
+        }
+        Log.d("myuser", "size of interests: " + mInterest.size()) ;
+        return mInterest ;
+    }
+
+    public static void storeInterests(ArrayList<Interest> interestList, DaoSession session){
+        if (interestList != null) {
+            Log.d("myuser", "Going to store interests now") ;
+            InterestDao interestDao = session.getInterestDao();
+            for(Interest interest: interestList){
+                interestDao.insertOrReplace(interest) ;
+            }
+        }
+    }
+
+
+    public static ArrayList<SocialProfile> getSocialProfileList(List<SocialProfileResponse> socialProfiles, User user, ContagContag cc){
+
+        ArrayList<SocialProfile> mProfiles = new ArrayList<>() ;
+        for (SocialProfileResponse spr : socialProfiles) {
+            SocialProfile socialProfile = new SocialProfile();
+            socialProfile.setPlatform_id(spr.platformId);
+            socialProfile.setSocial_platform(spr.socialPlatform);
+            socialProfile.setContagContag(cc);
+            socialProfile.setContagUserId(user.id);
+            mProfiles.add(socialProfile) ;
+        }
+        Log.d("myuser", "size of social profiles: " + mProfiles.size()) ;
+
+        return mProfiles ;
+    }
+
+    public static void storeSocialProfile(List<SocialProfile> socialProfileList, DaoSession session) {
+
+        if (socialProfileList != null) {
+            Log.d("myuser", "Going to store social profiles") ;
+            SocialProfileDao spDao = session.getSocialProfileDao();
+            for(SocialProfile profile: socialProfileList){
+                spDao.insertOrReplace(profile);
+            }
+        }
+    }
+
+    public static ArrayList<CustomShare> getCustomShareList(List<CustomShareResponse> customShares, ContagContag cc){
+
+            ArrayList<CustomShare> mShares = new ArrayList<>() ;
+            for (CustomShareResponse csr : customShares) {
+                CustomShare cs = new CustomShare();
+                cs.setField_name(csr.fieldName);
+                cs.setUser_ids(csr.userIDS);
+                cs.setIs_public(csr.isPublic);
+                cs.setIs_private(csr.isPrivate);
+                cs.setContagContag(cc);
+                mShares.add(cs);
+            }
+        Log.d("myuser", "size of custom share: " + mShares.size()) ;
+        return mShares ;
+
+        }
+
+    public static void storeCustomShare(ArrayList<CustomShare> customShares,  DaoSession session){
+
+        if(customShares != null ){
+            Log.d("myuser", "Going to store custom shares") ;
+            CustomShareDao csDao = session.getCustomShareDao() ;
+            for(CustomShare cs: customShares) {
+                csDao.insertOrReplace(cs);
+            }
+        }
+    }
+
 }

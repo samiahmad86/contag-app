@@ -65,6 +65,14 @@ public interface APIInterface {
     User getUser(@Header(Constants.Headers.HEADER_TOKEN) String token);
 
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_USER)
+    User getUserByUserID(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                         @Query(Constants.Keys.KEY_USER_ID) Long userID);
+
+
 
 
     @Headers({

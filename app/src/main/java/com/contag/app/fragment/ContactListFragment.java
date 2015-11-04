@@ -87,10 +87,11 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("myuser", "Item click event heard") ;
                 ContactListItem cli = contacts.get(position);
-                if (cli.type == Constants.Types.ITEM_CONTAG) {
-                    Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, cli.mContagContag.getId());
-                }
+                Log.d("myuser", "asking for user with id; " + cli.mContagContag.getId()) ;
+                Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, cli.mContagContag.getId());
+
             }
         });
 

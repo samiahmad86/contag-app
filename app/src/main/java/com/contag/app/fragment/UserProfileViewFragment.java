@@ -181,7 +181,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                             cc.getEmergencyContactNumber()));
                     hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY,
                             cc.getMarriageAnniversary()));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus()));
+                    hm.put(8    , new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus()));
                     hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender()));
                     break;
                 }

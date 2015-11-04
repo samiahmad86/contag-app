@@ -45,7 +45,7 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
     @Override
     public ContactResponse.ContactList loadDataFromNetwork() throws Exception {
-        if (type == Constants.Types.REQUEST_GET_APP_USER) {
+        if (type == Constants.Types.REQUEST_GET_CURRENT_USER) {
 
             return getService().getContacts(PrefUtils.getAuthToken());
 

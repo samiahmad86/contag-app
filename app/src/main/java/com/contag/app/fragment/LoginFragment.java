@@ -200,7 +200,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                         } else {
                                             PrefUtils.setAuthToken(otpResponse.authToken);
                                             Router.startUserService(getActivity(),
-                                                    Constants.Types.REQUEST_GET_APP_USER);
+                                                    Constants.Types.REQUEST_GET_CURRENT_USER);
                                         }
                                     } else {
                                         showToast("OTP is incorrect");

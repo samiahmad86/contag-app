@@ -125,9 +125,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         return getSocialProfiles(PrefUtils.getCurrentUserID());
     }
 
+    public Boolean isUserOnLocal(long id){
+
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        ContagContagDao ccDao = session.getContagContagDao();
+
+        return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).count() > 0 ;
+    }
     public ContagContag getUser(long id) {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         ContagContagDao ccDao = session.getContagContagDao();
+
         return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
     }
 

@@ -84,7 +84,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
             }
             else {
                 Log.d("Condev", "ContactService: Going to fetch the contacts from the server") ;
-                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET_APP_USER);
+                ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_GET_CURRENT_USER);
                 mSpiceManager.execute(cr, this);
             }
         }

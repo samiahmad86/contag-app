@@ -100,6 +100,13 @@ public class Router {
         context.startService(iUser);
     }
 
+    public static void startUserService(Context context, int type, long userID){
+        Intent iUser = new Intent(context, UserService.class);
+        iUser.putExtra(Constants.Keys.KEY_REQUEST_TYPE, type);
+        iUser.putExtra(Constants.Keys.KEY_USER_ID, userID);
+        context.startService(iUser);
+    }
+
     public static void startInterestUpdateService(Context context, String interestList){
         Log.d("iList", "Starting service") ;
         Intent iInterest = new Intent(context, UserService.class) ;

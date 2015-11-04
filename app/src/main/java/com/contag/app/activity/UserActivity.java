@@ -49,17 +49,18 @@ import java.util.ArrayList;
 public class UserActivity extends BaseActivity {
 
     private static final String TAG = UserActivity.class.getName();
-    private FlowLayout interestsBoxFlowLayout ;
-    private ArrayList<Interest> interests ;
-    private ImageView ivEditIcon ;
+    private FlowLayout interestsBoxFlowLayout;
+    private ArrayList<Interest> interests;
+    private ImageView ivEditIcon;
     private static int[] interestContainer = {R.id.rl_interest_one, R.id.rl_interest_two,
-            R.id.rl_interest_three} ;
+            R.id.rl_interest_three};
     private static int[] interestText = {R.id.tv_user_interest_one, R.id.tv_user_interest_two,
-            R.id.tv_user_interest_three} ;
+            R.id.tv_user_interest_three};
     private static int[] rmInterest = {R.id.btn_rm_interest_one, R.id.btn_rm_interest_two,
-            R.id.btn_rm_interest_three}  ;
+            R.id.btn_rm_interest_three};
 
     private boolean isEditModeOn = false;
+    private long userID ;
 
 
     @Override
@@ -74,18 +75,21 @@ public class UserActivity extends BaseActivity {
 
         setUpActionBar(R.id.tb_user);
 
-        View toolbar =  findViewById(R.id.tb_user) ;
+        View toolbar = findViewById(R.id.tb_user);
         toolbar.setBackgroundResource(R.color.bg_tb_home);
 
         Intent intent = getIntent();
-        long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);
+        userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);
 
-        new LoadUser().execute(userID);
+        if (isUserOnLocal(userID))
+            new LoadUser().execute(userID);
+        else
+            Router.startUserService(this, Constants.Types.REQUEST_GET_USER_BY_ID, userID);
 
         hideInterest();
         setUpInterests();
 
-        if(userID != PrefUtils.getCurrentUserID()) {
+        if (userID != PrefUtils.getCurrentUserID()) {
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
             transaction.add(R.id.root_user_fragment, userFragment);
             transaction.commit();
@@ -95,7 +99,7 @@ public class UserActivity extends BaseActivity {
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
-            ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile) ;
+            ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile);
             ivEditIcon.setVisibility(View.VISIBLE);
             ivEditIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,7 +122,6 @@ public class UserActivity extends BaseActivity {
             });
 
 
-
             CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
             transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
         }
@@ -127,6 +130,8 @@ public class UserActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(brGetUser, new IntentFilter("com.contag.app.user.id"));
         LocalBroadcastManager.getInstance(this).
                 registerReceiver(brSuggestions, new IntentFilter(getResources().getString(R.string.intent_filter_interest_suggestion)));
         LocalBroadcastManager.getInstance(this).
@@ -154,7 +159,7 @@ public class UserActivity extends BaseActivity {
             oUser.put(Constants.Keys.KEY_USER_NAME, name);
             aUser.put(oUser);
             Router.startUserService(this, Constants.Types.REQUEST_PUT, aUser.toString(), Constants.Types.PROFILE_STATUS);
-        }catch (JSONException ex) {
+        } catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
@@ -168,7 +173,7 @@ public class UserActivity extends BaseActivity {
             @Override
             protected ArrayList<Interest> doInBackground(Void... params) {
                 interests = getUserInterests(PrefUtils.getCurrentUserID());
-                return interests ;
+                return interests;
             }
 
             @Override
@@ -179,41 +184,42 @@ public class UserActivity extends BaseActivity {
 
     }
 
-    private void hideInterest(){
+    private void hideInterest() {
 
-        for(int rlView : interestContainer){
+        for (int rlView : interestContainer) {
             (findViewById(rlView)).setVisibility(View.GONE);
         }
     }
 
-    private void showInterests(ArrayList<Interest> userInterests){
-        int i = 0 ; //hideInterest();
-        for(Interest userInterest : userInterests) {
-            if(i >= 3)
-                return ;
+    private void showInterests(ArrayList<Interest> userInterests) {
+        int i = 0; //hideInterest();
+        for (Interest userInterest : userInterests) {
+            if (i >= 3)
+                return;
             // Set interest on the text views
-            ((TextView) findViewById(interestText[i])).setText(userInterest.getName()) ;
+            ((TextView) findViewById(interestText[i])).setText(userInterest.getName());
             Log.d("interest", userInterest.getName());
             // make the interest boxes visible
             (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
-            i++ ;
+            i++;
         }
-        Log.d("iList", "Number of interestes: " + i) ;
+        Log.d("iList", "Number of interestes: " + i);
     }
 
-    private void setupInterestRemoveButton(ArrayList<Interest> userInterests){
-        int i = 0 ;
+    private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
+        int i = 0;
 
-        for(Interest userInterest : userInterests) {
-            if(i >= 3)
-                return ;
+        for (Interest userInterest : userInterests) {
+            if (i >= 3)
+                return;
             (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
-            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_POSITION, i) ;
-            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest) ;
+            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_POSITION, i);
+            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
             (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
-            i++ ;
+            i++;
         }
     }
+
     private void setupEditableInterests() {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
             @Override
@@ -223,8 +229,8 @@ public class UserActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(ArrayList<Interest> userInterests) {
-                setupInterestRemoveButton(userInterests) ;
-                if(userInterests.size() < 3)
+                setupInterestRemoveButton(userInterests);
+                if (userInterests.size() < 3)
                     setupNewInterestView();
 
             }
@@ -234,45 +240,54 @@ public class UserActivity extends BaseActivity {
     private View.OnClickListener removeInterestListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int position = (int) v.getTag(R.id.INTEREST_POSITION) ;
-            Interest interestObject = (Interest) v.getTag(R.id.INTEREST_OBJECT) ;
+            int position = (int) v.getTag(R.id.INTEREST_POSITION);
+            Interest interestObject = (Interest) v.getTag(R.id.INTEREST_OBJECT);
 
-                    ((TextView) findViewById(interestText[position])).setText("") ;
+            ((TextView) findViewById(interestText[position])).setText("");
             (findViewById(interestContainer[position])).setVisibility(View.GONE);
             try {
-                interests.remove(interestObject) ;
-            } catch (Exception e){
-                Log.d("iList", "Exception occured while removing: " + interestObject.getName()) ;
+                interests.remove(interestObject);
+            } catch (Exception e) {
+                Log.d("iList", "Exception occured while removing: " + interestObject.getName());
             }
             setupNewInterestView();
             saveInterests();
 
         }
-    } ;
+    };
 
-    private void saveInterests(){
-        Log.d("iList", "Going to save the interest list") ;
-        String interestList = "" ;
-        int i = 0 ;
-        for(Interest interest: interests){
-            if(i == 0)
-                interestList += String.valueOf(interest.getId()) ;
+    private void saveInterests() {
+        Log.d("iList", "Going to save the interest list");
+        String interestList = "";
+        int i = 0;
+        for (Interest interest : interests) {
+            if (i == 0)
+                interestList += String.valueOf(interest.getId());
             else
-                interestList += "," + String.valueOf(interest.getId()) ;
+                interestList += "," + String.valueOf(interest.getId());
 
-            i++ ;
+            i++;
         }
-        Log.d("iList", "Interests List: " + interestList) ;
+        Log.d("iList", "Interests List: " + interestList);
 
-        Router.startInterestUpdateService(this, interestList) ;
+        Router.startInterestUpdateService(this, interestList);
     }
 
 
     private class Data<T> {
         private T val;
-        public void set(T newVal) { val = newVal; }
-        public T get() { return val; }
-        public void clear() { val = null; }
+
+        public void set(T newVal) {
+            val = newVal;
+        }
+
+        public T get() {
+            return val;
+        }
+
+        public void clear() {
+            val = null;
+        }
     }
 
     private BroadcastReceiver brSuggestions = new BroadcastReceiver() {
@@ -303,11 +318,20 @@ public class UserActivity extends BaseActivity {
     private BroadcastReceiver brInterestUpdated = new BroadcastReceiver() {
 
         @Override
-        public void onReceive(Context context, Intent intent){
+        public void onReceive(Context context, Intent intent) {
             showToast("Interests updated!");
             User.saveUserInterest(((ContagApplication) getApplicationContext()).getDaoSession(), interests);
         }
     };
+
+    BroadcastReceiver brGetUser = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new LoadUser().execute(userID);
+        }
+    };
+
+
     private void setupNewInterestView() {
         (findViewById(R.id.add_new_interest)).setVisibility(View.VISIBLE);
         final EditText interestHint = (EditText) findViewById(R.id.interest_hint);
@@ -320,25 +344,26 @@ public class UserActivity extends BaseActivity {
         interestText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("coninterest", "before text: "+  s)  ;
+                Log.d("coninterest", "before text: " + s);
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 final String interestTextStr = interestText.getText().toString();
 
-                if(interestTextStr.length() >= 2) {
-                    Log.d("coninterest", "Going to search for: " + interestTextStr) ;
+                if (interestTextStr.length() >= 2) {
+                    Log.d("coninterest", "Going to search for: " + interestTextStr);
                     getSpiceManager().execute(
                             new InterestSuggestionRequest(interestTextStr),
                             new RequestListener<InterestSuggestion.List>() {
                                 @Override
                                 public void onRequestSuccess(InterestSuggestion.List suggestions) {
 
-                                    if (suggestions.size() > 0 &&  interestText.getText().length() > 0) {
+                                    if (suggestions.size() > 0 && interestText.getText().length() > 0) {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
@@ -357,7 +382,7 @@ public class UserActivity extends BaseActivity {
                             }
                     );
                 } else {
-                    Log.d("coninterest", "no text here") ;
+                    Log.d("coninterest", "no text here");
                     interestHint.setText("");
                 }
             }
@@ -367,19 +392,19 @@ public class UserActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //((EditText) findViewById(R.id.interest_hint)).setText("");
-                interestHint.setText("") ;
+                interestHint.setText("");
                 interestText.setText("");
-                InterestSuggestion suggestion = (InterestSuggestion) interestText.getTag() ;
-                Interest newInterest = new Interest(suggestion.id) ;
-                newInterest.setName(suggestion.name) ;
+                InterestSuggestion suggestion = (InterestSuggestion) interestText.getTag();
+                Interest newInterest = new Interest(suggestion.id);
+                newInterest.setName(suggestion.name);
                 newInterest.setContagUserId(PrefUtils.getCurrentUserID());
                 newInterest.setContagContag(getCurrentUser());
-                interests.add(newInterest) ;
+                interests.add(newInterest);
 
                 showInterests(interests);
                 setupInterestRemoveButton(interests);
 
-                if(interests.size() >= 3){
+                if (interests.size() >= 3) {
                     (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                 }
                 saveInterests();

@@ -106,7 +106,7 @@ public class Constants {
     }
 
     public class Types {
-        public static final int REQUEST_GET_APP_USER = 1;
+        public static final int REQUEST_GET_CURRENT_USER = 1;
         public static final int REQUEST_GET_USER_BY_ID = 2 ;
         public static final int REQUEST_GET_USER_BY_CONTAG_ID = 3 ;
         public static final int REQUEST_POST = 4;

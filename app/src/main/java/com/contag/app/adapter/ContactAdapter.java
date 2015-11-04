@@ -111,6 +111,7 @@ public class ContactAdapter extends BaseAdapter {
 
         }
 
+
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
             if(ContactUtils.isExistingContact(contObject.getId(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);

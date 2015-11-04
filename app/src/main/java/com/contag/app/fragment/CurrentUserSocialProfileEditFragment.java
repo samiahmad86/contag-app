@@ -65,6 +65,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private boolean isFbSync = false;
     private TwitterAuthClient mTwitterAuthClient;
     private GoogleApiClient mGoogleApiClient;
+    private Button btnEditProfile;
+    private boolean isEditModeOn;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
         CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
@@ -94,6 +96,10 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         hmProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
+        btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
+        btnEditProfile.setOnClickListener(this);
+        btnEditProfile.setVisibility(View.VISIBLE);
+        isEditModeOn = false;
         new LoadUser().execute();
         return view;
     }
@@ -119,6 +125,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         int id = v.getId();
         switch (id) {
             case R.id.btn_add: {
+
             }
             case R.id.btn_edit: {
                 if (!DeviceUtils.isInternetConnected(getActivity())) {
@@ -130,26 +137,33 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 ProfileModel pm = hmProfileModel.get(tag);
                 if (pm.fieldType == Constants.Types.FIELD_STRING) {
                     vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
-                } else {
-                    String value = convertKeytoLabel(pm.key).toLowerCase();
-                    if (value.contains("google")) {
-                        vh.btnGplus.setVisibility(View.VISIBLE);
-                    } else if (value.contains("facebook")) {
-                        vh.btnFb.setVisibility(View.VISIBLE);
-                    } else if (value.contains("twitter")) {
-                        vh.btnTwitter.setVisibility(View.VISIBLE);
-                    } else if (value.contains("instagram")) {
-                        vh.btnInstagram.setVisibility(View.VISIBLE);
-                    } else if (value.contains("linkedin")) {
-                        vh.btnLinkedIn.setVisibility(View.VISIBLE);
-                    }
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else if (pm.fieldType == Constants.Types.FIELD_GOOGLE) {
+                    vh.btnGplus.setVisibility(View.VISIBLE);
+                } else if (pm.fieldType == Constants.Types.FIELD_FACEBOOK) {
+                    vh.btnFb.setVisibility(View.VISIBLE);
+                } else if (pm.fieldType == Constants.Types.FIELD_TWITTER) {
+                    vh.btnTwitter.setVisibility(View.VISIBLE);
+                } else if (pm.fieldType == Constants.Types.FIELD_INSTAGRAM) {
+                    vh.btnInstagram.setVisibility(View.VISIBLE);
+                } else if (pm.fieldType == Constants.Types.FIELD_LINKEDIN) {
+                    vh.btnLinkedIn.setVisibility(View.VISIBLE);
                 }
                 vh.tvFieldValue.setVisibility(View.GONE);
-                int fieldType = hmProfileModel.get(tag).fieldType;
-                if (fieldType == Constants.Types.FIELD_STRING) {
-                    vh.etFieldValue.setVisibility(View.VISIBLE);
-                }
                 v.setVisibility(View.GONE);
+                break;
+            }
+
+            case R.id.btn_edit_profile: {
+                if (!DeviceUtils.isInternetConnected(getActivity())) {
+                    showToast("Sorry there is no internet.");
+                    return;
+                }
+                if (!isEditModeOn) {
+                    openEditMode();
+                } else {
+                    sendData();
+                }
                 break;
             }
 
@@ -163,7 +177,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     return;
                 }
                 Bundle args = new Bundle();
-                args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, value.substring(index + 1));
                 args.putString(Constants.Keys.KEY_SOCIAL_PLATFORM_NAME, vh.tvFieldLabel.getText().toString());
                 new SendSocialNetworkData().execute(args);
@@ -172,50 +185,30 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
 
             case R.id.btn_facebook_login: {
-                log(TAG, "facebook login");
                 String text = ((Button) v).getText().toString();
                 if (!getActivity().getResources().getString(R.string.fb_unsync_msg).equalsIgnoreCase(text)) {
-                    isFbSync = true;
-                    LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+                    loginFacebook();
                 }
                 break;
             }
 
             case R.id.btn_g_plus_login: {
-                mGoogleApiClient.connect();
+                loginGPlus();
                 break;
             }
 
             case R.id.btn_twitter_login: {
-                mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
-                    @Override
-                    public void success(Result<TwitterSession> result) {
-//                        new SendTwitterData().execute(result.data);
-                        TwitterSession session = result.data;
-                        Bundle args = new Bundle();
-                        args.putString(Constants.Keys.KEY_SOCIAL_PLATFORM_NAME, "twitter");
-                        args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
-                        args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
-                        args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
-                        args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
-                        new SendSocialNetworkData().execute(args);
-                    }
-
-                    @Override
-                    public void failure(TwitterException e) {
-
-                    }
-                });
+                loginTwitter();
                 break;
             }
 
             case R.id.btn_linkedin_login: {
-                Router.startLinkendInLoginActivity(getActivity(), Constants.Values.RC_LINKEDIN);
+                loginLinkedIn();
                 break;
             }
 
             case R.id.btn_instagram_login: {
-                Router.startInstagramLoginActivity(getActivity(), Constants.Values.RC_INSTAGRAM);
+                loginInstagram();
                 break;
             }
         }
@@ -246,6 +239,109 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
+    private void loginFacebook() {
+        isFbSync = true;
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+    }
+
+    private void loginGPlus() {
+        mGoogleApiClient.connect();
+    }
+
+    private void loginTwitter() {
+        mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                TwitterSession session = result.data;
+                Bundle args = new Bundle();
+                args.putString(Constants.Keys.KEY_SOCIAL_PLATFORM_NAME, "twitter");
+                args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
+                args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
+                args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
+                new SendSocialNetworkData().execute(args);
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+
+            }
+        });
+    }
+
+    private void loginInstagram() {
+        Router.startInstagramLoginActivity(getActivity(), Constants.Values.RC_INSTAGRAM);
+    }
+
+    private void loginLinkedIn() {
+        Router.startLinkendInLoginActivity(getActivity(), Constants.Values.RC_LINKEDIN);
+    }
+
+    private void sendData() {
+        for (int i = 0; i < viewHolderArrayList.size(); i++) {
+            ViewHolder vh = viewHolderArrayList.get(i);
+            ProfileModel pm = hmProfileModel.get(i);
+            String value = vh.etFieldValue.getText().toString();
+            int index = value.lastIndexOf("/");
+            if (index == -1 || index == value.length() - 1) {
+                showToast("Enter a valid id");
+                return;
+            }
+            Bundle args = new Bundle();
+            args.putString(Constants.Keys.KEY_PLATFORM_ID, value.substring(index + 1));
+            args.putString(Constants.Keys.KEY_SOCIAL_PLATFORM_NAME, vh.tvFieldLabel.getText().toString());
+            new SendSocialNetworkData().execute(args);
+        }
+
+    }
+
+    private void openEditMode() {
+        for (int i = 0; i < viewHolderArrayList.size(); i++) {
+            ViewHolder vh = viewHolderArrayList.get(i);
+            ProfileModel pm = hmProfileModel.get(i);
+            if (pm.fieldType == Constants.Types.FIELD_STRING) {
+                vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                vh.etFieldValue.setVisibility(View.VISIBLE);
+            } else if (pm.fieldType == Constants.Types.FIELD_GOOGLE) {
+                if (vh.tvFieldValue.getVisibility() == View.VISIBLE) {
+                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else {
+                    vh.btnGplus.setVisibility(View.VISIBLE);
+                }
+            } else if (pm.fieldType == Constants.Types.FIELD_FACEBOOK) {
+                if (vh.tvFieldValue.getVisibility() == View.VISIBLE) {
+                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else {
+                    vh.btnFb.setVisibility(View.VISIBLE);
+                }
+            } else if (pm.fieldType == Constants.Types.FIELD_TWITTER) {
+                if (vh.tvFieldValue.getVisibility() == View.VISIBLE) {
+                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else {
+                    vh.btnTwitter.setVisibility(View.VISIBLE);
+                }
+            } else if (pm.fieldType == Constants.Types.FIELD_INSTAGRAM) {
+                if (vh.tvFieldValue.getVisibility() == View.VISIBLE) {
+                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else {
+                    vh.btnInstagram.setVisibility(View.VISIBLE);
+                }
+            } else if (pm.fieldType == Constants.Types.FIELD_LINKEDIN) {
+                if (vh.tvFieldValue.getVisibility() == View.VISIBLE) {
+                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+                    vh.etFieldValue.setVisibility(View.VISIBLE);
+                } else {
+                    vh.btnLinkedIn.setVisibility(View.VISIBLE);
+                }
+            }
+            vh.tvFieldValue.setVisibility(View.GONE);
+        }
+        isEditModeOn = true;
+        btnEditProfile.setBackgroundResource(R.drawable.btn_add);
+    }
 
     private void addViews() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -267,12 +363,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnInstagram = (Button) view.findViewById(R.id.btn_instagram_login);
             vh.btnLinkedIn = (Button) view.findViewById(R.id.btn_linkedin_login);
             vh.btnTwitter = (Button) view.findViewById(R.id.btn_twitter_login);
+            vh.btnShare = (Button) view.findViewById(R.id.btn_share);
             vh.btnAdd.setOnClickListener(this);
             vh.btnTwitter.setOnClickListener(this);
             vh.btnGplus.setOnClickListener(this);
             vh.btnInstagram.setOnClickListener(this);
             vh.btnFb.setOnClickListener(this);
             vh.btnLinkedIn.setOnClickListener(this);
+            vh.btnShare.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);
         }
@@ -294,14 +392,46 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {
                 vh.etFieldValue.setInputType(hmProfileModel.get(i).inputType);
             }
-            vh.tvFieldLabel.setText(convertKeytoLabel(hmProfileModel.get(i).key));
+            vh.tvFieldLabel.setText(convertKeyToLabel(hmProfileModel.get(i).key));
             if (hmProfileModel.get(i).value != null && (String.valueOf(hmProfileModel.get(i).value)).length() != 0) {
                 if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {
                     vh.tvFieldValue.setText(String.valueOf(hmProfileModel.get(i).value));
-                } else if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_SOCIAL) {
+                    vh.btnShare.setVisibility(View.VISIBLE);
+                } else {
+                    final int fieldType = hmProfileModel.get(i).fieldType;
+                    vh.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                                 if(hasFocus) {
+                                     switch (fieldType) {
+                                         case Constants.Types.FIELD_FACEBOOK: {
+                                             loginFacebook();
+                                             break;
+                                         }
+                                         case Constants.Types.FIELD_INSTAGRAM: {
+                                             loginInstagram();
+                                             break;
+                                         }
+                                         case Constants.Types.FIELD_TWITTER: {
+                                             loginTwitter();
+                                             break;
+                                         }
+                                         case Constants.Types.FIELD_GOOGLE: {
+                                             loginGPlus();
+                                             break;
+                                         }
+                                         case Constants.Types.FIELD_LINKEDIN: {
+                                             loginLinkedIn();
+                                             break;
+                                         }
+                                     }
+                                 }
+                        }
+                    });
                     String value = hmProfileModel.get(i).value.toString();
                     if (value.lastIndexOf("/") != value.length() - 1) {
                         vh.tvFieldValue.setText(value);
+                        vh.btnShare.setVisibility(View.VISIBLE);
                     } else {
                         vh.tvFieldValue.setVisibility(View.GONE);
                         vh.btnAdd.setVisibility(View.VISIBLE);
@@ -314,7 +444,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
-    private String convertKeytoLabel(String key) {
+    private String convertKeyToLabel(String key) {
         String str = key.replace("_", " ");
         str = str.toLowerCase();
         char ch = str.charAt(0);
@@ -477,6 +607,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 addViews();
             }
             setViewContent();
+            isEditModeOn = false;
+            btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
         }
     }
 

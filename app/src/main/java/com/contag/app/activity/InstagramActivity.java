@@ -224,10 +224,9 @@ public class InstagramActivity extends BaseActivity {
         protected Bundle doInBackground(JSONObject... params) {
             if (params.length > 0) {
                 JSONObject json = params[0];
-                long id = 0;
                 SocialPlatform sp = InstagramActivity.this
                         .getPlatformFromName("instagram");
-                id = sp.getId();
+                long id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
@@ -235,7 +234,6 @@ public class InstagramActivity extends BaseActivity {
                     args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, json.getString("access_token"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
-                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     return args;
                 } catch (JSONException ex) {
                     ex.printStackTrace();

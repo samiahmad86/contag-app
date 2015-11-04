@@ -71,6 +71,7 @@ public class Constants {
         public static final String KEY_INTEREST_SUGGESTION_LIST = "interest_suggestion_list";
         public static final String KEY_PROFILE_REQUEST_FOR_USER = "for_user";
         public static final String KEY_PROFILE_REQUEST_TYPE = "request_type";
+        public static final String KEY_SOCIAL_PLATFORM_NAME = "fucking_social_platform_name";
         public static final String KEY_SOCIAL_PLATFORM_ID = "social_platform_id";
         public static final String KEY_PLATFORM_ID = "platform_id";
         public static final String KEY_PLATFORM_SECRET = "platform_secret";
@@ -131,6 +132,11 @@ public class Constants {
         public static final int FIELD_LIST = 2;
         public static final int FIELD_DATE = 3;
         public static final int FIELD_SOCIAL = 4;
+        public static final int FIELD_FACEBOOK = 5;
+        public static final int FIELD_TWITTER = 6;
+        public static final int FIELD_INSTAGRAM = 7;
+        public static final int FIELD_GOOGLE = 8;
+        public static final int FIELD_LINKEDIN = 9;
         public static final int LIST_BLOCKED_USERS = 1;
         public static final int LIST_MUTED_USERS = 2;
 

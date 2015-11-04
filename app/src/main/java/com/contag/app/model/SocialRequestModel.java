@@ -23,14 +23,10 @@ public class SocialRequestModel {
     @SerializedName(Constants.Keys.KEY_PLATFORM_EMAIL_ID)
     @Expose
     public String platformEmail;
-    @SerializedName(Constants.Keys.KEY_USER_FIELD_VISIBILITY)
-    @Expose
-    public String visibility;
 
     public SocialRequestModel(long socialPlatformId, String platformId, String platformToken, String platformPermissions,
-                              String platformSecret, String platformEmail, String visibility) {
+                              String platformSecret, String platformEmail) {
         this.socialPlatformId = socialPlatformId;
-        this.visibility = visibility;
         this.platformId = platformId;
         this.platformToken = platformToken;
         this.platformEmail = platformEmail;

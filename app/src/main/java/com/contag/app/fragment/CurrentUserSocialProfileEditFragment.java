@@ -127,32 +127,32 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             case R.id.btn_add: {
 
             }
-            case R.id.btn_edit: {
-                if (!DeviceUtils.isInternetConnected(getActivity())) {
-                    showToast("Sorry there is no internet.");
-                    return;
-                }
-                int tag = (int) v.getTag();
-                ViewHolder vh = viewHolderArrayList.get(tag);
-                ProfileModel pm = hmProfileModel.get(tag);
-                if (pm.fieldType == Constants.Types.FIELD_STRING) {
-                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
-                    vh.etFieldValue.setVisibility(View.VISIBLE);
-                } else if (pm.fieldType == Constants.Types.FIELD_GOOGLE) {
-                    vh.btnGplus.setVisibility(View.VISIBLE);
-                } else if (pm.fieldType == Constants.Types.FIELD_FACEBOOK) {
-                    vh.btnFb.setVisibility(View.VISIBLE);
-                } else if (pm.fieldType == Constants.Types.FIELD_TWITTER) {
-                    vh.btnTwitter.setVisibility(View.VISIBLE);
-                } else if (pm.fieldType == Constants.Types.FIELD_INSTAGRAM) {
-                    vh.btnInstagram.setVisibility(View.VISIBLE);
-                } else if (pm.fieldType == Constants.Types.FIELD_LINKEDIN) {
-                    vh.btnLinkedIn.setVisibility(View.VISIBLE);
-                }
-                vh.tvFieldValue.setVisibility(View.GONE);
-                v.setVisibility(View.GONE);
-                break;
-            }
+//            case R.id.btn_edit_profile: {
+//                if (!DeviceUtils.isInternetConnected(getActivity())) {
+//                    showToast("Sorry there is no internet.");
+//                    return;
+//                }
+//                int tag = (int) v.getTag();
+//                ViewHolder vh = viewHolderArrayList.get(tag);
+//                ProfileModel pm = hmProfileModel.get(tag);
+//                if (pm.fieldType == Constants.Types.FIELD_STRING) {
+//                    vh.etFieldValue.setText(vh.tvFieldValue.getText().toString());
+//                    vh.etFieldValue.setVisibility(View.VISIBLE);
+//                } else if (pm.fieldType == Constants.Types.FIELD_GOOGLE) {
+//                    vh.btnGplus.setVisibility(View.VISIBLE);
+//                } else if (pm.fieldType == Constants.Types.FIELD_FACEBOOK) {
+//                    vh.btnFb.setVisibility(View.VISIBLE);
+//                } else if (pm.fieldType == Constants.Types.FIELD_TWITTER) {
+//                    vh.btnTwitter.setVisibility(View.VISIBLE);
+//                } else if (pm.fieldType == Constants.Types.FIELD_INSTAGRAM) {
+//                    vh.btnInstagram.setVisibility(View.VISIBLE);
+//                } else if (pm.fieldType == Constants.Types.FIELD_LINKEDIN) {
+//                    vh.btnLinkedIn.setVisibility(View.VISIBLE);
+//                }
+//                vh.tvFieldValue.setVisibility(View.GONE);
+//                v.setVisibility(View.GONE);
+//                break;
+//            }
 
             case R.id.btn_edit_profile: {
                 if (!DeviceUtils.isInternetConnected(getActivity())) {
@@ -338,6 +338,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 }
             }
             vh.tvFieldValue.setVisibility(View.GONE);
+            vh.btnAdd.setVisibility(View.GONE);
+            vh.btnShare.setVisibility(View.GONE);
         }
         isEditModeOn = true;
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
@@ -351,7 +353,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             View view = inflater.inflate(R.layout.item_profile_social_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
-            vh.pbUpdate = (ProgressBar) view.findViewById(R.id.pb_update);
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
@@ -386,7 +387,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnGplus.setVisibility(View.GONE);
             vh.btnLinkedIn.setVisibility(View.GONE);
             vh.tvFieldValue.setVisibility(View.VISIBLE);
-            vh.pbUpdate.setVisibility(View.GONE);
             vh.etFieldValue.setVisibility(View.GONE);
             vh.btnAdd.setVisibility(View.GONE);
             if (hmProfileModel.get(i).fieldType == Constants.Types.FIELD_STRING) {

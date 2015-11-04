@@ -55,7 +55,7 @@
     <!--android:background="@drawable/btn_edit_pencil" />-->
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_edit"
+        android:id="@+id/btn_add"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
@@ -95,13 +95,13 @@
     <!--android:background="@drawable/bg_btn_profile_update" />-->
 
 
-    <!--<ProgressBar-->
-    <!--android:id="@+id/pb_update"-->
-    <!--style="?android:attr/progressBarStyleSmall"-->
-    <!--android:layout_width="30dp"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_marginRight="10dp"-->
-    <!--android:layout_toLeftOf="@id/btn_update"-->
-    <!--android:layout_alignTop="@id/btn_update"-->
-    <!--android:visibility="gone" />-->
+    <ProgressBar
+    android:id="@+id/pb_update"
+    style="?android:attr/progressBarStyleSmall"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_marginRight="10dp"
+    android:layout_toLeftOf="@id/btn_update"
+    android:layout_alignTop="@id/btn_update"
+    android:visibility="gone" />
 </RelativeLayout>

@@ -66,6 +66,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         pbProfileUpdate = view.findViewById(R.id.pb_edit_profile);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
+        btnEditProfile.setVisibility(View.VISIBLE);
         btnEditProfile.setOnClickListener(this);
         new LoadUser().execute();
         return view;

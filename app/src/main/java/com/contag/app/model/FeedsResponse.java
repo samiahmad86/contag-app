@@ -1,5 +1,8 @@
 package com.contag.app.model;
 
+import android.util.Log;
+
+import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -39,6 +42,14 @@ public class FeedsResponse {
     @SerializedName("from_user")
     @Expose
     public long fromUser;
+    @SerializedName("avatar_url")
+    @Expose
+    public String avatarURL;
+
+    public String getAvatarURL(){
+        Log.d("feed", Constants.Urls.BASE_URL + avatarURL) ;
+        return Constants.Urls.BASE_URL + avatarURL ;
+    }
     
     public static class FeedList extends ArrayList<FeedsResponse> {
 

@@ -1,5 +1,6 @@
 package com.contag.app.model;
 
+import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -34,9 +35,9 @@ public class NotificationsResponse {
     @Expose
     public String text;
 
-    @SerializedName("image")
+    @SerializedName("avatar_url")
     @Expose
-    public String image;
+    public String avatarURL;
 
     @SerializedName("object_id")
     @Expose
@@ -53,6 +54,10 @@ public class NotificationsResponse {
     @SerializedName("updated_on")
     @Expose
     public String updatedOn;
+
+    public String getAvatarURL(){
+        return Constants.Urls.BASE_URL + avatarURL ;
+    }
 
     public static class NotificationList extends ArrayList<NotificationsResponse> {
 

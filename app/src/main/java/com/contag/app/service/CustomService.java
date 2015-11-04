@@ -67,25 +67,25 @@ public class CustomService extends Service {
             int type = intent.getIntExtra(Constants.Keys.KEY_SERVICE_TYPE, 0);
             if (type == Constants.Types.SERVICE_GET_ALL_PLATFORMS) {
                 SocialPlatformRequest spr = new SocialPlatformRequest();
-                Log.d("SocialVocial", "About to make the social request") ;
+                Log.d("SocialVocial", "About to make the social request");
                 mSpiceManager.execute(spr, new RequestListener<SocialPlatformResponse.List>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-                        Log.d("SocialVocial", "Request Failed") ;
+                        Log.d("SocialVocial", "Request Failed");
                         CustomService.this.stopSelf(serviceID);
                     }
 
                     @Override
                     public void onRequestSuccess(SocialPlatformResponse.List socialPlatforms) {
-                        Log.d("SocialVocial", "Request was successful") ;
+                        Log.d("SocialVocial", "Request was successful");
                         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
-                        Log.d("SocialVocial", String.valueOf(socialPlatforms.size())) ;
+                        Log.d("SocialVocial", String.valueOf(socialPlatforms.size()));
                         for (SocialPlatformResponse spr : socialPlatforms) {
                             SocialPlatformDao spDao = session.getSocialPlatformDao();
                             SocialPlatform sp = new SocialPlatform(spr.id);
                             sp.setPlatformBaseUrl(spr.platformUrl);
                             sp.setPlatformName(spr.platformName);
-                            Log.d("SocialVoical", "Platform: " + spr.platformName)  ;
+                            Log.d("SocialVoical", "Platform: " + spr.platformName);
                             spDao.insertOrReplace(sp);
                         }
 
@@ -129,7 +129,7 @@ public class CustomService extends Service {
 
                     @Override
                     public void onRequestSuccess(MessageResponse messageResponse) {
-                        Log.d(TAG, messageResponse.message);
+//                        Log.d(TAG, messageResponse.message);
                         Toast.makeText(CustomService.this, messageResponse.message, Toast.LENGTH_LONG).show();
                         CustomService.this.stopSelf(serviceID);
                     }

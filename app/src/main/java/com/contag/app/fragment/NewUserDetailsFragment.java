@@ -167,7 +167,6 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 //                        return;
 //                    }
                     oUsr.put(Constants.Keys.KEY_USER_NAME, name);
-                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     arrUsr.put(oUsr);
                     oUsr = new JSONObject();
                     if(rgGender.getCheckedRadioButtonId() == R.id.rb_male) {
@@ -175,12 +174,10 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                     } else {
                         oUsr.put(Constants.Keys.KEY_USER_GENDER, "female");
                     }
-                    oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     arrUsr.put(oUsr);
                     oUsr = new JSONObject();
                     if(imageUrl != null) {
                         oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
-                        oUsr.put(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                         arrUsr.put(oUsr);
                     }
                     log("NewFubar", arrUsr.toString());
@@ -205,7 +202,6 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");

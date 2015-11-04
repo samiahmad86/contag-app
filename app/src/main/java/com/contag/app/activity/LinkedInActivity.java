@@ -308,7 +308,6 @@ public class LinkedInActivity extends BaseActivity {
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    args.putString(Constants.Keys.KEY_USER_FIELD_VISIBILITY, "1");
                     String url = object.getString("url");
                     int idStartIndex = url.indexOf("id=");
                     int idEndIndex = url.indexOf("&", idStartIndex);

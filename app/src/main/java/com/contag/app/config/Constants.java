@@ -36,6 +36,7 @@ public class Constants {
         public static final String KEY_CONTACTS_UPDATED_TIMESTAMP = "contact_fucking_timestamp";
         public static final String KEY_USER_ID = "id";
         public static final String KEY_USER_PROFILE_RIGHTS = "profile_rights";
+        public static final String KEY_USER_PROFILE_CUSTOM_SHARES = "profile_share" ;
         public static final String KEY_USER_SOCIAL_PROFILE ="social_profile";
         public static final String KEY_USER_INTERESTS = "user_interests";
         public static final String KEY_USER_CREATED_ON = "created_on";
@@ -64,7 +65,6 @@ public class Constants {
         public static final String KEY_USER_IOS_APP_LINK = "ios_app_link";
         public static final String KEY_USER_AVATAR_URL = "avatar_url";
         public static final String KEY_USER_BLOOD_GROUP = "blood_group";
-        public static final String KEY_USER_FIELD_VISIBILITY = "visibility";
         public static final String KEY_USER_PROFILE_TYPE = "come_fuck_me";
         public static final String KEY_CURRENT_USER_ID = "fucking_user_id";
         public static final String KEY_INTEREST_SUGGESTION_SLUG = "slug";

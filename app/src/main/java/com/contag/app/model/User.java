@@ -10,14 +10,18 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class User {
 
     @SerializedName(Constants.Keys.KEY_USER_ID)
     @Expose
     public long id;
-    @SerializedName(Constants.Keys.KEY_USER_PROFILE_RIGHTS)
+
+    @SerializedName(Constants.Keys.KEY_USER_PROFILE_CUSTOM_SHARES)
     @Expose
-    public List<ProfileRight> profileRights = new ArrayList<ProfileRight>();
+    public List<CustomShareResponse> customShares = new ArrayList<>();
+
     @SerializedName(Constants.Keys.KEY_USER_SOCIAL_PROFILE)
     @Expose
     public List<SocialProfileResponse> socialProfile = new ArrayList<>();

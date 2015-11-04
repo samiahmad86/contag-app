@@ -13,6 +13,9 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.CustomShare;
+import com.contag.app.model.CustomShareDao;
+import com.contag.app.model.CustomShareResponse;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestDao;
@@ -183,6 +186,22 @@ public class UserService extends Service implements RequestListener<User> {
                 }
             }
 
+            Log.d("myuser", "Going for profile custom shares") ;
+
+            if(user.customShares != null && user.customShares.size() > 0){
+                Log.d("myuser", "Got profile custom shares with a size of: " + user.customShares.size()) ;
+                CustomShareDao csDao = session.getCustomShareDao() ;
+                for(CustomShareResponse csr: user.customShares) {
+                    CustomShare cs = new CustomShare();
+                    Log.d("myuser", csr.fieldName) ;
+                    cs.setField_name(csr.fieldName);
+                    cs.setUser_ids(csr.userIDS);
+                    cs.setIs_public(csr.isPublic);
+                    cs.setIs_private(csr.isPrivate);
+                    cs.setContagContag(cc);
+                    csDao.insertOrReplace(cs);
+                }
+            }
 
             ccDao.insertOrReplace(cc);
 

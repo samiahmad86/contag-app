@@ -10,6 +10,7 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
 
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.CustomShareDao;
 import com.contag.app.model.InterestDao;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialPlatformDao;
@@ -25,6 +26,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         ContactDao.createTable(db, ifNotExists);
         ContagContagDao.createTable(db, ifNotExists);
+        CustomShareDao.createTable(db, ifNotExists);
         InterestDao.createTable(db, ifNotExists);
         SocialProfileDao.createTable(db, ifNotExists);
         SocialPlatformDao.createTable(db, ifNotExists);
@@ -34,6 +36,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         ContactDao.dropTable(db, ifExists);
         ContagContagDao.dropTable(db, ifExists);
+        CustomShareDao.dropTable(db, ifExists);
         InterestDao.dropTable(db, ifExists);
         SocialProfileDao.dropTable(db, ifExists);
         SocialPlatformDao.dropTable(db, ifExists);
@@ -70,6 +73,7 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(ContactDao.class);
         registerDaoClass(ContagContagDao.class);
+        registerDaoClass(CustomShareDao.class);
         registerDaoClass(InterestDao.class);
         registerDaoClass(SocialProfileDao.class);
         registerDaoClass(SocialPlatformDao.class);

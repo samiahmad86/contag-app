@@ -11,11 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.contag.app.R;
-import com.contag.app.config.Constants;
 import com.contag.app.model.ProfileModel;
 
 import java.util.HashMap;
-import java.util.zip.Inflater;
 
 /**
  * Created by tanay on 28/9/15.
@@ -57,7 +55,7 @@ public class ProfileListAdapter extends BaseAdapter {
             vh.btnEdit = (Button) convertView.findViewById(R.id.btn_edit);
             vh.tvFieldValue = (TextView) convertView.findViewById(R.id.tv_field_value);
             vh.etFieldValue = (EditText) convertView.findViewById(R.id.et_field_value);
-            vh.pbUpdate = (ProgressBar) convertView.findViewById(R.id.pb_update);
+            //vh.pbUpdate = (ProgressBar) convertView.findViewById(R.id.pb_update);
             vh.tvFieldLabel = (TextView) convertView.findViewById(R.id.tv_field_label);
             vh.btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -113,9 +113,9 @@ public class ContactAdapter extends BaseAdapter {
 
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
+            final ContactListItem item = (ContactListItem) getItem(position) ;
             if(ContactUtils.isExistingContact(contObject.getId(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
-                final ContactListItem item = (ContactListItem) getItem(position) ;
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -124,6 +124,13 @@ public class ContactAdapter extends BaseAdapter {
                     }
                 });
             }
+            vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Going to profile", Toast.LENGTH_LONG).show();
+                    //Router.startUserActivity(mContext, TAG, item.mContagContag.getId());
+                }
+            });
         }else {
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
         }

@@ -87,9 +87,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("myuser", "Item click event heard") ;
+
                 ContactListItem cli = contacts.get(position);
-                Log.d("myuser", "asking for user with id; " + cli.mContagContag.getId()) ;
+
                 Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, cli.mContagContag.getId());
 
             }
@@ -267,17 +267,22 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
     @Override
     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-        Log.d("SearchFilter", "Refactor successfull, this works!") ;
-        pbContacts.setVisibility(View.INVISIBLE );
+
+        pbContacts.setVisibility(View.GONE);
+
         if(contactResponses.size() == 1){
-        ContactListItem listItem = ContactUtils.getContactListItem(contactResponses) ;
-        contacts.clear() ;
-        contacts.add(listItem) ;
-        contactAdapter.notifyDataSetChanged(); }
-        else{
-            showToast("No users found with that contag id!");
+
+            ContactListItem listItem = ContactUtils.getContactListItem(contactResponses) ;
+            contacts.clear() ;
+            ArrayList<ContactListItem> contactListItems = new ArrayList<>() ;
+            contactListItems.add(listItem) ;
+            contacts.addAll(contactListItems) ;
+            contactAdapter.notifyDataSetChanged();
         }
-        //Log.d("SearchFilter", listItem.mContact.getContactName()) ;
+        else{
+            showToast("No users found with that Contag id!");
+        }
+
     }
 
     private void doSearch(String query) {

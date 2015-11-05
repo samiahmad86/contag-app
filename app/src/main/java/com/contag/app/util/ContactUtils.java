@@ -43,7 +43,7 @@ public class ContactUtils {
 
             if (mContact.getIsOnContag()) {
 
-                ContagContag cc = getContagContact(response.contactContagUser, mContact);
+                ContagContag cc = getContagContact(response.contactContagUser, mContact, true);
                 ContagContagDao ccDao = session.getContagContagDao();
 
                 if (response.contactContagUser.userInterest != null && response.contactContagUser.userInterest.size() > 0) {
@@ -80,18 +80,19 @@ public class ContactUtils {
         }
     }
 
-    public static ContactListItem getContactListItem(ContactResponse.ContactList contactResponse){
+    public static ContactListItem getContactListItem(ContactResponse.ContactList contactResponse, Context mContext){
         ContactListItem listItem ;
         ArrayList<Interest> interests = new ArrayList<>() ;
         ArrayList<SocialProfile> socialProfiles = new ArrayList<>() ;
         Contact mContact = new Contact();
         ContagContag cc = new ContagContag() ;
+        session = ((ContagApplication) mContext.getApplicationContext()).getDaoSession();
         for (ContactResponse response : contactResponse) {
              mContact = getContact(response);
 
             if (mContact.getIsOnContag()) {
 
-                cc = getContagContact(response.contactContagUser, mContact);
+                cc = getContagContact(response.contactContagUser, mContact, false);
 
                 if (response.contactContagUser.userInterest != null && response.contactContagUser.userInterest.size() > 0)
                     interests = getInterestList(response.contactContagUser.userInterest,
@@ -101,6 +102,18 @@ public class ContactUtils {
                     socialProfiles = getSocialProfiles(response.contactContagUser.socialProfile,
                             response.contactContagUser.id ,cc);
             }
+            ContagContagDao ccDao = session.getContagContagDao();
+            InterestDao interestDao = session.getInterestDao();
+            SocialProfileDao spDao = session.getSocialProfileDao();
+
+            for(Interest interest: interests){
+                interestDao.insertOrReplace(interest);
+            }
+
+            for(SocialProfile socialProfile: socialProfiles) {
+                spDao.insertOrReplace(socialProfile);
+            }
+            ccDao.insertOrReplace(cc);
 
         }
         listItem = new ContactListItem(interests, cc, mContact, socialProfiles, Constants.Types.ITEM_ADD_CONTAG) ;
@@ -111,19 +124,12 @@ public class ContactUtils {
     public static void addContag(Context mContext, ContactListItem contag){
         session = ((ContagApplication) mContext.getApplicationContext()).getDaoSession();
         ContactDao mContactDao = session.getContactDao();
-        ContagContagDao ccDao = session.getContagContagDao();
-        InterestDao interestDao = session.getInterestDao();
-        SocialProfileDao spDao = session.getSocialProfileDao();
+        ContagContagDao ccDao = session.getContagContagDao() ;
 
-        for(Interest interest: contag.interests){
-            interestDao.insertOrReplace(interest);
-        }
-
-        for(SocialProfile socialProfile: contag.profiles) {
-            spDao.insertOrReplace(socialProfile);
-        }
-        ccDao.insertOrReplace(contag.mContagContag);
         mContactDao.insertOrReplace(contag.mContact);
+
+        contag.mContagContag.setIs_contact(true);
+        ccDao.insertOrReplace(contag.mContagContag);
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
 
@@ -133,18 +139,18 @@ public class ContactUtils {
 
     }
 
-    public static Boolean isExistingContact(long userID, Context mContext){
+    public static Boolean isExistingContact(String contactNumber, Context mContext){
         session = ((ContagApplication) mContext).getDaoSession();
-        ContagContagDao ccDao = session.getContagContagDao();
 
-        long count = ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(userID)).count() ;
+        ContactDao cDao = session.getContactDao() ;
+        long count = cDao.queryBuilder().where(ContactDao.Properties.ContactNumber.eq(contactNumber)).count() ;
 
-        return (count == 0 && userID != PrefUtils.getCurrentUserID()) ;
+        return (count == 0) ;
 
 
     }
 
-    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact){
+    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact, Boolean isOnContag){
 
         ContagContag cc = new ContagContag(ccResponse.id);
         cc.setContact(mContact);
@@ -179,6 +185,7 @@ public class ContactUtils {
         cc.setMarriageAnniversary(ccResponse.marriageAnniversary);
         cc.setPersonalEmail(ccResponse.personalEmail);
         cc.setWorkAddress(ccResponse.workAddress);
+        cc.setIs_contact(isOnContag);
 
         return cc ;
 

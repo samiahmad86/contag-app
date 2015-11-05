@@ -13,6 +13,8 @@ public class ContactListItem {
     public Contact mContact;
     public List<SocialProfile> profiles ;
     public int type;
+    public boolean isSharedWith ;
+
 
     public ContactListItem(Contact contact, int type) {
         this.mContact = contact;
@@ -31,5 +33,11 @@ public class ContactListItem {
         this.profiles = profiles ;
         this.mContagContag = contagContag;
         this.mContact = contact ;
+    }
+
+    public ContactListItem(ContagContag contagContag, boolean isSharedWith, int type){
+        this.type = type ;
+        this.isSharedWith = isSharedWith ;
+        this.mContagContag = contagContag ;
     }
 }

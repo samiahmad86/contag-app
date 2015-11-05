@@ -272,7 +272,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         if(contactResponses.size() == 1){
 
-            ContactListItem listItem = ContactUtils.getContactListItem(contactResponses) ;
+            ContactListItem listItem = ContactUtils.getContactListItem(contactResponses, ContactListFragment.this.getActivity()) ;
             contacts.clear() ;
             ArrayList<ContactListItem> contactListItems = new ArrayList<>() ;
             contactListItems.add(listItem) ;
@@ -322,7 +322,8 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
             ContagContagDao mContagContagDao = session.getContagContagDao();
             List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
-                    where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())).list();
+                    where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID()),
+                            ContagContagDao.Properties.Is_contact.eq(true)).list();
             Log.d("Condev", "ContactListFrag - Size of contacts: " + String.valueOf(contagContacts.size())) ;
             if (contagContacts != null) {
                 for (ContagContag cuntag : contagContacts) {

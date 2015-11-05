@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -114,7 +113,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_share: {
-                DialogFragment d = new DialogFragment() ;
+                ShareDialog share = ShareDialog.newInstance((String) v.getTag()) ;
+                share.show(getChildFragmentManager(),TAG) ;
                 break ;
             }
         }
@@ -145,6 +145,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         for (int i = 0; i < hmProfileModel.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
             vh.btnAdd.setTag(i);
+            vh.btnShare.setTag(hmProfileModel.get(i).key);
             vh.tvFieldValue.setVisibility(View.VISIBLE);
             vh.etFieldValue.setVisibility(View.GONE);
             vh.spFieldValue.setVisibility(View.GONE);
@@ -321,8 +322,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
                             Constants.Types.FIELD_DATE));
                     hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
-                            Constants.Types.FIELD_LIST));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
                             Constants.Types.FIELD_LIST));
 
                     break;

@@ -16,6 +16,9 @@ public class Constants {
         public static final String KEY_NEW_USER = "is_new_user";
         public static final String KEY_OTP = "otp";
         public static final String KEY_FIELD_TYPE = "field_type";
+        public static final String KEY_FIELD_NAME = "field_name" ;
+        public static final String KEY_IS_PUBLIC = "is_public" ;
+        public static final String KEY_USER_IDS = "user_ids" ;
         public static final String KEY_NUMBER = "number";
         public static final String KEY_CONTAG_ID = "contag_id";
         public static final String KEY_CONTAG_USER = "contag_user";
@@ -113,9 +116,11 @@ public class Constants {
         public static final int REQUEST_PUT = 5;
         public static final int REQUEST_PUT_ADD_USER = 6 ;
         public static final int REQUEST_UPDATE_USER_INTEREST = 7 ;
+        public static final int REQUEST_POST_PRIVACY = 8 ;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int ITEM_ADD_CONTAG = 2 ;
+        public static final int ITEM_SHARE_CONTAG = 3 ;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
@@ -154,6 +159,7 @@ public class Constants {
         public static final String URL_SOCIAL_PROFILE = "/social_profile/";
         public static final String URL_USER_INTEREST = "/interest/";
         public static final String URL_PROFILE_REQUEST = "/profile_request/";
+        public static final String URL_PROFILE_PRIVACY = "/privacy/";
         public static final String URL_NOTIFICATIONS = "/notification/" ;
     }
 

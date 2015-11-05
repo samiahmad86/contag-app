@@ -31,23 +31,26 @@
         android:text="Custom"
         android:textColor="@color/black"/>
 
-    <ListView
-        android:id="@+id/lv_share_list"
-        android:layout_below="@id/btn_share_public"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:scrollbars="none"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
 
     <Button
         android:id="@+id/btn_share_done"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_share_custom"
+        android:layout_below="@id/btn_share_public"
         android:text="Done"
         android:textColor="@color/black"/>
+
+    <ListView
+        android:id="@+id/lv_contag_share"
+        style="@style/ContactScrollBarStyle"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btn_share_done"
+        android:layout_margin="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp" />
+
+
 
 </RelativeLayout>

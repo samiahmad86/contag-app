@@ -229,9 +229,11 @@ public class User {
     public static void storeCustomShare(ArrayList<CustomShare> customShares,  DaoSession session){
 
         if(customShares != null ){
-            Log.d("myuser", "Going to store custom shares") ;
+            Log.d("shave", "Going to store custom shares") ;
+
             CustomShareDao csDao = session.getCustomShareDao() ;
             for(CustomShare cs: customShares) {
+                Log.d("shave",cs.getUser_ids()) ;
                 csDao.insertOrReplace(cs);
             }
         }

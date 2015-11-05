@@ -17,6 +17,9 @@ import com.contag.app.model.CustomShare;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestPost;
+import com.contag.app.model.MessageResponse;
+import com.contag.app.model.PrivacyRequest;
+import com.contag.app.model.ProfilePrivacyRequestModel;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.User;
@@ -87,6 +90,15 @@ public class UserService extends Service implements RequestListener<User> {
                     });
                     break ;
                 }
+                case Constants.Types.REQUEST_POST_PRIVACY: {
+                    String fieldName = intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME) ;
+                    Boolean isPublic = intent.getBooleanExtra(Constants.Keys.KEY_IS_PUBLIC, false) ;
+                    String userIDs = intent.getStringExtra(Constants.Keys.KEY_USER_IDS) ;
+                    ProfilePrivacyRequestModel privacyRequestModel  = new ProfilePrivacyRequestModel(fieldName, isPublic, userIDs) ;
+                    PrivacyRequest privacyRequest = new PrivacyRequest(privacyRequestModel) ;
+                    mSpiceManager.execute(privacyRequest, privacyRequestListener);
+                    break ;
+                }
             }
         }
         return START_REDELIVER_INTENT;
@@ -109,7 +121,18 @@ public class UserService extends Service implements RequestListener<User> {
         }
     }
 
+    RequestListener<MessageResponse> privacyRequestListener = new RequestListener<MessageResponse>(){
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Log.d("share", "failure");
+        }
 
+        @Override
+        public void onRequestSuccess(MessageResponse response) {
+            Intent privacyIntent = new Intent("com.contag.app.profile.privacy") ;
+            LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(privacyIntent) ;
+        }
+    };
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         Log.d(TAG, "failure");

@@ -126,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public Boolean isUserOnLocal(long id){
-
+        Log.d("myuser", "Checking for user with id: " + id) ;
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         ContagContagDao ccDao = session.getContagContagDao();
 

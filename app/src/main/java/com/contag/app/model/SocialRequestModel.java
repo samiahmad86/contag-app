@@ -4,6 +4,8 @@ import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class SocialRequestModel {
     @SerializedName(Constants.Keys.KEY_SOCIAL_PLATFORM_ID)
     @Expose
@@ -34,4 +36,7 @@ public class SocialRequestModel {
         this.platformSecret = platformSecret;
     }
 
+    public static class List extends ArrayList<SocialRequestModel> {
+
+    }
 }

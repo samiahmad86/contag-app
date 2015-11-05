@@ -128,7 +128,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
-            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
+            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
@@ -162,16 +162,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus) {
-                            ViewHolder vh = viewHolderArrayList.get(position);
-                            String date = vh.tvFieldValue.getText().toString();
-                            if (date.equals("null") || date.length() == 0) {
-                                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                                Calendar calendar = Calendar.getInstance();
-                                date = dateFormat.format(calendar.getTime()).toString();
-                            }
-                            DateFragment df = DateFragment.newInstance(date, position, profileType);
-                            df.show(getChildFragmentManager(), "Date");
+                            showDate(position);
                         }
+                    }
+                });
+                vh.etFieldValue.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDate(position);
                     }
                 });
             }
@@ -186,6 +184,18 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 vh.btnAdd.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private void showDate(int position) {
+        ViewHolder vh = viewHolderArrayList.get(position);
+        String date = vh.tvFieldValue.getText().toString();
+        if (date.equals("null") || date.length() == 0) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            Calendar calendar = Calendar.getInstance();
+            date = dateFormat.format(calendar.getTime()).toString();
+        }
+        DateFragment df = DateFragment.newInstance(date, position, profileType);
+        df.show(getChildFragmentManager(), "Date");
     }
 
     private void openEditMode() {

@@ -59,9 +59,9 @@ public class Router {
     }
 
     public static void startNotificationsActivity(Context mContext, String className) {
-        Intent userNotifications = new Intent(mContext, NotificationsActivity.class) ;
-        userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className) ;
-        mContext.startActivity(userNotifications) ;
+        Intent userNotifications = new Intent(mContext, NotificationsActivity.class);
+        userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        mContext.startActivity(userNotifications);
     }
 
     public static void startContactService(Context mContext, boolean sendContacts) {
@@ -71,11 +71,11 @@ public class Router {
         mContext.startService(iStartContactService);
     }
 
-    public static void addContagUser(Context mContext, Long userID){
-        Log.d("conadd", "Adding this user to server") ;
+    public static void addContagUser(Context mContext, Long userID) {
+        Log.d("conadd", "Adding this user to server");
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_ADD_CONTACT, true);
-        iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID) ;
+        iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID);
         mContext.startService(iStartContactService);
     }
 
@@ -89,7 +89,7 @@ public class Router {
     }
 
     public static void startUserService(Context context, int type, String userArray) {
-       startUserService(context, type, userArray, 0);
+        startUserService(context, type, userArray, 0);
     }
 
     public static void startUserService(Context context, int type, String userArray, int profileType) {
@@ -100,27 +100,27 @@ public class Router {
         context.startService(iUser);
     }
 
-    public static void startUserService(Context context, int type, long userID){
+    public static void startUserService(Context context, int type, long userID) {
         Intent iUser = new Intent(context, UserService.class);
         iUser.putExtra(Constants.Keys.KEY_REQUEST_TYPE, type);
         iUser.putExtra(Constants.Keys.KEY_USER_ID, userID);
         context.startService(iUser);
     }
 
-    public static void startInterestUpdateService(Context context, String interestList){
-        Log.d("iList", "Starting service") ;
-        Intent iInterest = new Intent(context, UserService.class) ;
-        iInterest.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_UPDATE_USER_INTEREST) ;
-        iInterest.putExtra(Constants.Keys.KEY_INTEREST_IDS, interestList) ;
-        context.startService(iInterest) ;
+    public static void startInterestUpdateService(Context context, String interestList) {
+        Log.d("iList", "Starting service");
+        Intent iInterest = new Intent(context, UserService.class);
+        iInterest.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_UPDATE_USER_INTEREST);
+        iInterest.putExtra(Constants.Keys.KEY_INTEREST_IDS, interestList);
+        context.startService(iInterest);
     }
 
-    public static void startGmailApp(Context context){
+    public static void startGmailApp(Context context) {
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.setType("plain/text");
         sendIntent.setData(Uri.parse("team@contagapp.com"));
         sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
-        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "team@contagapp.com" });
+        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"team@contagapp.com"});
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for contag");
         context.startActivity(sendIntent);
     }
@@ -145,37 +145,44 @@ public class Router {
         context.startActivity(socialIntent);
     }
 
-    public static void startLinkendInLoginActivity(Context context, int requestCode) {
+    public static void startLinkendInLoginActivity(Context context, int requestCode, long linkedInId) {
         Intent iLinkedIn = new Intent(context, LinkedInActivity.class);
-        ((BaseActivity)context).startActivityForResult(iLinkedIn, requestCode);
+        iLinkedIn.putExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, linkedInId);
+        ((BaseActivity) context).startActivityForResult(iLinkedIn, requestCode);
     }
 
-    public static void startInstagramLoginActivity(Context context, int requestCode) {
+    public static void startInstagramLoginActivity(Context context, int requestCode, long instagramId) {
         Intent iInsta = new Intent(context, InstagramActivity.class);
-        ((BaseActivity)context).startActivityForResult(iInsta, requestCode);
+        iInsta.putExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, instagramId);
+        ((BaseActivity) context).startActivityForResult(iInsta, requestCode);
     }
 
-    public static void openFacebookProfile(Context context, String facebookUrl) {
+    public static void openFacebookProfile(Context context, String facebookId) {
+        Intent facebookIntent = getFacebookIntent(context, facebookId);
+        context.startActivity(facebookIntent);
+    }
+
+    public static Intent getFacebookIntent(Context context, String facebookId) {
+
         try {
-            int versionCode = context.getPackageManager().getPackageInfo("com.facebook.katana", 0).versionCode;
-            if (versionCode >= 3002850) {
-                Uri uri = Uri.parse("fb://facewebmodal/f?href=" + facebookUrl);
-                context.startActivity(new Intent(Intent.ACTION_VIEW, uri));;
-            } else {
-                // open the Facebook app using the old method (fb://profile/id or fb://page/id)
-                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
-                        ("fb://page/" + facebookUrl.substring(facebookUrl.lastIndexOf("/") + 1))));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            // Facebook is not installed. Open the browser
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl)));
+            // Check if FB app is even installed
+            context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+
+            String facebookScheme = "fb://profile/" + facebookId;
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(facebookScheme));
+        } catch (Exception e) {
+
+            // Cache and Open a url in browser
+            String facebookProfileUri = "https://www.facebook.com/" + facebookId;
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(facebookProfileUri));
         }
+
     }
 
     public static void openTwitterProfile(Context context, String twitterUserName) {
         try {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + twitterUserName)));
-        }catch (Exception e) {
+        } catch (Exception e) {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/" + twitterUserName)));
         }
     }

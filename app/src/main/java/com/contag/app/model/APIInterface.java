@@ -118,6 +118,14 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
+    @POST(Constants.Urls.URL_SOCIAL_PROFILE)
+    Response addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel.List
+            mSocialRequestModelList);
+
+
+    @Headers({
+            "Content-Type: application/json"
+    })
     @GET(Constants.Urls.URL_USER_INTEREST)
     InterestSuggestion.List getInterestSuggestions(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                                    @Query(Constants.Keys.KEY_INTEREST_SUGGESTION_SLUG) String slug);

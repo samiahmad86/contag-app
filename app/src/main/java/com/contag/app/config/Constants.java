@@ -83,7 +83,6 @@ public class Constants {
         public static final String KEY_FEEDS_END_INDEX = "end_index";
         public static final String KEY_INTEREST_IDS = "interest_ids";
         public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
-
     }
 
     public class Headers {

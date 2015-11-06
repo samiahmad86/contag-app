@@ -17,7 +17,7 @@ import com.contag.app.model.CustomShare;
 /** 
  * DAO for table "CUSTOM_SHARE".
 */
-public class CustomShareDao extends AbstractDao<CustomShare, Void> {
+public class CustomShareDao extends AbstractDao<CustomShare, Long> {
 
     public static final String TABLENAME = "CUSTOM_SHARE";
 
@@ -26,11 +26,12 @@ public class CustomShareDao extends AbstractDao<CustomShare, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Field_name = new Property(0, String.class, "field_name", false, "FIELD_NAME");
-        public final static Property User_ids = new Property(1, String.class, "user_ids", false, "USER_IDS");
-        public final static Property Is_public = new Property(2, Boolean.class, "is_public", false, "IS_PUBLIC");
-        public final static Property Is_private = new Property(3, Boolean.class, "is_private", false, "IS_PRIVATE");
-        public final static Property UserID = new Property(4, Long.class, "userID", false, "USER_ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Field_name = new Property(1, String.class, "field_name", false, "FIELD_NAME");
+        public final static Property User_ids = new Property(2, String.class, "user_ids", false, "USER_IDS");
+        public final static Property Is_public = new Property(3, Boolean.class, "is_public", false, "IS_PUBLIC");
+        public final static Property Is_private = new Property(4, Boolean.class, "is_private", false, "IS_PRIVATE");
+        public final static Property UserID = new Property(5, Long.class, "userID", false, "USER_ID");
     };
 
     private DaoSession daoSession;
@@ -49,11 +50,12 @@ public class CustomShareDao extends AbstractDao<CustomShare, Void> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CUSTOM_SHARE\" (" + //
-                "\"FIELD_NAME\" TEXT," + // 0: field_name
-                "\"USER_IDS\" TEXT," + // 1: user_ids
-                "\"IS_PUBLIC\" INTEGER," + // 2: is_public
-                "\"IS_PRIVATE\" INTEGER," + // 3: is_private
-                "\"USER_ID\" INTEGER);"); // 4: userID
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"FIELD_NAME\" TEXT," + // 1: field_name
+                "\"USER_IDS\" TEXT," + // 2: user_ids
+                "\"IS_PUBLIC\" INTEGER," + // 3: is_public
+                "\"IS_PRIVATE\" INTEGER," + // 4: is_private
+                "\"USER_ID\" INTEGER);"); // 5: userID
     }
 
     /** Drops the underlying database table. */
@@ -67,29 +69,34 @@ public class CustomShareDao extends AbstractDao<CustomShare, Void> {
     protected void bindValues(SQLiteStatement stmt, CustomShare entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String field_name = entity.getField_name();
         if (field_name != null) {
-            stmt.bindString(1, field_name);
+            stmt.bindString(2, field_name);
         }
  
         String user_ids = entity.getUser_ids();
         if (user_ids != null) {
-            stmt.bindString(2, user_ids);
+            stmt.bindString(3, user_ids);
         }
  
         Boolean is_public = entity.getIs_public();
         if (is_public != null) {
-            stmt.bindLong(3, is_public ? 1L: 0L);
+            stmt.bindLong(4, is_public ? 1L: 0L);
         }
  
         Boolean is_private = entity.getIs_private();
         if (is_private != null) {
-            stmt.bindLong(4, is_private ? 1L: 0L);
+            stmt.bindLong(5, is_private ? 1L: 0L);
         }
  
         Long userID = entity.getUserID();
         if (userID != null) {
-            stmt.bindLong(5, userID);
+            stmt.bindLong(6, userID);
         }
     }
 
@@ -101,19 +108,20 @@ public class CustomShareDao extends AbstractDao<CustomShare, Void> {
 
     /** @inheritdoc */
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public CustomShare readEntity(Cursor cursor, int offset) {
         CustomShare entity = new CustomShare( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // field_name
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // user_ids
-            cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0, // is_public
-            cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // is_private
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userID
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // field_name
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // user_ids
+            cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // is_public
+            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // is_private
+            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5) // userID
         );
         return entity;
     }
@@ -121,24 +129,29 @@ public class CustomShareDao extends AbstractDao<CustomShare, Void> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, CustomShare entity, int offset) {
-        entity.setField_name(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setUser_ids(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setIs_public(cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0);
-        entity.setIs_private(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
-        entity.setUserID(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setField_name(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setUser_ids(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setIs_public(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
+        entity.setIs_private(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
+        entity.setUserID(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */
     @Override
-    protected Void updateKeyAfterInsert(CustomShare entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(CustomShare entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Void getKey(CustomShare entity) {
-        return null;
+    public Long getKey(CustomShare entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /** @inheritdoc */

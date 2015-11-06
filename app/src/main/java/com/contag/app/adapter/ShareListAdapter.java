@@ -26,14 +26,20 @@ import java.util.ArrayList;
 public class ShareListAdapter extends BaseAdapter {
 
     private ArrayList<ContactListItem> items;
-    private int shareCount = 0;
+    private int shareCount ;
     private Context mContext;
     private static final String TAG = ContactAdapter.class.getName();
 
-    public ShareListAdapter(ArrayList<ContactListItem> contactListItems, Context context) {
+    public ShareListAdapter(ArrayList<ContactListItem> contactListItems,  Context context) {
         this.mContext = context;
         this.items = contactListItems;
 
+
+
+    }
+
+    public void setShareCount(int shareCount){
+        this.shareCount = shareCount ;
     }
 
     @Override

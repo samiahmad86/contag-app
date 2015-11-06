@@ -56,6 +56,7 @@ public class ContagDaoGenerator {
 
 
         Entity customShare = schema.addEntity("CustomShare") ;
+        customShare.addIdProperty() ;
         customShare.addStringProperty("field_name") ;
         customShare.addStringProperty("user_ids") ;
         customShare.addBooleanProperty("is_public") ;

@@ -229,14 +229,22 @@ public class User {
     public static void storeCustomShare(ArrayList<CustomShare> customShares,  DaoSession session){
 
         if(customShares != null ){
-            Log.d("shave", "Going to store custom shares") ;
+
 
             CustomShareDao csDao = session.getCustomShareDao() ;
             for(CustomShare cs: customShares) {
-                Log.d("shave",cs.getUser_ids()) ;
-                csDao.insertOrReplace(cs);
+                Log.d("shave","cd user ids: " +cs.getUser_ids()) ;
+                Log.d("shave","cs is public: " + cs.getIs_public()) ;
+                Log.d("shave", "cs field name:" + cs.getField_name()) ;
+                long result = csDao.insertOrReplace(cs);
+                Log.d("shave", "cs result:" + result) ;
             }
         }
     }
+
+    public static void updatePrivacy(String fieldName, long userID){
+        //
+    }
+
 
 }

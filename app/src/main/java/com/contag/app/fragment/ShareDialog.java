@@ -29,7 +29,6 @@ import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
 import com.contag.app.model.CustomShareDao;
 import com.contag.app.model.DaoSession;
-import com.contag.app.model.User;
 import com.contag.app.util.PrefUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -106,6 +105,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         int id = v.getId();
         switch (id) {
             case R.id.btn_share_public:{
+                mCustomShare.setIs_public(!mCustomShare.getIs_public());
                 setPublicButton() ;
                 break ;
             }
@@ -122,29 +122,38 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     }
 
     private void savePrivacySettings(){
-        ArrayList<String> userIDS = new ArrayList<>() ;
 
-        for(ContactListItem item: shareList){
-           if (item.isSharedWith)
-               userIDS.add(String.valueOf(item.mContagContag.getId())) ;
-        }
-        Log.d("shave", "" + mCustomShare.getIs_public()) ;
-        Log.d("share", "" + shareCount) ;
-        if(mCustomShare.getIs_public() || shareCount > 0)
+        if(shareCount > 0)
+            mCustomShare.setIs_public(false);
+
+        Log.d("shave", "Is Public: " + mCustomShare.getIs_public()) ;
+        Log.d("shave", "Share Count: " + shareCount) ;
+
         Router.startUserServiceForPrivacy(getActivity(), mCustomShare.getField_name(), mCustomShare.getIs_public(),
-                TextUtils.join(",", userIDS));
-        else
-            Toast.makeText(getActivity(), "Share with at least one contag!", Toast.LENGTH_LONG).show() ;
+                getSharesAsString());
+
+    }
+
+    private String getSharesAsString(){
+        ArrayList<String> userIDS = new ArrayList<>() ;
+        for(ContactListItem item: shareList){
+            if (item.isSharedWith)
+                userIDS.add(String.valueOf(item.mContagContag.getId())) ;
+        }
+        return TextUtils.join(",",userIDS) ;
     }
 
     private BroadcastReceiver privacySettingsUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             Toast.makeText(getActivity(), "Shared successfully!", Toast.LENGTH_LONG).show() ;
-            DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
-            ArrayList<CustomShare> customShares = new ArrayList<>() ;
-            customShares.add(mCustomShare) ;
-            User.storeCustomShare(customShares, session);
+            mCustomShare.setUser_ids(getSharesAsString());
+            Log.d("shave", "Broadcast, isPublic: " + mCustomShare.getIs_public()) ;
+            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids()) ;
+            Log.d("shave", "Field name: " + mCustomShare.getField_name()) ;
+
+            mCustomShare.update();
         }
     } ;
 
@@ -158,11 +167,14 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
     private void setPublicButton(){
 
-        mCustomShare.setIs_public(!mCustomShare.getIs_public());
+
 
         if(mCustomShare.getIs_public() || lvContags.getVisibility() == View.VISIBLE) {
-            sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
+            //Hide contag list
             lvContags.setVisibility(View.GONE);
+
+            // Toggle Color
+            sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
             shareCustom.setTextColor(getResources().getColor(R.color.black));
         }
         else
@@ -173,10 +185,16 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private void setContagList(){
 
         if(lvContags.getVisibility() == View.VISIBLE) {
+            // Remove contact list
             lvContags.setVisibility(View.GONE);
+            // Set color to unselected
             shareCustom.setTextColor(getResources().getColor(R.color.black));
         } else {
+            // Set is_public as false when showing list
+            mCustomShare.setIs_public(false);
+            //Show the list
             lvContags.setVisibility(View.VISIBLE);
+            // Toggle color of buttons
             shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
             sharePublic.setTextColor(getResources().getColor(R.color.black));
 
@@ -185,6 +203,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
     private void setCustomShareCount(){
         shareCustom.setText("Custom(" +  shareCount + ")") ;
+        shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
     }
 
 
@@ -231,14 +250,15 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
 
             setPublicButton();
-            setCustomShareCount();
+
             if(mCustomShare.getUser_ids().length() > 0)
                 shareCount = mCustomShare.getUser_ids().split(",").length ;
 
-
+            setCustomShareCount();
             shareList.clear();
             shareList.addAll(contactListItems);
             shareListAdapter.notifyDataSetChanged();
+            shareListAdapter.setShareCount(shareCount) ;
 
         }
     }

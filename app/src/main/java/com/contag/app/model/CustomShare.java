@@ -9,6 +9,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class CustomShare {
 
+    private Long id;
     private String field_name;
     private String user_ids;
     private Boolean is_public;
@@ -28,7 +29,12 @@ public class CustomShare {
     public CustomShare() {
     }
 
-    public CustomShare(String field_name, String user_ids, Boolean is_public, Boolean is_private, Long userID) {
+    public CustomShare(Long id) {
+        this.id = id;
+    }
+
+    public CustomShare(Long id, String field_name, String user_ids, Boolean is_public, Boolean is_private, Long userID) {
+        this.id = id;
         this.field_name = field_name;
         this.user_ids = user_ids;
         this.is_public = is_public;
@@ -40,6 +46,14 @@ public class CustomShare {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getCustomShareDao() : null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getField_name() {

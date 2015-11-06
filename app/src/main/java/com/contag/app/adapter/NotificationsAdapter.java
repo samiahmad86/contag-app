@@ -88,17 +88,16 @@ public class NotificationsAdapter extends BaseAdapter {
                 vh.shareButton.setTag(1) ;
             }
             final int requestType = (int) vh.shareButton.getTag() ;
-            final long requestBy = notification.userId ;
+            final String requestBy = String.valueOf(notification.userId) ;
             final String fieldName = notification.requestInfo ;
 
             vh.shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    User.updatePrivacy(fieldName, requestBy) ;
+                    String userIDS = User.getSharesAsString(fieldName, requestBy, mCtxt) ;
+                    Router.startUserServiceForPrivacy(mCtxt, fieldName, false, userIDS);
                     if(requestType == 0){
-                        // Add request -> Navigate to profile but before doing that add the asker to the share list
-                        //Need user_id, request_info
                         Router.startUserActivity(mCtxt, "Notifications", PrefUtils.getCurrentUserID());
                     }
                 }

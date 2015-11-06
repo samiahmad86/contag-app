@@ -91,12 +91,25 @@ public class UserService extends Service implements RequestListener<User> {
                     break ;
                 }
                 case Constants.Types.REQUEST_POST_PRIVACY: {
-                    String fieldName = intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME) ;
-                    Boolean isPublic = intent.getBooleanExtra(Constants.Keys.KEY_IS_PUBLIC, false) ;
-                    String userIDs = intent.getStringExtra(Constants.Keys.KEY_USER_IDS) ;
-                    ProfilePrivacyRequestModel privacyRequestModel  = new ProfilePrivacyRequestModel(fieldName, isPublic, userIDs) ;
+
+                    final String fieldName = intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME) ;
+                    final Boolean isPublic = intent.getBooleanExtra(Constants.Keys.KEY_IS_PUBLIC, false) ;
+                    final String userIDS = intent.getStringExtra(Constants.Keys.KEY_USER_IDS) ;
+
+                    ProfilePrivacyRequestModel privacyRequestModel  = new ProfilePrivacyRequestModel(fieldName, isPublic, userIDS) ;
+
                     PrivacyRequest privacyRequest = new PrivacyRequest(privacyRequestModel) ;
-                    mSpiceManager.execute(privacyRequest, privacyRequestListener);
+                    mSpiceManager.execute(privacyRequest, new RequestListener<MessageResponse>(){
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            Log.d("share", "failure");
+                        }
+
+                        @Override
+                        public void onRequestSuccess(MessageResponse response) {
+                            User.updatePrivacy(fieldName, isPublic, userIDS, getApplicationContext()) ;
+
+                        }}) ;
                     break ;
                 }
             }
@@ -120,19 +133,6 @@ public class UserService extends Service implements RequestListener<User> {
             mSpiceManager.shouldStop();
         }
     }
-
-    RequestListener<MessageResponse> privacyRequestListener = new RequestListener<MessageResponse>(){
-        @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Log.d("share", "failure");
-        }
-
-        @Override
-        public void onRequestSuccess(MessageResponse response) {
-            Intent privacyIntent = new Intent("com.contag.app.profile.privacy") ;
-            LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(privacyIntent) ;
-        }
-    };
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         Log.d(TAG, "failure");

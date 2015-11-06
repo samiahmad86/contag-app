@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.adapter.ShareListAdapter;
@@ -88,8 +87,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     @Override
     public void onStart(){
         super.onStart();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(privacySettingsUpdated,
-                new IntentFilter("com.contag.app.profile.privacy"));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(shareCountUpdated,
                 new IntentFilter("com.contag.app.profile.sharecount")) ;
     }
@@ -97,7 +94,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     @Override
     public void onStop(){
         super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(privacySettingsUpdated);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(shareCountUpdated);
     }
     @Override
@@ -126,11 +122,13 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         if(shareCount > 0)
             mCustomShare.setIs_public(false);
 
+        mCustomShare.setUser_ids(getSharesAsString());
+
         Log.d("shave", "Is Public: " + mCustomShare.getIs_public()) ;
         Log.d("shave", "Share Count: " + shareCount) ;
 
         Router.startUserServiceForPrivacy(getActivity(), mCustomShare.getField_name(), mCustomShare.getIs_public(),
-                getSharesAsString());
+                mCustomShare.getUser_ids());
 
     }
 
@@ -142,20 +140,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         }
         return TextUtils.join(",",userIDS) ;
     }
-
-    private BroadcastReceiver privacySettingsUpdated = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Toast.makeText(getActivity(), "Shared successfully!", Toast.LENGTH_LONG).show() ;
-            mCustomShare.setUser_ids(getSharesAsString());
-            Log.d("shave", "Broadcast, isPublic: " + mCustomShare.getIs_public()) ;
-            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids()) ;
-            Log.d("shave", "Field name: " + mCustomShare.getField_name()) ;
-
-            mCustomShare.update();
-        }
-    } ;
 
     private BroadcastReceiver shareCountUpdated = new BroadcastReceiver() {
         @Override

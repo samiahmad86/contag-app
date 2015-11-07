@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -195,22 +196,28 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
         protected Bundle doInBackground(JSONObject... params) {
             if(params.length > 0) {
                 JSONObject object = params[0];
-                long id = 0;
+                long id ;
                 SocialPlatform sp = (NewUserDetailsFragment.this.getBaseActivity())
                         .getPlatformFromName("facebook");
                 id = sp.getId();
+                Log.d("SocialVocial", "ID of platform is: " + id) ;
+                Log.d("SocialVocial", object.toString()) ;
+                Bundle args = new Bundle();
                 try {
-                    Bundle args = new Bundle();
+
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
-                    return args;
+
                 } catch (JSONException ex) {
                     ex.printStackTrace();
+                    args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, "user@contagapp.com");
+                    args.putString(Constants.Keys.KEY_PLATFORM_ID, "contag_user");
                 }
+                return args;
             }
-            return null;
+            return null ;
         }
         @Override
         protected void onPostExecute(Bundle bundle) {

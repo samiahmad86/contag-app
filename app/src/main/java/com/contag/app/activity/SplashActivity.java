@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
-import com.contag.app.util.PrefUtils;
 
 /**
  *
@@ -20,11 +19,13 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
         if (isUserLoggedIn()) {
-            if(PrefUtils.getCurrentUserID() != 0) {
-                Router.startHomeActivity(this, TAG);
-            } else {
-                Router.startNewUserActivity(this, TAG, 0);
-            }
+            Router.getSocialPlatforms(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
+            Router.startNewUserActivity(this, TAG, 0);
+//            if(PrefUtils.getCurrentUserID() != 0) {
+//                Router.startHomeActivity(this, TAG);
+//            } else {
+//                Router.startNewUserActivity(this, TAG, 0);
+//            }
         } else {
             Router.getSocialPlatforms(this, Constants.Types.SERVICE_GET_ALL_PLATFORMS);
             Router.startGcmRegisterService(this);

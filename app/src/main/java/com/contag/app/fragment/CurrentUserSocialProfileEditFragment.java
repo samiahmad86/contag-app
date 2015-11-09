@@ -207,9 +207,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     @Override
                     public void onRequestSuccess(Response response) {
                         if (response.result) {
-                            if(position == fbViewPosition) {
-                                LoginManager.getInstance().logOut();
-                            }
                             new DeleteSocialProfile().execute(position);
                         }
                     }
@@ -506,6 +503,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             Bundle args = new Bundle();
             args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, hmSocialProfileModel.get(googlePlusPosition).mSocialPlatform.getId());
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+            log(TAG, "id is " + (currentPerson== null));
             if (currentPerson != null) {
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
@@ -685,6 +683,11 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
         @Override
         protected void onPostExecute(Void result) {
+            if(position == fbViewPosition) {
+                LoginManager.getInstance().logOut();
+            } else if(position == googlePlusPosition) {
+                Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
+            }
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
             SocialProfileModel newSocialProfileModel = new SocialProfileModel(mSocialProfileModel.mSocialPlatform, false, mSocialProfileModel.mViewType);
             viewHolderArrayList.get(position).btnDisconnect.setVisibility(View.GONE);

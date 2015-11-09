@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import com.contag.app.util.PrefUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -49,6 +51,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private int shareCount = 0;
     private TextView shareText ;
     private String fieldName ;
+    private Hashtable<String,String> hashTable;
 
     public static ShareDialog newInstance(String fieldName) {
 
@@ -56,6 +59,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         Bundle args = new Bundle();
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
+        share.setStyle(DialogFragment.STYLE_NO_TITLE, 0);                       // To remove the header from the dialog
         return share ;
     }
 
@@ -71,11 +75,15 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         shareListAdapter= new ShareListAdapter(shareList, getActivity());
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
         lvContags.setAdapter(shareListAdapter);
+        hashTable = new Hashtable();
+        initializeHashTable();
+
 
         sharePublic = (Button) view.findViewById(R.id.btn_share_public) ;
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom) ;
         shareText = (TextView) view.findViewById(R.id.tv_share_text) ;
-        shareText.setText("Share your " + fieldName + " with: ") ;
+        String temp=getHashValue(fieldName);
+        shareText.setText("Share your " + Html.fromHtml("<b>"+temp+"</b>") + " with: ") ;
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
 
         sharePublic.setOnClickListener(this);
@@ -150,7 +158,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             Toast.makeText(getActivity(), "Shared successfully!", Toast.LENGTH_LONG).show() ;
             mCustomShare.setUser_ids(getSharesAsString());
             Log.d("shave", "Broadcast, isPublic: " + mCustomShare.getIs_public()) ;
-            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids()) ;
+            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids());
             Log.d("shave", "Field name: " + mCustomShare.getField_name()) ;
 
             mCustomShare.update();
@@ -202,7 +210,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     }
 
     private void setCustomShareCount(){
-        shareCustom.setText("Custom(" +  shareCount + ")") ;
+        shareCustom.setText("Custom(" + shareCount + ")");
         shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
     }
 
@@ -261,6 +269,19 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             shareListAdapter.setShareCount(shareCount) ;
 
         }
+    }
+    // TODO: Feed all the detail hashtags
+    private void initializeHashTable( )
+    {
+        hashTable.put(Constants.Keys.KEY_USER_MARITAL_STATUS,"Marital Status");
+       // hashTable.put("marital_status","Marital Status");
+    }
+    private String getHashValue( String key)
+    {
+       if(hashTable.containsKey(key))
+           return hashTable.get(key);
+        else
+           return null;
     }
 
 }

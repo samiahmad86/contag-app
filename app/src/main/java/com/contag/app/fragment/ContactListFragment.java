@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,10 +13,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -114,7 +117,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             @Override
             public void onClick(View v) {
 
-                toggleDropDown(true);
+                toggleDropDown(true, v);
 
             }
         });
@@ -123,8 +126,20 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         filterView.findViewById(R.id.tv_filter_blood).setOnClickListener(filterSelection);
         filterView.findViewById(R.id.tv_filter_platform).setOnClickListener(filterSelection);
 
-        filterDropDown = new PopupWindow(filterView, 600, 570, true) ;
-        filterDropDown.setBackgroundDrawable(new BitmapDrawable(getResources(), ""));
+        filterDropDown = new PopupWindow(filterView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true) ;
+     /*   filterDropDown.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);*/
+       // popupWindow.setContentView(popupView);
+     /*   filterDropDown.setWindowLayoutMode(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        filterDropDown.setHeight(1);
+        filterDropDown.setWidth(1);*/
+      // filterDropDown.setBackgroundDrawable(new BitmapDrawable());
+        filterDropDown.setBackgroundDrawable(getResources().getDrawable(R.color.light_blue));
+       // filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+      /*  Rect location=locateView(filterV
+        filterDropDown.showAtLocation(filterView, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);*/
 
         EditText etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
         etSearchBox.setOnEditorActionListener(this);
@@ -155,9 +170,12 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         }
     }
 
-    private void toggleDropDown(Boolean show){
+    private void toggleDropDown(Boolean show,View v){
         if(show)
-            filterDropDown.showAsDropDown(btnFilter, 0, 0) ;
+           // filterDropDown.show
+
+      {  Rect location=locateView(v);
+          filterDropDown.showAtLocation(v, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);}
         else
             filterDropDown.dismiss();
     }
@@ -475,6 +493,25 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             contactAdapter.notifyDataSetChanged();
             pbContacts.setVisibility(View.INVISIBLE);
         }
+    }
+    public static Rect locateView(View v)
+    {
+        int[] loc_int = new int[2];
+        if (v == null) return null;
+        try
+        {
+            v.getLocationOnScreen(loc_int);
+        } catch (NullPointerException npe)
+        {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect location = new Rect();
+        location.left = loc_int[0];
+        location.top = loc_int[1];
+        location.right = location.left + v.getWidth();
+        location.bottom = location.top + v.getHeight();
+        return location;
     }
 
 }

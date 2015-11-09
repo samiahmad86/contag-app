@@ -159,29 +159,33 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                 JSONArray arrUsr = new JSONArray();
                 JSONObject oUsr = new JSONObject();
                 try {
+
                     String name = etUserName.getText().toString();
+
 //                    String regexExpression = "^[\\\\p{L} .'-]+$";
 //                    if(!name.matches(regexExpression)) {
 //                        log(TAG, name + "fuckkk");
 //                        showToast("Enter a valid name");
 //                        return;
 //                    }
-                    oUsr.put(Constants.Keys.KEY_USER_NAME, name);
-                    arrUsr.put(oUsr);
-                    oUsr = new JSONObject();
-                    if(rgGender.getCheckedRadioButtonId() == R.id.rb_male) {
-                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "male");
-                    } else {
-                        oUsr.put(Constants.Keys.KEY_USER_GENDER, "female");
-                    }
-                    arrUsr.put(oUsr);
-                    oUsr = new JSONObject();
-                    if(imageUrl != null) {
-                        oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
+                    if(name!=null) {
+                        oUsr.put(Constants.Keys.KEY_USER_NAME, name);
                         arrUsr.put(oUsr);
+                        oUsr = new JSONObject();
+                        if (rgGender.getCheckedRadioButtonId() == R.id.rb_male) {
+                            oUsr.put(Constants.Keys.KEY_USER_GENDER, "male");
+                        } else {
+                            oUsr.put(Constants.Keys.KEY_USER_GENDER, "female");
+                        }
+                        arrUsr.put(oUsr);
+                        oUsr = new JSONObject();
+                        if (imageUrl != null) {
+                            oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
+                            arrUsr.put(oUsr);
+                        }
+                        log("NewFubar", arrUsr.toString());
+                        Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
                     }
-                    log("NewFubar", arrUsr.toString());
-                    Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }

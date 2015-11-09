@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_contacts"
-    android:padding="10dp">
+    android:padding="6dp">
 
 
 
@@ -11,8 +11,17 @@
         android:id="@+id/rv_user_basics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
         android:orientation="vertical">
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/checkbox_shared"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:button="@drawable/abc_btn_check_material"
+            />
+
 
         <com.contag.app.view.CircularImageView
             android:id="@+id/iv_user_photo"
@@ -25,9 +34,12 @@
             android:id="@+id/tv_contact_name"
             android:layout_width="wrap_content"
             android:layout_toRightOf="@id/iv_user_photo"
-            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/iv_user_photo"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="5dp"
             android:text="Shahid Kapoor"
-            android:textSize="20sp"
+            android:layout_toLeftOf="@id/checkbox_shared"
+            android:textSize="18sp"
             android:textColor="@color/notifications_story"
             android:layout_height="wrap_content" />
 
@@ -36,7 +48,9 @@
             android:id="@+id/tv_contact_id"
             android:layout_below="@id/tv_contact_name"
             android:layout_toRightOf="@id/iv_user_photo"
-            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/iv_user_photo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -46,16 +60,9 @@
             android:layout_marginBottom="3dp"/>
 
 
-
     </RelativeLayout>
 
-    <CheckBox
-        android:id="@+id/checkbox_shared"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        />
+
 
 
 

@@ -7,28 +7,30 @@
         android:id="@+id/pb_contacts"
         layout="@layout/layout_progress_bar" />
 
+    <ImageView android:id="@+id/btn_filter"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/filter_icon" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_contact_search"
-        android:layout_width="300dp"
-        android:layout_height="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:layout_toLeftOf="@id/btn_filter"
         android:background="@drawable/bg_contact_search"
         android:drawableLeft="@drawable/search_icon"
-        android:drawablePadding="5dp"
+        android:drawablePadding="10dp"
         android:imeOptions="actionSearch"
-        android:paddingLeft="4dp"
+        android:padding="5dp"
         android:singleLine="true"
         android:textSize="16sp" />
 
-    <ImageView android:id="@+id/btn_filter"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_toRightOf="@id/et_contact_search"
-        android:scaleType="fitXY"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/filter_icon" />
+
 
 
     <ListView

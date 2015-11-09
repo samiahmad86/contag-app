@@ -112,15 +112,14 @@ public interface APIInterface {
             "Content-Type: application/json"
     })
     @POST(Constants.Urls.URL_SOCIAL_PROFILE)
-    Response addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel mSocialRequestModel);
-
+    Response addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel.List
+            mSocialRequestModelList);
 
     @Headers({
             "Content-Type: application/json"
     })
-    @POST(Constants.Urls.URL_SOCIAL_PROFILE)
-    Response addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel.List
-            mSocialRequestModelList);
+    @DELETE(Constants.Urls.URL_SOCIAL_PROFILE)
+    Response deleteSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Query("id") long id);
 
 
     @Headers({

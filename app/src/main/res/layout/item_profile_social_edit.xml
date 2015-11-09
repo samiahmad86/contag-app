@@ -44,6 +44,7 @@
         android:textSize="13sp" />
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_field_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tv_connected_as"
@@ -62,78 +63,86 @@
         android:layout_below="@id/tv_field_name"
         android:padding="5dp">
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/et_field_base_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:visibility="gone"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/et_field_value"
+        <RelativeLayout
+            android:id="@+id/rl_social_edit_container_inner"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:singleLine="true"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/et_field_base_value"
-            android:textColor="@color/white" />
+            android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_g_plus_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_g_plus_btn"
-            android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:padding="5dp"
-            android:text="@string/sync_gplus"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/et_field_base_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_twitter_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_twitter_btn"
-            android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:padding="5dp"
-            android:text="@string/sync_twitter"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/et_field_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/et_field_base_value"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_linkedin_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_linkedin_btn"
-            android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:padding="5dp"
-            android:text="@string/sync_linkedin"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_g_plus_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_g_plus_btn"
+                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:padding="5dp"
+                android:text="@string/sync_gplus"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_instagram_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_insta_btn"
-            android:drawableLeft="@drawable/tw__ic_logo_default"
-            android:padding="5dp"
-            android:text="@string/sync_instagram"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_twitter_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_twitter_btn"
+                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:padding="5dp"
+                android:text="@string/sync_twitter"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
-        <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/btn_facebook_login"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            fb:login_text="@string/sync_fb"
-            fb:logout_text="@string/fb_unsync_msg" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_linkedin_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_linkedin_btn"
+                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:padding="5dp"
+                android:text="@string/sync_linkedin"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_instagram_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_insta_btn"
+                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:padding="5dp"
+                android:text="@string/sync_instagram"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/btn_facebook_login"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                fb:login_text="@string/sync_fb"
+                fb:logout_text="@string/fb_unsync_msg" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.v7.widget.AppCompatButton
@@ -141,9 +150,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_social_edit_container"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:background="?android:selectableItemBackground"
+        android:padding="5dp"
         android:text="@string/disconnect"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:visibility="gone" />
 
@@ -152,6 +163,7 @@
         layout="@layout/layout_progress_bar"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_alignTop="@id/btn_disconnect"
         android:layout_marginRight="10dp"
         android:layout_toRightOf="@id/btn_disconnect" />
 

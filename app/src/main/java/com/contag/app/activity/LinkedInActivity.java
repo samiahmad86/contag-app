@@ -313,41 +313,5 @@ public class LinkedInActivity extends BaseActivity {
         }
     }
 
-    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
-        @Override
-        protected Bundle doInBackground(JSONObject... params) {
-            if(params.length > 0) {
-                JSONObject jsonObject = params[0];
-                long id = 0;
-                SocialPlatform sp = LinkedInActivity.this.getPlatformFromName("linkedin");
-                id = sp.getId();
-                try {
-                    Bundle args = new Bundle();
-                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    String url = jsonObject.getString("url");
-                    int idStartIndex = url.indexOf("id=");
-                    int idEndIndex = url.indexOf("&", idStartIndex);
-
-                    args.putString(Constants.Keys.KEY_PLATFORM_ID, url.substring(idStartIndex + 3, idEndIndex));
-                    args.putString(Constants.Keys.KEY_PLATFORM_SECRET, accessSecret);
-                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, accessToken);
-                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
-                    return args;
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Bundle args) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
-            setResult(Activity.RESULT_OK,intent);
-            finish();
-        }
-
-    }
-
 
 }

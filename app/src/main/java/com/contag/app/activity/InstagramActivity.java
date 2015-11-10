@@ -74,6 +74,8 @@ public class InstagramActivity extends BaseActivity {
     private WebView webView;
     private ProgressBar pb;
 
+    private long instagramID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +85,8 @@ public class InstagramActivity extends BaseActivity {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.getSettings().setJavaScriptEnabled(true);
+
+        instagramID = getIntent().getLongExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 0);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -214,7 +218,21 @@ public class InstagramActivity extends BaseActivity {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             log(TAG, jsonObject.toString());
-            new SendData().execute(jsonObject);
+            try {
+                Bundle args = new Bundle();
+                args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, instagramID);
+                JSONObject usr = jsonObject.getJSONObject("user");
+                args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, jsonObject.getString("access_token"));
+                args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
+                args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
+                Intent intent = new Intent();
+                intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+//            new SendData().execute(jsonObject);
         }
 
     }
@@ -223,15 +241,15 @@ public class InstagramActivity extends BaseActivity {
         @Override
         protected Bundle doInBackground(JSONObject... params) {
             if (params.length > 0) {
-                JSONObject json = params[0];
+                JSONObject jsonObject = params[0];
                 SocialPlatform sp = InstagramActivity.this
                         .getPlatformFromName("instagram");
                 long id = sp.getId();
                 try {
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    JSONObject usr = json.getJSONObject("user");
-                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, json.getString("access_token"));
+                    JSONObject usr = jsonObject.getJSONObject("user");
+                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, jsonObject.getString("access_token"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
                     return args;
@@ -243,9 +261,9 @@ public class InstagramActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(Bundle bundle) {
+        protected void onPostExecute(Bundle args) {
             Intent intent = new Intent();
-            intent.putExtra(Constants.Keys.KEY_BUNDLE, bundle);
+            intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
             setResult(Activity.RESULT_OK, intent);
             finish();
         }

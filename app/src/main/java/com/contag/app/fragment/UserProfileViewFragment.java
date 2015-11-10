@@ -65,7 +65,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             ViewHolder vh = new ViewHolder();
             vh.btnSocialGo = (Button) view.findViewById(R.id.btn_social_go);
             vh.btnRequestField = (Button) view.findViewById(R.id.btn_request);
-            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_label);
+            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.tvFieldValue.setOnClickListener(this);
             viewHolderArrayList.add(vh);
@@ -144,7 +144,8 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 String name = convertKeyToLabel(hmProfileModel.get(pos).key).toLowerCase();
                 log(TAG, name);
                 if (name.contains("facebook")) {
-                    Router.openFacebookProfile(getActivity(), hmProfileModel.get(pos).value.toString());
+                    String value = hmProfileModel.get(pos).value.toString();
+                    Router.openFacebookProfile(getActivity(), value.substring(value.lastIndexOf("/") + 1));
                 } else if (name.contains("twitter")) {
                     String twitterProfile = hmProfileModel.get(pos).value.toString();
                     Router.openTwitterProfile(getActivity(), twitterProfile.substring(twitterProfile.lastIndexOf("/") + 1));

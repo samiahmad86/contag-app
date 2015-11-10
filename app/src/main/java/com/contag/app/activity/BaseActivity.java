@@ -190,7 +190,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return PrefUtils.getAuthToken() != null;
     }
 
-
+    public void deleteSocialProfileFromId(long id) {
+        DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
+        SocialProfileDao socialProfileDao = session.getSocialProfileDao();
+        socialProfileDao.deleteByKey(id);
+    }
 
 
 

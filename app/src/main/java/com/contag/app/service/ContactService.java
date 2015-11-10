@@ -140,7 +140,6 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                 }
             }
         }
-        Gson gson = new Gson();
         Log.d("Condev", "Contacts loaded from contact book. Time to make the request");
         Log.d("Condev", "Requesting the server with " + String.valueOf(contacts.size()) + " contacts");
         ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_POST, contacts);

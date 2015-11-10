@@ -68,6 +68,7 @@ public class LinkedInActivity extends BaseActivity {
     private WebView webView;
     private ProgressBar pb;
     private String accessToken = null, accessSecret = null;
+    private long linkedInID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class LinkedInActivity extends BaseActivity {
         setContentView(R.layout.activity_social_login);
         webView = (WebView) findViewById(R.id.wv_social_login);
         pb = (ProgressBar) findViewById(R.id.pb_social_login);
-
+        linkedInID = getIntent().getLongExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 0);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -287,28 +288,10 @@ public class LinkedInActivity extends BaseActivity {
                 pb.setVisibility(View.GONE);
                 log(TAG, data.toString());
                 try {
-                    new SendData().execute(data.getJSONObject("siteStandardProfileRequest"));
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-            } else {
-                log(TAG, "something went wrong");
-            }
-        }
-    }
-
-    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
-        @Override
-        protected Bundle doInBackground(JSONObject... params) {
-            if(params.length > 0) {
-                JSONObject object = params[0];
-                long id = 0;
-                SocialPlatform sp = LinkedInActivity.this.getPlatformFromName("linkedin");
-                id = sp.getId();
-                try {
+                    JSONObject jsonObject = data.getJSONObject("siteStandardProfileRequest");
                     Bundle args = new Bundle();
-                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    String url = object.getString("url");
+                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, linkedInID);
+                    String url = jsonObject.getString("url");
                     int idStartIndex = url.indexOf("id=");
                     int idEndIndex = url.indexOf("&", idStartIndex);
 
@@ -316,21 +299,18 @@ public class LinkedInActivity extends BaseActivity {
                     args.putString(Constants.Keys.KEY_PLATFORM_SECRET, accessSecret);
                     args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, accessToken);
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
-                    return args;
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+//                    new SendData().execute(data.getJSONObject("siteStandardProfileRequest"));
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
+            } else {
+                log(TAG, "something went wrong");
             }
-            return null;
         }
-        @Override
-        protected void onPostExecute(Bundle bundle) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.Keys.KEY_BUNDLE, bundle);
-            setResult(Activity.RESULT_OK,intent);
-            finish();
-        }
-
     }
 
 

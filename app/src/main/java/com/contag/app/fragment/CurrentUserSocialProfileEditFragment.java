@@ -39,6 +39,7 @@ import com.contag.app.request.DeleteSocialProfileRequest;
 import com.contag.app.request.SocialProfileRequest;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.PrefUtils;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -503,7 +504,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             Bundle args = new Bundle();
             args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, hmSocialProfileModel.get(googlePlusPosition).mSocialPlatform.getId());
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            log(TAG, "id is " + (currentPerson== null));
+            log(TAG, "id is " + (currentPerson == null));
             if (currentPerson != null) {
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
@@ -683,9 +684,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
         @Override
         protected void onPostExecute(Void result) {
-            if(position == fbViewPosition) {
+            if (position == fbViewPosition) {
                 LoginManager.getInstance().logOut();
-            } else if(position == googlePlusPosition) {
+            } else if (position == googlePlusPosition) {
                 Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
             }
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);

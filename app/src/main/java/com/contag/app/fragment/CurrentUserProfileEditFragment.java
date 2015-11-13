@@ -24,7 +24,7 @@ import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.ProfileModel;
+import com.contag.app.model.P2ProfileModel;
 import com.contag.app.util.DeviceUtils;
 
 import org.json.JSONArray;
@@ -39,7 +39,7 @@ import java.util.HashMap;
 
 public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
 
-    private HashMap<Integer, ProfileModel> hmProfileModel;
+    private HashMap<Integer, P2ProfileModel> hmP2PProfileModel;
     private int profileType;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
@@ -47,6 +47,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     public static final String TAG = CurrentUserProfileEditFragment.class.getName();
     private Button btnEditProfile;
     private View pbProfileUpdate;
+    private boolean isDateShown;
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
@@ -59,7 +60,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
-        hmProfileModel = new HashMap<>();
+        hmP2PProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
@@ -68,6 +69,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
         btnEditProfile.setOnClickListener(this);
+        isDateShown = false;
         new LoadUser().execute();
         return view;
     }
@@ -114,8 +116,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_share: {
-                DialogFragment d = new DialogFragment() ;
-                break ;
+                DialogFragment d = new DialogFragment();
+                break;
             }
         }
     }
@@ -124,7 +126,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private void addViews() {
         llViewContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        for (int i = 0; i < hmProfileModel.size(); i++) {
+        for (int i = 0; i < hmP2PProfileModel.size(); i++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
@@ -141,90 +143,88 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     }
 
     private void setViewContent() {
-        log(TAG, "Profile Type: " + profileType);
-        for (int i = 0; i < hmProfileModel.size(); i++) {
-            ViewHolder vh = viewHolderArrayList.get(i);
-            vh.btnAdd.setTag(i);
-            vh.tvFieldValue.setVisibility(View.VISIBLE);
-            vh.etFieldValue.setVisibility(View.GONE);
-            vh.spFieldValue.setVisibility(View.GONE);
-            vh.btnAdd.setVisibility(View.GONE);
-            int fieldType = hmProfileModel.get(i).fieldType;
-            if (fieldType == Constants.Types.FIELD_STRING) {
-                vh.etFieldValue.setInputType(hmProfileModel.get(i).inputType);
-            } else if (fieldType == Constants.Types.FIELD_LIST) {
-                ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this.getActivity(),
-                        android.R.layout.simple_spinner_item, getSpinnerArray(hmProfileModel.get(i).key));
-                vh.spFieldValue.setAdapter(spAdapter);
-            } else if (fieldType == Constants.Types.FIELD_DATE) {
-                final int position = i;
-                vh.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
-                            showDate(position);
-                        }
+        for (int i = 0; i < hmP2PProfileModel.size(); i++) {
+            setUpView(i);
+        }
+    }
+
+    private void setUpView(int position) {
+        P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
+        ViewHolder mViewHolder = viewHolderArrayList.get(position);
+
+        mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
+        mViewHolder.etFieldValue.setVisibility(View.GONE);
+        mViewHolder.spFieldValue.setVisibility(View.GONE);
+        mViewHolder.btnAdd.setVisibility(View.GONE);
+
+        mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mP2ProfileModel.key));
+
+        int viewType = mP2ProfileModel.viewType;
+        if (viewType == Constants.Types.FIELD_STRING) {
+            mViewHolder.etFieldValue.setInputType(mP2ProfileModel.inputType);
+        } else if (viewType == Constants.Types.FIELD_LIST) {
+            ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this.getActivity(),
+                    android.R.layout.simple_spinner_item, mP2ProfileModel.values);
+            mViewHolder.spFieldValue.setAdapter(spAdapter);
+        } else if (viewType == Constants.Types.FIELD_DATE) {
+            final int datePosition = position;
+            mViewHolder.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus && !isDateShown) {
+                        showDate(datePosition);
                     }
-                });
-                vh.etFieldValue.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDate(position);
+                }
+            });
+            mViewHolder.etFieldValue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isDateShown) {
+                        showDate(datePosition);
                     }
-                });
-            }
-            vh.tvFieldLabel.setText(convertKeyToLabel(hmProfileModel.get(i).key));
-            String value = String.valueOf(hmProfileModel.get(i).value);
-            log(TAG, value);
-            if (!value.equals("null") && value.length() != 0) {
-                vh.tvFieldValue.setText(value);
-                vh.btnShare.setVisibility(View.VISIBLE);
-            } else {
-                vh.tvFieldValue.setVisibility(View.GONE);
-                vh.btnAdd.setVisibility(View.VISIBLE);
-            }
+                }
+            });
+        }
+
+        if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
+            mViewHolder.tvFieldValue.setText(mP2ProfileModel.value);
+            mViewHolder.btnShare.setVisibility(View.VISIBLE);
+        } else {
+            mViewHolder.tvFieldValue.setVisibility(View.GONE);
+            mViewHolder.btnAdd.setVisibility(View.VISIBLE);
         }
     }
 
     private void showDate(int position) {
-        ViewHolder vh = viewHolderArrayList.get(position);
-        String date = vh.tvFieldValue.getText().toString();
-        if (date.equals("null") || date.length() == 0) {
+        String date = hmP2PProfileModel.get(position).value;
+        if (date == null || date.length() == 0) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
             Calendar calendar = Calendar.getInstance();
             date = dateFormat.format(calendar.getTime()).toString();
         }
         DateFragment df = DateFragment.newInstance(date, position, profileType);
         df.show(getChildFragmentManager(), "Date");
+        isDateShown = true;
     }
 
     private void openEditMode() {
-        for (int i = 0; i < hmProfileModel.size(); i++) {
-            ViewHolder vh = viewHolderArrayList.get(i);
-            ProfileModel pm = hmProfileModel.get(i);
-            vh.btnAdd.setVisibility(View.GONE);
-            vh.btnShare.setVisibility(View.GONE);
-            String value = vh.tvFieldValue.getText().toString();
-            if (pm.fieldType == Constants.Types.FIELD_LIST) {
-                vh.spFieldValue.setVisibility(View.VISIBLE);
-                if (value.length() != 0) {
-                    int position = -1;
-                    String[] arr = getSpinnerArray(pm.key);
-                    for (int j = 0; j < arr.length; j++) {
-                        if (arr[j].equalsIgnoreCase(value)) {
-                            position = j;
-                            break;
-                        }
-                    }
-                    vh.spFieldValue.setSelection(position);
+        for (int i = 0; i < hmP2PProfileModel.size(); i++) {
+            ViewHolder mViewHolder = viewHolderArrayList.get(i);
+            P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(i);
+            mViewHolder.btnAdd.setVisibility(View.GONE);
+            mViewHolder.btnShare.setVisibility(View.GONE);
+            if (mP2ProfileModel.viewType == Constants.Types.FIELD_LIST) {
+                mViewHolder.spFieldValue.setVisibility(View.VISIBLE);
+                if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
+                    mViewHolder.spFieldValue.setSelection(getSelectedPosition(i));
                 }
             } else {
-                vh.etFieldValue.setVisibility(View.VISIBLE);
-                if (value.length() != 0 && value != null) {
-                    vh.etFieldValue.setText(value);
+                mViewHolder.etFieldValue.setVisibility(View.VISIBLE);
+                if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
+                    mViewHolder.etFieldValue.setText(mP2ProfileModel.value);
                 }
             }
-            vh.tvFieldValue.setVisibility(View.GONE);
+            mViewHolder.tvFieldValue.setVisibility(View.GONE);
         }
         isEditModeOn = true;
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
@@ -234,11 +234,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         JSONArray aUser = new JSONArray();
         JSONObject oUser;
         try {
-            for (int i = 0; i < hmProfileModel.size(); i++) {
+            for (int i = 0; i < hmP2PProfileModel.size(); i++) {
                 oUser = new JSONObject();
-                ProfileModel pm = hmProfileModel.get(i);
+                P2ProfileModel pm = hmP2PProfileModel.get(i);
                 ViewHolder vh = viewHolderArrayList.get(i);
-                int fieldType = pm.fieldType;
+                int fieldType = pm.viewType;
                 if (fieldType == Constants.Types.FIELD_LIST) {
                     oUser.put(pm.key, vh.spFieldValue.getSelectedItem().toString());
                 } else {
@@ -246,7 +246,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 }
                 aUser.put(oUser);
             }
-            log(TAG, aUser.toString());
             pbProfileUpdate.setVisibility(View.VISIBLE);
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
@@ -268,22 +267,22 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         return str;
     }
 
-    private String[] getSpinnerArray(String key) {
-        String[] arr = null;
-        if (key.equalsIgnoreCase(Constants.Keys.KEY_USER_GENDER)) {
-            arr = Constants.Arrays.USER_GENDER;
-        } else if (key.equalsIgnoreCase(Constants.Keys.KEY_USER_MARITAL_STATUS)) {
-            arr = Constants.Arrays.USER_MARITAL_STATUS;
-        } else if (key.equalsIgnoreCase(Constants.Keys.KEY_USER_BLOOD_GROUP)) {
-            arr = Constants.Arrays.USER_BLOOD_GROUPS;
+    private int getSelectedPosition(int pos) {
+        int position = 0;
+        P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(pos);
+        pos = 0;
+        for (String entry : mP2ProfileModel.values) {
+            if (mP2ProfileModel.value.equalsIgnoreCase(entry)) {
+                position = pos;
+            }
+            pos++;
         }
-        return arr;
+        return position;
     }
 
     private BroadcastReceiver brUsr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            log(TAG, "Broadcast received");
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == CurrentUserProfileEditFragment.this.profileType) {
                 new LoadUser().execute(type);
@@ -301,71 +300,91 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     ViewHolder vh = viewHolderArrayList.get(position);
                     vh.etFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
-
+                    isDateShown = false;
                 }
             }
         }
     };
 
-    private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileModel>> {
+    private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, P2ProfileModel>> {
         @Override
-        protected HashMap<Integer, ProfileModel> doInBackground(Integer... params) {
+        protected HashMap<Integer, P2ProfileModel> doInBackground(Integer... params) {
+
             ContagContag cc = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).getCurrentUser();
-            HashMap<Integer, ProfileModel> hm = new HashMap<>();
+            HashMap<Integer, P2ProfileModel> hmP2ProfileModel = new HashMap<>();
+
             switch (profileType) {
+
                 case Constants.Types.PROFILE_PERSONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
+                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
+
+                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
+
+                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
+
+                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
-                            Constants.Types.FIELD_LIST));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
-                            Constants.Types.FIELD_DATE));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
+
+                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
+                            Constants.Types.FIELD_LIST, Constants.Arrays.USER_BLOOD_GROUPS));
+
+                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
+                            Constants.Types.FIELD_DATE, InputType.TYPE_DATETIME_VARIATION_DATE));
+
+                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
-                            Constants.Types.FIELD_DATE));
-                    hm.put(8, new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
-                            Constants.Types.FIELD_LIST));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
-                            Constants.Types.FIELD_LIST));
+
+                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
+                            Constants.Types.FIELD_DATE, InputType.TYPE_DATETIME_VARIATION_DATE));
+
+                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
+                            Constants.Types.FIELD_LIST, Constants.Arrays.USER_MARITAL_STATUS));
+
+                    hmP2ProfileModel.put(9, new P2ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
+                            Constants.Types.FIELD_LIST, Constants.Arrays.USER_GENDER));
 
                     break;
                 }
                 case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
+                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
+
+                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
+
+                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
+
+                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
+
+                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
+
+                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
+
+                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
+
+                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+
                     break;
                 }
 
             }
-            return hm;
+            return hmP2ProfileModel;
         }
 
         @Override
-        protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
-            hmProfileModel.clear();
-            hmProfileModel.putAll(hm);
-            if (viewHolderArrayList.size() != hmProfileModel.size()) {
+        protected void onPostExecute(HashMap<Integer, P2ProfileModel> hm) {
+            hmP2PProfileModel.clear();
+            hmP2PProfileModel.putAll(hm);
+            if (viewHolderArrayList.size() != hmP2PProfileModel.size()) {
                 addViews();
             }
             setViewContent();

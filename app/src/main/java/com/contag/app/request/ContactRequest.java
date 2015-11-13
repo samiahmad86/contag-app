@@ -2,7 +2,7 @@ package com.contag.app.request;
 
 import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
-import com.contag.app.model.AddContactRequest;
+import com.contag.app.model.AddContact;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.RawContacts;
 import com.contag.app.util.PrefUtils;
@@ -18,7 +18,7 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
     private HashSet<RawContacts> rawContact;
     private int type;
     private String contagID ;
-    private AddContactRequest contact ;
+    private AddContact contact ;
 
     public ContactRequest(int type) {
         super(ContactResponse.ContactList.class, APIInterface.class);
@@ -37,7 +37,7 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
         this.contagID = contagID ;
     }
 
-    public ContactRequest(int type, AddContactRequest contact){
+    public ContactRequest(int type, AddContact contact){
         super(ContactResponse.ContactList.class, APIInterface.class);
         this.type = type;
         this.contact = contact ;

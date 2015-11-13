@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.model.AddContactRequest;
+import com.contag.app.model.AddContact;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.RawContacts;
 import com.contag.app.request.ContactRequest;
@@ -68,7 +68,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
                 Log.d("conadd", "Going to make that call") ;
                 long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0l);
                 Log.d("conadd", "" + userID) ;
-                AddContactRequest addContact = new AddContactRequest(userID)  ;
+                AddContact addContact = new AddContact(userID)  ;
                 ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_PUT_ADD_USER, addContact);
                 mSpiceManager.execute(cr, new RequestListener<ContactResponse.ContactList>() {
                     @Override

@@ -12,6 +12,7 @@ public class SocialProfile {
     private Long id;
     private String social_platform;
     private String platform_id;
+    private String platform_username;
     private Long contagUserId;
 
     /** Used to resolve relations */
@@ -31,10 +32,11 @@ public class SocialProfile {
         this.id = id;
     }
 
-    public SocialProfile(Long id, String social_platform, String platform_id, Long contagUserId) {
+    public SocialProfile(Long id, String social_platform, String platform_id, String platform_username, Long contagUserId) {
         this.id = id;
         this.social_platform = social_platform;
         this.platform_id = platform_id;
+        this.platform_username = platform_username;
         this.contagUserId = contagUserId;
     }
 
@@ -66,6 +68,14 @@ public class SocialProfile {
 
     public void setPlatform_id(String platform_id) {
         this.platform_id = platform_id;
+    }
+
+    public String getPlatform_username() {
+        return platform_username;
+    }
+
+    public void setPlatform_username(String platform_username) {
+        this.platform_username = platform_username;
     }
 
     public Long getContagUserId() {

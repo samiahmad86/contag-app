@@ -1,5 +1,6 @@
 package com.contag.app.model;
 
+import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,5 +14,7 @@ public class SocialProfileResponse {
     @SerializedName("platform_id")
     @Expose
     public String platformId;
-
+    @SerializedName(Constants.Keys.KEY_USER_PLATFORM_USERNAME)
+    @Expose
+    public String platformUsername;
 }

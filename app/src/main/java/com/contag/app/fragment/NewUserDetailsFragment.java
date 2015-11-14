@@ -203,6 +203,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                     Bundle args = new Bundle();
                     args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
+                    args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, object.getString("name"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
                     return args;

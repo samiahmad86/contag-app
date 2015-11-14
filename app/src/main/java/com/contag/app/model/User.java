@@ -118,7 +118,7 @@ public class User {
             Log.d("iList", "Saving user interest") ;
             for (Interest interest : interestList) {
                 interestDao.insertOrReplace(interest);
-                Log.d("iList", "Interest inserted: "+  interest.getName()) ;
+                Log.d("iList", "Interest inserted: " + interest.getName()) ;
             }
         }
     }
@@ -185,10 +185,11 @@ public class User {
     public static ArrayList<SocialProfile> getSocialProfileList(List<SocialProfileResponse> socialProfiles, User user, ContagContag cc){
 
         ArrayList<SocialProfile> mProfiles = new ArrayList<>() ;
-        for (SocialProfileResponse spr : socialProfiles) {
+        for (SocialProfileResponse mSocialProfileResponse : socialProfiles) {
             SocialProfile socialProfile = new SocialProfile();
-            socialProfile.setPlatform_id(spr.platformId);
-            socialProfile.setSocial_platform(spr.socialPlatform);
+            socialProfile.setPlatform_id(mSocialProfileResponse.platformId);
+            socialProfile.setSocial_platform(mSocialProfileResponse.socialPlatform);
+            socialProfile.setPlatform_username(mSocialProfileResponse.platformUsername);
             socialProfile.setContagContag(cc);
             socialProfile.setContagUserId(user.id);
             mProfiles.add(socialProfile) ;

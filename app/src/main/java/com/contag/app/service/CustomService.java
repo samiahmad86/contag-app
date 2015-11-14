@@ -141,7 +141,8 @@ public class CustomService extends Service {
                         args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_PERMISSION, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
-                        args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null));
+                        args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
+                        args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
                 Gson gson = new Gson();
                 Log.d(TAG, gson.toJson(srm).toString());
                 SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srm);

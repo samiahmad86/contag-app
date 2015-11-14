@@ -258,6 +258,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 Bundle args = new Bundle();
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, platformID);
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
                 addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_INSTAGRAM);
@@ -331,7 +332,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.tvConnectedAs.setVisibility(View.VISIBLE);
-            mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_id());
+            mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
             mViewHolder.tvFieldValue.setTag(i);
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
@@ -433,6 +434,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             if (socialProfileModel.mViewType == Constants.Types.FIELD_SOCIAL && value.length() != 0) {
                 Bundle args = new Bundle();
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, value);
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, value);
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, socialProfileModel.mSocialPlatform.getId());
                 bSocialProfileInfo.add(args);
             }
@@ -444,7 +446,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
                     args.getString(Constants.Keys.KEY_PLATFORM_PERMISSION, null),
                     args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
-                    args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null));
+                    args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
+                    args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
             socialRequestModels.add(srm);
         }
         final SocialRequestModel.List copySocialRequestModels = socialRequestModels;
@@ -466,7 +469,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private void addBundletoList(Bundle args, int position, int viewType) {
         SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
         SocialProfile socialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
-                args.getString(Constants.Keys.KEY_PLATFORM_ID), PrefUtils.getCurrentUserID());
+                args.getString(Constants.Keys.KEY_PLATFORM_ID), args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null)
+                , PrefUtils.getCurrentUserID());
         hmSocialProfileModel.remove(position);
         hmSocialProfileModel.put(position, new SocialProfileModel(socialProfile,
                 socialProfileModel.mSocialPlatform, true, viewType));
@@ -506,6 +510,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
             log(TAG, "id is " + (currentPerson == null));
             if (currentPerson != null) {
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, currentPerson.getDisplayName());
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
@@ -553,6 +558,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         Bundle args = new Bundle();
         args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, hmSocialProfileModel.get(fbViewPosition).mSocialPlatform.getId());
         try {
+            log(TAG, object.toString());
+            args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, object.getString("name"));
             args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
             args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
         } catch (JSONException ex) {
@@ -686,7 +693,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected void onPostExecute(Void result) {
             if (position == fbViewPosition) {
                 LoginManager.getInstance().logOut();
-            } else if (position == googlePlusPosition) {
+            } else if (position == googlePlusPosition && mGoogleApiClient.isConnected()) {
                 Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
             }
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);

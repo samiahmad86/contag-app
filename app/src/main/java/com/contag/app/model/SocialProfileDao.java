@@ -29,7 +29,8 @@ public class SocialProfileDao extends AbstractDao<SocialProfile, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Social_platform = new Property(1, String.class, "social_platform", false, "SOCIAL_PLATFORM");
         public final static Property Platform_id = new Property(2, String.class, "platform_id", false, "PLATFORM_ID");
-        public final static Property ContagUserId = new Property(3, Long.class, "contagUserId", false, "CONTAG_USER_ID");
+        public final static Property Platform_username = new Property(3, String.class, "platform_username", false, "PLATFORM_USERNAME");
+        public final static Property ContagUserId = new Property(4, Long.class, "contagUserId", false, "CONTAG_USER_ID");
     };
 
     private DaoSession daoSession;
@@ -51,7 +52,8 @@ public class SocialProfileDao extends AbstractDao<SocialProfile, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"SOCIAL_PLATFORM\" TEXT," + // 1: social_platform
                 "\"PLATFORM_ID\" TEXT," + // 2: platform_id
-                "\"CONTAG_USER_ID\" INTEGER);"); // 3: contagUserId
+                "\"PLATFORM_USERNAME\" TEXT," + // 3: platform_username
+                "\"CONTAG_USER_ID\" INTEGER);"); // 4: contagUserId
     }
 
     /** Drops the underlying database table. */
@@ -80,9 +82,14 @@ public class SocialProfileDao extends AbstractDao<SocialProfile, Long> {
             stmt.bindString(3, platform_id);
         }
  
+        String platform_username = entity.getPlatform_username();
+        if (platform_username != null) {
+            stmt.bindString(4, platform_username);
+        }
+ 
         Long contagUserId = entity.getContagUserId();
         if (contagUserId != null) {
-            stmt.bindLong(4, contagUserId);
+            stmt.bindLong(5, contagUserId);
         }
     }
 
@@ -105,7 +112,8 @@ public class SocialProfileDao extends AbstractDao<SocialProfile, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // social_platform
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // platform_id
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // contagUserId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // platform_username
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // contagUserId
         );
         return entity;
     }
@@ -116,7 +124,8 @@ public class SocialProfileDao extends AbstractDao<SocialProfile, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setSocial_platform(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setPlatform_id(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setContagUserId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setPlatform_username(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setContagUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

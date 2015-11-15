@@ -339,34 +339,31 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             switch (profileType) {
 
                 case Constants.Types.PROFILE_PERSONAL: {
-                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber(),
-                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
-
-                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
+                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
 
-                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
+                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
 
-                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
+                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
+                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup(),
                             Constants.Types.FIELD_LIST, Constants.Arrays.USER_BLOOD_GROUPS));
 
-                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
+                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth(),
                             Constants.Types.FIELD_DATE, InputType.TYPE_DATETIME_VARIATION_DATE));
 
-                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
+                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER, cc.getEmergencyContactNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
+                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY, cc.getMarriageAnniversary(),
                             Constants.Types.FIELD_DATE, InputType.TYPE_DATETIME_VARIATION_DATE));
 
-                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
+                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST, Constants.Arrays.USER_MARITAL_STATUS));
 
-                    hmP2ProfileModel.put(9, new P2ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
+                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
                             Constants.Types.FIELD_LIST, Constants.Arrays.USER_GENDER));
 
                     break;

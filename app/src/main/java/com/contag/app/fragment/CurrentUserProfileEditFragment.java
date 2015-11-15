@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,15 +41,18 @@ import java.util.HashMap;
 
 public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
 
+    public static final String TAG = CurrentUserProfileEditFragment.class.getName();
+
     private HashMap<Integer, P2ProfileModel> hmP2PProfileModel;
-    private int profileType;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     private boolean isEditModeOn = false;
-    public static final String TAG = CurrentUserProfileEditFragment.class.getName();
+    private boolean isDateShown;
+
     private Button btnEditProfile;
     private View pbProfileUpdate;
-    private boolean isDateShown;
+    private ScrollView svProfile;
+    private int profileType;
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
@@ -66,8 +71,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         pbProfileUpdate = view.findViewById(R.id.pb_edit_profile);
+        svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
+        btnEditProfile.setTag(0);
         btnEditProfile.setOnClickListener(this);
         isDateShown = false;
         new LoadUser().execute();
@@ -100,6 +107,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     return;
                 }
                 openEditMode();
+                scrollToPosition((int) v.getTag());
                 break;
             }
             case R.id.btn_edit_profile: {
@@ -112,7 +120,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     sendData();
                 } else {
                     openEditMode();
-                }
+                     }
                 break;
             }
             case R.id.btn_share: {
@@ -129,6 +137,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         for (int i = 0; i < hmP2PProfileModel.size(); i++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
+            vh.rlContainer = (RelativeLayout) view.findViewById(R.id.rl_other_container);
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
             vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
@@ -171,7 +180,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             mViewHolder.etFieldValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus && !isDateShown) {
+                    if (hasFocus && !isDateShown && isEditModeOn) {
+                        log(TAG, "show the date focus");
                         showDate(datePosition);
                     }
                 }
@@ -179,7 +189,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             mViewHolder.etFieldValue.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!isDateShown) {
+                    if (!isDateShown && isEditModeOn) {
+                        log(TAG, "show the date click");
                         showDate(datePosition);
                     }
                 }
@@ -192,6 +203,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         } else {
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
             mViewHolder.btnAdd.setVisibility(View.VISIBLE);
+            mViewHolder.btnAdd.setTag(position);
         }
     }
 
@@ -250,6 +262,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void scrollToPosition(int position) {
+        if(hmP2PProfileModel.get(position).viewType == Constants.Types.FIELD_LIST) {
+            viewHolderArrayList.get(position).spFieldValue.requestFocus();
+        } else {
+            viewHolderArrayList.get(position).etFieldValue.requestFocus();
         }
     }
 
@@ -402,5 +422,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public Button btnAdd;
         public Button btnShare;
         public Spinner spFieldValue;
+        public RelativeLayout rlContainer;
     }
 }

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.fragment.BaseFragment;
+import com.contag.app.fragment.LoginFragment;
 import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.fragment.NewUserFragment;
 
@@ -30,13 +31,13 @@ public class NewUserActivity extends BaseActivity implements BaseFragment.OnFrag
 
         Intent intent = getIntent();
         String previousClassName = intent.getStringExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY);
-        onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, intent.getExtras());
 
-//        if (previousClassName.equalsIgnoreCase(LoginFragment.TAG) && !isUserLoggedIn()) {
-//            onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, intent.getExtras());
-//        } else {
-//            onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, intent.getExtras());
-//        }
+
+        if (previousClassName.equalsIgnoreCase(LoginFragment.TAG) && !isUserLoggedIn()) {
+            onFragmentInteraction(Constants.Types.FRAG_CREATE_USER, intent.getExtras());
+        } else {
+            onFragmentInteraction(Constants.Types.FRAG_USER_DETAILS, intent.getExtras());
+        }
     }
 
     @Override

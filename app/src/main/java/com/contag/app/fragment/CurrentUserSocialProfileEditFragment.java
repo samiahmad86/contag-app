@@ -378,6 +378,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             setUpEditMode(i);
         }
         isEditModeOn = true;
+        Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+        iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
     }
 
@@ -488,14 +491,11 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         SocialProfile newSocialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
                 args.getString(Constants.Keys.KEY_PLATFORM_ID), args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null)
                 , PrefUtils.getCurrentUserID());
-        log(TAG, "new user social profile username " + newSocialProfile.getPlatform_username() + " platformName " +
-                newSocialProfile.getSocial_platform() + " platformId" + newSocialProfile.getPlatform_id());
         hmSocialProfileModel.remove(position);
         hmSocialProfileModel.put(position, new SocialProfileModel(newSocialProfile,
                 socialProfileModel.mSocialPlatform, true, viewType));
         bSocialProfileInfo.add(args);
         socialProfileModel = hmSocialProfileModel.get(position);
-        log(TAG, "setting up edit mode for " + socialProfileModel.mSocialPlatform.getPlatformName() + " username is " + socialProfileModel.mSocialProfile.getPlatform_username());
         setUpEditMode(position);
     }
 
@@ -675,6 +675,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
             setViewContent();
             isEditModeOn = false;
+            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
         }
     }

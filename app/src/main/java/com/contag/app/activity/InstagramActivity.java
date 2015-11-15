@@ -221,7 +221,7 @@ public class InstagramActivity extends BaseActivity {
                 JSONObject usr = jsonObject.getJSONObject("user");
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, jsonObject.getString("access_token"));
                 args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
-                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, usr.getString("full_name"));
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, usr.getString("username"));
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
                 Intent intent = new Intent();
                 intent.putExtra(Constants.Keys.KEY_BUNDLE, args);

@@ -16,6 +16,8 @@
     <string name="intent_filter_user_social">com.contag.app.social.updated</string>
     <string name="intent_filter_custom_share">com.contag.app.custom.share</string>
     <string name="intent_filter_interest_post">com.contag.app.interest.post</string>
+    <string name="intent_filter_edit_mode_enabled">com.contag.app.toogle.swipe</string>
+
     <!-- action bar items -->
     <string name="action_settings">Settings</string>
     <string name="action_edit_profile">Edit Profile</string>

@@ -239,6 +239,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
         }
         isEditModeOn = true;
+        Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+        iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
     }
 
@@ -407,6 +410,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             if (viewHolderArrayList.size() != hmP2PProfileModel.size()) {
                 addViews();
             }
+            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             setViewContent();
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);

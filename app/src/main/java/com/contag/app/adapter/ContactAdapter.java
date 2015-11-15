@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
@@ -114,7 +115,7 @@ public class ContactAdapter extends BaseAdapter {
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
             final ContactListItem item = (ContactListItem) getItem(position) ;
-            if(ContactUtils.isExistingContact(contObject.getId(), mContext.getApplicationContext())) {
+            if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -127,8 +128,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Going to profile", Toast.LENGTH_LONG).show();
-                    //Router.startUserActivity(mContext, TAG, item.mContagContag.getId());
+                    Router.startUserActivity(mContext, TAG, item.mContagContag.getId());
                 }
             });
         }else {

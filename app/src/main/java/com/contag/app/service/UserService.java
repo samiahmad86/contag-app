@@ -17,6 +17,9 @@ import com.contag.app.model.CustomShare;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestPost;
+import com.contag.app.model.MessageResponse;
+import com.contag.app.model.PrivacyRequest;
+import com.contag.app.model.ProfilePrivacyRequestModel;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.User;
@@ -87,6 +90,28 @@ public class UserService extends Service implements RequestListener<User> {
                     });
                     break ;
                 }
+                case Constants.Types.REQUEST_POST_PRIVACY: {
+
+                    final String fieldName = intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME) ;
+                    final Boolean isPublic = intent.getBooleanExtra(Constants.Keys.KEY_IS_PUBLIC, false) ;
+                    final String userIDS = intent.getStringExtra(Constants.Keys.KEY_USER_IDS) ;
+
+                    ProfilePrivacyRequestModel privacyRequestModel  = new ProfilePrivacyRequestModel(fieldName, isPublic, userIDS) ;
+
+                    PrivacyRequest privacyRequest = new PrivacyRequest(privacyRequestModel) ;
+                    mSpiceManager.execute(privacyRequest, new RequestListener<MessageResponse>(){
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            Log.d("share", "failure");
+                        }
+
+                        @Override
+                        public void onRequestSuccess(MessageResponse response) {
+                            User.updatePrivacy(fieldName, isPublic, userIDS, getApplicationContext()) ;
+
+                        }}) ;
+                    break ;
+                }
             }
         }
         return START_REDELIVER_INTENT;
@@ -108,8 +133,6 @@ public class UserService extends Service implements RequestListener<User> {
             mSpiceManager.shouldStop();
         }
     }
-
-
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         Log.d(TAG, "failure");

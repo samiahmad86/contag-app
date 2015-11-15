@@ -71,8 +71,17 @@ public class Router {
         mContext.startService(iStartContactService);
     }
 
-    public static void addContagUser(Context mContext, Long userID) {
-        Log.d("conadd", "Adding this user to server");
+    public static void startUserServiceForPrivacy(Context mContext, String fieldName, Boolean isPublic, String userIDS){
+        Intent privacyIntent = new Intent(mContext, UserService.class) ;
+        privacyIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_POST_PRIVACY) ;
+        privacyIntent.putExtra(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
+        privacyIntent.putExtra(Constants.Keys.KEY_IS_PUBLIC, isPublic) ;
+        privacyIntent.putExtra(Constants.Keys.KEY_USER_IDS, userIDS) ;
+        mContext.startService(privacyIntent) ;
+    }
+
+    public static void addContagUser(Context mContext, Long userID){
+        Log.d("conadd", "Adding this user to server") ;
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_ADD_CONTACT, true);
         iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID);

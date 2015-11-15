@@ -14,14 +14,10 @@ public class NotificationsResponse {
     @SerializedName("id")
     @Expose
     public long id;
-//
-//    @SerializedName("name")
-//    @Expose
-//    public String name;
 
     @SerializedName("user_id")
     @Expose
-    public String userId;
+    public long userId;
 
     @SerializedName("notification_type")
     @Expose
@@ -47,13 +43,17 @@ public class NotificationsResponse {
     @Expose
     public String seenAt;
 
-
     @SerializedName("created_on")
     @Expose
     public String createdOn;
+
     @SerializedName("updated_on")
     @Expose
     public String updatedOn;
+
+    @SerializedName("request_info")
+    @Expose
+    public String requestInfo ;
 
     public String getAvatarURL(){
         return Constants.Urls.BASE_URL + avatarURL ;

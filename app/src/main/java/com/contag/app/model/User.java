@@ -1,13 +1,17 @@
 package com.contag.app.model;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.util.PrefUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -230,12 +234,52 @@ public class User {
     public static void storeCustomShare(ArrayList<CustomShare> customShares,  DaoSession session){
 
         if(customShares != null ){
-            Log.d("myuser", "Going to store custom shares") ;
+
+
             CustomShareDao csDao = session.getCustomShareDao() ;
             for(CustomShare cs: customShares) {
-                csDao.insertOrReplace(cs);
+                Log.d("shave","cd user ids: " +cs.getUser_ids()) ;
+                Log.d("shave","cs is public: " + cs.getIs_public()) ;
+                Log.d("shave", "cs field name:" + cs.getField_name()) ;
+                long result = csDao.insertOrReplace(cs);
+                Log.d("shave", "cs result:" + result) ;
             }
         }
     }
+
+    public static String getSharesAsString(String fieldName, String userID, Context mContext){
+        CustomShare cs = getCustomShareByFieldName(fieldName, mContext.getApplicationContext()) ;
+        List<String> userIDS = Arrays.asList(cs.getUser_ids().split(",")) ;
+
+        if(!userIDS.contains(userID))
+            userIDS.add(userID) ;
+
+        return TextUtils.join(",",userIDS) ;
+
+    }
+
+
+    public static void updatePrivacy(String fieldName, boolean isPublic, String userIDS, Context mContext ){
+
+        CustomShare cs = getCustomShareByFieldName(fieldName, mContext) ;
+
+        cs.setUser_ids(userIDS) ;
+        cs.setIs_public(isPublic);
+        cs.update() ;
+
+    }
+
+    public static CustomShare getCustomShareByFieldName(String fieldName, Context mContext){
+        DaoSession session = ((ContagApplication) mContext).getDaoSession();
+        CustomShareDao csDao = session.getCustomShareDao();
+
+        CustomShare cs = csDao.queryBuilder().where(CustomShareDao.
+                Properties.Field_name.eq(fieldName)).list().get(0);
+
+        return cs;
+
+    }
+
+
 
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.contag.app.R;
 import com.contag.app.config.Router;
 import com.contag.app.model.NotificationsResponse;
+import com.contag.app.model.User;
 import com.contag.app.util.PrefUtils;
 import com.squareup.picasso.Picasso;
 
@@ -58,7 +59,6 @@ public class NotificationsAdapter extends BaseAdapter {
             vh.ivUsrProfilePic = (ImageView) convertView.findViewById(R.id.iv_notifications_usr_img);
             vh.tvNotificationsTxt = (TextView) convertView.findViewById(R.id.tv_notifications_txt);
             vh.shareButton = (Button) convertView.findViewById(R.id.btn_share) ;
-            //vh.tvUsrName = (TextView) convertView.findViewById(R.id.tv_notifications_usr_name);
             convertView.setTag(vh);
         } else {
             vh = (ViewHolder) convertView.getTag();
@@ -79,20 +79,33 @@ public class NotificationsAdapter extends BaseAdapter {
 
             vh.shareButton.setVisibility(View.VISIBLE);
 
-            if(notification.notificationType.equals("profile_request_add"))
-                vh.shareButton.setText("Add") ;
-            else
+            if(notification.notificationType.equals("profile_request_add")) {
+                vh.shareButton.setText("Add");
+                vh.shareButton.setTag(0) ;
+            }
+            else{
                 vh.shareButton.setText("Share");
+                vh.shareButton.setTag(1) ;
+            }
+            final int requestType = (int) vh.shareButton.getTag() ;
+            final String requestBy = String.valueOf(notification.userId) ;
+            final String fieldName = notification.requestInfo ;
 
             vh.shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.startUserActivity(mCtxt, "Notifications", PrefUtils.getCurrentUserID());
+
+                    String userIDS = User.getSharesAsString(fieldName, requestBy, mCtxt) ;
+                    Router.startUserServiceForPrivacy(mCtxt, fieldName, false, userIDS);
+                    if(requestType == 0){
+                        Router.startUserActivity(mCtxt, "Notifications", PrefUtils.getCurrentUserID());
+                    }
                 }
             });
 
         } else {
             vh.shareButton.setVisibility(View.INVISIBLE);
+
         }
         return convertView;
     }

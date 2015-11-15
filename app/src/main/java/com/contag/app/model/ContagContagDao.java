@@ -54,7 +54,8 @@ public class ContagContagDao extends AbstractDao<ContagContag, Long> {
         public final static Property MaritalStatus = new Property(25, String.class, "maritalStatus", false, "MARITAL_STATUS");
         public final static Property MarriageAnniversary = new Property(26, String.class, "marriageAnniversary", false, "MARRIAGE_ANNIVERSARY");
         public final static Property Status_update = new Property(27, String.class, "status_update", false, "STATUS_UPDATE");
-        public final static Property ContactId = new Property(28, Long.class, "contactId", false, "CONTACT_ID");
+        public final static Property Is_contact = new Property(28, Boolean.class, "is_contact", false, "IS_CONTACT");
+        public final static Property ContactId = new Property(29, Long.class, "contactId", false, "CONTACT_ID");
     };
 
     private DaoSession daoSession;
@@ -101,7 +102,8 @@ public class ContagContagDao extends AbstractDao<ContagContag, Long> {
                 "\"MARITAL_STATUS\" TEXT," + // 25: maritalStatus
                 "\"MARRIAGE_ANNIVERSARY\" TEXT," + // 26: marriageAnniversary
                 "\"STATUS_UPDATE\" TEXT," + // 27: status_update
-                "\"CONTACT_ID\" INTEGER);"); // 28: contactId
+                "\"IS_CONTACT\" INTEGER," + // 28: is_contact
+                "\"CONTACT_ID\" INTEGER);"); // 29: contactId
     }
 
     /** Drops the underlying database table. */
@@ -255,9 +257,14 @@ public class ContagContagDao extends AbstractDao<ContagContag, Long> {
             stmt.bindString(28, status_update);
         }
  
+        Boolean is_contact = entity.getIs_contact();
+        if (is_contact != null) {
+            stmt.bindLong(29, is_contact ? 1L: 0L);
+        }
+ 
         Long contactId = entity.getContactId();
         if (contactId != null) {
-            stmt.bindLong(29, contactId);
+            stmt.bindLong(30, contactId);
         }
     }
 
@@ -305,7 +312,8 @@ public class ContagContagDao extends AbstractDao<ContagContag, Long> {
             cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // maritalStatus
             cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // marriageAnniversary
             cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27), // status_update
-            cursor.isNull(offset + 28) ? null : cursor.getLong(offset + 28) // contactId
+            cursor.isNull(offset + 28) ? null : cursor.getShort(offset + 28) != 0, // is_contact
+            cursor.isNull(offset + 29) ? null : cursor.getLong(offset + 29) // contactId
         );
         return entity;
     }
@@ -341,7 +349,8 @@ public class ContagContagDao extends AbstractDao<ContagContag, Long> {
         entity.setMaritalStatus(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
         entity.setMarriageAnniversary(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
         entity.setStatus_update(cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27));
-        entity.setContactId(cursor.isNull(offset + 28) ? null : cursor.getLong(offset + 28));
+        entity.setIs_contact(cursor.isNull(offset + 28) ? null : cursor.getShort(offset + 28) != 0);
+        entity.setContactId(cursor.isNull(offset + 29) ? null : cursor.getLong(offset + 29));
      }
     
     /** @inheritdoc */

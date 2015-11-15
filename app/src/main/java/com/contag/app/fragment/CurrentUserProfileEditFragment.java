@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -124,8 +123,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_share: {
-                DialogFragment d = new DialogFragment();
-                break;
+                ShareDialog share = ShareDialog.newInstance((String) v.getTag()) ;
+                share.show(getChildFragmentManager(),TAG) ;
+                break ;
             }
         }
     }

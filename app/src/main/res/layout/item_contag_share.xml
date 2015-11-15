@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_contacts"
+    android:padding="10dp">
+
+
+
+    <RelativeLayout
+        android:id="@+id/rv_user_basics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:orientation="vertical">
+
+        <com.contag.app.view.CircularImageView
+            android:id="@+id/iv_user_photo"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:layout_centerVertical="false"
+            android:src="@drawable/default_profile_pic_small" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@id/iv_user_photo"
+            android:layout_marginLeft="5dp"
+            android:text="Shahid Kapoor"
+            android:textSize="20sp"
+            android:textColor="@color/notifications_story"
+            android:layout_height="wrap_content" />
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_contact_id"
+            android:layout_below="@id/tv_contact_name"
+            android:layout_toRightOf="@id/iv_user_photo"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="shad1111"
+            android:textSize="14sp"
+            android:textColor="@color/light_blue"
+            android:layout_marginBottom="3dp"/>
+
+
+
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/checkbox_shared"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        />
+
+
+
+</RelativeLayout>

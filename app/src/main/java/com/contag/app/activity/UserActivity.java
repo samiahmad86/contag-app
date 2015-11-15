@@ -81,8 +81,10 @@ public class UserActivity extends BaseActivity {
         Intent intent = getIntent();
         userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);
 
-        if (isUserOnLocal(userID))
+        if (isUserOnLocal(userID)) {
+            Log.d("myuser", "User is in db") ;
             new LoadUser().execute(userID);
+        }
         else
             Router.startUserService(this, Constants.Types.REQUEST_GET_USER_BY_ID, userID);
 

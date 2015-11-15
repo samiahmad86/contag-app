@@ -77,7 +77,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     private Button btnEditProfile;
-    private ScrollView svProfile;
 
     private boolean isFbSync = false;
     private boolean isEditModeOn;
@@ -120,7 +119,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         bSocialProfileInfo = new ArrayList<>();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
-        svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         btnEditProfile.setOnClickListener(this);
         btnEditProfile.setTag(0);
         btnEditProfile.setVisibility(View.VISIBLE);
@@ -266,6 +264,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 Bundle args = new Bundle();
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, platformID);
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
+                log(TAG, "twitter user name " + session.getUserName());
                 args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
@@ -386,6 +385,13 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public void setUpEditMode(int position) {
         setUpViewContent(position);
         ViewHolder mViewHolder = viewHolderArrayList.get(position);
+        mViewHolder.btnGplus.setVisibility(View.GONE);
+        mViewHolder.btnFb.setVisibility(View.GONE);
+        mViewHolder.btnTwitter.setVisibility(View.GONE);
+        mViewHolder.btnLinkedIn.setVisibility(View.GONE);
+        mViewHolder.btnInstagram.setVisibility(View.GONE);
+        mViewHolder.etFieldBaseValue.setVisibility(View.GONE);
+        mViewHolder.etFieldValue.setVisibility(View.GONE);
         SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.btnDisconnect.setVisibility(View.VISIBLE);
@@ -479,13 +485,17 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     private void addBundletoList(Bundle args, int position, int viewType) {
         SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
-        SocialProfile socialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
+        SocialProfile newSocialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
                 args.getString(Constants.Keys.KEY_PLATFORM_ID), args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null)
                 , PrefUtils.getCurrentUserID());
+        log(TAG, "new user social profile username " + newSocialProfile.getPlatform_username() + " platformName " +
+                newSocialProfile.getSocial_platform() + " platformId" + newSocialProfile.getPlatform_id());
         hmSocialProfileModel.remove(position);
-        hmSocialProfileModel.put(position, new SocialProfileModel(socialProfile,
+        hmSocialProfileModel.put(position, new SocialProfileModel(newSocialProfile,
                 socialProfileModel.mSocialPlatform, true, viewType));
         bSocialProfileInfo.add(args);
+        socialProfileModel = hmSocialProfileModel.get(position);
+        log(TAG, "setting up edit mode for " + socialProfileModel.mSocialPlatform.getPlatformName() + " username is " + socialProfileModel.mSocialProfile.getPlatform_username());
         setUpEditMode(position);
     }
 
@@ -601,6 +611,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     getSocialPlatforms();
             HashMap<String, SocialPlatform> hmNameToPlatform = new HashMap<>();
             for (SocialPlatform socialPlatform : socialPlatforms) {
+                log(TAG, socialPlatform.getPlatformName());
                 hmNameToPlatform.put(socialPlatform.getPlatformName(), socialPlatform);
             }
             ArrayList<SocialProfile> socialProfiles = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
@@ -608,6 +619,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             int counter = 0;
             for (SocialProfile socialProfile : socialProfiles) {
                 log(TAG, "user is on " + socialProfile.getSocial_platform() + " as " + socialProfile.getPlatform_id());
+                log(TAG,"size " + hmNameToPlatform.size());
                 if (hmNameToPlatform.containsKey(socialProfile.getSocial_platform())) {
                     String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
                     if (keyLowerCase.contains("google")) {
@@ -633,7 +645,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 }
             }
             for (SocialPlatform socialPlatform : socialPlatforms) {
-                log(TAG, "user isn't on " + socialPlatform.getPlatformName());
                 if (hmNameToPlatform.containsKey(socialPlatform.getPlatformName())) {
                     String keyLowerCase = socialPlatform.getPlatformName().toLowerCase();
                     if (keyLowerCase.contains("facebook")) {
@@ -687,6 +698,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                             where(SocialPlatformDao.Properties.Id.eq(socialRequestModel.socialPlatformId)).list().get(0).getPlatformName();
                     socialProfile.setSocial_platform(socialPlatformName);
                     SocialProfileDao socialProfileDao = session.getSocialProfileDao();
+                    log(TAG, "social profile id = " + socialProfile.getId());
                     socialProfileDao.insertOrReplace(socialProfile);
                 }
                 return true;
@@ -697,6 +709,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         @Override
         protected void onPostExecute(Boolean result) {
             Log.d(TAG, "socialProfileUpdated");
+            bSocialProfileInfo.clear();
             new LoadUser().execute();
         }
     }

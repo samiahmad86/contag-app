@@ -50,6 +50,9 @@ public class NotificationsResponse {
     @SerializedName("request")
     @Expose
     public Long request;
+    @SerializedName("field_name")
+    @Expose
+    public String fieldName;
 
     public static class NotificationList extends ArrayList<NotificationsResponse> {
 

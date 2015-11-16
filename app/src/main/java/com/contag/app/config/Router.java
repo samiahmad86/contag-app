@@ -58,6 +58,14 @@ public class Router {
         mContext.startActivity(iUsrProf);
     }
 
+
+    public static void startEditUserActivity(Context context, String className, Bundle bNotification) {
+        Intent iEditUserProfile = new Intent(context, UserActivity.class);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_DATA, bNotification);
+        context.startActivity(iEditUserProfile);
+    }
+
     public static void startNotificationsActivity(Context mContext, String className) {
         Intent userNotifications = new Intent(mContext, NotificationsActivity.class);
         userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);

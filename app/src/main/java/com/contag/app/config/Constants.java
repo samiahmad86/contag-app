@@ -87,6 +87,8 @@ public class Constants {
         public static final String KEY_FEEDS_END_INDEX = "end_index";
         public static final String KEY_INTEREST_IDS = "interest_ids";
         public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
+        public static final String PROFILE_REQUEST_ADD = "profile_request_add";
+        public static final String PROFILE_REQUEST_SHARE = "profile_request_share";
     }
 
     public class Headers {
@@ -145,6 +147,8 @@ public class Constants {
         public static final int FIELD_LINKEDIN = 9;
         public static final int LIST_BLOCKED_USERS = 1;
         public static final int LIST_MUTED_USERS = 2;
+        public static final int NOTIF_BUTTON_SHARE = 1;
+        public static final int NOTIF_BUTTON_ADD = 0;
 
     }
 

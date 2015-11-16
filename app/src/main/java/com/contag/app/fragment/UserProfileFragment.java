@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.content.BroadcastReceiver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -166,6 +167,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             return null;
         }
     }
+
 
     private class LoadNumber extends AsyncTask<Void, Void, String> {
         @Override

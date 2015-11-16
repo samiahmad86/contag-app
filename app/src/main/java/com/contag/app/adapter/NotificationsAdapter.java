@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.contag.app.R;
+import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.model.NotificationsResponse;
@@ -21,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class NotificationsAdapter extends BaseAdapter {
+public class NotificationsAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context mCtxt;
     private ArrayList<NotificationsResponse> notifications;
@@ -48,10 +49,8 @@ public class NotificationsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("Nof", "Inside get view of notifications adapter");
         ViewHolder mViewHolder;
         NotificationsResponse notification = (NotificationsResponse) getItem(position);
-        final Long objectID = notification.fromUser;
 
         if (convertView == null) {
             mViewHolder = new ViewHolder();
@@ -64,50 +63,59 @@ public class NotificationsAdapter extends BaseAdapter {
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
+
         Picasso.with(mCtxt).load(Constants.Urls.BASE_URL + notification.avatarUrl).error(R.drawable.default_profile_pic_small).into(mViewHolder.ivUsrProfilePic);
-        //vh.tvUsrName.setText(notification.name);
         mViewHolder.tvNotificationsTxt.setText(notification.text);
 
-        mViewHolder.ivUsrProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Router.startUserActivity(mCtxt, "Notifications", objectID);
-            }
-        });
+        mViewHolder.ivUsrProfilePic.setTag(position);
+        mViewHolder.ivUsrProfilePic.setOnClickListener(this);
 
-        if (notification.notificationType.equals("profile_request_add") ||
-                notification.notificationType.equals("profile_request_share")) {
+        if (notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_ADD) ||
+                notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_SHARE)) {
 
             mViewHolder.shareButton.setVisibility(View.VISIBLE);
+            mViewHolder.shareButton.setTag(position);
+            mViewHolder.shareButton.setOnClickListener(this);
 
-            if (notification.notificationType.equals("profile_request_add")) {
+            if (notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_ADD)) {
                 mViewHolder.shareButton.setText("Add");
-                mViewHolder.shareButton.setTag(0);
             } else {
                 mViewHolder.shareButton.setText("Share");
-                mViewHolder.shareButton.setTag(1);
             }
-            final int requestType = (int) mViewHolder.shareButton.getTag();
-            final String requestBy = String.valueOf(notification.user);
-            final String fieldName = notification.requesterName;
 
-            mViewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String userIDS = User.getSharesAsString(fieldName, requestBy, mCtxt);
-                    Router.startUserServiceForPrivacy(mCtxt, fieldName, false, userIDS);
-                    if (requestType == 0) {
-                        Router.startUserActivity(mCtxt, "Notifications", PrefUtils.getCurrentUserID());
-                    }
-                }
-            });
+            mViewHolder.shareButton.setOnClickListener(this);
 
         } else {
             mViewHolder.shareButton.setVisibility(View.INVISIBLE);
 
         }
         return convertView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.iv_notifications_usr_img: {
+                int position = (int) v.getTag();
+                NotificationsResponse notificationsResponse = notifications.get(position);
+                Router.startUserActivity(mCtxt, NotificationsActivity.TAG, notificationsResponse.fromUser);
+                break;
+            }
+            case R.id.btn_share: {
+                int position = (int) v.getTag();
+                NotificationsResponse notificationsResponse = notifications.get(position);
+                if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.PROFILE_REQUEST_ADD)) {
+                    Router.startUserActivity(mCtxt, NotificationsActivity.TAG, PrefUtils.getCurrentUserID());
+                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.PROFILE_REQUEST_SHARE)) {
+                    String userIDS = User.getSharesAsString(notificationsResponse.fieldName, String.valueOf(notificationsResponse.fromUser), mCtxt);
+                    Router.startUserServiceForPrivacy(mCtxt, notificationsResponse.fieldName, false, userIDS);
+                    notifications.remove(notificationsResponse);
+                    notifyDataSetChanged();
+                }
+                break;
+            }
+        }
     }
 
     public static class ViewHolder {

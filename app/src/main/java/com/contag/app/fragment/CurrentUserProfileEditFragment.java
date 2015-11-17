@@ -163,6 +163,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
+            vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnShare.setOnClickListener(this);
             vh.btnAdd.setOnClickListener(this);
@@ -383,8 +384,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST, Constants.Arrays.USER_MARITAL_STATUS));
 
-                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
-                            Constants.Types.FIELD_LIST, Constants.Arrays.USER_GENDER));
 
                     break;
                 }

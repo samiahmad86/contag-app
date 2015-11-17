@@ -24,8 +24,8 @@ android {
         applicationId "com.contag.app"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 4
-        versionName "0.3"
+        versionCode 5
+        versionName "0.4"
         multiDexEnabled true
     }
     buildTypes {

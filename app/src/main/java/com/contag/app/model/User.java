@@ -219,13 +219,14 @@ public class User {
         for (CustomShareResponse csr : customShares) {
             CustomShare cs = new CustomShare();
             cs.setField_name(csr.fieldName);
+            Log.d("ShareFubar", "FieldName: "+  csr.fieldName) ;
             cs.setUser_ids(csr.userIDS);
             cs.setIs_public(csr.isPublic);
             cs.setIs_private(csr.isPrivate);
             cs.setContagContag(cc);
             mShares.add(cs);
         }
-        Log.d("myuser", "size of custom share: " + mShares.size());
+        Log.d("ShareFubar", "size of custom share: " + mShares.size());
         return mShares;
 
     }
@@ -237,11 +238,11 @@ public class User {
 
             CustomShareDao csDao = session.getCustomShareDao();
             for (CustomShare cs : customShares) {
-                Log.d("shave", "cd user ids: " + cs.getUser_ids());
-                Log.d("shave", "cs is public: " + cs.getIs_public());
-                Log.d("shave", "cs field name:" + cs.getField_name());
+                Log.d("ShareFubar", "cd user ids: " + cs.getUser_ids());
+                Log.d("ShareFubar", "cs is public: " + cs.getIs_public());
+                Log.d("ShareFubar", "cs field name:" + cs.getField_name());
                 long result = csDao.insertOrReplace(cs);
-                Log.d("shave", "cs result:" + result);
+                Log.d("ShareFubar", "cs result:" + result);
             }
         }
     }

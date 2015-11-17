@@ -212,10 +212,17 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
                             ContagContagDao.Properties.Is_contact.eq(true)).list();
 
             CustomShareDao mCustomDao = session.getCustomShareDao() ;
-
+            Log.d("ShareFubar", "Trying to open this up for: " + fieldName) ;
+            try{
             mCustomShare = mCustomDao.queryBuilder().where(
                     CustomShareDao.Properties.Field_name.eq(fieldName)
-            ).list().get(0) ;
+            ).list().get(0) ;} catch (Exception e){
+                List<CustomShare> shares = mCustomDao.loadAll() ;
+                Log.d("ShareFubar", "Fetching size: " + shares.size()) ;
+                for(CustomShare cs : shares){
+                    Log.d("ShareFubar", "Field Name:" + cs.getField_name()) ;
+                }
+            }
 
 
             String[] sharedWith = mCustomShare.getUser_ids().split(",") ;

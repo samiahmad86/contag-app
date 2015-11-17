@@ -238,16 +238,16 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             mCustomShare = mCustomDao.queryBuilder().where(
                     CustomShareDao.Properties.Field_name.eq(fieldName)
             ).list().get(0) ;} catch (Exception e){
-                List<CustomShare> shares = mCustomDao.loadAll() ;
-                Log.d("ShareFubar", "Fetching size: " + shares.size()) ;
-                for(CustomShare cs : shares){
-                    Log.d("ShareFubar", "Field Name:" + cs.getField_name()) ;
-                }
+                Log.d("ShareFubar","Did not find the platform: " + fieldName) ;
+            }
+            String[] sharedWith;
+            try {
+               sharedWith = mCustomShare.getUser_ids().split(",");
+            }catch (Exception e){
+                sharedWith = new String[1] ;
+                sharedWith[0] = "" ;
             }
 
-
-            String[] sharedWith = mCustomShare.getUser_ids().split(",") ;
-            Log.d("share", "Length of user ids: " + mCustomShare.getUser_ids().split(",").length) ;
 
             for(ContagContag cc: contagContacts){
                 Log.d("share","Status with: " + cc.getName() + " :"+ ArrayUtils.contains(sharedWith,cc.getId().toString())) ;

@@ -27,6 +27,7 @@ import com.contag.app.model.SocialPlatformResponse;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialRequestModel;
+import com.contag.app.model.User;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.request.ProfileRequest;
@@ -138,7 +139,7 @@ public class CustomService extends Service {
             } else if (type == Constants.Types.SERVICE_ADD_SOCIAL_PROFILE) {
                 Bundle args = intent.getBundleExtra(Constants.Keys.KEY_BUNDLE);
                 Log.d("SocialVocial", "Syncing facebook:" + args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID)) ;
-                final SocialRequestModel srm = new SocialRequestModel(
+                final SocialRequestModel sm = new SocialRequestModel(
                         args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 1l),
                         args.getString(Constants.Keys.KEY_PLATFORM_ID, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
@@ -146,17 +147,18 @@ public class CustomService extends Service {
                         args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
                         args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
-                Gson gson = new Gson();
-                Log.d(TAG, gson.toJson(srm).toString());
-                SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srm);
-                mSpiceManager.execute(socialProfileRequest, new RequestListener<Response>() {
+                SocialRequestModel.List srm = new SocialRequestModel.List() ;
+                srm.add(sm) ;
+                final SocialRequestModel.List srmList = srm ;
+                SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srmList);
+                mSpiceManager.execute(socialProfileRequest, new RequestListener<User>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
                     }
 
                     @Override
-                    public void onRequestSuccess(Response response) {
-                        new SaveSocialProfile().execute(srm);
+                    public void onRequestSuccess(User user) {
+                        new SaveSocialProfile().execute(srmList);
                     }
                 });
             } else if (type == Constants.Types.SERVICE_POST_INTERESTS) {
@@ -188,11 +190,12 @@ public class CustomService extends Service {
         }
     }
 
-    private class SaveSocialProfile extends AsyncTask<SocialRequestModel, Void, Boolean> {
+    private class SaveSocialProfile extends AsyncTask<SocialRequestModel.List, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(SocialRequestModel... params) {
+        protected Boolean doInBackground(SocialRequestModel.List... params) {
             if (params.length > 0) {
-                SocialRequestModel srm = params[0];
+                SocialRequestModel.List srmList = params[0];
+                SocialRequestModel srm = srmList.get(0)  ;
                 DaoSession session = ((ContagApplication) CustomService.this.getApplicationContext()).getDaoSession();
                 SocialProfile socialProfile = new SocialProfile(srm.socialPlatformId);
                 socialProfile.setPlatform_id(srm.platformId);

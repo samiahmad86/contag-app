@@ -9,6 +9,7 @@ import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -750,9 +751,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
         @Override
         protected void onPostExecute(Void result) {
+            CustomShare mCustomShare ;
+            DaoSession session = ((ContagApplication) getActivity().
+                    getApplicationContext()).getDaoSession();
+            CustomShareDao mCustomDao = session.getCustomShareDao() ;
             mCustomShare = mCustomDao.queryBuilder().where(
                     CustomShareDao.Properties.Field_name.eq(fieldName)
             ).list().get(0) ;
+            Log.d("ShareFubar", "After updating user: " + mCustomShare.getField_name()) ;
             bSocialProfileInfo.clear();
             new LoadUser().execute();
         }

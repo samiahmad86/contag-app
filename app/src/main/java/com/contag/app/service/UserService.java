@@ -148,7 +148,9 @@ public class UserService extends Service implements RequestListener<User> {
     public void onRequestSuccess(User user) {
         Log.d(TAG, "success");
         if(user.name != null) {
-            PrefUtils.setCurrentUserID(user.id);
+            if(requestType == Constants.Types.REQUEST_GET_CURRENT_USER) {
+                PrefUtils.setCurrentUserID(user.id);
+            }
             new SaveUser().execute(user);
         }
     }

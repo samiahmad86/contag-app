@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -29,6 +28,7 @@ import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.DeleteSocialProfile;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialPlatformDao;
@@ -80,6 +80,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     private boolean isFbSync = false;
     private boolean isEditModeOn;
+    private boolean isComingFromNotification;
+    private Bundle requestBundle;
+    private String fieldName;
     private String fbAccessToken;
     private int fbViewPosition, googlePlusPosition, instagramViewPosition, twitterViewPosition, linkedInViewPosition;
 
@@ -90,15 +93,32 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private ArrayList<Bundle> bSocialProfileInfo;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
-        CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
+        CurrentUserSocialProfileEditFragment currentUserSocialProfileEditFragment = new CurrentUserSocialProfileEditFragment();
         Bundle args = new Bundle();
-        epdf.setArguments(args);
-        return epdf;
+        currentUserSocialProfileEditFragment.setArguments(args);
+        return currentUserSocialProfileEditFragment;
     }
+
+    public static CurrentUserSocialProfileEditFragment newInstance(boolean isComingFromNotification, Bundle requestBundle, String fieldName) {
+        CurrentUserSocialProfileEditFragment currentUserSocialProfileEditFragment = new CurrentUserSocialProfileEditFragment();
+        Bundle args = new Bundle();
+        args.putBundle(Constants.Keys.KEY_DATA, requestBundle);
+        args.putBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, isComingFromNotification);
+        args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        currentUserSocialProfileEditFragment.setArguments(args);
+        return currentUserSocialProfileEditFragment;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        isComingFromNotification = args.getBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION);
+        if(isComingFromNotification) {
+            requestBundle = args.getBundle(Constants.Keys.KEY_DATA);
+            fieldName = args.getString(Constants.Keys.KEY_FIELD_NAME);
+        }
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, this);
         mTwitterAuthClient = new TwitterAuthClient();
@@ -380,6 +400,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         isEditModeOn = true;
         Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+        log(TAG, "sending broadcast false");
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
     }
@@ -495,7 +516,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         hmSocialProfileModel.put(position, new SocialProfileModel(newSocialProfile,
                 socialProfileModel.mSocialPlatform, true, viewType));
         bSocialProfileInfo.add(args);
-        socialProfileModel = hmSocialProfileModel.get(position);
         setUpEditMode(position);
     }
 
@@ -674,11 +694,28 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 addViews();
             }
             setViewContent();
+            if(isEditModeOn) {
+                Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+                iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+                log(TAG, "sending broadcast true");
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
+            }
             isEditModeOn = false;
-            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
-            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
+            if(isComingFromNotification) {
+                log(TAG, "opening edit mode");
+                openEditMode();
+                for (int position = 0; position < hmSocialProfileModel.size(); position++) {
+                    SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
+                    log(TAG, socialProfileModel.mSocialPlatform.getPlatformName());
+                    if(socialProfileModel.mSocialPlatform.getPlatformName().equalsIgnoreCase(fieldName)) {
+                        log(TAG, "position found " + position);
+                        scrollToPosition(position);
+                        break;
+                    }
+                }
+                isComingFromNotification = false;
+            }
         }
     }
 

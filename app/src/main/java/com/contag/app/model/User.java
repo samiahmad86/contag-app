@@ -250,7 +250,11 @@ public class User {
         CustomShare cs = getCustomShareByFieldName(fieldName, mContext.getApplicationContext());
         ArrayList<String> userIDS = new ArrayList<>();
         if (cs.getUser_ids() != null) {
-            userIDS = (ArrayList<String>) Arrays.asList(cs.getUser_ids().split(","));
+            if (cs.getUser_ids().indexOf(",") == -1) {
+                userIDS.add(cs.getUser_ids());
+            } else {
+                userIDS = (ArrayList<String>) Arrays.asList(cs.getUser_ids().split(","));
+            }
             if (!userIDS.contains(userID)) {
                 userIDS.add(userID);
             }

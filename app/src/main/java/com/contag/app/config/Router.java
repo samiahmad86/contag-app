@@ -59,10 +59,15 @@ public class Router {
     }
 
 
-    public static void startEditUserActivity(Context context, String className, Bundle bNotification) {
+    public static void startEditUserActivity(Context context, String className, long userID, Bundle requestBundle,
+                                             int fragmentToBeOpened, String fieldName, boolean isComingFromNotification) {
         Intent iEditUserProfile = new Intent(context, UserActivity.class);
         iEditUserProfile.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
-        iEditUserProfile.putExtra(Constants.Keys.KEY_DATA, bNotification);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_USER_ID, userID);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_FRAGMENT_TYPE, fragmentToBeOpened);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, isComingFromNotification);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_DATA, requestBundle);
         context.startActivity(iEditUserProfile);
     }
 

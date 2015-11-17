@@ -1,6 +1,7 @@
 package com.contag.app.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.contag.app.config.Router;
 import com.contag.app.model.NotificationsResponse;
 import com.contag.app.model.User;
 import com.contag.app.util.PrefUtils;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 
 public class NotificationsAdapter extends BaseAdapter implements View.OnClickListener {
 
+
+    public static final String TAG = NotificationsAdapter.class.getName();
     private Context mCtxt;
     private ArrayList<NotificationsResponse> notifications;
 
@@ -70,14 +74,14 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.ivUsrProfilePic.setTag(position);
         mViewHolder.ivUsrProfilePic.setOnClickListener(this);
 
-        if (notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_ADD) ||
-                notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_SHARE)) {
+        if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
+                notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
 
             mViewHolder.shareButton.setVisibility(View.VISIBLE);
             mViewHolder.shareButton.setTag(position);
             mViewHolder.shareButton.setOnClickListener(this);
 
-            if (notification.notificationType.equals(Constants.Keys.PROFILE_REQUEST_ADD)) {
+            if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD)) {
                 mViewHolder.shareButton.setText("Add");
             } else {
                 mViewHolder.shareButton.setText("Share");
@@ -105,9 +109,16 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
             case R.id.btn_share: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.PROFILE_REQUEST_ADD)) {
-                    Router.startUserActivity(mCtxt, NotificationsActivity.TAG, PrefUtils.getCurrentUserID());
-                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.PROFILE_REQUEST_SHARE)) {
+                Gson gson = new Gson();
+                Log.d(TAG, gson.toJson(notificationsResponse));
+                if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_ADD)) {
+                    Bundle requestBundle = new Bundle();
+                    requestBundle.putLong(Constants.Keys.KEY_REQUEST_ID, notificationsResponse.request);
+                    requestBundle.putLong(Constants.Keys.KEY_REQUEST_FROM_USER_ID, notificationsResponse.fromUser);
+                    requestBundle.putString(Constants.Keys.KEY_REQUEST_FROM_USER_NAME, notificationsResponse.requesterName);
+                    Router.startEditUserActivity(mCtxt, NotificationsActivity.TAG, PrefUtils.getCurrentUserID(), requestBundle,
+                            Integer.parseInt(notificationsResponse.fieldCategory), notificationsResponse.fieldName, true);
+                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
                     String userIDS = User.getSharesAsString(notificationsResponse.fieldName, String.valueOf(notificationsResponse.fromUser), mCtxt);
                     Router.startUserServiceForPrivacy(mCtxt, notificationsResponse.fieldName, false, userIDS);
                     notifications.remove(notificationsResponse);

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,12 +32,28 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     private EditViewPager mEditViewPager;
     private SlidingTabLayout mSlidingTabLayout;
+    private boolean isComingFromNotification;
+    private Bundle requestBundle;
+    private int fragmentToBeOpened;
+    private String fieldName;
 
     public static CurrentUserProfileFragment newInstance() {
-        CurrentUserProfileFragment cupf = new CurrentUserProfileFragment();
+        CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
         Bundle args = new Bundle();
-        cupf.setArguments(args);
-        return cupf;
+        currentUserProfileFragment.setArguments(args);
+        return currentUserProfileFragment;
+    }
+
+    public static CurrentUserProfileFragment newInstance(boolean isComingFromNotification, int fragmentToBeOpened,
+                                                         Bundle requestBundle, String fieldName) {
+        CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
+        Bundle args = new Bundle();
+        args.putBundle(Constants.Keys.KEY_DATA, requestBundle);
+        args.putBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, isComingFromNotification);
+        args.putInt(Constants.Keys.KEY_FRAGMENT_TYPE, fragmentToBeOpened);
+        args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        currentUserProfileFragment.setArguments(args);
+        return currentUserProfileFragment;
     }
 
     @Override
@@ -69,7 +84,29 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         });
         mSlidingTabLayout.setViewPager(mEditViewPager);
 
+        Bundle args = getArguments();
 
+        isComingFromNotification = args.getBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION);
+
+        if(isComingFromNotification) {
+            fragmentToBeOpened = args.getInt(Constants.Keys.KEY_FRAGMENT_TYPE);
+            fieldName = args.getString(Constants.Keys.KEY_FIELD_NAME);
+            requestBundle = args.getBundle(Constants.Keys.KEY_DATA);
+            switch (fragmentToBeOpened) {
+                case Constants.Types.PROFILE_PERSONAL: {
+                    mEditViewPager.setCurrentItem(UserProfileFragment.ViewMode.PERSONAL_DETAILS);
+                    break;
+                }
+                case Constants.Types.PROFILE_PROFESSIONAL: {
+                    mEditViewPager.setCurrentItem(UserProfileFragment.ViewMode.PROFESSIONAL_DETAILS);
+                    break;
+                }
+                case Constants.Types.PROFILE_SOCIAL: {
+                    mEditViewPager.setCurrentItem(UserProfileFragment.ViewMode.SOCIAL_DETAILS);
+                    break;
+                }
+            }
+        }
 
         return view;
     }
@@ -130,6 +167,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean mode = intent.getBooleanExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            log(TAG, "broadcast received " + mode);
             mEditViewPager.setSwipeEnabled(mode);
             mSlidingTabLayout.setEnabled(mode);
         }
@@ -147,15 +185,33 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             Fragment fragment = null;
             switch (position) {
                 case UserProfileFragment.ViewMode.PERSONAL_DETAILS: {
-                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL);
+                    if(fragmentToBeOpened == Constants.Types.PROFILE_PERSONAL && isComingFromNotification) {
+                        fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL, isComingFromNotification,
+                                requestBundle, fieldName);
+                        isComingFromNotification = false;
+                    } else {
+                        fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL);
+                    }
                     break;
                 }
                 case UserProfileFragment.ViewMode.SOCIAL_DETAILS: {
-                    fragment = CurrentUserSocialProfileEditFragment.newInstance();
+                    if(fragmentToBeOpened == Constants.Types.PROFILE_SOCIAL && isComingFromNotification) {
+                        fragment = CurrentUserSocialProfileEditFragment.newInstance(isComingFromNotification,
+                                requestBundle, fieldName);
+                        isComingFromNotification = false;
+                    } else {
+                        fragment = CurrentUserSocialProfileEditFragment.newInstance();
+                    }
                     break;
                 }
                 case UserProfileFragment.ViewMode.PROFESSIONAL_DETAILS: {
-                    fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);
+                    if(fragmentToBeOpened == Constants.Types.PROFILE_PROFESSIONAL && isComingFromNotification) {
+                        fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL,
+                                isComingFromNotification, requestBundle, fieldName);
+                        isComingFromNotification = false;
+                    } else {
+                        fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);
+                    }
                     break;
                 }
             }

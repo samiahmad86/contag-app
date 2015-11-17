@@ -123,9 +123,15 @@ public class UserActivity extends BaseActivity {
                 }
             });
 
+            boolean isComingFromNotification = intent.getBooleanExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, false);
+            CurrentUserProfileFragment currentUserProfileFragment;
+            if(isComingFromNotification) {
+                currentUserProfileFragment = CurrentUserProfileFragment.newInstance(true, intent.getIntExtra(Constants.Keys.KEY_FRAGMENT_TYPE, 0),
+                        intent.getBundleExtra(Constants.Keys.KEY_DATA), intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME));
+            } else {
+                currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
 
-            CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
-            transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
+            } transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
     }
 

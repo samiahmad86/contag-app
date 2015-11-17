@@ -28,7 +28,6 @@ import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
-import com.contag.app.model.DeleteSocialProfile;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialPlatformDao;

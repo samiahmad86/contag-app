@@ -75,11 +75,11 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
-    private Button btnEditProfile;
+    private Button btnEditProfile, btnSaveProfile;
 
     private boolean isFbSync = false;
     private boolean isEditModeOn;
-    private boolean isComingFromNotification;
+    private boolean isComingFromNotification, cameFromNotification;
     private Bundle requestBundle;
     private String fieldName;
     private String fbAccessToken;
@@ -114,7 +114,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         isComingFromNotification = args.getBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION);
-        if(isComingFromNotification) {
+        if (isComingFromNotification) {
             requestBundle = args.getBundle(Constants.Keys.KEY_DATA);
             fieldName = args.getString(Constants.Keys.KEY_FIELD_NAME);
         }
@@ -138,7 +138,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         bSocialProfileInfo = new ArrayList<>();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
+        btnSaveProfile = (Button) view.findViewById(R.id.btn_save_profile);
         btnEditProfile.setOnClickListener(this);
+        btnSaveProfile.setOnClickListener(this);
         btnEditProfile.setTag(0);
         btnEditProfile.setVisibility(View.VISIBLE);
         isEditModeOn = false;
@@ -169,6 +171,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             case R.id.btn_add: {
             }
 
+            case R.id.btn_save_profile: {
+            }
+
             case R.id.btn_edit_profile: {
                 if (!DeviceUtils.isInternetConnected(getActivity())) {
                     showToast("Sorry there is no internet.");
@@ -187,6 +192,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 share.show(getChildFragmentManager(), TAG);
                 break;
             }
+
 
             case R.id.btn_facebook_login: {
                 String text = ((Button) v).getText().toString();
@@ -407,7 +413,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
         log(TAG, "sending broadcast false");
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
-        btnEditProfile.setBackgroundResource(R.drawable.btn_add);
+        btnEditProfile.setVisibility(View.GONE);
+        btnSaveProfile.setVisibility(View.VISIBLE);
     }
 
 
@@ -644,7 +651,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             int counter = 0;
             for (SocialProfile socialProfile : socialProfiles) {
                 log(TAG, "user is on " + socialProfile.getSocial_platform() + " as " + socialProfile.getPlatform_id());
-                log(TAG,"size " + hmNameToPlatform.size());
+                log(TAG, "size " + hmNameToPlatform.size());
                 if (hmNameToPlatform.containsKey(socialProfile.getSocial_platform())) {
                     String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
                     if (keyLowerCase.contains("google")) {
@@ -699,27 +706,40 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 addViews();
             }
             setViewContent();
-            if(isEditModeOn) {
+            if (isEditModeOn) {
                 Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
                 iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
                 log(TAG, "sending broadcast true");
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             }
             isEditModeOn = false;
-            btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
-            if(isComingFromNotification) {
-                log(TAG, "opening edit mode");
+            btnEditProfile.setVisibility(View.VISIBLE);
+            btnSaveProfile.setVisibility(View.GONE);
+            if (cameFromNotification) {
+                for (int position = 0; position < hmSocialProfileModel.size(); position++) {
+                    SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
+                    if (socialProfileModel.mSocialPlatform.getPlatformName().equalsIgnoreCase(fieldName) &&
+                            socialProfileModel.mSocialProfile != null
+                            && socialProfileModel.mSocialProfile.getPlatform_id() != null) {
+                        ShareFieldDialog mShareFieldDialog = ShareFieldDialog.newInstance(requestBundle, fieldName);
+                        mShareFieldDialog.show(getChildFragmentManager(), "share_dialog");
+                        break;
+                    }
+                }
+                cameFromNotification = false;
+            }
+            if (isComingFromNotification) {
                 openEditMode();
                 for (int position = 0; position < hmSocialProfileModel.size(); position++) {
                     SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
                     log(TAG, socialProfileModel.mSocialPlatform.getPlatformName());
-                    if(socialProfileModel.mSocialPlatform.getPlatformName().equalsIgnoreCase(fieldName)) {
-                        log(TAG, "position found " + position);
+                    if (socialProfileModel.mSocialPlatform.getPlatformName().equalsIgnoreCase(fieldName)) {
                         scrollToPosition(position);
                         break;
                     }
                 }
                 isComingFromNotification = false;
+                cameFromNotification = true;
             }
         }
     }

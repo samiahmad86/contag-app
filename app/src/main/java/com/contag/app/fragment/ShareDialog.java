@@ -57,15 +57,20 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         Bundle args = new Bundle();
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
-        share.setStyle(DialogFragment.STYLE_NO_TITLE, 0);                       // To remove the header from the dialog
         return share ;
     }
 
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_share_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_share_field, container, false);
 
 
         fieldName = getArguments().getString(Constants.Keys.KEY_FIELD_NAME) ;

@@ -8,6 +8,7 @@
         android:id="@+id/sv_user_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
         android:layout_marginTop="20dp"
         android:padding="10dp"
         android:scrollbars="none">
@@ -20,12 +21,25 @@
     </ScrollView>
 
     <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_save_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/filter_selection"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="@string/save_changes"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_edit_profile"
         android:layout_width="20dp"
-        android:visibility="gone"
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
-        android:background="@drawable/edit_pencil_contag" />
+        android:background="@drawable/edit_pencil_contag"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/pb_edit_profile"

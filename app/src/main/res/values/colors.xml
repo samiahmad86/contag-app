@@ -4,7 +4,7 @@
     <!-- app theme colors -->
     <color name="primary_color">#5890FF</color>
     <color name="primary_color_dark">#3e6960</color>
-    <color name="accent_color">#ddd</color>
+    <color name="accent_color">#5890FF</color>
 
     <!-- common colors -->
     <color name="black">#000000</color>

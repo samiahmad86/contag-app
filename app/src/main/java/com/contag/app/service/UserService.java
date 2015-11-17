@@ -108,6 +108,7 @@ public class UserService extends Service implements RequestListener<User> {
                         @Override
                         public void onRequestSuccess(MessageResponse response) {
                             User.updatePrivacy(fieldName, isPublic, userIDS, getApplicationContext()) ;
+                            Toast.makeText(UserService.this, "Shared successfully!", Toast.LENGTH_LONG).show() ;
 
                         }}) ;
                     break ;

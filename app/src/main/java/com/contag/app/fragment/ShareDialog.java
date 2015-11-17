@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,12 +50,14 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private TextView shareText ;
     private String fieldName ;
 
+
     public static ShareDialog newInstance(String fieldName) {
 
         ShareDialog share = new ShareDialog();
         Bundle args = new Bundle();
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
+        share.setStyle(DialogFragment.STYLE_NO_TITLE, 0);                       // To remove the header from the dialog
         return share ;
     }
 
@@ -71,10 +74,12 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
         lvContags.setAdapter(shareListAdapter);
 
+
         sharePublic = (Button) view.findViewById(R.id.btn_share_public) ;
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom) ;
         shareText = (TextView) view.findViewById(R.id.tv_share_text) ;
-        shareText.setText("Share your " + fieldName + " with: ") ;
+        String temp=getHashValue(fieldName);
+        shareText.setText("Share your " + Html.fromHtml("<b>"+temp+"</b>") + " with: ") ;
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
 
         sharePublic.setOnClickListener(this);
@@ -141,6 +146,22 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         return TextUtils.join(",",userIDS) ;
     }
 
+
+//    private BroadcastReceiver privacySettingsUpdated = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//
+//
+//            mCustomShare.setUser_ids(getSharesAsString());
+//            Log.d("shave", "Broadcast, isPublic: " + mCustomShare.getIs_public()) ;
+//            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids());
+//            Log.d("shave", "Field name: " + mCustomShare.getField_name()) ;
+//
+//            mCustomShare.update();
+//        }
+//    } ;
+
+
     private BroadcastReceiver shareCountUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -186,7 +207,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     }
 
     private void setCustomShareCount(){
-        shareCustom.setText("Custom(" +  shareCount + ")") ;
+        shareCustom.setText("Custom(" + shareCount + ")");
         shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
     }
 
@@ -252,6 +273,11 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             shareListAdapter.setShareCount(shareCount) ;
 
         }
+    }
+
+    private String getHashValue( String key)
+    {
+        return CurrentUserProfileEditFragment.convertKeyToLabel(key) ;
     }
 
 }

@@ -84,6 +84,7 @@ public class Router {
         mContext.startService(iStartContactService);
     }
 
+
     public static void startUserServiceForPrivacy(Context mContext, String fieldName, Boolean isPublic, String userIDS){
         Intent privacyIntent = new Intent(mContext, UserService.class) ;
         privacyIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_POST_PRIVACY) ;

@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="200dp"
+    android:layout_width="110dp"
     android:background="@color/light_blue"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginRight="10dp">
 
 
     <TextView
         android:id="@+id/tv_filter_name"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:background="@color/filter_selection"
@@ -19,7 +20,7 @@
 
     <TextView
         android:id="@+id/tv_filter_platform"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_below="@id/tv_filter_name"
@@ -30,7 +31,7 @@
 
     <TextView
         android:id="@+id/tv_filter_blood"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_below="@id/tv_filter_platform"

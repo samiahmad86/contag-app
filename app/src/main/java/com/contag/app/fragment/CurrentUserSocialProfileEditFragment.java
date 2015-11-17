@@ -182,6 +182,11 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 }
                 break;
             }
+            case R.id.btn_share: {
+                ShareDialog share = ShareDialog.newInstance((String) v.getTag());
+                share.show(getChildFragmentManager(), TAG);
+                break;
+            }
 
             case R.id.btn_facebook_login: {
                 String text = ((Button) v).getText().toString();
@@ -338,6 +343,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnFb.setOnClickListener(this);
             vh.btnLinkedIn.setOnClickListener(this);
             vh.btnShare.setOnClickListener(this);
+            vh.btnShare.setTag(hmSocialProfileModel.get(i).mSocialPlatform.getPlatformName());
             vh.btnDisconnect.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);

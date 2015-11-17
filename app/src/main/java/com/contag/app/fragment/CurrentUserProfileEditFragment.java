@@ -297,7 +297,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         }
     }
 
-    private String convertKeyToLabel(String key) {
+    public static String convertKeyToLabel(String key) {
         String str = key.replace("_", " ");
         str = str.toLowerCase();
         char ch = str.charAt(0);

@@ -108,6 +108,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             }
         }
 
+
         return view;
     }
 
@@ -170,6 +171,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             log(TAG, "broadcast received " + mode);
             mEditViewPager.setSwipeEnabled(mode);
             mSlidingTabLayout.setEnabled(mode);
+
         }
     };
 

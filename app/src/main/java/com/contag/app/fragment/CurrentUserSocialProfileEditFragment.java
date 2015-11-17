@@ -68,6 +68,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CurrentUserSocialProfileEditFragment extends BaseFragment implements View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -185,7 +186,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case R.id.btn_share: {
-                ShareDialog share = ShareDialog.newInstance((String) v.getTag());
+                int position = (int) v.getTag();
+                ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName());
                 share.show(getChildFragmentManager(), TAG);
                 break;
             }
@@ -345,7 +347,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnFb.setOnClickListener(this);
             vh.btnLinkedIn.setOnClickListener(this);
             vh.btnShare.setOnClickListener(this);
-            vh.btnShare.setTag(hmSocialProfileModel.get(i).mSocialPlatform.getPlatformName());
+            vh.btnShare.setTag(i);
             vh.btnDisconnect.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);
@@ -367,7 +369,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.tvConnectedAs.setVisibility(View.VISIBLE);
-            log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
+            //log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
             mViewHolder.tvFieldValue.setTag(position);
@@ -745,20 +747,21 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
             ContagContagDao ccDao = session.getContagContagDao();
             ccDao.insertOrReplace(cc);
+            Log.d("ShareFubar", "Stored the new user") ;
 
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            CustomShare mCustomShare ;
+            List<CustomShare> mCustomShare ;
             DaoSession session = ((ContagApplication) getActivity().
                     getApplicationContext()).getDaoSession();
             CustomShareDao mCustomDao = session.getCustomShareDao() ;
-            mCustomShare = mCustomDao.queryBuilder().where(
-                    CustomShareDao.Properties.Field_name.eq(fieldName)
-            ).list().get(0) ;
-            Log.d("ShareFubar", "After updating user: " + mCustomShare.getField_name()) ;
+            mCustomShare = mCustomDao.loadAll() ;
+            for(CustomShare c : mCustomShare){
+                Log.d("ShareFubar", "In onPostExecute with these field names: " + c.getField_name()) ;
+            }
             bSocialProfileInfo.clear();
             new LoadUser().execute();
         }

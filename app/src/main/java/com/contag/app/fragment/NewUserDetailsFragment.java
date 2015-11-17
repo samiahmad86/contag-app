@@ -219,9 +219,11 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 
                 } catch (JSONException ex) {
                     ex.printStackTrace();
+                    Log.d("NewUser", "Exception Occurred") ;
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, "user@contagapp.com");
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, "contag_user");
                 }
+                Log.d("NewUser", args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME)) ;
                 return args;
             }
             return null ;

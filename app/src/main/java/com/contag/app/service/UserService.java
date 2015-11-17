@@ -149,14 +149,14 @@ public class UserService extends Service implements RequestListener<User> {
     public void onRequestSuccess(User user) {
         Log.d(TAG, "success");
         if(user.name != null) {
-            if(requestType == Constants.Types.REQUEST_GET_CURRENT_USER) {
+            if(requestType == Constants.Types.REQUEST_GET_CURRENT_USER || requestType == Constants.Types.REQUEST_PUT) {
                 PrefUtils.setCurrentUserID(user.id);
             }
             new SaveUser().execute(user);
         }
     }
 
-    private class SaveUser extends AsyncTask<User, Void, Void> {
+    public class SaveUser extends AsyncTask<User, Void, Void> {
         @Override
         protected Void doInBackground(User... params) {
 

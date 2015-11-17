@@ -27,14 +27,16 @@ import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.CustomShare;
+import com.contag.app.model.CustomShareDao;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.Interest;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialPlatform;
-import com.contag.app.model.SocialPlatformDao;
 import com.contag.app.model.SocialProfile;
-import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialProfileModel;
 import com.contag.app.model.SocialRequestModel;
+import com.contag.app.model.User;
 import com.contag.app.request.DeleteSocialProfileRequest;
 import com.contag.app.request.SocialProfileRequest;
 import com.contag.app.util.DeviceUtils;
@@ -66,6 +68,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CurrentUserSocialProfileEditFragment extends BaseFragment implements View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -188,7 +191,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case R.id.btn_share: {
-                ShareDialog share = ShareDialog.newInstance((String) v.getTag());
+                int position = (int) v.getTag();
+                ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName());
                 share.show(getChildFragmentManager(), TAG);
                 break;
             }
@@ -349,7 +353,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnFb.setOnClickListener(this);
             vh.btnLinkedIn.setOnClickListener(this);
             vh.btnShare.setOnClickListener(this);
-            vh.btnShare.setTag(hmSocialProfileModel.get(i).mSocialPlatform.getPlatformName());
+            vh.btnShare.setTag(i);
             vh.btnDisconnect.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);
@@ -371,7 +375,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.tvConnectedAs.setVisibility(View.VISIBLE);
-            log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
+            //log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
             mViewHolder.tvFieldValue.setTag(position);
@@ -505,15 +509,15 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
         final SocialRequestModel.List copySocialRequestModels = socialRequestModels;
         SocialProfileRequest socialProfileRequest = new SocialProfileRequest(socialRequestModels);
-        getSpiceManager().execute(socialProfileRequest, new RequestListener<Response>() {
+        getSpiceManager().execute(socialProfileRequest, new RequestListener<User>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
             }
 
             @Override
-            public void onRequestSuccess(Response response) {
-                new SaveSocialProfile().execute(copySocialRequestModels);
+            public void onRequestSuccess(User user) {
+                new SaveUser().execute(user) ;
             }
         });
     }
@@ -744,40 +748,80 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
-    private class SaveSocialProfile extends AsyncTask<SocialRequestModel.List, Void, Boolean> {
+    private class SaveUser extends AsyncTask<User, Void, Void> {
         @Override
-        protected Boolean doInBackground(SocialRequestModel.List... params) {
-            if (params.length > 0) {
-                ArrayList<SocialRequestModel> socialRequestModels = params[0];
-                DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
-                ContagContagDao ccDao = session.getContagContagDao();
-                ContagContag cc = ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).
-                        list().get(0);
-                for (SocialRequestModel socialRequestModel : socialRequestModels) {
-                    SocialProfile socialProfile = new SocialProfile(socialRequestModel.socialPlatformId);
-                    socialProfile.setPlatform_id(socialRequestModel.platformId);
-                    socialProfile.setPlatform_username(socialRequestModel.platformUsername);
-                    socialProfile.setContagContag(cc);
-                    SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
-                    String socialPlatformName = socialPlatformDao.queryBuilder().
-                            where(SocialPlatformDao.Properties.Id.eq(socialRequestModel.socialPlatformId)).list().get(0).getPlatformName();
-                    socialProfile.setSocial_platform(socialPlatformName);
-                    SocialProfileDao socialProfileDao = session.getSocialProfileDao();
-                    log(TAG, "social profile id = " + socialProfile.getId());
-                    socialProfileDao.insertOrReplace(socialProfile);
-                }
-                return true;
-            }
-            return false;
+        protected Void doInBackground(User... params) {
+
+
+            User user = params[0];
+            DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+
+            ContagContag cc = User.getContagContagObject(user);
+            ArrayList<Interest> interestList = User.getInterestList(user.userInterest, user, cc);
+            ArrayList<SocialProfile> socialProfiles = User.getSocialProfileList(user.socialProfile, user, cc) ;
+            ArrayList<CustomShare> customShares = User.getCustomShareList(user.customShares, cc) ;
+
+            User.storeInterests(interestList, session);
+            User.storeSocialProfile(socialProfiles, session);
+            User.storeCustomShare(customShares, session);
+
+            ContagContagDao ccDao = session.getContagContagDao();
+            ccDao.insertOrReplace(cc);
+            Log.d("ShareFubar", "Stored the new user") ;
+
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            Log.d(TAG, "socialProfileUpdated");
+        protected void onPostExecute(Void result) {
+            List<CustomShare> mCustomShare ;
+            DaoSession session = ((ContagApplication) getActivity().
+                    getApplicationContext()).getDaoSession();
+            CustomShareDao mCustomDao = session.getCustomShareDao() ;
+            mCustomShare = mCustomDao.loadAll() ;
+            for(CustomShare c : mCustomShare){
+                Log.d("ShareFubar", "In onPostExecute with these field names: " + c.getField_name()) ;
+            }
             bSocialProfileInfo.clear();
             new LoadUser().execute();
         }
     }
+
+
+//    private class SaveSocialProfile extends AsyncTask<SocialRequestModel.List, Void, Boolean> {
+//        @Override
+//        protected Boolean doInBackground(SocialRequestModel.List... params) {
+//            if (params.length > 0) {
+//                ArrayList<SocialRequestModel> socialRequestModels = params[0];
+//                DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+//                ContagContagDao ccDao = session.getContagContagDao();
+//                ContagContag cc = ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).
+//                        list().get(0);
+//                for (SocialRequestModel socialRequestModel : socialRequestModels) {
+//                    SocialProfile socialProfile = new SocialProfile(socialRequestModel.socialPlatformId);
+//                    socialProfile.setPlatform_id(socialRequestModel.platformId);
+//                    socialProfile.setPlatform_username(socialRequestModel.platformUsername);
+//                    socialProfile.setContagContag(cc);
+//                    SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
+//                    String socialPlatformName = socialPlatformDao.queryBuilder().
+//                            where(SocialPlatformDao.Properties.Id.eq(socialRequestModel.socialPlatformId)).list().get(0).getPlatformName();
+//                    socialProfile.setSocial_platform(socialPlatformName);
+//                    SocialProfileDao socialProfileDao = session.getSocialProfileDao();
+//                    log(TAG, "social profile id = " + socialProfile.getId());
+//                    socialProfileDao.insertOrReplace(socialProfile);
+//                }
+//                return true;
+//            }
+//            return false;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            Log.d(TAG, "socialProfileUpdated");
+//            bSocialProfileInfo.clear();
+//            new LoadUser().execute();
+//        }
+//    }
 
     private class DeleteSocialProfile extends AsyncTask<Integer, Void, Void> {
 

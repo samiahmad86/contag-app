@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.config.Router;
-import com.contag.app.model.SocialPlatform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -294,7 +291,7 @@ public class LinkedInActivity extends BaseActivity {
                     String url = jsonObject.getString("url");
                     int idStartIndex = url.indexOf("id=");
                     int idEndIndex = url.indexOf("&", idStartIndex);
-
+                    args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, data.getString("firstName") + " " + data.getString("lastName"));
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, url.substring(idStartIndex + 3, idEndIndex));
                     args.putString(Constants.Keys.KEY_PLATFORM_SECRET, accessSecret);
                     args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, accessToken);

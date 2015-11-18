@@ -55,6 +55,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
     private boolean mDistributeEvenly;
+    private boolean isEnabled;
 
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
@@ -72,6 +73,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        isEnabled = true;
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
@@ -293,11 +296,15 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
+    public void setEnabled(boolean value) {
+        this.isEnabled = value;
+    }
+
     private class TabClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
-                if (v == mTabStrip.getChildAt(i)) {
+                if (v == mTabStrip.getChildAt(i) && isEnabled) {
                     mViewPager.setCurrentItem(i);
                     return;
                 }

@@ -57,6 +57,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
         ShareDialog share = new ShareDialog();
         Bundle args = new Bundle();
+      //  Log.e("fieldname",fieldName);
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
         share.setStyle(DialogFragment.STYLE_NO_TITLE, 0);                       // To remove the header from the dialog
@@ -82,8 +83,9 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         sharePublic = (Button) view.findViewById(R.id.btn_share_public) ;
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom) ;
         shareText = (TextView) view.findViewById(R.id.tv_share_text) ;
-        String temp=getHashValue(fieldName);
-        shareText.setText("Share your " + Html.fromHtml("<b>"+temp+"</b>") + " with: ") ;
+
+       // String temp=getHashValue(fieldName);
+        shareText.setText("Share your " +/* Html.fromHtml("<b>"+temp+"</b>")*/ " with: ") ;
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
 
         sharePublic.setOnClickListener(this);
@@ -96,8 +98,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     @Override
     public void onStart(){
         super.onStart();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(privacySettingsUpdated,
-                new IntentFilter("com.contag.app.profile.privacy"));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(shareCountUpdated,
                 new IntentFilter("com.contag.app.profile.sharecount")) ;
     }
@@ -105,7 +105,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     @Override
     public void onStop(){
         super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(privacySettingsUpdated);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(shareCountUpdated);
     }
     @Override
@@ -134,11 +133,13 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         if(shareCount > 0)
             mCustomShare.setIs_public(false);
 
+        mCustomShare.setUser_ids(getSharesAsString());
+
         Log.d("shave", "Is Public: " + mCustomShare.getIs_public()) ;
         Log.d("shave", "Share Count: " + shareCount) ;
 
         Router.startUserServiceForPrivacy(getActivity(), mCustomShare.getField_name(), mCustomShare.getIs_public(),
-                getSharesAsString());
+                mCustomShare.getUser_ids());
 
     }
 
@@ -150,6 +151,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         }
         return TextUtils.join(",",userIDS) ;
     }
+
 
     private BroadcastReceiver privacySettingsUpdated = new BroadcastReceiver() {
         @Override
@@ -274,14 +276,18 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private void initializeHashTable( )
     {
         hashTable.put(Constants.Keys.KEY_USER_MARITAL_STATUS,"Marital Status");
-       // hashTable.put("marital_status","Marital Status");
+        Log.e("hash value",Constants.Keys.KEY_USER_MARITAL_STATUS);
+       //hashTable.put("marital_status","Marital Status");
     }
     private String getHashValue( String key)
     {
+
+        Log.e("hash value",key);
+        Log.e("hash value",hashTable.get(key));
        if(hashTable.containsKey(key))
            return hashTable.get(key);
         else
-           return null;
+           return "";
     }
 
 }

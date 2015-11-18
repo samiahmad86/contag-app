@@ -2,15 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rl_other_container"
     android:background="@android:color/transparent"
-    android:padding="20dp">
+    android:padding="0dp">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_field_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+
+        android:layout_marginTop="10dp"
+       />
 
 
     <android.support.v7.widget.AppCompatTextView
@@ -18,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_field_name"
-        android:layout_marginTop="20dp"
         android:textColor="@color/white"
+        android:layout_marginTop="10dp"
         android:textSize="13sp" />
 
     <RelativeLayout
@@ -27,23 +31,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_field_name"
-        android:layout_marginTop="20dp">
+      >
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_field_value"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:textColor="@color/white"
             android:textSize="13sp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_edit_text"
+            android:theme="@style/EditTextTheme"
             android:visibility="gone" />
 
-        <android.support.v7.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/sp_field_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:theme="@style/Theme.Contag.Material.ActionBar"
+            android:backgroundTint="@color/light_blue"
+            android:popupBackground="@color/light_blue"
             android:textSize="13sp"
-            android:visibility="gone" />
+            android:paddingLeft="0dp"
+            android:layout_marginTop="10dp"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <!--<android.support.v7.widget.AppCompatButton-->
@@ -60,7 +74,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/tv_field_name"
-        android:background="@drawable/btn_add"
+        android:background="@drawable/request_icon"
         android:visibility="gone" />
 
 
@@ -70,38 +84,9 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/tv_field_name"
-        android:background="@drawable/btn_share_icon"
+        android:background="@drawable/share_icon"
         android:visibility="gone" />
 
 
-    <!--<include-->
-    <!--android:id="@+id/rl_share_container"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/rl_edit_container"-->
-    <!--layout="@layout/layout_share_container"/>-->
 
-
-    <!--<android.support.v7.widget.AppCompatButton-->
-    <!--android:id="@+id/btn_update"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:text="@string/update"-->
-    <!--android:textSize="13sp"-->
-    <!--android:visibility="gone"-->
-    <!--android:textColor="@color/white"-->
-    <!--android:layout_below="@id/rl_share_container"-->
-    <!--android:background="@drawable/bg_btn_profile_update" />-->
-
-
-    <!--<ProgressBar-->
-    <!--android:id="@+id/pb_update"-->
-    <!--style="?android:attr/progressBarStyleSmall"-->
-    <!--android:layout_width="30dp"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_marginRight="10dp"-->
-    <!--android:layout_toLeftOf="@id/btn_update"-->
-    <!--android:layout_alignTop="@id/btn_update"-->
-    <!--android:visibility="gone" />-->
 </RelativeLayout>

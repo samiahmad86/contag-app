@@ -79,6 +79,7 @@ public class Constants {
         public static final String KEY_PLATFORM_ID = "platform_id";
         public static final String KEY_PLATFORM_SECRET = "platform_secret";
         public static final String KEY_PLATFORM_TOKEN = "platform_token";
+        public static final String KEY_USER_PLATFORM_USERNAME = "platform_username";
         public static final String KEY_PLATFORM_PERMISSION = "platform_permissions";
         public static final String KEY_PLATFORM_EMAIL_ID = "platform_email";
         public static final String KEY_BUNDLE = "fucking_bundle";

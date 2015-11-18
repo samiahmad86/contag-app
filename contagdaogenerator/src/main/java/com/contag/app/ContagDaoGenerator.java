@@ -80,6 +80,7 @@ public class ContagDaoGenerator {
         socialProfile.addIdProperty();
         socialProfile.addStringProperty("social_platform");
         socialProfile.addStringProperty("platform_id");
+        socialProfile.addStringProperty("platform_username");
 
         Property socialProfileToCuntag = socialProfile.addLongProperty("contagUserId").getProperty();
         socialProfile.addToOne(contagContact, socialProfileToCuntag);

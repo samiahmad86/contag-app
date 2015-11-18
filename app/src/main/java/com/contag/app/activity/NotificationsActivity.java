@@ -26,9 +26,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class NotificationsActivity extends BaseActivity  implements AdapterView.OnItemClickListener,
+public class NotificationsActivity extends BaseActivity implements AdapterView.OnItemClickListener,
         NavDrawerFragment.OnFragmentInteractionListener, View.OnClickListener,
-        RequestListener<NotificationsResponse.NotificationList>{
+        RequestListener<NotificationsResponse.NotificationList> {
 
     public static final String TAG = NotificationsActivity.class.getName();
     private boolean isLoading = false;
@@ -47,7 +47,7 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
-        Button btnBack = (Button) findViewById(R.id.btn_back) ;
+        Button btnBack = (Button) findViewById(R.id.btn_back);
 
 
         ListView lvNotifications = (ListView) findViewById(R.id.lv_notifications);
@@ -66,7 +66,7 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading) {
                     int start = notifications.size() == 0 ? 0 : notifications.size();
-                    NotificationsRequest fr = new NotificationsRequest(start, 10) ;
+                    NotificationsRequest fr = new NotificationsRequest(start, 10);
                     getSpiceManager().execute(fr, NotificationsActivity.this);
                     isLoading = true;
                 }
@@ -83,8 +83,8 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
     @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
-        Log.d("Nof", String.valueOf(notificationsResponses.size())) ;
-        if(notificationsResponses.size() != 0) {
+        Log.d("Nof", String.valueOf(notificationsResponses.size()));
+        if (notificationsResponses.size() != 0) {
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();
         }
@@ -93,7 +93,7 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      // Router.startUserActivity(this, TAG, Long.parseLong(notifications.get(position).objectId, 10));
+        // Router.startUserActivity(this, TAG, Long.parseLong(notifications.get(position).objectId, 10));
     }
 
     @Override
@@ -111,8 +111,8 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
                 break;
             }
             case R.id.btn_back: {
-                this.finish() ;
-                break ;
+                this.finish();
+                break;
             }
         }
     }
@@ -134,12 +134,12 @@ public class NotificationsActivity extends BaseActivity  implements AdapterView.
             Picasso.with(NotificationsActivity.this)
                     .load(ccUser.getAvatarUrl())
                     .placeholder(R.drawable.default_profile_pic_small)
-                    .into(((ImageView) tbHome.findViewById(R.id.iv_user_photo))) ;
+                    .into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
 
             Picasso.with(NotificationsActivity.this)
                     .load(ccUser.getAvatarUrl())
                     .placeholder(R.drawable.default_profile_pic_small)
-                    .into((ImageView) findViewById(R.id.iv_header_pic)) ;
+                    .into((ImageView) findViewById(R.id.iv_header_pic));
 
         }
     }

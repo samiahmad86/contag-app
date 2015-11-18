@@ -175,7 +175,8 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
            // filterDropDown.show
 
       {  Rect location=locateView(v);
-          filterDropDown.showAtLocation(v, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);}
+
+          filterDropDown.showAtLocation(v, Gravity.TOP | Gravity.LEFT, location.right, location.bottom);}
         else
             filterDropDown.dismiss();
     }

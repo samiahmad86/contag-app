@@ -1,10 +1,9 @@
 package com.contag.app.activity;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -13,7 +12,6 @@ import android.widget.ProgressBar;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
-import com.contag.app.model.SocialPlatform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +24,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -224,6 +221,7 @@ public class InstagramActivity extends BaseActivity {
                 JSONObject usr = jsonObject.getJSONObject("user");
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, jsonObject.getString("access_token"));
                 args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, usr.getString("username"));
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
                 Intent intent = new Intent();
                 intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
@@ -232,40 +230,6 @@ public class InstagramActivity extends BaseActivity {
             } catch (JSONException ex) {
                 ex.printStackTrace();
             }
-//            new SendData().execute(jsonObject);
-        }
-
-    }
-
-    private class SendData extends AsyncTask<JSONObject, Void, Bundle> {
-        @Override
-        protected Bundle doInBackground(JSONObject... params) {
-            if (params.length > 0) {
-                JSONObject jsonObject = params[0];
-                SocialPlatform sp = InstagramActivity.this
-                        .getPlatformFromName("instagram");
-                long id = sp.getId();
-                try {
-                    Bundle args = new Bundle();
-                    args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, id);
-                    JSONObject usr = jsonObject.getJSONObject("user");
-                    args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, jsonObject.getString("access_token"));
-                    args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
-                    args.putString(Constants.Keys.KEY_PLATFORM_ID, usr.getString("username"));
-                    return args;
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bundle args) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
         }
 
     }

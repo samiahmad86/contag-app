@@ -13,51 +13,43 @@ public class NotificationsResponse {
 
     @SerializedName("id")
     @Expose
-    public long id;
-
-    @SerializedName("user_id")
-    @Expose
-    public long userId;
-
-    @SerializedName("notification_type")
-    @Expose
-    public String notificationType;
-
-    @SerializedName("request_type")
-    @Expose
-    public String requestType ;
-
-    @SerializedName("text")
-    @Expose
-    public String text;
-
+    public Long id;
     @SerializedName("avatar_url")
     @Expose
-    public String avatarURL;
-
-    @SerializedName("object_id")
+    public String avatarUrl;
+    @SerializedName("requester_name")
     @Expose
-    public String objectId;
-
-    @SerializedName("seen_at")
+    public String requesterName;
+    @SerializedName("field_category")
     @Expose
-    public String seenAt;
-
+    public String fieldCategory;
     @SerializedName("created_on")
     @Expose
     public String createdOn;
-
     @SerializedName("updated_on")
     @Expose
     public String updatedOn;
-
-    @SerializedName("request_info")
+    @SerializedName("notification_type")
     @Expose
-    public String requestInfo ;
-
-    public String getAvatarURL(){
-        return Constants.Urls.BASE_URL + avatarURL ;
-    }
+    public String notificationType;
+    @SerializedName("text")
+    @Expose
+    public String text;
+    @SerializedName("seen_at")
+    @Expose
+    public Object seenAt;
+    @SerializedName("is_shown")
+    @Expose
+    public Boolean isShown;
+    @SerializedName("user")
+    @Expose
+    public Long user;
+    @SerializedName("from_user")
+    @Expose
+    public Long fromUser;
+    @SerializedName("request")
+    @Expose
+    public Long request;
 
     public static class NotificationList extends ArrayList<NotificationsResponse> {
 

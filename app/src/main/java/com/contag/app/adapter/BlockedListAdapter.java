@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.contag.app.R;
-import com.contag.app.model.BlockModel;
+import com.contag.app.model.BlockContact;
 
 import java.util.ArrayList;
 
@@ -18,11 +18,11 @@ import java.util.ArrayList;
  */
 public class BlockedListAdapter extends BaseAdapter {
 
-    private ArrayList<BlockModel> items;
+    private ArrayList<BlockContact> items;
     private Context mContext;
     private View.OnClickListener mListener;
 
-    public BlockedListAdapter(Context mContext, ArrayList<BlockModel> items, View.OnClickListener mListener) {
+    public BlockedListAdapter(Context mContext, ArrayList<BlockContact> items, View.OnClickListener mListener) {
         this.mContext = mContext;
         this.items = items;
         this.mListener = mListener;
@@ -46,7 +46,7 @@ public class BlockedListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder vh;
-        BlockModel bm = (BlockModel) items.get(position);
+        BlockContact bm = (BlockContact) items.get(position);
         if(convertView == null) {
             vh = new ViewHolder();
             convertView = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).

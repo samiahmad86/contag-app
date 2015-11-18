@@ -1,13 +1,17 @@
 package com.contag.app.model;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.contag.app.config.Constants;
+import com.contag.app.config.ContagApplication;
 import com.contag.app.util.PrefUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -118,7 +122,7 @@ public class User {
             Log.d("iList", "Saving user interest") ;
             for (Interest interest : interestList) {
                 interestDao.insertOrReplace(interest);
-                Log.d("iList", "Interest inserted: "+  interest.getName()) ;
+                Log.d("iList", "Interest inserted: " + interest.getName()) ;
             }
         }
     }
@@ -185,10 +189,11 @@ public class User {
     public static ArrayList<SocialProfile> getSocialProfileList(List<SocialProfileResponse> socialProfiles, User user, ContagContag cc){
 
         ArrayList<SocialProfile> mProfiles = new ArrayList<>() ;
-        for (SocialProfileResponse spr : socialProfiles) {
+        for (SocialProfileResponse mSocialProfileResponse : socialProfiles) {
             SocialProfile socialProfile = new SocialProfile();
-            socialProfile.setPlatform_id(spr.platformId);
-            socialProfile.setSocial_platform(spr.socialPlatform);
+            socialProfile.setPlatform_id(mSocialProfileResponse.platformId);
+            socialProfile.setSocial_platform(mSocialProfileResponse.socialPlatform);
+            socialProfile.setPlatform_username(mSocialProfileResponse.platformUsername);
             socialProfile.setContagContag(cc);
             socialProfile.setContagUserId(user.id);
             mProfiles.add(socialProfile) ;
@@ -242,9 +247,39 @@ public class User {
         }
     }
 
-    public static void updatePrivacy(String fieldName, long userID){
-        //
+    public static String getSharesAsString(String fieldName, String userID, Context mContext){
+        CustomShare cs = getCustomShareByFieldName(fieldName, mContext.getApplicationContext()) ;
+        List<String> userIDS = Arrays.asList(cs.getUser_ids().split(",")) ;
+
+        if(!userIDS.contains(userID))
+            userIDS.add(userID) ;
+
+        return TextUtils.join(",",userIDS) ;
+
     }
+
+
+    public static void updatePrivacy(String fieldName, boolean isPublic, String userIDS, Context mContext ){
+
+        CustomShare cs = getCustomShareByFieldName(fieldName, mContext) ;
+
+        cs.setUser_ids(userIDS) ;
+        cs.setIs_public(isPublic);
+        cs.update() ;
+
+    }
+
+    public static CustomShare getCustomShareByFieldName(String fieldName, Context mContext){
+        DaoSession session = ((ContagApplication) mContext).getDaoSession();
+        CustomShareDao csDao = session.getCustomShareDao();
+
+        CustomShare cs = csDao.queryBuilder().where(CustomShareDao.
+                Properties.Field_name.eq(fieldName)).list().get(0);
+
+        return cs;
+
+    }
+
 
 
 }

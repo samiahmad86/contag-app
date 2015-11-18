@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -72,17 +73,21 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
 
     public static final String TAG = CurrentUserSocialProfileEditFragment.class.getName();
+
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
-    private CallbackManager mCallbackManager;
+    private Button btnEditProfile;
+
     private boolean isFbSync = false;
+    private boolean isEditModeOn;
+    private String fbAccessToken;
+    private int fbViewPosition, googlePlusPosition, instagramViewPosition, twitterViewPosition, linkedInViewPosition;
+
+    private CallbackManager mCallbackManager;
     private TwitterAuthClient mTwitterAuthClient;
     private GoogleApiClient mGoogleApiClient;
-    private Button btnEditProfile;
-    private boolean isEditModeOn;
     private HashMap<Integer, SocialProfileModel> hmSocialProfileModel;
     private ArrayList<Bundle> bSocialProfileInfo;
-    private int fbViewPosition, googlePlusPosition, instagramViewPosition, twitterViewPosition, linkedInViewPosition;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
         CurrentUserSocialProfileEditFragment epdf = new CurrentUserSocialProfileEditFragment();
@@ -115,6 +120,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         btnEditProfile.setOnClickListener(this);
+        btnEditProfile.setTag(0);
         btnEditProfile.setVisibility(View.VISIBLE);
         isEditModeOn = false;
         new LoadUser().execute();
@@ -151,6 +157,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 }
                 if (!isEditModeOn) {
                     openEditMode();
+                    scrollToPosition((int) v.getTag());
                 } else {
                     sendData();
                 }
@@ -257,6 +264,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 Bundle args = new Bundle();
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, platformID);
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, session.getUserName());
+                log(TAG, "twitter user name " + session.getUserName());
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
                 addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_INSTAGRAM);
@@ -285,6 +294,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         for (int i = 0; i < size; i++) {
             View view = inflater.inflate(R.layout.item_profile_social_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
+            vh.rlContainer = (RelativeLayout) view.findViewById(R.id.rl_social_container);
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
             vh.etFieldBaseValue = (EditText) view.findViewById(R.id.et_field_base_value);
             vh.tvFieldName = (TextView) view.findViewById(R.id.tv_field_name);
@@ -322,42 +332,44 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
-    private void setUpViewContent(int i) {
-        SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(i);
-        ViewHolder mViewHolder = viewHolderArrayList.get(i);
+    private void setUpViewContent(int position) {
+        SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
+        ViewHolder mViewHolder = viewHolderArrayList.get(position);
         mViewHolder.tvFieldName.setText(convertKeyToLabel(mSocialProfileModel.mSocialPlatform.getPlatformName()));
         mViewHolder.rlEditContainerInner.setVisibility(View.GONE);
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.tvConnectedAs.setVisibility(View.VISIBLE);
-            mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_id());
+            log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
+            mViewHolder.tvFieldValue.setText(mSocialProfileModel.mSocialProfile.getPlatform_username());
             mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
-            mViewHolder.tvFieldValue.setTag(i);
+            mViewHolder.tvFieldValue.setTag(position);
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnAdd.setVisibility(View.GONE);
         } else {
+            mViewHolder.btnAdd.setTag(position);
             mViewHolder.btnAdd.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setVisibility(View.GONE);
             mViewHolder.tvConnectedAs.setVisibility(View.GONE);
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
         }
         if (mSocialProfileModel.mViewType == Constants.Types.FIELD_GOOGLE) {
-            googlePlusPosition = i;
-            mViewHolder.btnGplus.setTag(i);
+            googlePlusPosition = position;
+            mViewHolder.btnGplus.setTag(position);
         } else if (mSocialProfileModel.mViewType == Constants.Types.FIELD_FACEBOOK) {
-            fbViewPosition = i;
-            mViewHolder.btnFb.setTag(i);
+            fbViewPosition = position;
+            mViewHolder.btnFb.setTag(position);
         } else if (mSocialProfileModel.mViewType == Constants.Types.FIELD_INSTAGRAM) {
-            instagramViewPosition = i;
-            mViewHolder.btnInstagram.setTag(i);
+            instagramViewPosition = position;
+            mViewHolder.btnInstagram.setTag(position);
         } else if (mSocialProfileModel.mViewType == Constants.Types.FIELD_LINKEDIN) {
-            linkedInViewPosition = i;
-            mViewHolder.btnLinkedIn.setTag(i);
+            linkedInViewPosition = position;
+            mViewHolder.btnLinkedIn.setTag(position);
         } else if (mSocialProfileModel.mViewType == Constants.Types.FIELD_TWITTER) {
-            twitterViewPosition = i;
-            mViewHolder.btnTwitter.setTag(i);
+            twitterViewPosition = position;
+            mViewHolder.btnTwitter.setTag(position);
         }
-        mViewHolder.btnDisconnect.setTag(i);
+        mViewHolder.btnDisconnect.setTag(position);
 
     }
 
@@ -366,6 +378,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             setUpEditMode(i);
         }
         isEditModeOn = true;
+        Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+        iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
         btnEditProfile.setBackgroundResource(R.drawable.btn_add);
     }
 
@@ -373,6 +388,13 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public void setUpEditMode(int position) {
         setUpViewContent(position);
         ViewHolder mViewHolder = viewHolderArrayList.get(position);
+        mViewHolder.btnGplus.setVisibility(View.GONE);
+        mViewHolder.btnFb.setVisibility(View.GONE);
+        mViewHolder.btnTwitter.setVisibility(View.GONE);
+        mViewHolder.btnLinkedIn.setVisibility(View.GONE);
+        mViewHolder.btnInstagram.setVisibility(View.GONE);
+        mViewHolder.etFieldBaseValue.setVisibility(View.GONE);
+        mViewHolder.etFieldValue.setVisibility(View.GONE);
         SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.btnDisconnect.setVisibility(View.VISIBLE);
@@ -432,6 +454,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             if (socialProfileModel.mViewType == Constants.Types.FIELD_SOCIAL && value.length() != 0) {
                 Bundle args = new Bundle();
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, value);
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, value);
                 args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, socialProfileModel.mSocialPlatform.getId());
                 bSocialProfileInfo.add(args);
             }
@@ -443,7 +466,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
                     args.getString(Constants.Keys.KEY_PLATFORM_PERMISSION, null),
                     args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
-                    args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null));
+                    args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
+                    args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
             socialRequestModels.add(srm);
         }
         final SocialRequestModel.List copySocialRequestModels = socialRequestModels;
@@ -464,14 +488,25 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     private void addBundletoList(Bundle args, int position, int viewType) {
         SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
-        SocialProfile socialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
-                args.getString(Constants.Keys.KEY_PLATFORM_ID), PrefUtils.getCurrentUserID());
+        SocialProfile newSocialProfile = new SocialProfile(0l, socialProfileModel.mSocialPlatform.getPlatformName(),
+                args.getString(Constants.Keys.KEY_PLATFORM_ID), args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null)
+                , PrefUtils.getCurrentUserID());
         hmSocialProfileModel.remove(position);
-        hmSocialProfileModel.put(position, new SocialProfileModel(socialProfile,
+        hmSocialProfileModel.put(position, new SocialProfileModel(newSocialProfile,
                 socialProfileModel.mSocialPlatform, true, viewType));
         bSocialProfileInfo.add(args);
+        socialProfileModel = hmSocialProfileModel.get(position);
         setUpEditMode(position);
     }
+
+    private void scrollToPosition(int position) {
+        if (hmSocialProfileModel.get(position).mViewType == Constants.Types.FIELD_SOCIAL) {
+            viewHolderArrayList.get(position).etFieldValue.requestFocus();
+        } else {
+            viewHolderArrayList.get(position).rlEditContainerInner.requestFocus();
+        }
+    }
+
 
     private String convertKeyToLabel(String key) {
         String str = key.replace("_", " ");
@@ -503,8 +538,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             Bundle args = new Bundle();
             args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, hmSocialProfileModel.get(googlePlusPosition).mSocialPlatform.getId());
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            log(TAG, "id is " + (currentPerson== null));
+            log(TAG, "id is " + (currentPerson == null));
             if (currentPerson != null) {
+                args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, currentPerson.getDisplayName());
                 args.putString(Constants.Keys.KEY_PLATFORM_ID, currentPerson.getId());
             }
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
@@ -534,6 +570,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     @Override
     public void onSuccess(LoginResult loginResult) {
+        fbAccessToken = loginResult.getAccessToken().getToken();
         GraphRequest.newMeRequest(loginResult.getAccessToken(), this).executeAsync();
     }
 
@@ -552,6 +589,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         Bundle args = new Bundle();
         args.putLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, hmSocialProfileModel.get(fbViewPosition).mSocialPlatform.getId());
         try {
+            log(TAG, object.toString());
+            args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, fbAccessToken);
+            args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, object.getString("name"));
             args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, object.getString("email"));
             args.putString(Constants.Keys.KEY_PLATFORM_ID, object.getString("id"));
         } catch (JSONException ex) {
@@ -571,6 +611,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     getSocialPlatforms();
             HashMap<String, SocialPlatform> hmNameToPlatform = new HashMap<>();
             for (SocialPlatform socialPlatform : socialPlatforms) {
+                log(TAG, socialPlatform.getPlatformName());
                 hmNameToPlatform.put(socialPlatform.getPlatformName(), socialPlatform);
             }
             ArrayList<SocialProfile> socialProfiles = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
@@ -578,6 +619,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             int counter = 0;
             for (SocialProfile socialProfile : socialProfiles) {
                 log(TAG, "user is on " + socialProfile.getSocial_platform() + " as " + socialProfile.getPlatform_id());
+                log(TAG,"size " + hmNameToPlatform.size());
                 if (hmNameToPlatform.containsKey(socialProfile.getSocial_platform())) {
                     String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
                     if (keyLowerCase.contains("google")) {
@@ -603,7 +645,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 }
             }
             for (SocialPlatform socialPlatform : socialPlatforms) {
-                log(TAG, "user isn't on " + socialPlatform.getPlatformName());
                 if (hmNameToPlatform.containsKey(socialPlatform.getPlatformName())) {
                     String keyLowerCase = socialPlatform.getPlatformName().toLowerCase();
                     if (keyLowerCase.contains("facebook")) {
@@ -634,6 +675,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
             setViewContent();
             isEditModeOn = false;
+            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
         }
     }
@@ -643,19 +687,21 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected Boolean doInBackground(SocialRequestModel.List... params) {
             if (params.length > 0) {
                 ArrayList<SocialRequestModel> socialRequestModels = params[0];
+                DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
+                ContagContagDao ccDao = session.getContagContagDao();
+                ContagContag cc = ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).
+                        list().get(0);
                 for (SocialRequestModel socialRequestModel : socialRequestModels) {
-                    DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
                     SocialProfile socialProfile = new SocialProfile(socialRequestModel.socialPlatformId);
                     socialProfile.setPlatform_id(socialRequestModel.platformId);
-                    ContagContagDao ccDao = session.getContagContagDao();
-                    ContagContag cc = ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(PrefUtils.getCurrentUserID())).
-                            list().get(0);
+                    socialProfile.setPlatform_username(socialRequestModel.platformUsername);
                     socialProfile.setContagContag(cc);
                     SocialPlatformDao socialPlatformDao = session.getSocialPlatformDao();
                     String socialPlatformName = socialPlatformDao.queryBuilder().
                             where(SocialPlatformDao.Properties.Id.eq(socialRequestModel.socialPlatformId)).list().get(0).getPlatformName();
                     socialProfile.setSocial_platform(socialPlatformName);
                     SocialProfileDao socialProfileDao = session.getSocialProfileDao();
+                    log(TAG, "social profile id = " + socialProfile.getId());
                     socialProfileDao.insertOrReplace(socialProfile);
                 }
                 return true;
@@ -666,6 +712,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         @Override
         protected void onPostExecute(Boolean result) {
             Log.d(TAG, "socialProfileUpdated");
+            bSocialProfileInfo.clear();
             new LoadUser().execute();
         }
     }
@@ -678,14 +725,16 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected Void doInBackground(Integer... params) {
             position = params[0];
             ((BaseActivity) getActivity()).deleteSocialProfileFromId(hmSocialProfileModel.get(position).mSocialProfile.getId());
+            ArrayList<SocialProfile> socialProfiles = ((BaseActivity) getActivity()).getSocialProfiles(PrefUtils.getCurrentUserID());
+            log(TAG, socialProfiles.size() + "");
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            if(position == fbViewPosition) {
+            if (position == fbViewPosition) {
                 LoginManager.getInstance().logOut();
-            } else if(position == googlePlusPosition) {
+            } else if (position == googlePlusPosition && mGoogleApiClient.isConnected()) {
                 Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
             }
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
@@ -693,6 +742,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             viewHolderArrayList.get(position).btnDisconnect.setVisibility(View.GONE);
             hmSocialProfileModel.remove(position);
             hmSocialProfileModel.put(position, newSocialProfileModel);
+            log(TAG, "calling edit mode " + hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName()
+                    + " " + (hmSocialProfileModel.get(position).mSocialProfile == null));
             setUpEditMode(position);
         }
     }
@@ -714,6 +765,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public Button btnTwitter;
         public RelativeLayout rlEditContainer;
         public RelativeLayout rlEditContainerInner;
+        public RelativeLayout rlContainer;
         public ProgressBar pbDisconnectSocialProfile;
     }
 }

@@ -7,13 +7,13 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by varunj on 27/10/15.
  */
-public class AddContactRequest {
+public class AddContact {
 
     @SerializedName(Constants.Keys.KEY_USER_ID)
     @Expose
     public long userID;
 
-    public AddContactRequest(long userID) {
+    public AddContact(long userID) {
         this.userID = userID;
     }
 }

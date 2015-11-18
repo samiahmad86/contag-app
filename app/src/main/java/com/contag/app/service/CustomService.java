@@ -85,7 +85,8 @@ public class CustomService extends Service {
                             SocialPlatform sp = new SocialPlatform(spr.id);
                             sp.setPlatformBaseUrl(spr.platformUrl);
                             sp.setPlatformName(spr.platformName);
-                            Log.d("SocialVoical", "Platform: " + spr.platformName);
+                            Log.d("SocialVocial", "Platform id: " +  spr.id) ;
+                            Log.d("SocialVocial", "Platform: " + spr.platformName);
                             spDao.insertOrReplace(sp);
                         }
 
@@ -136,12 +137,15 @@ public class CustomService extends Service {
                 });
             } else if (type == Constants.Types.SERVICE_ADD_SOCIAL_PROFILE) {
                 Bundle args = intent.getBundleExtra(Constants.Keys.KEY_BUNDLE);
-                final SocialRequestModel srm = new SocialRequestModel(args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 0),
+                Log.d("SocialVocial", "Syncing facebook:" + args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID)) ;
+                final SocialRequestModel srm = new SocialRequestModel(
+                        args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 1l),
                         args.getString(Constants.Keys.KEY_PLATFORM_ID, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_PERMISSION, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
-                        args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null));
+                        args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
+                        args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
                 Gson gson = new Gson();
                 Log.d(TAG, gson.toJson(srm).toString());
                 SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srm);

@@ -1,11 +1,15 @@
 package com.contag.app.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +19,7 @@ import android.widget.EditText;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.view.EditViewPager;
 import com.contag.app.view.SlidingTabLayout;
 
 import java.util.List;
@@ -26,6 +31,8 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     public static final String TAG = CurrentUserProfileFragment.class.getName();
 
+    private EditViewPager mEditViewPager;
+    private SlidingTabLayout mSlidingTabLayout;
 
     public static CurrentUserProfileFragment newInstance() {
         CurrentUserProfileFragment cupf = new CurrentUserProfileFragment();
@@ -46,25 +53,38 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_current_user_profile, container, false);
 
-        ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
+        mEditViewPager = (EditViewPager) view.findViewById(R.id.root_pager);
 
         PersonalDetailsTabsAdapter homeTabsAdapter = new
                 PersonalDetailsTabsAdapter(getChildFragmentManager());
-        pager.setAdapter(homeTabsAdapter);
+        mEditViewPager.setAdapter(homeTabsAdapter);
 
-        SlidingTabLayout stl = (SlidingTabLayout) view.findViewById(R.id.stl_current_user);
-        stl.setDistributeEvenly(true);
-        stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.stl_current_user);
+        mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
                 return Color.parseColor("#ffffff");
             }
         });
-        stl.setViewPager(pager);
+        mSlidingTabLayout.setViewPager(mEditViewPager);
 
 
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brToggleSwipe,
+                new IntentFilter(getActivity().getString(R.string.intent_filter_edit_mode_enabled)));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brToggleSwipe);
     }
 
     @Override
@@ -106,7 +126,14 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
 
     }
 
-
+    private BroadcastReceiver brToggleSwipe = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean mode = intent.getBooleanExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            mEditViewPager.setSwipeEnabled(mode);
+            mSlidingTabLayout.setEnabled(mode);
+        }
+    };
 
     private class PersonalDetailsTabsAdapter extends FragmentPagerAdapter {
 

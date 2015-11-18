@@ -20,6 +20,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
         if (isUserLoggedIn()) {
+
             if(PrefUtils.getCurrentUserID() != 0) {
                 Router.startHomeActivity(this, TAG);
             } else {

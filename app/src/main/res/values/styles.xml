@@ -5,12 +5,18 @@
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
         <item name="colorAccent">@color/accent_color</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
+
     </style>
 
     <style name="Theme.Contag.Material.ActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
         <item name="colorAccent">@color/accent_color</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
+
     </style>
 
     <style name="Contag.Text.Headline" parent="Base.TextAppearance.AppCompat.Headline"></style>
@@ -105,6 +111,31 @@
         <item name="android:scrollbarFadeDuration">2000</item>
         <item name="android:scrollbarDefaultDelayBeforeFade">1000</item>
     </style>
+    <style name="EditTextTheme" parent="Widget.AppCompat.EditText">
+
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+
+    </style>
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">#ffffff</item>s
+        <item name="colorControlNormal">#ffffff</item>
+        <item name="colorControlHighlight">#ffffff</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
+
+    <style name="Widget.MyTheme.HeaderBar.Spinner" parent="Widget.AppCompat.Spinner.DropDown">
+        <item name="android:theme">@style/Theme.Contag.Material.ActionBar</item>
+    </style>
+    <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="SpinnerItem.DropDownItem" parent="@android:style/Widget.DropDownItem.Spinner">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 
 
 </resources>

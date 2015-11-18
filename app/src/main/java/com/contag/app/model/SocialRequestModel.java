@@ -25,15 +25,19 @@ public class SocialRequestModel {
     @SerializedName(Constants.Keys.KEY_PLATFORM_EMAIL_ID)
     @Expose
     public String platformEmail;
+    @SerializedName(Constants.Keys.KEY_USER_PLATFORM_USERNAME)
+    @Expose
+    public String platformUsername;
 
     public SocialRequestModel(long socialPlatformId, String platformId, String platformToken, String platformPermissions,
-                              String platformSecret, String platformEmail) {
+                              String platformSecret, String platformEmail, String platformUsername) {
         this.socialPlatformId = socialPlatformId;
         this.platformId = platformId;
         this.platformToken = platformToken;
         this.platformEmail = platformEmail;
         this.platformPermissions = platformPermissions;
         this.platformSecret = platformSecret;
+        this.platformUsername = platformUsername;
     }
 
     public static class List extends ArrayList<SocialRequestModel> {

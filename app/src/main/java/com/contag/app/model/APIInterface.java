@@ -148,6 +148,13 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
+    @PUT(Constants.Urls.URL_PROFILE_REQUEST)
+    Response sendResponseToNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                        @Body FieldRequestNotificationResponse mFieldRequestNotificationResponse);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
     @POST(Constants.Urls.URL_PROFILE_PRIVACY)
     MessageResponse setProfilePrivacy(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                        @Body ProfilePrivacyRequestModel mProfilePrivacyRequestModel);

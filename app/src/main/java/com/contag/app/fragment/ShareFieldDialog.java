@@ -75,11 +75,13 @@ public class ShareFieldDialog extends DialogFragment implements View.OnClickList
         int id = v.getId();
         switch (id) {
             case R.id.btn_field_request_reject:{
+                Router.sendFieldRequestNotificationResponse(getActivity(), requestID, Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
                 getDialog().dismiss();
                 break;
             }
             case R.id.btn_field_request_allow: {
                 Router.startUserServiceForPrivacy(getActivity(), fieldName, false, fromUserID + "");
+                Router.sendFieldRequestNotificationResponse(getActivity(), requestID, Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);
                 getDialog().dismiss();
                 break;
             }

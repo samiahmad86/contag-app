@@ -94,6 +94,13 @@ public class Router {
         mContext.startService(privacyIntent) ;
     }
 
+    public static void sendFieldRequestNotificationResponse(Context mContext, long requestID, int serviceType) {
+        Intent iFieldRequestNotifResponse = new Intent(mContext, UserService.class);
+        iFieldRequestNotifResponse.putExtra(Constants.Keys.KEY_REQUEST_ID, requestID);
+        iFieldRequestNotifResponse.putExtra(Constants.Keys.KEY_REQUEST_TYPE, serviceType);
+        mContext.startService(iFieldRequestNotifResponse);
+    }
+
     public static void addContagUser(Context mContext, Long userID){
         Log.d("conadd", "Adding this user to server") ;
         Intent iStartContactService = new Intent(mContext, ContactService.class);

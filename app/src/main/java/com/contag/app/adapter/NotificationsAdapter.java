@@ -62,7 +62,8 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     inflate(R.layout.items_notifications, parent, false);
             mViewHolder.ivUsrProfilePic = (ImageView) convertView.findViewById(R.id.iv_notifications_usr_img);
             mViewHolder.tvNotificationsTxt = (TextView) convertView.findViewById(R.id.tv_notifications_txt);
-            mViewHolder.shareButton = (Button) convertView.findViewById(R.id.btn_share);
+            mViewHolder.btnShare = (Button) convertView.findViewById(R.id.btn_share);
+            mViewHolder.btnReject = (Button) convertView.findViewById(R.id.btn_notif_reject);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
@@ -74,23 +75,26 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.ivUsrProfilePic.setTag(position);
         mViewHolder.ivUsrProfilePic.setOnClickListener(this);
 
+        mViewHolder.btnReject.setTag(position);
+        mViewHolder.btnReject.setOnClickListener(this);
+
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
 
-            mViewHolder.shareButton.setVisibility(View.VISIBLE);
-            mViewHolder.shareButton.setTag(position);
-            mViewHolder.shareButton.setOnClickListener(this);
+            mViewHolder.btnShare.setVisibility(View.VISIBLE);
+            mViewHolder.btnShare.setTag(position);
+            mViewHolder.btnShare.setOnClickListener(this);
 
             if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD)) {
-                mViewHolder.shareButton.setText("Add");
+                mViewHolder.btnShare.setText("Add");
             } else {
-                mViewHolder.shareButton.setText("Share");
+                mViewHolder.btnShare.setText("Share");
             }
 
-            mViewHolder.shareButton.setOnClickListener(this);
+            mViewHolder.btnShare.setOnClickListener(this);
 
         } else {
-            mViewHolder.shareButton.setVisibility(View.INVISIBLE);
+            mViewHolder.btnShare.setVisibility(View.INVISIBLE);
 
         }
         return convertView;
@@ -109,8 +113,6 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
             case R.id.btn_share: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                Gson gson = new Gson();
-                Log.d(TAG, gson.toJson(notificationsResponse));
                 if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_ADD)) {
                     Bundle requestBundle = new Bundle();
                     requestBundle.putLong(Constants.Keys.KEY_REQUEST_ID, notificationsResponse.request);
@@ -121,9 +123,20 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                 } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
                     String userIDS = User.getSharesAsString(notificationsResponse.fieldName, String.valueOf(notificationsResponse.fromUser), mCtxt);
                     Router.startUserServiceForPrivacy(mCtxt, notificationsResponse.fieldName, false, userIDS);
+                    Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
+                            Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
                 }
+                break;
+            }
+            case R.id.btn_notif_reject:{
+                int position = (int) v.getTag();
+                NotificationsResponse notificationsResponse = notifications.get(position);
+                Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
+                        Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
+                notifications.remove(notificationsResponse);
+                notifyDataSetChanged();
                 break;
             }
         }
@@ -133,6 +146,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         //protected TextView tvUsrName;
         protected TextView tvNotificationsTxt;
         protected ImageView ivUsrProfilePic;
-        protected Button shareButton;
+        protected Button btnShare;
+        protected Button btnReject;
     }
 }

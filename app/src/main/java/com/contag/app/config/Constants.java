@@ -93,7 +93,8 @@ public class Constants {
         public static final String KEY_REQUEST_ID = "request_id";
         public static final String KEY_REQUEST_FROM_USER_ID = "from_user_id";
         public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
-
+        public static final String KEY_NOTIF_STATUS = "status";
+        public static final String KEY_NOTIF_USER_ID = "user_id";
     }
 
     public class Headers {
@@ -113,6 +114,8 @@ public class Constants {
         public static final String FILTER_PLATFORM = "Platform";
         public static final String FILTER_NAME = "Name";
         public static final String FILTER_BLOOD_GROUP = "Blood Group";
+        public static final String STATUS_ALLOWED = "allow";
+        public static final String STATUS_DECLINE = "declined";
     }
 
     public class Types {
@@ -137,6 +140,8 @@ public class Constants {
         public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
         public static final int SERVICE_ADD_SOCIAL_PROFILE = 4;
         public static final int SERVICE_POST_INTERESTS = 5;
+        public static final int SERVICE_REJECT_FIELD_REQUEST = 6;
+        public static final int SERVICE_ALLOW_FIELD_REQUEST = 37;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;

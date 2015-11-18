@@ -170,7 +170,9 @@
         </activity>
         <activity
             android:name=".activity.NotificationsActivity"
-            android:label="@string/title_activity_notifications" >
+            android:label="@string/title_activity_notifications"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
         </activity>
     </application>
 

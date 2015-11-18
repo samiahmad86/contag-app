@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.contag.app.adapter.NotificationsAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.util.PrefUtils;
@@ -189,7 +190,7 @@ public class User {
 
         ArrayList<SocialProfile> mProfiles = new ArrayList<>();
         for (SocialProfileResponse mSocialProfileResponse : socialProfiles) {
-            SocialProfile socialProfile = new SocialProfile();
+            SocialProfile socialProfile = new SocialProfile(mSocialProfileResponse.id);
             socialProfile.setPlatform_id(mSocialProfileResponse.platformId);
             socialProfile.setSocial_platform(mSocialProfileResponse.socialPlatform);
             socialProfile.setPlatform_username(mSocialProfileResponse.platformUsername);
@@ -250,7 +251,7 @@ public class User {
     public static String getSharesAsString(String fieldName, String userID, Context mContext) {
         CustomShare cs = getCustomShareByFieldName(fieldName, mContext.getApplicationContext());
         ArrayList<String> userIDS = new ArrayList<>();
-        if (cs.getUser_ids() != null) {
+        if (cs.getUser_ids() != null && cs.getUser_ids().length() != 0) {
             if (cs.getUser_ids().indexOf(",") == -1) {
                 userIDS.add(cs.getUser_ids());
             } else {
@@ -260,8 +261,14 @@ public class User {
                 userIDS.add(userID);
             }
         } else {
-            userIDS.add(userID);
+            Log.d(NotificationsAdapter.TAG, "pissu chod");
+            return userID;
         }
+        if(userIDS.size() == 1) {
+            Log.d(NotificationsAdapter.TAG, "pissu chod 2");
+            return userIDS.get(0);
+        }
+        Log.d(NotificationsAdapter.TAG, "pissu chod 3 ggg" + cs.getUser_ids() + "ggggg " + userIDS.size());
         return TextUtils.join(",", userIDS);
 
     }

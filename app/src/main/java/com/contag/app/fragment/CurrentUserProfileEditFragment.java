@@ -52,7 +52,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private View pbProfileUpdate;
     private ScrollView svProfile;
     private int profileType;
-    private boolean isComingFromNotification;
+    private boolean isComingFromNotification, cameFromNotification;
     private Bundle requestBundle;
     private String fieldName;
 
@@ -437,6 +437,18 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
+            if(cameFromNotification) {
+                for (int position = 0; position < hmP2PProfileModel.size(); position++) {
+                    P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
+                    if(mP2ProfileModel.key.equalsIgnoreCase(fieldName) && mP2ProfileModel.value != null
+                            && mP2ProfileModel.value.length() != 0) {
+                        ShareFieldDialog mShareFieldDialog = ShareFieldDialog.newInstance(requestBundle, fieldName);
+                        mShareFieldDialog.show(getChildFragmentManager(), "share_dialog");
+                        break;
+                    }
+                }
+                cameFromNotification = false;
+            }
             if (isComingFromNotification) {
                 openEditMode();
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
@@ -446,6 +458,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                         break;
                     }
                 }
+                cameFromNotification = true;
                 isComingFromNotification = false;
             }
         }

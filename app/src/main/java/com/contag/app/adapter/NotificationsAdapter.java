@@ -122,6 +122,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                             Integer.parseInt(notificationsResponse.fieldCategory), notificationsResponse.fieldName, true);
                 } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
                     String userIDS = User.getSharesAsString(notificationsResponse.fieldName, String.valueOf(notificationsResponse.fromUser), mCtxt);
+                    Log.d(TAG, userIDS);
                     Router.startUserServiceForPrivacy(mCtxt, notificationsResponse.fieldName, false, userIDS);
                     Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
                             Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);

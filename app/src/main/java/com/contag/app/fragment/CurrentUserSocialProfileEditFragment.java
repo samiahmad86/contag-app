@@ -265,7 +265,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.Values.RC_INSTAGRAM) {
             if (resultCode == Activity.RESULT_OK) {
-                log(TAG, "instagram here" + data.getBundleExtra(Constants.Keys.KEY_BUNDLE).getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME));
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), instagramViewPosition, Constants.Types.FIELD_INSTAGRAM);
             }
         } else if (requestCode == Constants.Values.RC_LINKEDIN) {

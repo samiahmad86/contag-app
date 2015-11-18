@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
  * Created by tanay on 27/9/15.
  */
 public class SocialProfileResponse {
+    @Expose
+    public long id;
     @SerializedName("social_platform")
     @Expose
     public String socialPlatform;

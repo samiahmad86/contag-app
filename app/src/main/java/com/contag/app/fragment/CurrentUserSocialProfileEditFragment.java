@@ -237,7 +237,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 final int position = (int) v.getTag();
 
 //                DeleteSocialProfile mDeleteSocialProfile = new DeleteSocialProfile(hmSocialProfileModel.get(position).mSocialPlatform.getId());
-                DeleteSocialProfileRequest mDeleteSocialProfileRequest = new DeleteSocialProfileRequest(hmSocialProfileModel.get(position).mSocialPlatform.getId());
+                long platformId = hmSocialProfileModel.get(position).mSocialPlatform.getId() ;
+                Log.d("DeleteSocial", "Going to delete platfrom id with number: " + platformId ) ;
+                DeleteSocialProfileRequest mDeleteSocialProfileRequest = new DeleteSocialProfileRequest(platformId);
 
                 getSpiceManager().execute(mDeleteSocialProfileRequest, new RequestListener<Response>() {
                     @Override
@@ -247,6 +249,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
                     @Override
                     public void onRequestSuccess(Response response) {
+                        log(TAG, String.valueOf(response.result));
                         if (response.result) {
                             new DeleteSocialProfile().execute(position);
                         }
@@ -262,6 +265,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.Values.RC_INSTAGRAM) {
             if (resultCode == Activity.RESULT_OK) {
+                log(TAG, "instagram here" + data.getBundleExtra(Constants.Keys.KEY_BUNDLE).getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME));
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), instagramViewPosition, Constants.Types.FIELD_INSTAGRAM);
             }
         } else if (requestCode == Constants.Values.RC_LINKEDIN) {

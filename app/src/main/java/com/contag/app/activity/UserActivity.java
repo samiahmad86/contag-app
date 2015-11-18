@@ -117,15 +117,30 @@ public class UserActivity extends BaseActivity {
                         tvUserStatus.setVisibility(View.GONE);
                         isEditModeOn = true;
                     } else {
-                        Log.d(TAG, "sending name");
-                        sendNameAndStatus(etUserName.getText().toString(), etUserStatus.getText().toString());
+
+                        String name = etUserName.getText().toString() ;
+                        if(name.length()> 0)
+                            sendNameAndStatus(name, etUserStatus.getText().toString());
+                        else {
+                            showToast("Name cannot be blank!");
+                            (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
+                            setUpInterests();
+                        }
+
+
                     }
                 }
             });
 
+            boolean isComingFromNotification = intent.getBooleanExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, false);
+            CurrentUserProfileFragment currentUserProfileFragment;
+            if(isComingFromNotification) {
+                currentUserProfileFragment = CurrentUserProfileFragment.newInstance(true, intent.getIntExtra(Constants.Keys.KEY_FRAGMENT_TYPE, 0),
+                        intent.getBundleExtra(Constants.Keys.KEY_DATA), intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME));
+            } else {
+                currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
 
-            CurrentUserProfileFragment cupf = CurrentUserProfileFragment.newInstance();
-            transaction.add(R.id.root_user_fragment, cupf, CurrentUserProfileFragment.TAG).commit();
+            } transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
     }
 
@@ -313,6 +328,8 @@ public class UserActivity extends BaseActivity {
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
             ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
+            (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
+            setUpInterests();
             new LoadUser().execute(PrefUtils.getCurrentUserID());
         }
     };
@@ -397,19 +414,23 @@ public class UserActivity extends BaseActivity {
                 interestHint.setText("");
                 interestText.setText("");
                 InterestSuggestion suggestion = (InterestSuggestion) interestText.getTag();
-                Interest newInterest = new Interest(suggestion.id);
-                newInterest.setName(suggestion.name);
-                newInterest.setContagUserId(PrefUtils.getCurrentUserID());
-                newInterest.setContagContag(getCurrentUser());
-                interests.add(newInterest);
+                if(suggestion != null) {
+                    Interest newInterest = new Interest(suggestion.id);
+                    newInterest.setName(suggestion.name);
+                    newInterest.setContagUserId(PrefUtils.getCurrentUserID());
+                    newInterest.setContagContag(getCurrentUser());
+                    interests.add(newInterest);
 
-                showInterests(interests);
-                setupInterestRemoveButton(interests);
+                    showInterests(interests);
+                    setupInterestRemoveButton(interests);
 
-                if (interests.size() >= 3) {
-                    (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
+                    if (interests.size() >= 3) {
+                        (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
+                    }
+                    saveInterests();
+                } else {
+                    showToast("Please enter a valid interest!");
                 }
-                saveInterests();
 
             }
         });

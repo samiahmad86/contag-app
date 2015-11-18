@@ -14,3 +14,4 @@ contag-android-app.iml
 Contag.iml
 *.iml
 app/app-release.apk
+.DS_Store

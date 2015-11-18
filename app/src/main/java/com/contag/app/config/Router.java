@@ -58,6 +58,19 @@ public class Router {
         mContext.startActivity(iUsrProf);
     }
 
+
+    public static void startEditUserActivity(Context context, String className, long userID, Bundle requestBundle,
+                                             int fragmentToBeOpened, String fieldName, boolean isComingFromNotification) {
+        Intent iEditUserProfile = new Intent(context, UserActivity.class);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_USER_ID, userID);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_FRAGMENT_TYPE, fragmentToBeOpened);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, isComingFromNotification);
+        iEditUserProfile.putExtra(Constants.Keys.KEY_DATA, requestBundle);
+        context.startActivity(iEditUserProfile);
+    }
+
     public static void startNotificationsActivity(Context mContext, String className) {
         Intent userNotifications = new Intent(mContext, NotificationsActivity.class);
         userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
@@ -81,9 +94,15 @@ public class Router {
         mContext.startService(privacyIntent) ;
     }
 
+    public static void sendFieldRequestNotificationResponse(Context mContext, long requestID, int serviceType) {
+        Intent iFieldRequestNotifResponse = new Intent(mContext, UserService.class);
+        iFieldRequestNotifResponse.putExtra(Constants.Keys.KEY_REQUEST_ID, requestID);
+        iFieldRequestNotifResponse.putExtra(Constants.Keys.KEY_REQUEST_TYPE, serviceType);
+        mContext.startService(iFieldRequestNotifResponse);
+    }
+
     public static void addContagUser(Context mContext, Long userID){
         Log.d("conadd", "Adding this user to server") ;
-
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_ADD_CONTACT, true);
         iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID);

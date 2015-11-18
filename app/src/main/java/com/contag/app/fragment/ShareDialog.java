@@ -35,7 +35,6 @@ import com.contag.app.util.PrefUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -51,7 +50,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private int shareCount = 0;
     private TextView shareText ;
     private String fieldName ;
-    private Hashtable<String,String> hashTable;
+
 
     public static ShareDialog newInstance(String fieldName) {
 
@@ -60,15 +59,21 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
       //  Log.e("fieldname",fieldName);
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
-        share.setStyle(DialogFragment.STYLE_NO_TITLE, 0);                       // To remove the header from the dialog
         return share ;
     }
 
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        getDialog().setCancelable(false);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_share_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_share_field, container, false);
 
 
         fieldName = getArguments().getString(Constants.Keys.KEY_FIELD_NAME) ;
@@ -76,8 +81,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         shareListAdapter= new ShareListAdapter(shareList, getActivity());
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
         lvContags.setAdapter(shareListAdapter);
-        hashTable = new Hashtable();
-        initializeHashTable();
 
 
         sharePublic = (Button) view.findViewById(R.id.btn_share_public) ;
@@ -122,6 +125,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             }
             case R.id.btn_share_done:{
                 savePrivacySettings() ;
+                getDialog().dismiss();
                 break ;
 
             }
@@ -153,19 +157,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     }
 
 
-    private BroadcastReceiver privacySettingsUpdated = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Toast.makeText(getActivity(), "Shared successfully!", Toast.LENGTH_LONG).show() ;
-            mCustomShare.setUser_ids(getSharesAsString());
-            Log.d("shave", "Broadcast, isPublic: " + mCustomShare.getIs_public()) ;
-            Log.d("shave", "Going to save custom share string: " + mCustomShare.getUser_ids());
-            Log.d("shave", "Field name: " + mCustomShare.getField_name()) ;
-
-            mCustomShare.update();
-        }
-    } ;
 
     private BroadcastReceiver shareCountUpdated = new BroadcastReceiver() {
         @Override
@@ -238,14 +229,21 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
                             ContagContagDao.Properties.Is_contact.eq(true)).list();
 
             CustomShareDao mCustomDao = session.getCustomShareDao() ;
-
+            Log.d("ShareFubar", "Trying to open this up for: " + fieldName) ;
+            try{
             mCustomShare = mCustomDao.queryBuilder().where(
                     CustomShareDao.Properties.Field_name.eq(fieldName)
-            ).list().get(0) ;
+            ).list().get(0) ;} catch (Exception e){
+                Log.d("ShareFubar","Did not find the platform: " + fieldName) ;
+            }
+            String[] sharedWith;
+            try {
+               sharedWith = mCustomShare.getUser_ids().split(",");
+            }catch (Exception e){
+                sharedWith = new String[1] ;
+                sharedWith[0] = "" ;
+            }
 
-
-            String[] sharedWith = mCustomShare.getUser_ids().split(",") ;
-            Log.d("share", "Length of user ids: " + mCustomShare.getUser_ids().split(",").length) ;
 
             for(ContagContag cc: contagContacts){
                 Log.d("share","Status with: " + cc.getName() + " :"+ ArrayUtils.contains(sharedWith,cc.getId().toString())) ;
@@ -272,22 +270,12 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
         }
     }
-    // TODO: Feed all the detail hashtags
-    private void initializeHashTable( )
-    {
-        hashTable.put(Constants.Keys.KEY_USER_MARITAL_STATUS,"Marital Status");
-        Log.e("hash value",Constants.Keys.KEY_USER_MARITAL_STATUS);
-       //hashTable.put("marital_status","Marital Status");
-    }
+
+
     private String getHashValue( String key)
     {
+        return CurrentUserProfileEditFragment.convertKeyToLabel(key) ;
 
-        Log.e("hash value",key);
-        Log.e("hash value",hashTable.get(key));
-       if(hashTable.containsKey(key))
-           return hashTable.get(key);
-        else
-           return "";
     }
 
 }

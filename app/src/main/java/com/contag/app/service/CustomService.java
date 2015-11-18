@@ -15,6 +15,8 @@ import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.CustomShare;
+import com.contag.app.model.CustomShareDao;
 import com.contag.app.model.DaoSession;
 import com.contag.app.model.InterestPost;
 import com.contag.app.model.InterestSuggestion;
@@ -27,6 +29,7 @@ import com.contag.app.model.SocialPlatformResponse;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialRequestModel;
+import com.contag.app.model.User;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.request.ProfileRequest;
@@ -138,7 +141,9 @@ public class CustomService extends Service {
             } else if (type == Constants.Types.SERVICE_ADD_SOCIAL_PROFILE) {
                 Bundle args = intent.getBundleExtra(Constants.Keys.KEY_BUNDLE);
                 Log.d("SocialVocial", "Syncing facebook:" + args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID)) ;
-                final SocialRequestModel srm = new SocialRequestModel(
+                Log.d("NewUser", "Username received for server request: " +
+                        args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME)) ;
+                final SocialRequestModel sm = new SocialRequestModel(
                         args.getLong(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, 1l),
                         args.getString(Constants.Keys.KEY_PLATFORM_ID, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_TOKEN, null),
@@ -146,17 +151,18 @@ public class CustomService extends Service {
                         args.getString(Constants.Keys.KEY_PLATFORM_SECRET, null),
                         args.getString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, null),
                         args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, null));
-                Gson gson = new Gson();
-                Log.d(TAG, gson.toJson(srm).toString());
-                SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srm);
-                mSpiceManager.execute(socialProfileRequest, new RequestListener<Response>() {
+                SocialRequestModel.List srm = new SocialRequestModel.List() ;
+                srm.add(sm) ;
+                final SocialRequestModel.List srmList = srm ;
+                SocialProfileRequest socialProfileRequest = new SocialProfileRequest(srmList);
+                mSpiceManager.execute(socialProfileRequest, new RequestListener<User>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
                     }
 
                     @Override
-                    public void onRequestSuccess(Response response) {
-                        new SaveSocialProfile().execute(srm);
+                    public void onRequestSuccess(User user) {
+                        new SaveSocialProfile().execute(srmList);
                     }
                 });
             } else if (type == Constants.Types.SERVICE_POST_INTERESTS) {
@@ -188,11 +194,13 @@ public class CustomService extends Service {
         }
     }
 
-    private class SaveSocialProfile extends AsyncTask<SocialRequestModel, Void, Boolean> {
+    private class SaveSocialProfile extends AsyncTask<SocialRequestModel.List, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(SocialRequestModel... params) {
+        protected Boolean doInBackground(SocialRequestModel.List... params) {
             if (params.length > 0) {
-                SocialRequestModel srm = params[0];
+                SocialRequestModel.List srmList = params[0];
+                SocialRequestModel srm = srmList.get(0)  ;
+                Log.d("NewUser", "Srm has this in SaveSocialProfile: "+ srm.platformUsername) ;
                 DaoSession session = ((ContagApplication) CustomService.this.getApplicationContext()).getDaoSession();
                 SocialProfile socialProfile = new SocialProfile(srm.socialPlatformId);
                 socialProfile.setPlatform_id(srm.platformId);
@@ -204,8 +212,22 @@ public class CustomService extends Service {
                 String socialPlatformName = socialPlatformDao.queryBuilder().
                         where(SocialPlatformDao.Properties.Id.eq(srm.socialPlatformId)).list().get(0).getPlatformName();
                 socialProfile.setSocial_platform(socialPlatformName);
+                socialProfile.setPlatform_username(srm.platformUsername);
                 SocialProfileDao socialProfileDao = session.getSocialProfileDao();
                 socialProfileDao.insertOrReplace(socialProfile);
+
+                // Now save the share object, this is done because the user object has already been saved previous
+                // to saving the facebook social platform. And at that time the social platform was not saved on the server
+                // hence no share record for this was returned
+                CustomShare mCustomShare = new CustomShare() ;
+                CustomShareDao mCustomDao = session.getCustomShareDao() ;
+                mCustomShare.setIs_public(false);
+                mCustomShare.setUser_ids("");
+                mCustomShare.setField_name(socialPlatformName);
+                mCustomShare.setIs_private(true);
+                mCustomShare.setContagContag(cc);
+                mCustomShare.setUserID(PrefUtils.getCurrentUserID());
+                mCustomDao.insertOrReplace(mCustomShare) ;
                 return true;
             }
             return false;

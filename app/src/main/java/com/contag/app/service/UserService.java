@@ -15,6 +15,7 @@ import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.FieldRequestNotificationResponse;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestPost;
 import com.contag.app.model.MessageResponse;
@@ -23,6 +24,7 @@ import com.contag.app.model.ProfilePrivacyRequestModel;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.User;
+import com.contag.app.request.FieldRequest;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.UserRequest;
 import com.contag.app.util.PrefUtils;
@@ -108,9 +110,33 @@ public class UserService extends Service implements RequestListener<User> {
                         @Override
                         public void onRequestSuccess(MessageResponse response) {
                             User.updatePrivacy(fieldName, isPublic, userIDS, getApplicationContext()) ;
+                            Toast.makeText(UserService.this, "Shared successfully!", Toast.LENGTH_LONG).show() ;
 
                         }}) ;
                     break ;
+                }
+
+                case Constants.Types.SERVICE_REJECT_FIELD_REQUEST: {
+                }
+                case Constants.Types.SERVICE_ALLOW_FIELD_REQUEST: {
+                    long requestID = intent.getLongExtra(Constants.Keys.KEY_REQUEST_ID, 0l);
+                    String status = (requestType == Constants.Types.SERVICE_REJECT_FIELD_REQUEST) ? Constants.Values.STATUS_DECLINE :
+                            Constants.Values.STATUS_ALLOWED;
+                    FieldRequestNotificationResponse mFieldRequestNotificationResponse = new FieldRequestNotificationResponse(status, requestID);
+                    FieldRequest mFieldRequest = new FieldRequest(mFieldRequestNotificationResponse);
+                    mSpiceManager.execute(mFieldRequest, new RequestListener<Response>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(Response response) {
+                            Log.d(TAG, response.result + " fuck");
+                            UserService.this.stopSelf();
+                        }
+                    });
+                    break;
                 }
             }
         }
@@ -148,12 +174,14 @@ public class UserService extends Service implements RequestListener<User> {
     public void onRequestSuccess(User user) {
         Log.d(TAG, "success");
         if(user.name != null) {
-            PrefUtils.setCurrentUserID(user.id);
+            if(requestType == Constants.Types.REQUEST_GET_CURRENT_USER || requestType == Constants.Types.REQUEST_PUT) {
+                PrefUtils.setCurrentUserID(user.id);
+            }
             new SaveUser().execute(user);
         }
     }
 
-    private class SaveUser extends AsyncTask<User, Void, Void> {
+    public class SaveUser extends AsyncTask<User, Void, Void> {
         @Override
         protected Void doInBackground(User... params) {
 

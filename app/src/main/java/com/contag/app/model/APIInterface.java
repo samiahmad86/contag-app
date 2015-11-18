@@ -112,7 +112,7 @@ public interface APIInterface {
             "Content-Type: application/json"
     })
     @POST(Constants.Urls.URL_SOCIAL_PROFILE)
-    Response addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel.List
+    User addSocialPlatform(@Header(Constants.Headers.HEADER_TOKEN) String token, @Body SocialRequestModel.List
             mSocialRequestModelList);
 
     @Headers({
@@ -144,6 +144,13 @@ public interface APIInterface {
     @POST(Constants.Urls.URL_PROFILE_REQUEST)
     MessageResponse makeProfileRequest(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                        @Body ProfileRequestModel mProfileRequestModel);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @PUT(Constants.Urls.URL_PROFILE_REQUEST)
+    Response sendResponseToNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                        @Body FieldRequestNotificationResponse mFieldRequestNotificationResponse);
 
     @Headers({
             "Content-Type: application/json"

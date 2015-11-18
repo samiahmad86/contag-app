@@ -52,13 +52,28 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private View pbProfileUpdate;
     private ScrollView svProfile;
     private int profileType;
+    private boolean isComingFromNotification, cameFromNotification;
+    private Bundle requestBundle;
+    private String fieldName;
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
-        CurrentUserProfileEditFragment epdf = new CurrentUserProfileEditFragment();
+        CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, type);
-        epdf.setArguments(args);
-        return epdf;
+        currentUserProfileEditFragment.setArguments(args);
+        return currentUserProfileEditFragment;
+    }
+
+    public static CurrentUserProfileEditFragment newInstance(int type, boolean isComingFromNotification,
+                                                             Bundle requestBundle, String fieldName) {
+        CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, type);
+        args.putBundle(Constants.Keys.KEY_DATA, requestBundle);
+        args.putBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, isComingFromNotification);
+        args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        currentUserProfileEditFragment.setArguments(args);
+        return currentUserProfileEditFragment;
     }
 
     @Override
@@ -76,6 +91,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         btnEditProfile.setTag(0);
         btnEditProfile.setOnClickListener(this);
         isDateShown = false;
+        isComingFromNotification = args.getBoolean(Constants.Keys.KEY_COMING_FROM_NOTIFICATION);
+        if (isComingFromNotification) {
+            requestBundle = args.getBundle(Constants.Keys.KEY_DATA);
+            fieldName = args.getString(Constants.Keys.KEY_FIELD_NAME);
+        }
         new LoadUser().execute();
         return view;
     }
@@ -119,13 +139,13 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     sendData();
                 } else {
                     openEditMode();
-                     }
+                }
                 break;
             }
             case R.id.btn_share: {
-                ShareDialog share = ShareDialog.newInstance((String) v.getTag()) ;
-                share.show(getChildFragmentManager(),TAG) ;
-                break ;
+                ShareDialog share = ShareDialog.newInstance((String) v.getTag());
+                share.show(getChildFragmentManager(), TAG);
+                break;
             }
         }
     }
@@ -143,6 +163,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
+            vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnShare.setOnClickListener(this);
             vh.btnAdd.setOnClickListener(this);
@@ -270,16 +291,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     }
 
     private void scrollToPosition(int position) {
-        if(hmP2PProfileModel.get(position).viewType == Constants.Types.FIELD_LIST) {
+        if (hmP2PProfileModel.get(position).viewType == Constants.Types.FIELD_LIST) {
             viewHolderArrayList.get(position).spFieldValue.requestFocus();
         } else {
             viewHolderArrayList.get(position).etFieldValue.requestFocus();
         }
     }
 
-    private String convertKeyToLabel(String key) {
-
-
+    public static String convertKeyToLabel(String key) {
         String str = key.replace("_", " ");
         str = str.toLowerCase();
         char ch = str.charAt(0);
@@ -366,8 +385,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus(),
                             Constants.Types.FIELD_LIST, Constants.Arrays.USER_MARITAL_STATUS));
 
-                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender(),
-                            Constants.Types.FIELD_LIST, Constants.Arrays.USER_GENDER));
 
                     break;
                 }
@@ -410,14 +427,41 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             if (viewHolderArrayList.size() != hmP2PProfileModel.size()) {
                 addViews();
             }
-            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
-            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
+            if (isEditModeOn) {
+                Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+                iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+                log(TAG, "sending broadcast from p2 with true");
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
+            }
+            isEditModeOn = false;
             setViewContent();
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
-            isEditModeOn = false;
+            if(cameFromNotification) {
+                for (int position = 0; position < hmP2PProfileModel.size(); position++) {
+                    P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
+                    if(mP2ProfileModel.key.equalsIgnoreCase(fieldName) && mP2ProfileModel.value != null
+                            && mP2ProfileModel.value.length() != 0) {
+                        ShareFieldDialog mShareFieldDialog = ShareFieldDialog.newInstance(requestBundle, fieldName);
+                        mShareFieldDialog.show(getChildFragmentManager(), "share_dialog");
+                        break;
+                    }
+                }
+                cameFromNotification = false;
+            }
+            if (isComingFromNotification) {
+                openEditMode();
+                for (int position = 0; position < hmP2PProfileModel.size(); position++) {
+                    P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
+                    if (mP2ProfileModel.key.equals(fieldName)) {
+                        scrollToPosition(position);
+                        break;
+                    }
+                }
+                cameFromNotification = true;
+                isComingFromNotification = false;
+            }
         }
     }
 

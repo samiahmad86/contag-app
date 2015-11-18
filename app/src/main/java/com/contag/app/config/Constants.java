@@ -87,6 +87,14 @@ public class Constants {
         public static final String KEY_FEEDS_END_INDEX = "end_index";
         public static final String KEY_INTEREST_IDS = "interest_ids";
         public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
+        public static final String KEY_PROFILE_REQUEST_ADD = "profile_request_add";
+        public static final String KEY_PROFILE_REQUEST_SHARE = "profile_request_share";
+        public static final String KEY_COMING_FROM_NOTIFICATION = "fucking_coming_from_notification";
+        public static final String KEY_REQUEST_ID = "request_id";
+        public static final String KEY_REQUEST_FROM_USER_ID = "from_user_id";
+        public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
+        public static final String KEY_NOTIF_STATUS = "status";
+        public static final String KEY_NOTIF_USER_ID = "user_id";
     }
 
     public class Headers {
@@ -106,6 +114,8 @@ public class Constants {
         public static final String FILTER_PLATFORM = "Platform";
         public static final String FILTER_NAME = "Name";
         public static final String FILTER_BLOOD_GROUP = "Blood Group";
+        public static final String STATUS_ALLOWED = "allow";
+        public static final String STATUS_DECLINE = "declined";
     }
 
     public class Types {
@@ -130,6 +140,8 @@ public class Constants {
         public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
         public static final int SERVICE_ADD_SOCIAL_PROFILE = 4;
         public static final int SERVICE_POST_INTERESTS = 5;
+        public static final int SERVICE_REJECT_FIELD_REQUEST = 6;
+        public static final int SERVICE_ALLOW_FIELD_REQUEST = 37;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;
@@ -145,6 +157,8 @@ public class Constants {
         public static final int FIELD_LINKEDIN = 9;
         public static final int LIST_BLOCKED_USERS = 1;
         public static final int LIST_MUTED_USERS = 2;
+        public static final int NOTIF_BUTTON_SHARE = 1;
+        public static final int NOTIF_BUTTON_ADD = 0;
 
     }
 

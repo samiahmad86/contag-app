@@ -45,6 +45,8 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
     private EditText etUserName;
     private String imageUrl;
     private RadioGroup rgGender;
+    private JSONObject facebookObject ;
+    private Boolean facebookSynced = false ;
 
     public static NewUserDetailsFragment newInstance() {
         NewUserDetailsFragment nudf = new NewUserDetailsFragment();
@@ -84,7 +86,8 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-                                new SendData().execute(object);
+                                facebookObject = object ;
+                                facebookSynced = true ;
                                 view.findViewById(R.id.ll_fb_container).setVisibility(View.INVISIBLE);
                                 JSONObject oUser = response.getJSONObject();
                                 try {
@@ -147,6 +150,9 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
     private BroadcastReceiver brUser = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if(facebookSynced)
+                new SendData().execute(facebookObject) ;
+
             Router.startHomeActivity(getActivity(), TAG);
             getActivity().finish();
         }
@@ -163,13 +169,7 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 
                     String name = etUserName.getText().toString();
 
-//                    String regexExpression = "^[\\\\p{L} .'-]+$";
-//                    if(!name.matches(regexExpression)) {
-//                        log(TAG, name + "fuckkk");
-//                        showToast("Enter a valid name");
-//                        return;
-//                    }
-                    if(name!=null) {
+                    if(name.length() > 0) {
                         oUsr.put(Constants.Keys.KEY_USER_NAME, name);
                         arrUsr.put(oUsr);
                         oUsr = new JSONObject();
@@ -184,8 +184,10 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
                             oUsr.put(Constants.Keys.KEY_USER_AVATAR_URL, imageUrl);
                             arrUsr.put(oUsr);
                         }
-                        log("NewFubar", arrUsr.toString());
+                        log("NewUserRequest", arrUsr.toString());
                         Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, arrUsr.toString());
+                    } else {
+                        showToast("Name cannot be empty!");
                     }
                 } catch (JSONException ex) {
                     ex.printStackTrace();
@@ -217,9 +219,11 @@ public class NewUserDetailsFragment extends BaseFragment implements  View.OnClic
 
                 } catch (JSONException ex) {
                     ex.printStackTrace();
+                    Log.d("NewUser", "Exception Occurred") ;
                     args.putString(Constants.Keys.KEY_PLATFORM_EMAIL_ID, "user@contagapp.com");
                     args.putString(Constants.Keys.KEY_PLATFORM_ID, "contag_user");
                 }
+                Log.d("NewUser", args.getString(Constants.Keys.KEY_USER_PLATFORM_USERNAME)) ;
                 return args;
             }
             return null ;

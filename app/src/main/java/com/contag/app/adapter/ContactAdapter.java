@@ -120,7 +120,7 @@ public class ContactAdapter extends BaseAdapter {
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ContactUtils.addContag(mContext, item);
+                        ContactUtils.addContag(mContext.getApplicationContext(), item);
                         Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
                     }
                 });

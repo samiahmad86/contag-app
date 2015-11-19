@@ -153,7 +153,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 @Override
                 public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                     if (contactResponses.size() == 1) {
-                        ContactUtils.insertAndReturnContagContag(getActivity(), ContactUtils.getContact(contactResponses.get(0)),
+                        ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
                                 contactResponses.get(0).contagContactUser, isContact);
                     }
                     pbFeeds.setVisibility(View.GONE);

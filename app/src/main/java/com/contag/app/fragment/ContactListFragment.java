@@ -107,7 +107,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                         @Override
                         public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                             if (contactResponses.size() == 1) {
-                                ContactUtils.insertAndReturnContagContag(getActivity(), ContactUtils.getContact(contactResponses.get(0)),
+                                ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
                                         contactResponses.get(0).contagContactUser, isContact);
                             }
                             pbContacts.setVisibility(View.GONE);
@@ -314,7 +314,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         if (contactResponses.size() == 1) {
             ContactResponse mContactResponse = contactResponses.get(0);
             Contact mContact = ContactUtils.getContact(mContactResponse);
-            ContagContag mContagContag = ContactUtils.insertAndReturnContagContag(getActivity(), mContact,
+            ContagContag mContagContag = ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), mContact,
                     mContactResponse.contagContactUser, false);
             addContagContagToList(mContagContag);
         } else {
@@ -324,7 +324,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     }
 
     private void addContagContagToList(ContagContag mContagContag) {
-        ContactListItem listItem = ContactUtils.getContactListItem(getActivity(), mContagContag);
+        ContactListItem listItem = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
         contacts.clear();
         ArrayList<ContactListItem> contactListItems = new ArrayList<>();
         contactListItems.add(listItem);
@@ -338,7 +338,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         }
 
         if (query.length() == 8 && RegexUtils.isContagId(query)) {
-            ContagContag mContagContag = ContactUtils.getContagContagByContagID(getActivity(), query);
+            ContagContag mContagContag = ContactUtils.getContagContagByContagID(getActivity().getApplicationContext(), query);
             if(mContagContag != null) {
                 addContagContagToList(mContagContag);
             } else {
@@ -377,7 +377,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
             if (contagContacts != null) {
                 for (ContagContag mContagContag : contagContacts) {
-                    ContactListItem mContactListItem = ContactUtils.getContactListItem(getActivity(), mContagContag);
+                    ContactListItem mContactListItem = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                     contactListItems.add(mContactListItem);
                 }
             }
@@ -434,7 +434,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
                         if (contagContacts != null) {
                             for (ContagContag mContagContag : contagContacts) {
-                                ContactListItem item = ContactUtils.getContactListItem(getActivity(), mContagContag);
+                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                                 contactListItems.add(item);
                             }
                         }
@@ -459,7 +459,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
                         if (contagContacts != null) {
                             for (ContagContag mContagContag : contagContacts) {
-                                ContactListItem item = ContactUtils.getContactListItem(getActivity(), mContagContag);
+                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                                 contactListItems.add(item);
                             }
                         }
@@ -485,7 +485,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
                         if (contagContacts != null) {
                             for (ContagContag mContagContag : contagContacts) {
-                                ContactListItem item = ContactUtils.getContactListItem(getActivity(), mContagContag);
+                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                                 contactListItems.add(item);
                             }
                         }

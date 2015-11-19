@@ -64,7 +64,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading) {
+                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && totalItemCount > 3) {
                     int start = notifications.size() == 0 ? 0 : notifications.size();
                     NotificationsRequest fr = new NotificationsRequest(start, 10);
                     getSpiceManager().execute(fr, NotificationsActivity.this);

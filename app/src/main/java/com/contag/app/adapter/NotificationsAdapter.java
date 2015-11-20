@@ -1,6 +1,7 @@
 package com.contag.app.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,13 +13,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.model.ContactResponse;
+import com.contag.app.model.ContagContag;
 import com.contag.app.model.NotificationsResponse;
 import com.contag.app.model.User;
+import com.contag.app.request.ContactRequest;
+import com.contag.app.util.ContactUtils;
+import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.PrefUtils;
-import com.google.gson.Gson;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,10 +39,12 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
     public static final String TAG = NotificationsAdapter.class.getName();
     private Context mCtxt;
     private ArrayList<NotificationsResponse> notifications;
+    private SpiceManager mSpiceManager;
 
-    public NotificationsAdapter(Context mContext, ArrayList<NotificationsResponse> notifications) {
+    public NotificationsAdapter(Context mContext, ArrayList<NotificationsResponse> notifications, SpiceManager mSpiceManager) {
         this.mCtxt = mContext;
         this.notifications = notifications;
+        this.mSpiceManager = mSpiceManager;
     }
 
     @Override
@@ -107,7 +118,11 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
             case R.id.iv_notifications_usr_img: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                Router.startUserActivity(mCtxt, NotificationsActivity.TAG, notificationsResponse.fromUser);
+                if (DeviceUtils.isWifiConnected(mCtxt)) {
+                    new GetUserAndShowProfile().execute(notificationsResponse.fromUser);
+                } else {
+                    Router.startUserActivity(mCtxt, NotificationsActivity.TAG, notificationsResponse.fromUser);
+                }
                 break;
             }
             case R.id.btn_share: {
@@ -120,7 +135,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     requestBundle.putString(Constants.Keys.KEY_REQUEST_FROM_USER_NAME, notificationsResponse.requesterName);
                     Router.startEditUserActivity(mCtxt, NotificationsActivity.TAG, PrefUtils.getCurrentUserID(), requestBundle,
                             Integer.parseInt(notificationsResponse.fieldCategory), notificationsResponse.fieldName, true);
-                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+                } else if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
                     String userIDS = User.getSharesAsString(notificationsResponse.fieldName, String.valueOf(notificationsResponse.fromUser), mCtxt);
                     Log.d(TAG, userIDS);
                     Router.startUserServiceForPrivacy(mCtxt, notificationsResponse.fieldName, false, userIDS);
@@ -131,7 +146,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                 }
                 break;
             }
-            case R.id.btn_notif_reject:{
+            case R.id.btn_notif_reject: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
                 Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
@@ -140,6 +155,38 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                 notifyDataSetChanged();
                 break;
             }
+        }
+    }
+
+
+    private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(Long... params) {
+
+            return ((BaseActivity) mCtxt).getUser(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag mContagContag) {
+            ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
+            final boolean isContact = mContagContag.getIs_contact();
+            final long id = mContagContag.getId();
+            mSpiceManager.execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    Router.startUserActivity(mCtxt, TAG, id);
+                }
+
+                @Override
+                public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                    if (contactResponses.size() == 1) {
+                        ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                contactResponses.get(0).contagContactUser, isContact);
+                    }
+                    Router.startUserActivity(mCtxt, TAG, id);
+                }
+            });
+
         }
     }
 

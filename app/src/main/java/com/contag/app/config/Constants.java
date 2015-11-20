@@ -178,9 +178,9 @@ public class Constants {
     }
 
     public static class Arrays {
-        public static final String[] USER_GENDER = {"female", "male", "other"};
-        public static final String[] USER_BLOOD_GROUPS = {"O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
-        public static final String[] USER_MARITAL_STATUS = {"Married", "Single"};
+        public static final String[] USER_GENDER = {"Gender","female", "male", "other"};
+        public static final String[] USER_BLOOD_GROUPS = {"Blood Group","O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
+        public static final String[] USER_MARITAL_STATUS = {"Marital Status","Married", "Single"};
         public static final String[] SEARCH_FILTER = {Values.FILTER_NAME,  Values.FILTER_PLATFORM, Values.FILTER_BLOOD_GROUP};
         public static final String[] SHARE_WITH = {"Private", "Public"};
     }

@@ -16,58 +16,73 @@
         android:padding="10dp"
         android:text="Text"
         android:textSize="18sp"
-
         android:textColor="@color/black"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tv_share_text"
+        android:background="@color/light_gray" />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ll_two_buttons"
         android:layout_below="@id/tv_share_text"
         >
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share_public"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
         android:layout_below="@id/tv_share_text"
         android:text="Public"
-        android:background="@drawable/bg_grey_border_button"
-        android:layout_weight="0.5"
-         android:textColor="@color/black"/>
+        android:textAllCaps="false"
+        android:textColor="@color/black"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray"/>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share_custom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textAllCaps="false"
+        android:background="?android:selectableItemBackground"
         android:layout_below="@id/tv_share_text"
-        android:layout_toRightOf="@id/btn_share_public"
         android:text="Custom"
-        android:background="@drawable/bg_grey_border_button"
-         android:layout_weight="0.5"
         android:textColor="@color/black"/>
 
         </LinearLayout>
-    <Button
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ll_two_buttons"
+        android:background="@color/light_gray" />
+    <android.support.v7.widget.AppCompatButton
+        android:background="?android:selectableItemBackground"
         android:id="@+id/btn_share_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:layout_below="@id/ll_two_buttons"
         android:text="Ok"
-        android:padding="2dp"
-        android:background="@drawable/bg_grey_border_button"
         android:textColor="@color/black"/>
+
 
     <ListView
         android:id="@+id/lv_contag_share"
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"
+        android:visibility="visible"
         android:layout_below="@id/btn_share_done"
+        android:layout_height="match_parent"
+
         android:layout_margin="10dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp" />
-
 
 
 </RelativeLayout>

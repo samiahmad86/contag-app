@@ -208,6 +208,17 @@ public class UserActivity extends BaseActivity {
         }
     }
 
+    private void hideInterestRemoveButton() {
+
+        int i = 0;
+            do{
+              (findViewById(rmInterest[i])).setVisibility(View.GONE);
+                i++;
+            }while(i<3);
+    }
+
+
+
     private void showInterests(ArrayList<Interest> userInterests) {
         int i = 0; //hideInterest();
         for (Interest userInterest : userInterests) {
@@ -228,13 +239,13 @@ public class UserActivity extends BaseActivity {
 
         for (Interest userInterest : userInterests) {
             if (i >= 3)
-                return;
-            (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
-            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_POSITION, i);
-            (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
-            (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
-            i++;
-        }
+            return;
+        (findViewById(rmInterest[i])).setVisibility(View.VISIBLE);
+        (findViewById(rmInterest[i])).setTag(R.id.INTEREST_POSITION, i);
+        (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
+        (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
+        i++;
+    }
     }
 
     private void setupEditableInterests() {
@@ -330,6 +341,7 @@ public class UserActivity extends BaseActivity {
             ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
+            hideInterestRemoveButton();
             new LoadUser().execute(PrefUtils.getCurrentUserID());
         }
     };

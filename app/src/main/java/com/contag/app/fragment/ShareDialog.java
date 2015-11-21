@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import com.contag.app.model.CustomShare;
 import com.contag.app.model.CustomShareDao;
 import com.contag.app.model.DaoSession;
 import com.contag.app.util.PrefUtils;
+import com.contag.app.util.ShareUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -48,15 +50,21 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     private Button sharePublic ;
     private Button shareCustom ;
     private int shareCount = 0;
-    private TextView shareText ;
+    private TextView shareText;
+    private TextView shareTextIntent;
     private String fieldName ;
+    private LinearLayout ll_share;
+    private static String contact;
 
 
-    public static ShareDialog newInstance(String fieldName) {
+    public static ShareDialog newInstance(String fieldName,String value) {
 
         ShareDialog share = new ShareDialog();
         Bundle args = new Bundle();
-      //  Log.e("fieldname",fieldName);
+
+        contact=convertKeyToLabel(fieldName)+" : "+value;
+        Log.e("fieldname",fieldName);
+        Log.e("fieldname",value);
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
         share.setArguments(args);
         return share ;
@@ -67,7 +75,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        getDialog().setCancelable(false);
+        //getDialog().setCancelable(false);
     }
 
     @Override
@@ -77,20 +85,26 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
 
         fieldName = getArguments().getString(Constants.Keys.KEY_FIELD_NAME) ;
+        Log.e("fieldname", fieldName);
         new LoadContags().execute(fieldName) ;
         shareListAdapter= new ShareListAdapter(shareList, getActivity());
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
+        ll_share=(LinearLayout) view.findViewById(R.id.ll_share);
+        View footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
+        lvContags.addFooterView(footerView);
         lvContags.setAdapter(shareListAdapter);
+
 
 
         sharePublic = (Button) view.findViewById(R.id.btn_share_public) ;
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom) ;
         shareText = (TextView) view.findViewById(R.id.tv_share_text) ;
+        shareTextIntent = (TextView) view.findViewById(R.id.tv_share_intent) ;
 
-       // String temp=getHashValue(fieldName);
-        shareText.setText("Share your " +/* Html.fromHtml("<b>"+temp+"</b>")*/ " with: ") ;
+
+        shareText.setText("Share your " +convertKeyToLabel(fieldName)+ " with: ") ;
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
-
+        shareTextIntent.setOnClickListener(this);
         sharePublic.setOnClickListener(this);
         shareCustom.setOnClickListener(this);
         shareDone.setOnClickListener(this);
@@ -125,6 +139,12 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             }
             case R.id.btn_share_done:{
                 savePrivacySettings() ;
+                getDialog().dismiss();
+                break;
+
+            }
+            case R.id.tv_share_intent:{
+               ShareUtils.shareText(getActivity(),contact);
                 getDialog().dismiss();
                 break ;
 
@@ -173,6 +193,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         if(mCustomShare.getIs_public() || lvContags.getVisibility() == View.VISIBLE) {
             //Hide contag list
             lvContags.setVisibility(View.GONE);
+            //ll_share.setVisibility(View.GONE);
 
             // Toggle Color
             sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
@@ -188,6 +209,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         if(lvContags.getVisibility() == View.VISIBLE) {
             // Remove contact list
             lvContags.setVisibility(View.GONE);
+            //ll_share.setVisibility(View.GONE);
             // Set color to unselected
             shareCustom.setTextColor(getResources().getColor(R.color.black));
         } else {
@@ -195,6 +217,8 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
             mCustomShare.setIs_public(false);
             //Show the list
             lvContags.setVisibility(View.VISIBLE);
+          //  lvContags.addFooterView(lvContags);
+            //ll_share.setVisibility(View.VISIBLE);
             // Toggle color of buttons
             shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
             sharePublic.setTextColor(getResources().getColor(R.color.black));
@@ -271,11 +295,19 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         }
     }
 
-
-    private String getHashValue( String key)
-    {
-        return CurrentUserProfileEditFragment.convertKeyToLabel(key) ;
-
+    private static String convertKeyToLabel(String key) {
+        String str = key.replace("_", " ");
+        str = str.toLowerCase();
+        char ch = str.charAt(0);
+        str = ((char) (ch - 32)) + str.substring(1);
+        int position = str.indexOf(" ");
+        while (position != -1) {
+            ch = str.charAt(position + 1);
+            str = str.substring(0, position + 1) + (char) (ch - 32) + str.substring(position + 2);
+            position = str.indexOf(" ", position + 1);
+        }
+        return str;
     }
+
 
 }

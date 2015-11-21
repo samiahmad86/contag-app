@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/ll_share"
+    >
+
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/contag_logo"
+        android:layout_marginLeft="5dp"
+        />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_share_intent"
+        android:text="Select from Phonebook"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        />
+
+
+
+</LinearLayout>

@@ -45,6 +45,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private boolean isLoading = false, isListViewEnabled;
     private View pbFeeds;
 
+
     public static FeedsFragment newInstance() {
         FeedsFragment ff = new FeedsFragment();
         Bundle args = new Bundle();
@@ -71,7 +72,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && isListViewEnabled) {
+                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
+                        && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
                     log(TAG, "making progress bar visible while getting feeds");
                     pbFeeds.setVisibility(View.VISIBLE);
@@ -82,6 +84,12 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isLoading = false;
     }
 
     @Override
@@ -114,10 +122,10 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
+            isLoading = false;
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);
-        isLoading = false;
     }
 
     @Override

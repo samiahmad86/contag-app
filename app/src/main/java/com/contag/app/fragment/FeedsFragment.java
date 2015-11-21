@@ -73,6 +73,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
+                    log(TAG, "making progress bar visible while getting feeds");
                     pbFeeds.setVisibility(View.VISIBLE);
                     FeedsRequest fr = new FeedsRequest(start, 10);
                     getSpiceManager().execute(fr, FeedsFragment.this);
@@ -114,6 +115,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
         }
+        log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);
         isLoading = false;
     }
@@ -121,6 +123,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (DeviceUtils.isWifiConnected(getActivity())) {
+            log(TAG, "progress bar made visible on feeds item click and requesting user profile");
             pbFeeds.setVisibility(View.VISIBLE);
             isListViewEnabled = false;
             new GetUserAndShowProfile().execute(feeds.get(position).fromUser);
@@ -141,10 +144,12 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
             final boolean isContact = mContagContag.getIs_contact();
             final long id = mContagContag.getId();
+            log(TAG, "making progress bar visible inside post execute");
             pbFeeds.setVisibility(View.VISIBLE);
             getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
+                    log(TAG, "hiding progress bar in request failure while fetching user");
                     pbFeeds.setVisibility(View.GONE);
                     isListViewEnabled = true;
                     Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
@@ -156,6 +161,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                         ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
                                 contactResponses.get(0).contagContactUser, isContact);
                     }
+                    log(TAG, "hiding progress bar afer user fetched");
                     pbFeeds.setVisibility(View.GONE);
                     isListViewEnabled = true;
                     Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);

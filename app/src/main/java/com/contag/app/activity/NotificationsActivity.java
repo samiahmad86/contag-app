@@ -42,17 +42,15 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         setContentView(R.layout.activity_notifications);
         setUpActionBar(R.id.tb_home);
 
-
         new LoadUser().execute();
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
         Button btnBack = (Button) findViewById(R.id.btn_back);
 
-
         ListView lvNotifications = (ListView) findViewById(R.id.lv_notifications);
         notifications = new ArrayList<>();
-        notificationsAdapter = new NotificationsAdapter(this, notifications);
+        notificationsAdapter = new NotificationsAdapter(this, notifications, getSpiceManager());
         lvNotifications.setAdapter(notificationsAdapter);
         lvNotifications.setOnItemClickListener(this);
         btnBack.setOnClickListener(this);

@@ -13,7 +13,7 @@ public class ContactResponse {
     public long id;
     @SerializedName("contact_contag_user")
     @Expose
-    public ContagContactResponse contactContagUser;
+    public ContagContactResponse contagContactUser;
     @SerializedName("created_on")
     @Expose
     public String createdOn;

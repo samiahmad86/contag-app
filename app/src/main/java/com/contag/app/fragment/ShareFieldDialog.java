@@ -35,7 +35,7 @@ public class ShareFieldDialog extends DialogFragment implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        getDialog().setCancelable(false);
+        setCancelable(false);
     }
 
     @Override

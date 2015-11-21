@@ -44,6 +44,12 @@ public class DeviceUtils {
         return false;
     }
 
+    public static boolean isWifiConnected(Context context) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return mNetworkInfo.isConnected();
+    }
+
     public static int getDeviceWidth(Context context) {
         if (deviceWidth == 0) {
             Display mDisplay = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).

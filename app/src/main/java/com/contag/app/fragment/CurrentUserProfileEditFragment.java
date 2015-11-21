@@ -284,13 +284,19 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         try {
             for (int i = 0; i < hmP2PProfileModel.size(); i++) {
                 oUser = new JSONObject();
-                P2ProfileModel pm = hmP2PProfileModel.get(i);
+                P2ProfileModel p2ProfileModel = hmP2PProfileModel.get(i);
                 ViewHolder vh = viewHolderArrayList.get(i);
-                int fieldType = pm.viewType;
+                int fieldType = p2ProfileModel.viewType;
                 if (fieldType == Constants.Types.FIELD_LIST) {
-                    oUser.put(pm.key, vh.spFieldValue.getSelectedItem().toString());
+                    String selectionValue = "";
+                    if(vh.spFieldValue.getSelectedItemPosition() != 0) {
+                        selectionValue = vh.spFieldValue.getSelectedItem().toString();
+                    } else if(p2ProfileModel.value != null && p2ProfileModel.value.length() != 0) {
+                        selectionValue = p2ProfileModel.value;
+                    }
+                    oUser.put(p2ProfileModel.key, selectionValue);
                 } else {
-                    oUser.put(pm.key, vh.etFieldValue.getText().toString());
+                    oUser.put(p2ProfileModel.key, vh.etFieldValue.getText().toString());
                 }
                 aUser.put(oUser);
             }

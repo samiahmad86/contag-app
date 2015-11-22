@@ -77,9 +77,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     pbFeeds.setVisibility(View.VISIBLE);
                     FeedsRequest feedsRequest = new FeedsRequest(start, 10);
                     getSpiceManager().execute(feedsRequest, FeedsFragment.this);
-                    if (start == 0) {
-                        isLoading = true;
-                    }
+                    isLoading = true;
                 }
             }
         });
@@ -91,6 +89,16 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brContactsUpdated,
                 new IntentFilter(getResources().getString(R.string.intent_filter_contacts_updated)));
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isLoading = true;
+        feeds.clear();
+        FeedsRequest feedsRequest = new FeedsRequest(0, 10);
+        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
 
     }
 
@@ -116,7 +124,10 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
+            log(TAG, "is loading is set to false");
             isLoading = false;
+        } else {
+            isLoading = true;
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);

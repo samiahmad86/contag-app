@@ -48,7 +48,7 @@
 
         </LinearLayout>
     <Button
-        android:id="@+id/btn_share_done"
+        android:id="@+id/btn_invite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_two_buttons"
@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         android:layout_height="match_parent"
-        android:layout_below="@id/btn_share_done"
+        android:layout_below="@id/btn_invite"
         android:layout_margin="10dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp" />

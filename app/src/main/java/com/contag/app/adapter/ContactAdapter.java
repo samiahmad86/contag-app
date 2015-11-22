@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.fragment.IntroduceContagDialog;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
@@ -24,7 +26,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by tanay on 22/9/15.
  */
@@ -63,13 +64,13 @@ public class ContactAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position) ;
         if (type == Constants.Types.ITEM_CONTAG || type == Constants.Types.ITEM_ADD_CONTAG) {
-            return getCuntagView(position, convertView, parent, type);
+            return getContagView(position, convertView, parent, type);
         } else {
             return getContactView(position, convertView, parent);
         }
     }
 
-    private View getCuntagView(int position, View convertView, ViewGroup parent, int type) {
+    private View getContagView(int position, View convertView, ViewGroup parent, int type) {
         ContagViewHolder vhCont;
         if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
             vhCont = new ContagViewHolder();
@@ -83,6 +84,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
             vhCont.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
             vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
+            vhCont.btnShareContag = (Button) convertView.findViewById(R.id.btn_share_contag) ;
             convertView.setTag(vhCont);
         } else {
             vhCont = (ContagViewHolder) convertView.getTag();
@@ -112,8 +114,21 @@ public class ContactAdapter extends BaseAdapter {
 
         }
 
+        final String shareContagName = contObject.getName() ;
+        final long shareContagID = contObject.getId() ;
+
+        vhCont.btnShareContag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntroduceContagDialog invite = IntroduceContagDialog.newInstance(shareContagName, shareContagID);
+                invite.show(((BaseActivity) mContext).getSupportFragmentManager(), TAG);
+            }
+        });
+
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
+
+            vhCont.btnShareContag.setVisibility(View.GONE);
             final ContactListItem item = (ContactListItem) getItem(position) ;
             if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
@@ -132,6 +147,7 @@ public class ContactAdapter extends BaseAdapter {
                 }
             });
         }else {
+            vhCont.btnShareContag.setVisibility(View.VISIBLE);
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
         }
         return convertView;
@@ -199,6 +215,7 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest4;
         public ImageView ivPhoto;
         public Button btnAdd ;
+        public Button btnShareContag;
 
         public ContagViewHolder() {
 

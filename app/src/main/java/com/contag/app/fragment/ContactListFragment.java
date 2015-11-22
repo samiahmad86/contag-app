@@ -239,7 +239,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         for (Integer filterID : filterIDS) {
             if (filterID != selectedFilter.getId())
-                ((TextView) filterView.findViewById(filterID)).setBackgroundColor(getResources().getColor(R.color.light_blue));
+                (filterView.findViewById(filterID)).setBackgroundColor(getResources().getColor(R.color.light_blue));
         }
         selectedFilter.setBackgroundColor(getResources().getColor(R.color.filter_selection));
 

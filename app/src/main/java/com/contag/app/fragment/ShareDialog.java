@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.adapter.ShareListAdapter;
@@ -89,7 +87,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
        // String temp=getHashValue(fieldName);
         shareText.setText("Share your " +/* Html.fromHtml("<b>"+temp+"</b>")*/ " with: ") ;
-        Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
+        Button shareDone = (Button) view.findViewById(R.id.btn_invite) ;
 
         sharePublic.setOnClickListener(this);
         shareCustom.setOnClickListener(this);
@@ -123,7 +121,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
                 setContagList() ;
                 break ;
             }
-            case R.id.btn_share_done:{
+            case R.id.btn_invite:{
                 savePrivacySettings() ;
                 getDialog().dismiss();
                 break ;

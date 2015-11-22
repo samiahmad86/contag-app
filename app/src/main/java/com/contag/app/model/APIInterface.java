@@ -174,4 +174,12 @@ public interface APIInterface {
     NotificationsResponse.NotificationList getNotifications(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                     @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
                                     @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @POST(Constants.Urls.URL_INTRODUCE)
+    Response introduceContag(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                               @Body ContagIntroductionRequestModel introduction);
+
 }

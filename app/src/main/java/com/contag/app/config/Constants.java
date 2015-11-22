@@ -94,7 +94,10 @@ public class Constants {
         public static final String KEY_REQUEST_FROM_USER_ID = "from_user_id";
         public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
         public static final String KEY_NOTIF_STATUS = "status";
-        public static final String KEY_NOTIF_USER_ID = "user_id";
+        public static final String KEY_INTRODUCED_USER = "introduced_user" ;
+        public static final String KEY_INTRODUCED_TO_USERS = "introduced_to_users" ;
+        public static final String KEY_INTRODUCTION_MESSAGE = "message";
+
     }
 
     public class Headers {
@@ -131,6 +134,7 @@ public class Constants {
         public static final int ITEM_NON_CONTAG = 1;
         public static final int ITEM_ADD_CONTAG = 2 ;
         public static final int ITEM_SHARE_CONTAG = 3 ;
+        public static final int ITEM_INTRODUCE_CONTAG = 4;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
@@ -175,6 +179,7 @@ public class Constants {
         public static final String URL_PROFILE_REQUEST = "/profile_request/";
         public static final String URL_PROFILE_PRIVACY = "/privacy/";
         public static final String URL_NOTIFICATIONS = "/notification/" ;
+        public static final String URL_INTRODUCE = "/introduce/" ;
     }
 
     public static class Arrays {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/NotificationsButtonStyle"
+    android:padding="2dp"
+    >
+
+    <EditText
+        android:id="@+id/et_invite_message"
+        android:inputType="text"
+        android:layout_width="300dp"
+        android:layout_marginLeft="40dp"
+        android:layout_height="wrap_content"
+    />
+    <Button
+        android:id="@+id/btn_invite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_invite_message"
+        android:textAllCaps="false"
+        android:visibility="visible"
+        android:text="Invite"
+        android:padding="2dp"
+        android:background="@drawable/bg_grey_border_button"
+        android:textColor="@color/black"/>
+
+    <ListView
+        android:id="@+id/lv_contag_share"
+        style="@style/ContactScrollBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_invite"
+        android:layout_margin="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp" />
+
+
+
+
+
+</RelativeLayout>

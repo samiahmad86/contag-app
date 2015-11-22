@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.content.BroadcastReceiver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.SlidingTabLayout;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -131,15 +129,15 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             Fragment fragment = null;
             switch (position) {
                 case ViewMode.PERSONAL_DETAILS: {
-                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
+                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
                     break;
                 }
                 case ViewMode.SOCIAL_DETAILS: {
-                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
+                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
                     break;
                 }
                 case ViewMode.PROFESSIONAL_DETAILS: {
-                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
+                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
                     break;
                 }
             }

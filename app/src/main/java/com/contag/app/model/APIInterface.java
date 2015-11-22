@@ -9,9 +9,12 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Part;
 import retrofit.http.Query;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by tanay on 7/8/15.
@@ -174,4 +177,9 @@ public interface APIInterface {
     NotificationsResponse.NotificationList getNotifications(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                     @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
                                     @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
+
+    @Multipart
+    @PUT(Constants.Urls.URL_IMAGE_UPLOAD)
+    Response uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                         @Part(Constants.Keys.KEY_USER_AVATAR_URL)TypedFile mProfileImage);
 }

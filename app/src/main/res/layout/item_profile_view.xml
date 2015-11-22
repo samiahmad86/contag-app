@@ -37,7 +37,7 @@
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_social_go"
+            android:id="@+id/btn_action"
             android:layout_width="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"

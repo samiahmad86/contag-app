@@ -155,6 +155,22 @@ public class Router {
         context.startActivity(sendIntent);
     }
 
+    public static void openGmailForEmailID(Context context, String emailID) {
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setType("plain/text");
+        sendIntent.setData(Uri.parse(emailID));
+        sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
+        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailID});
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        context.startActivity(sendIntent);
+    }
+
+    public static void openGoogleMapsWithAddress(Context context, String address) {
+        String map = "http://maps.google.co.in/maps?q=" + address;
+        Intent openMapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+        context.startActivity(openMapIntent);
+    }
+
     public static void getSocialPlatforms(Context context, int type) {
         Intent iCustomService = new Intent(context, CustomService.class);
         iCustomService.putExtra(Constants.Keys.KEY_SERVICE_TYPE, type);

@@ -171,13 +171,19 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         @Override
         protected String doInBackground(Void... voids) {
             ContagContag user = ((BaseActivity) UserProfileFragment.this.getActivity()).getUser(userID);
-            return user.getMobileNumber();
+            try {
+                return user.getMobileNumber();
+            } catch (NullPointerException ex) {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(String number) {
-            btnCall.setTag(number);
-            btnMessage.setTag(number);
+            if(number != null) {
+                btnCall.setTag(number);
+                btnMessage.setTag(number);
+            }
         }
     }
 

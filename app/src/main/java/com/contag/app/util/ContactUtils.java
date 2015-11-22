@@ -207,7 +207,7 @@ public class ContactUtils {
             socialProfile.setContagContag(contagContag);
             socialProfile.setPlatform_username(socialProfileResponse.platformUsername);
             socialProfile.setContagUserId(userID);
-            mProfiles.add(socialProfile);
+            mProfiles.add(socialProfile) ;
         }
         return mProfiles;
 

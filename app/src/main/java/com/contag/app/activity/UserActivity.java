@@ -304,7 +304,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         switch (id) {
             case R.id.iv_user_photo: {
                 Intent intentUploadImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
+//                startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
                 break;
             }
         }

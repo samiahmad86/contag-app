@@ -510,15 +510,17 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
-            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
-            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-            ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(picaasoTarget);
-            isEditModeOn = false;
+            if(ccUser != null) {
+                Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+                ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
+                ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+                ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
+                Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+                Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(picaasoTarget);
+                isEditModeOn = false;
+            }
         }
     }
 

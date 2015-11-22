@@ -198,13 +198,14 @@ public class ContactUtils {
         return mInterest;
     }
 
-    private static ArrayList<SocialProfile> getSocialProfiles(ArrayList<SocialProfileResponse> profiles, long userID, ContagContag cc) {
+    private static ArrayList<SocialProfile> getSocialProfiles(ArrayList<SocialProfileResponse> profiles, long userID, ContagContag contagContag) {
         ArrayList<SocialProfile> mProfiles = new ArrayList<>();
-        for (SocialProfileResponse spr : profiles) {
+        for (SocialProfileResponse socialProfileResponse : profiles) {
             SocialProfile socialProfile = new SocialProfile();
-            socialProfile.setPlatform_id(spr.platformId);
-            socialProfile.setSocial_platform(spr.socialPlatform);
-            socialProfile.setContagContag(cc);
+            socialProfile.setPlatform_id(socialProfileResponse.platformId);
+            socialProfile.setSocial_platform(socialProfileResponse.socialPlatform);
+            socialProfile.setContagContag(contagContag);
+            socialProfile.setPlatform_username(socialProfileResponse.platformUsername);
             socialProfile.setContagUserId(userID);
             mProfiles.add(socialProfile) ;
         }

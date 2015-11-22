@@ -75,9 +75,11 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     int start = feeds.size() == 0 ? 0 : feeds.size();
                     log(TAG, "making progress bar visible while getting feeds");
                     pbFeeds.setVisibility(View.VISIBLE);
-                    FeedsRequest fr = new FeedsRequest(start, 10);
-                    getSpiceManager().execute(fr, FeedsFragment.this);
-                    isLoading = true;
+                    FeedsRequest feedsRequest = new FeedsRequest(start, 10);
+                    getSpiceManager().execute(feedsRequest, FeedsFragment.this);
+                    if (start == 0) {
+                        isLoading = true;
+                    }
                 }
             }
         });
@@ -114,10 +116,10 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
+            isLoading = false;
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);
-        isLoading = false;
     }
 
     @Override
@@ -141,33 +143,35 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
         @Override
         protected void onPostExecute(ContagContag mContagContag) {
-            ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
-            final boolean isContact = mContagContag.getIs_contact();
-            final long id = mContagContag.getId();
-            log(TAG, "making progress bar visible inside post execute");
-            pbFeeds.setVisibility(View.VISIBLE);
-            getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    log(TAG, "hiding progress bar in request failure while fetching user");
-                    pbFeeds.setVisibility(View.GONE);
-                    isListViewEnabled = true;
-                    Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
-                }
-
-                @Override
-                public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                    if (contactResponses.size() == 1) {
-                        ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                contactResponses.get(0).contagContactUser, isContact);
+            if (mContagContag != null) {
+                ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
+                final boolean isContact = mContagContag.getIs_contact();
+                final long id = mContagContag.getId();
+                log(TAG, "making progress bar visible inside post execute");
+                pbFeeds.setVisibility(View.VISIBLE);
+                getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        log(TAG, "hiding progress bar in request failure while fetching user");
+                        pbFeeds.setVisibility(View.GONE);
+                        isListViewEnabled = true;
+                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
                     }
-                    log(TAG, "hiding progress bar afer user fetched");
-                    pbFeeds.setVisibility(View.GONE);
-                    isListViewEnabled = true;
-                    Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
-                }
-            });
 
+                    @Override
+                    public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                        if (contactResponses.size() == 1) {
+                            ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                    contactResponses.get(0).contagContactUser, isContact);
+                        }
+                        log(TAG, "hiding progress bar afer user fetched");
+                        pbFeeds.setVisibility(View.GONE);
+                        isListViewEnabled = true;
+                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
+                    }
+                });
+
+            }
         }
     }
 }

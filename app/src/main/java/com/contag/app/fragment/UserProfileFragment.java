@@ -126,15 +126,15 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             Fragment fragment = null;
             switch (position) {
                 case ViewMode.PERSONAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
                     break;
                 }
                 case ViewMode.SOCIAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
                     break;
                 }
                 case ViewMode.PROFESSIONAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
                     break;
                 }
             }
@@ -168,13 +168,19 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         @Override
         protected String doInBackground(Void... voids) {
             ContagContag user = ((BaseActivity) UserProfileFragment.this.getActivity()).getUser(userID);
-            return user.getMobileNumber();
+            try {
+                return user.getMobileNumber();
+            } catch (NullPointerException ex) {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(String number) {
-            btnCall.setTag(number);
-            btnMessage.setTag(number);
+            if(number != null) {
+                btnCall.setTag(number);
+                btnMessage.setTag(number);
+            }
         }
     }
 

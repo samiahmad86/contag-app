@@ -17,13 +17,12 @@ import com.contag.app.model.ContagContag;
 import com.contag.app.model.ProfileViewModel;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialProfile;
-import com.contag.app.model.SocialProfileModel;
 import com.contag.app.util.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserP2ProfileViewFragment extends BaseFragment implements View.OnClickListener {
+public class UserProfileViewFragment extends BaseFragment implements View.OnClickListener {
 
     private long userId;
     private int profileType;
@@ -31,15 +30,15 @@ public class UserP2ProfileViewFragment extends BaseFragment implements View.OnCl
     private HashMap<Integer, ProfileViewModel> hmP2ProfileView;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
-    public static final String TAG = UserP2ProfileViewFragment.class.getName();
+    public static final String TAG = UserProfileViewFragment.class.getName();
 
-    public static UserP2ProfileViewFragment newInstance(int profileType, long userID) {
-        UserP2ProfileViewFragment mUserP2ProfileViewFragment = new UserP2ProfileViewFragment();
+    public static UserProfileViewFragment newInstance(int profileType, long userID) {
+        UserProfileViewFragment mUserProfileViewFragment = new UserProfileViewFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, profileType);
         args.putLong(Constants.Keys.KEY_USER_ID, userID);
-        mUserP2ProfileViewFragment.setArguments(args);
-        return mUserP2ProfileViewFragment;
+        mUserProfileViewFragment.setArguments(args);
+        return mUserProfileViewFragment;
     }
 
     @Override
@@ -85,7 +84,13 @@ public class UserP2ProfileViewFragment extends BaseFragment implements View.OnCl
                 mViewHolder.btnAction.setTag(position);
                 mViewHolder.btnAction.setVisibility(View.VISIBLE);
                 mViewHolder.btnRequestField.setVisibility(View.GONE);
-                mViewHolder.tvFieldValue.setText(mProfileViewModel.value);
+                if(mProfileViewModel.fieldType == Constants.Types.FIELD_FACEBOOK || mProfileViewModel.fieldType == Constants.Types.FIELD_GOOGLE
+                        || mProfileViewModel.fieldType == Constants.Types.FIELD_INSTAGRAM || mProfileViewModel.fieldType == Constants.Types.FIELD_LINKEDIN
+                        || mProfileViewModel.fieldType == Constants.Types.FIELD_TWITTER) {
+                    mViewHolder.tvFieldValue.setText(mProfileViewModel.socialProfile.getPlatform_username());
+                } else {
+                    mViewHolder.tvFieldValue.setText(mProfileViewModel.value);
+                }
             } else {
                 mViewHolder.btnRequestField.setTag(position);
                 mViewHolder.btnAction.setVisibility(View.GONE);
@@ -178,7 +183,7 @@ public class UserP2ProfileViewFragment extends BaseFragment implements View.OnCl
     private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileViewModel>> {
         @Override
         protected HashMap<Integer, ProfileViewModel> doInBackground(Integer... params) {
-            ContagContag mContagContag = ((BaseActivity) UserP2ProfileViewFragment.this.getActivity()).getUser(userId);
+            ContagContag mContagContag = ((BaseActivity) UserProfileViewFragment.this.getActivity()).getUser(userId);
             if (mContagContag != null) {
                 HashMap<Integer, ProfileViewModel> hmProfileViewModel = new HashMap<>();
                 switch (profileType) {
@@ -256,6 +261,8 @@ public class UserP2ProfileViewFragment extends BaseFragment implements View.OnCl
                         for (SocialProfile socialProfile : socialProfiles) {
                             if (hmNameToSocialPlatform.containsKey(socialProfile.getSocial_platform())) {
                                 String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
+                                log(TAG, "socialProfile  " + keyLowerCase + " username" +
+                                        socialProfile.getPlatform_username() + " user_id " + socialProfile.getPlatform_id());
                                 if (keyLowerCase.contains("google")) {
                                     hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
                                             Constants.Types.FIELD_GOOGLE));

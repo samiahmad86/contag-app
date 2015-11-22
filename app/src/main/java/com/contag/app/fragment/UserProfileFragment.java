@@ -129,15 +129,15 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             Fragment fragment = null;
             switch (position) {
                 case ViewMode.PERSONAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
                     break;
                 }
                 case ViewMode.SOCIAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
                     break;
                 }
                 case ViewMode.PROFESSIONAL_DETAILS: {
-                    fragment = UserP2ProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
+                    fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
                     break;
                 }
             }

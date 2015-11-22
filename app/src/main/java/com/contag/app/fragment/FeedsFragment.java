@@ -75,8 +75,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     int start = feeds.size() == 0 ? 0 : feeds.size();
                     log(TAG, "making progress bar visible while getting feeds");
                     pbFeeds.setVisibility(View.VISIBLE);
-                    FeedsRequest fr = new FeedsRequest(start, 10);
-                    getSpiceManager().execute(fr, FeedsFragment.this);
+                    FeedsRequest feedsRequest = new FeedsRequest(start, 10);
+                    getSpiceManager().execute(feedsRequest, FeedsFragment.this);
                     if (start == 0) {
                         isLoading = true;
                     }
@@ -116,10 +116,10 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
+            isLoading = false;
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);
-        isLoading = false;
     }
 
     @Override

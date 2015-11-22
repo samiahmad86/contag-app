@@ -17,11 +17,8 @@ import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.Interest;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.SlidingTabLayout;
-
-import java.util.ArrayList;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -75,7 +72,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         }
 
         new LoadNumber().execute();
-        new LoadInterests().execute();
+        //new LoadInterests().execute();
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -187,24 +184,27 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
-        @Override
-        protected ArrayList<Interest> doInBackground(Void... params) {
-            return ((BaseActivity) UserProfileFragment.this.getActivity()).getUserInterests(userID);
-        }
-        @Override
-        protected void onPostExecute(ArrayList<Interest> userInterests) {
-            int size = userInterests.size();
-            for(int i = 0; i < size; i ++) {
-                tvInterests[i].setVisibility(View.VISIBLE);
-                if(i % 2 == 0) {
-                    tvInterests[i+1].setVisibility(View.INVISIBLE);
-                }
-                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
-                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
-                tvInterests[i].setText(userInterests.get(i).getName());
-            }
-        }
-    }
+//    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
+//        @Override
+//        protected ArrayList<Interest> doInBackground(Void... params) {
+//            Log.d("Inter", "In load interests: " + userID) ;
+//            return ((BaseActivity) UserProfileFragment.this.getActivity()).getUserInterests(userID);
+//        }
+//        @Override
+//        protected void onPostExecute(ArrayList<Interest> userInterests) {
+//            int size = userInterests.size();
+//            for(int i = 0; i < size; i ++) {
+//
+//                tvInterests[i].setVisibility(View.VISIBLE);
+//                if(i % 2 == 0) {
+//                    tvInterests[i+1].setVisibility(View.INVISIBLE);
+//                }
+//                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
+//                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
+//                tvInterests[i].setText(userInterests.get(i).getName());
+//                Log.d("Inter", "onPostExecute: " +userInterests.get(i).getContagUserId()) ;
+//            }
+//        }
+//    }
 
 }

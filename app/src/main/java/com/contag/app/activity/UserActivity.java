@@ -126,12 +126,17 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     } else {
 
                         String name = etUserName.getText().toString();
-                        if (name.length() > 0)
+                        if (name.length() > 0){
+
                             sendNameAndStatus(name, etUserStatus.getText().toString());
-                        else {
-                            showToast("Name cannot be blank!");
+
                             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                             setUpInterests();
+                            hideInterestRemoveButton();
+                        }
+                        else {
+                            showToast("Name cannot be blank!") ;
+
                         }
 
 
@@ -197,7 +202,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
             @Override
             protected ArrayList<Interest> doInBackground(Void... params) {
-                interests = getUserInterests(PrefUtils.getCurrentUserID());
+
+                interests = getUserInterests(userID);
                 return interests;
             }
 
@@ -232,7 +238,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
-        int i = 0;
+        int i = 0 ;
 
         for (Interest userInterest : userInterests) {
             if (i >= 3)
@@ -242,6 +248,12 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
             (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
             i++;
+        }
+    }
+
+    private void hideInterestRemoveButton(){
+        for(int i: rmInterest){
+            (findViewById(i)).setVisibility(View.GONE);
         }
     }
 

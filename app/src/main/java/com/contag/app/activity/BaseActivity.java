@@ -144,6 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public ArrayList<Interest> getUserInterests(long id) {
+        Log.d("Inter", "In base activity: " + id) ;
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         InterestDao interestDao = session.getInterestDao();
         return (ArrayList<Interest>) interestDao.queryBuilder().

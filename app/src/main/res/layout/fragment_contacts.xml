@@ -3,9 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/pb_contacts"
-        layout="@layout/layout_progress_bar" />
 
     <ImageView android:id="@+id/btn_filter"
         android:layout_width="24dp"
@@ -43,5 +40,8 @@
         android:layout_margin="10dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp" />
+    <include
+        android:id="@+id/pb_contacts"
+        layout="@layout/layout_progress_bar" />
 
 </RelativeLayout>

@@ -107,9 +107,10 @@ public class Constants {
 
     public class Values {
         // Request code for google plus sign in
-        public static final int RC_GPLUS_SIGN_IN = 0;
-        public static final int RC_LINKEDIN = 1;
-        public static final int RC_INSTAGRAM = 2;
+        public static final int REQUEST_CODE_GPLUS_SIGN_IN = 0;
+        public static final int REQUEST_CODE_LINKEDIN = 1;
+        public static final int REQUEST_CODE_INSTAGRAM = 2;
+        public static final int REQUEST_CODE_IMAGE_UPLOAD = 3;
         public static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
         public static final String FILTER_PLATFORM = "Platform";
         public static final String FILTER_NAME = "Name";
@@ -155,6 +156,9 @@ public class Constants {
         public static final int FIELD_INSTAGRAM = 7;
         public static final int FIELD_GOOGLE = 8;
         public static final int FIELD_LINKEDIN = 9;
+        public static final int FIELD_EMAIL = 10;
+        public static final int FIELD_ADDRESS = 11;
+        public static final int FIELD_NUMBER = 12;
         public static final int LIST_BLOCKED_USERS = 1;
         public static final int LIST_MUTED_USERS = 2;
         public static final int NOTIF_BUTTON_SHARE = 1;
@@ -175,12 +179,13 @@ public class Constants {
         public static final String URL_PROFILE_REQUEST = "/profile_request/";
         public static final String URL_PROFILE_PRIVACY = "/privacy/";
         public static final String URL_NOTIFICATIONS = "/notification/" ;
+        public static final String URL_IMAGE_UPLOAD = "/image_upload/";
     }
 
     public static class Arrays {
-        public static final String[] USER_GENDER = {"female", "male", "other"};
-        public static final String[] USER_BLOOD_GROUPS = {"O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
-        public static final String[] USER_MARITAL_STATUS = {"Married", "Single"};
+        public static final String[] USER_GENDER = {"Gender","female", "male", "other"};
+        public static final String[] USER_BLOOD_GROUPS = {"Blood Group","O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
+        public static final String[] USER_MARITAL_STATUS = {"Marital Status","Married", "Single"};
         public static final String[] SEARCH_FILTER = {Values.FILTER_NAME,  Values.FILTER_PLATFORM, Values.FILTER_BLOOD_GROUP};
         public static final String[] SHARE_WITH = {"Private", "Public"};
     }

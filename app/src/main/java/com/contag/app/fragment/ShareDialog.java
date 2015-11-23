@@ -75,7 +75,11 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+<<<<<<< HEAD
         //getDialog().setCancelable(false);
+=======
+        setCancelable(false);
+>>>>>>> f64460e5d92607febdbab4e4ffe8889af18a5f06
     }
 
     @Override

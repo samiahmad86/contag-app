@@ -9,9 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:scrollbars="none"
         android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
+        android:dividerHeight="8dp"
+        android:scrollbars="none" />
 
+    <include
+        android:id="@+id/pb_feeds"
+        layout="@layout/layout_progress_bar" />
 
 </RelativeLayout>

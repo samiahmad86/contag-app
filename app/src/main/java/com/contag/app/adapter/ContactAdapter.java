@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.model.Contact;
@@ -120,7 +121,7 @@ public class ContactAdapter extends BaseAdapter {
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ContactUtils.addContag(mContext, item);
+                        ContactUtils.addContag(mContext.getApplicationContext(), item);
                         Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
                     }
                 });

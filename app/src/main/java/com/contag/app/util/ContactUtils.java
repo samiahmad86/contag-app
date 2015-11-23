@@ -25,47 +25,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by varunj on 27/10/15.
- */
 public class ContactUtils {
-    private static DaoSession session ;
+    private static DaoSession session;
 
-    public static void saveContact(Context mContext, ContactResponse.ContactList contactResponse){
+    private static DaoSession getSession(Context context) {
+        if(session == null) {
+            session = ((ContagApplication) context).getDaoSession();
+        }
+        return session;
+    }
 
-        session = ((ContagApplication) mContext).getDaoSession();
-        ContactDao mContactDao = session.getContactDao();
+    public static void saveContact(Context mContext, ContactResponse.ContactList contactResponse) {
+
+        ContactDao mContactDao = getSession(mContext).getContactDao();
 
         Log.d("Condev", "Current Dao size: " + mContactDao.loadAll().size());
 
         for (ContactResponse response : contactResponse) {
-            Contact mContact = getContact(response) ;
+            Contact mContact = getContact(response);
 
             if (mContact.getIsOnContag()) {
-
-                ContagContag cc = getContagContact(response.contactContagUser, mContact, true);
-                ContagContagDao ccDao = session.getContagContagDao();
-
-                if (response.contactContagUser.userInterest != null && response.contactContagUser.userInterest.size() > 0) {
-                    InterestDao interestDao = session.getInterestDao();
-
-                    List<Interest> interests = getInterestList(response.contactContagUser.userInterest,
-                            response.contactContagUser ,cc) ;
-
-                    for(Interest interest: interests){
-                        interestDao.insertOrReplace(interest);
-                    }
-                }
-
-                if (response.contactContagUser.socialProfile != null && response.contactContagUser.socialProfile.size() > 0) {
-                    SocialProfileDao spDao = session.getSocialProfileDao();
-                    List<SocialProfile> socialProfiles = getSocialProfiles(response.contactContagUser.socialProfile,
-                            response.contactContagUser.id ,cc);
-                    for(SocialProfile socialProfile: socialProfiles) {
-                        spDao.insertOrReplace(socialProfile);
-                    }
-                }
-                ccDao.insertOrReplace(cc);
+                insertAndReturnContagContag(mContext, mContact, response.contagContactUser, true);
             }
             Log.d("Condev", "" + mContact.getId() + " " + response.id);
             Log.d("Condevs", "" + mContact.getContactName() + " " + response.contactName);
@@ -80,51 +60,61 @@ public class ContactUtils {
         }
     }
 
-    public static ContactListItem getContactListItem(ContactResponse.ContactList contactResponse, Context mContext){
-        ContactListItem listItem ;
-        ArrayList<Interest> interests = new ArrayList<>() ;
-        ArrayList<SocialProfile> socialProfiles = new ArrayList<>() ;
-        Contact mContact = new Contact();
-        ContagContag cc = new ContagContag() ;
-        session = ((ContagApplication) mContext.getApplicationContext()).getDaoSession();
-        for (ContactResponse response : contactResponse) {
-             mContact = getContact(response);
-
-            if (mContact.getIsOnContag()) {
-
-                cc = getContagContact(response.contactContagUser, mContact, false);
-
-                if (response.contactContagUser.userInterest != null && response.contactContagUser.userInterest.size() > 0)
-                    interests = getInterestList(response.contactContagUser.userInterest,
-                            response.contactContagUser ,cc) ;
-
-                if (response.contactContagUser.socialProfile != null && response.contactContagUser.socialProfile.size() > 0)
-                    socialProfiles = getSocialProfiles(response.contactContagUser.socialProfile,
-                            response.contactContagUser.id ,cc);
-            }
-            ContagContagDao ccDao = session.getContagContagDao();
-            InterestDao interestDao = session.getInterestDao();
-            SocialProfileDao spDao = session.getSocialProfileDao();
-
-            for(Interest interest: interests){
-                interestDao.insertOrReplace(interest);
-            }
-
-            for(SocialProfile socialProfile: socialProfiles) {
-                spDao.insertOrReplace(socialProfile);
-            }
-            ccDao.insertOrReplace(cc);
-
+    public static ContagContag getContagContagByContagID(Context mContext, String contagID) {
+        ContagContagDao mContagContagDao = getSession(mContext).getContagContagDao();
+        try {
+            return mContagContagDao.queryBuilder().where(ContagContagDao.Properties.Contag.eq(contagID)).list().get(0);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
         }
-        listItem = new ContactListItem(interests, cc, mContact, socialProfiles, Constants.Types.ITEM_ADD_CONTAG) ;
-        return listItem ;
-
     }
 
-    public static void addContag(Context mContext, ContactListItem contag){
-        session = ((ContagApplication) mContext.getApplicationContext()).getDaoSession();
-        ContactDao mContactDao = session.getContactDao();
-        ContagContagDao ccDao = session.getContagContagDao() ;
+    public static ContagContag insertAndReturnContagContag(Context mContext, Contact mContact, ContagContactResponse mContagContactRespone,
+                                                           boolean isContact) {
+        ContagContag mContagContag = getContagContact(mContagContactRespone, mContact, isContact);
+        ContagContagDao mContagContagDao = getSession(mContext).getContagContagDao();
+
+        if (mContagContactRespone.userInterest != null && mContagContactRespone.userInterest.size() > 0) {
+            InterestDao interestDao = getSession(mContext).getInterestDao();
+
+            List<Interest> interests = getInterestList(mContagContactRespone.userInterest,
+                    mContagContactRespone, mContagContag);
+
+            for (Interest interest : interests) {
+                interestDao.insertOrReplace(interest);
+            }
+        }
+
+        if (mContagContactRespone.socialProfile != null && mContagContactRespone.socialProfile.size() > 0) {
+            SocialProfileDao spDao = getSession(mContext).getSocialProfileDao();
+            List<SocialProfile> socialProfiles = getSocialProfiles(mContagContactRespone.socialProfile,
+                    mContagContactRespone.id, mContagContag);
+            for (SocialProfile socialProfile : socialProfiles) {
+                spDao.insertOrReplace(socialProfile);
+            }
+        }
+        mContagContagDao.insertOrReplace(mContagContag);
+        return mContagContag;
+    }
+
+    public static ContactListItem getContactListItem(Context mContext, ContagContag mContagContag) {
+        InterestDao mInterestDao = getSession(mContext).getInterestDao();
+        List<Interest> interests = mInterestDao.queryBuilder().
+                where(InterestDao.Properties.ContagUserId.eq(mContagContag.getId())).
+                orderAsc(InterestDao.Properties.Name).list();
+        ContactListItem mContactListItem;
+        if(mContagContag.getIs_contact()) {
+            mContactListItem = new ContactListItem(interests, mContagContag, Constants.Types.ITEM_CONTAG);
+        } else {
+            mContactListItem = new ContactListItem(interests, mContagContag, Constants.Types.ITEM_ADD_CONTAG);
+        }
+            return mContactListItem;
+    }
+
+    public static void addContag(Context mContext, ContactListItem contag) {
+        ContactDao mContactDao = getSession(mContext).getContactDao();
+        ContagContagDao ccDao = getSession(mContext).getContagContagDao();
 
         mContactDao.insertOrReplace(contag.mContact);
 
@@ -133,30 +123,28 @@ public class ContactUtils {
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
 
-        Log.d("conadd", "Added the contag user!") ;
-
-
-
-    }
-
-    public static Boolean isExistingContact(String contactNumber, Context mContext){
-        session = ((ContagApplication) mContext).getDaoSession();
-
-        ContactDao cDao = session.getContactDao() ;
-        long count = cDao.queryBuilder().where(ContactDao.Properties.ContactNumber.eq(contactNumber)).count() ;
-
-        return (count == 0) ;
+        Log.d("conadd", "Added the contag user!");
 
 
     }
 
-    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact, Boolean isOnContag){
+    public static Boolean isExistingContact(String contactNumber, Context mContext) {
+
+        ContactDao cDao = getSession(mContext).getContactDao();
+        long count = cDao.queryBuilder().where(ContactDao.Properties.ContactNumber.eq(contactNumber)).count();
+
+        return (count == 0);
+
+
+    }
+
+    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact, Boolean isOnContag) {
 
         ContagContag cc = new ContagContag(ccResponse.id);
         cc.setContact(mContact);
         cc.setCreatedOn(ccResponse.createdOn);
         cc.setUpdatedOn(ccResponse.updatedOn);
-        if(ccResponse.name != null) {
+        if (ccResponse.name != null) {
             cc.setName(ccResponse.name);
         } else {
             cc.setName("Contag User");
@@ -187,40 +175,41 @@ public class ContactUtils {
         cc.setWorkAddress(ccResponse.workAddress);
         cc.setIs_contact(isOnContag);
 
-        return cc ;
+        return cc;
 
     }
 
-    private static Contact getContact(ContactResponse  response){
+    public static Contact getContact(ContactResponse response) {
         return new Contact(response.id, response.createdOn, response.updatedOn, response.contactName,
                 response.contactNumber, response.invitedOn, response.isOnContag, response.isMuted, response.isBlocked,
                 response.isBlocked);
     }
 
     private static ArrayList<Interest> getInterestList(ArrayList<InterestResponse> interests,
-                                                      ContagContactResponse ccResponse, ContagContag cc){
-        ArrayList<Interest> mInterest = new ArrayList<>() ;
+                                                       ContagContactResponse ccResponse, ContagContag cc) {
+        ArrayList<Interest> mInterest = new ArrayList<>();
         for (InterestResponse ir : interests) {
             Interest interest = new Interest(ir.id);
             interest.setName(ir.name);
             interest.setContagUserId(ccResponse.id);
             interest.setContagContag(cc);
-            mInterest.add(interest) ;
+            mInterest.add(interest);
         }
-        return mInterest ;
+        return mInterest;
     }
 
-    private static ArrayList<SocialProfile> getSocialProfiles(ArrayList<SocialProfileResponse> profiles, long userID , ContagContag cc){
-        ArrayList<SocialProfile> mProfiles = new ArrayList<>() ;
-        for (SocialProfileResponse spr : profiles) {
+    private static ArrayList<SocialProfile> getSocialProfiles(ArrayList<SocialProfileResponse> profiles, long userID, ContagContag contagContag) {
+        ArrayList<SocialProfile> mProfiles = new ArrayList<>();
+        for (SocialProfileResponse socialProfileResponse : profiles) {
             SocialProfile socialProfile = new SocialProfile();
-            socialProfile.setPlatform_id(spr.platformId);
-            socialProfile.setSocial_platform(spr.socialPlatform);
-            socialProfile.setContagContag(cc);
+            socialProfile.setPlatform_id(socialProfileResponse.platformId);
+            socialProfile.setSocial_platform(socialProfileResponse.socialPlatform);
+            socialProfile.setContagContag(contagContag);
+            socialProfile.setPlatform_username(socialProfileResponse.platformUsername);
             socialProfile.setContagUserId(userID);
-
+            mProfiles.add(socialProfile) ;
         }
-        return mProfiles ;
+        return mProfiles;
 
     }
 

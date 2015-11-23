@@ -14,6 +14,7 @@ import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.util.AtomicIntegerUtils;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /**
@@ -73,7 +74,7 @@ public class GcmService extends GcmListenerService {
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
             Log.d(TAG, "notification sent");
-            notificationManager.notify(0, notifBuilder.build());
+            notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
         }
 
     }

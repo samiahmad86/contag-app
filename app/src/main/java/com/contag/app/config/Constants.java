@@ -95,6 +95,7 @@ public class Constants {
         public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
         public static final String KEY_NOTIF_STATUS = "status";
         public static final String KEY_NOTIF_USER_ID = "user_id";
+        public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
     }
 
     public class Headers {

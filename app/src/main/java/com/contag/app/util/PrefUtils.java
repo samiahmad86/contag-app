@@ -51,21 +51,6 @@ public class PrefUtils {
         return mSharedPref.getLong(Constants.Keys.KEY_CONTACTS_UPDATED_TIMESTAMP, 0);
     }
 
-    public static void setCurrentUser(String user) {
-        mEditor.putString(Constants.Keys.KEY_CURRENT_USER, user).commit();
-    }
-
-    public static String getCurrentUser() {
-        return mSharedPref.getString(Constants.Keys.KEY_CURRENT_USER, null);
-    }
-
-    public static void setSocialPlatforms(String platforms) {
-        mEditor.putString(Constants.Keys.KEY_SOCIAL_PLATFORMS, platforms).commit();
-    }
-
-    public static String getSocialPlatforms() {
-        return mSharedPref.getString(Constants.Keys.KEY_SOCIAL_PLATFORMS, null);
-    }
 
     public static void setCurrentUserID(long id) {
         mEditor.putLong(Constants.Keys.KEY_CURRENT_USER_ID, id).commit();
@@ -73,6 +58,14 @@ public class PrefUtils {
 
     public static long getCurrentUserID() {
         return mSharedPref.getLong(Constants.Keys.KEY_CURRENT_USER_ID, 0l);
+    }
+
+    public static void setNewNotificationCount(int count){
+        mEditor.putInt(Constants.Keys.KEY_NOTIFICATION_COUNT, count).commit() ;
+    }
+
+    public static int getNewNotificationCount(){
+        return mSharedPref.getInt(Constants.Keys.KEY_NOTIFICATION_COUNT, 0) ;
     }
 
     public static void clearForLogout(){

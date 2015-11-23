@@ -81,7 +81,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         }
 
         Picasso.with(mCtxt).load(Constants.Urls.BASE_URL + notification.avatarUrl).error(R.drawable.default_profile_pic_small).into(mViewHolder.ivUsrProfilePic);
-        mViewHolder.tvNotificationsTxt.setText(notification.text);
+
 
         mViewHolder.ivUsrProfilePic.setTag(position);
         mViewHolder.ivUsrProfilePic.setOnClickListener(this);
@@ -89,8 +89,15 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.btnReject.setTag(position);
         mViewHolder.btnReject.setOnClickListener(this);
 
+        mViewHolder.btnShare.setVisibility(View.INVISIBLE);
+        mViewHolder.tvNotificationsTxt.setText(notification.text);
+        mViewHolder.tvNotificationsTxt.setOnClickListener(null);
+        mViewHolder.tvNotificationsTxt.setTag(null) ;
+
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+
+
 
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setTag(position);
@@ -104,9 +111,9 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else {
-            mViewHolder.btnShare.setVisibility(View.INVISIBLE);
-
+        } else if(notification.notificationType.equals(Constants.Keys.KEY_INTRODUCTION_NOTIFICATION)) {
+            mViewHolder.tvNotificationsTxt.setTag(notification.introducedUserID) ;
+            mViewHolder.tvNotificationsTxt.setOnClickListener(this);
         }
         return convertView;
     }
@@ -154,6 +161,14 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                 notifications.remove(notificationsResponse);
                 notifyDataSetChanged();
                 break;
+            }
+
+            case R.id.tv_notification_txt:
+            {
+                if(v.getTag() != null){
+                    int userID = (int) v.getTag() ;
+                }
+
             }
         }
     }

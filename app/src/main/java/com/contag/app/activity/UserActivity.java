@@ -68,6 +68,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private boolean isEditModeOn = false;
     private long userID;
+    private InterestSuggestion currentSuggestion = null ;
 
 
     @Override
@@ -418,10 +419,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
-                                        interestText.setTag(suggestion);
+                                        currentSuggestion = suggestion ;
                                         interestHint.setText(suggestion.name.toLowerCase());
 
                                     } else {
+                                        currentSuggestion = null ;
                                         interestSuggestion.clear();
                                         interestHint.setText("");
                                     }
@@ -442,13 +444,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //((EditText) findViewById(R.id.interest_hint)).setText("");
-                interestHint.setText("");
-                interestText.setText("");
-                InterestSuggestion suggestion = (InterestSuggestion) interestText.getTag();
-                if (suggestion != null) {
-                    Interest newInterest = new Interest(suggestion.id);
-                    newInterest.setName(suggestion.name);
+
+                if (currentSuggestion != null) {
+
+                    Interest newInterest = new Interest(currentSuggestion.id);
+                    newInterest.setName(currentSuggestion.name);
                     newInterest.setContagUserId(PrefUtils.getCurrentUserID());
                     newInterest.setContagContag(getCurrentUser());
                     interests.add(newInterest);
@@ -460,6 +460,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                         (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                     }
                     saveInterests();
+
+                    interestHint.setText("");
+                    currentSuggestion = null ;
                 } else {
                     showToast("Please enter a valid interest!");
                 }

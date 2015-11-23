@@ -9,12 +9,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,15 +21,12 @@ import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
-import com.contag.app.model.Contact;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.DaoSession;
 import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,11 +39,9 @@ import java.util.ArrayList;
 public class NavDrawerFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private ImageView ivHeader;
-    private View llBlockedUsr1, llBlockedUsr2, llBlockedUsr3;
-    private View llMutedUsr1, llMutedUsr2, llMutedUsr3;
     private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt, logoutTxt;
-    private Button btnSeeMoreBlockedUsers, btnSeeMoreMutedUsers;
     private Boolean isLoading ;
+    private TextView tvNotificationCount ;
 
 
 
@@ -82,23 +75,19 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_nav_drawer, container, false);
         ivHeader = (ImageView) view.findViewById(R.id.iv_nav_drawer_header);
-//        llBlockedUsr1 = view.findViewById(R.id.ll_blocked_usr_1);
-//        llBlockedUsr2 = view.findViewById(R.id.ll_blocked_usr_2);
-//        llBlockedUsr3 = view.findViewById(R.id.ll_blocked_usr_3);
-//        llMutedUsr1 = view.findViewById(R.id.ll_muted_usr_1);
-//        llMutedUsr2 = view.findViewById(R.id.ll_muted_usr_2);
-//        llMutedUsr3 = view.findViewById(R.id.ll_muted_usr_3);
+
         notificationTxt = (TextView) view.findViewById(R.id.tv_notification_txt) ;
+        tvNotificationCount = (TextView) view.findViewById(R.id.tv_notification_count) ;
         feedbackTxt = (TextView) view.findViewById(R.id.tv_feedback_txt) ;
         rateTxt = (TextView) view.findViewById(R.id.tv_rate_txt) ;
         logoutTxt = (TextView) view.findViewById(R.id.tv_logout_txt) ;
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
-//        btnSeeMoreBlockedUsers = (Button) view.findViewById(R.id.btn_see_blocked_usr);
-//        btnSeeMoreMutedUsers = (Button) view.findViewById(R.id.btn_see_muted_usr);
+
+        //tvNotificationCount.setText(PrefUtils.getNewNotificationCount()) ;
+
         new LoadUser().execute();
-        //new BlockedList().execute(Constants.Types.LIST_BLOCKED_USERS);
-        //new BlockedList().execute(Constants.Types.LIST_MUTED_USERS);
+
         notificationTxt.setOnClickListener(this);
         feedbackTxt.setOnClickListener(this);
         rateTxt.setOnClickListener(this);
@@ -154,22 +143,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     }
 
     private void logout(){
-//        SpiceManager mSpiceManager = new SpiceManager(APIService.class);
-//        mSpiceManager.start(getActivity());
-//        LogoutRequest lt = new LogoutRequest() ;
-//        mSpiceManager.execute(lt, nr) ;
-//                , new RequestListener<MessageResponse>(){
-//            @Override
-//            public void onRequestFailure(SpiceException spiceException) {
-//                Toast.makeText(getActivity(), "There was an error please try again", Toast.LENGTH_LONG).show();
-//            }
 //
-//            @Override
-//            public void onRequestSuccess(MessageResponse messageResponse) {
-//
-//
-//            }
-//        }) ;
         Log.d("logout", "going to clear pref utils");
         PrefUtils.clearForLogout();
         DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
@@ -246,98 +220,4 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private class BlockedList extends AsyncTask<Integer, Void, ArrayList<Contact>> {
-        private int listType;
-
-        @Override
-        protected ArrayList<Contact> doInBackground(Integer... params) {
-            if (params.length > 0) {
-                listType = params[0];
-                if (listType == Constants.Types.LIST_BLOCKED_USERS) {
-                    return ((BaseActivity) getActivity()).getBlockedUsers();
-                } else {
-                    return ((BaseActivity) getActivity()).getMutedUsers();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Contact> contacts) {
-            View view1, view2, view3;
-            String text;
-            if (contacts != null) {
-                if (listType == Constants.Types.LIST_BLOCKED_USERS) {
-                    view1 = llBlockedUsr1;
-                    view2 = llBlockedUsr2;
-                    view3 = llBlockedUsr3;
-                    btnSeeMoreBlockedUsers.setVisibility(View.GONE);
-                    text = "UNBLOCK";
-                } else {
-                    view1 = llMutedUsr1;
-                    view2 = llMutedUsr2;
-                    view3 = llMutedUsr3;
-                    btnSeeMoreMutedUsers.setVisibility(View.GONE);
-                    text = "UNMUTE";
-                }
-                int listSize = contacts.size();
-                if (listSize >= 3) {
-                    if (listSize != 3) {
-                        if (listType == Constants.Types.LIST_BLOCKED_USERS) {
-                            btnSeeMoreBlockedUsers.setVisibility(View.VISIBLE);
-                        } else {
-                            btnSeeMoreMutedUsers.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
-                    btn1.setTag(text);
-                    btn1.setTag(contacts.get(0).getId());
-                    btn1.setOnClickListener(NavDrawerFragment.this);
-
-                    ((TextView) view2.findViewById(R.id.tv_blocked_name)).setText(contacts.get(1).getContactName());
-                    Button btn2 = (Button) view2.findViewById(R.id.btn_unblock);
-                    btn2.setText(text);
-                    btn2.setTag(contacts.get(1).getId());
-                    btn2.setOnClickListener(NavDrawerFragment.this);
-
-                    ((TextView) view3.findViewById(R.id.tv_blocked_name)).setText(contacts.get(2).getContactName());
-                    Button btn3 = (Button) view3.findViewById(R.id.btn_unblock);
-                    btn2.setText(text);
-                    btn3.setTag(contacts.get(2).getId());
-                    btn3.setOnClickListener(NavDrawerFragment.this);
-                } else if (listSize == 2) {
-                    ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
-                    btn1.setTag(text);
-                    btn1.setTag(contacts.get(0).getId());
-                    btn1.setOnClickListener(NavDrawerFragment.this);
-
-                    ((TextView) view2.findViewById(R.id.tv_blocked_name)).setText(contacts.get(1).getContactName());
-                    Button btn2 = (Button) view2.findViewById(R.id.btn_unblock);
-                    btn2.setText(text);
-                    btn2.setTag(contacts.get(1).getId());
-                    btn2.setOnClickListener(NavDrawerFragment.this);
-                    view3.setVisibility(View.GONE);
-                } else if (listSize == 1) {
-                    ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText(contacts.get(0).getContactName());
-                    Button btn1 = (Button) view1.findViewById(R.id.btn_unblock);
-                    btn1.setTag(text);
-                    btn1.setTag(contacts.get(0).getId());
-                    btn1.setOnClickListener(NavDrawerFragment.this);
-                    view2.setVisibility(View.GONE);
-                    view3.setVisibility(View.GONE);
-                } else {
-                    if (listType == Constants.Types.LIST_BLOCKED_USERS) {
-                        ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText("You have not blocked any of your contacts");
-                    } else {
-                        ((TextView) view1.findViewById(R.id.tv_blocked_name)).setText("You have not muted any of your contacts");
-                    }
-                    view1.findViewById(R.id.btn_unblock).setVisibility(View.GONE);
-                    view2.setVisibility(View.GONE);
-                    view3.setVisibility(View.GONE);
-                }
-            }
-        }
-    }
 }

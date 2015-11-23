@@ -31,9 +31,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
 
-/**
- * Created by tanay on 23/9/15.
- */
 public class FeedsFragment extends BaseFragment implements AdapterView.OnItemClickListener,
         RequestListener<FeedsResponse.FeedList> {
 
@@ -97,6 +94,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         super.onResume();
         isLoading = true;
         feeds.clear();
+        feedsAdapter.notifyDataSetChanged();
+        pbFeeds.setVisibility(View.VISIBLE);
         FeedsRequest feedsRequest = new FeedsRequest(0, 10);
         getSpiceManager().execute(feedsRequest, FeedsFragment.this);
 
@@ -182,6 +181,9 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     }
                 });
 
+            } else {
+                pbFeeds.setVisibility(View.GONE);
+                showToast("Please wait while we sync your contacts");
             }
         }
     }

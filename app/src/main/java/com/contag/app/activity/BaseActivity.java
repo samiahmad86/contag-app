@@ -135,9 +135,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     public ContagContag getUser(long id) {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
-        ContagContagDao ccDao = session.getContagContagDao();
+        ContagContagDao contagContagDao = session.getContagContagDao();
         try {
-            return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+            return contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
         }   catch (Exception ex) {
             return null;
         }

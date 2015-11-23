@@ -117,6 +117,8 @@ public class Constants {
         public static final String FILTER_BLOOD_GROUP = "Blood Group";
         public static final String STATUS_ALLOWED = "allow";
         public static final String STATUS_DECLINE = "declined";
+        public static final int REQUEST_TIMEOUT = 60 * 1000;
+        public static final int READ_TIMEOUT = 60 * 1000;
     }
 
     public class Types {

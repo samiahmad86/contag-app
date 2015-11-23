@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.content.BroadcastReceiver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,12 +17,8 @@ import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.Interest;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.SlidingTabLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Bedprakash on 9/19/2015.
@@ -77,7 +72,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         }
 
         new LoadNumber().execute();
-        new LoadInterests().execute();
+        //new LoadInterests().execute();
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
 
@@ -173,34 +168,43 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         @Override
         protected String doInBackground(Void... voids) {
             ContagContag user = ((BaseActivity) UserProfileFragment.this.getActivity()).getUser(userID);
-            return user.getMobileNumber();
+            try {
+                return user.getMobileNumber();
+            } catch (NullPointerException ex) {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(String number) {
-            btnCall.setTag(number);
-            btnMessage.setTag(number);
-        }
-    }
-
-    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
-        @Override
-        protected ArrayList<Interest> doInBackground(Void... params) {
-            return ((BaseActivity) UserProfileFragment.this.getActivity()).getUserInterests(userID);
-        }
-        @Override
-        protected void onPostExecute(ArrayList<Interest> userInterests) {
-            int size = userInterests.size();
-            for(int i = 0; i < size; i ++) {
-                tvInterests[i].setVisibility(View.VISIBLE);
-                if(i % 2 == 0) {
-                    tvInterests[i+1].setVisibility(View.INVISIBLE);
-                }
-                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
-                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
-                tvInterests[i].setText(userInterests.get(i).getName());
+            if(number != null) {
+                btnCall.setTag(number);
+                btnMessage.setTag(number);
             }
         }
     }
+
+//    private class LoadInterests extends AsyncTask<Void, Void, ArrayList<Interest>> {
+//        @Override
+//        protected ArrayList<Interest> doInBackground(Void... params) {
+//            Log.d("Inter", "In load interests: " + userID) ;
+//            return ((BaseActivity) UserProfileFragment.this.getActivity()).getUserInterests(userID);
+//        }
+//        @Override
+//        protected void onPostExecute(ArrayList<Interest> userInterests) {
+//            int size = userInterests.size();
+//            for(int i = 0; i < size; i ++) {
+//
+//                tvInterests[i].setVisibility(View.VISIBLE);
+//                if(i % 2 == 0) {
+//                    tvInterests[i+1].setVisibility(View.INVISIBLE);
+//                }
+//                tvInterests[i].setBackgroundResource(R.drawable.bg_white_border_transparent_rect);
+//                tvInterests[i].setTextColor(getResources().getColor(R.color.white));
+//                tvInterests[i].setText(userInterests.get(i).getName());
+//                Log.d("Inter", "onPostExecute: " +userInterests.get(i).getContagUserId()) ;
+//            }
+//        }
+//    }
 
 }

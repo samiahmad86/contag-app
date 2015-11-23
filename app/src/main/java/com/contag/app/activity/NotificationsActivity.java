@@ -71,6 +71,9 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             }
         });
 
+        //Set new notifications count to 0
+        PrefUtils.setNewNotificationCount(0);
+
     }
 
 

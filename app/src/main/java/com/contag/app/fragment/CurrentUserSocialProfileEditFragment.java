@@ -263,15 +263,15 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.Values.RC_INSTAGRAM) {
+        if (requestCode == Constants.Values.REQUEST_CODE_INSTAGRAM) {
             if (resultCode == Activity.RESULT_OK) {
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), instagramViewPosition, Constants.Types.FIELD_INSTAGRAM);
             }
-        } else if (requestCode == Constants.Values.RC_LINKEDIN) {
+        } else if (requestCode == Constants.Values.REQUEST_CODE_LINKEDIN) {
             if (resultCode == Activity.RESULT_OK) {
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), linkedInViewPosition, Constants.Types.FIELD_LINKEDIN);
             }
-        } else if (requestCode == Constants.Values.RC_GPLUS_SIGN_IN) {
+        } else if (requestCode == Constants.Values.REQUEST_CODE_GPLUS_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
                 mGoogleApiClient.connect();
             }
@@ -316,11 +316,11 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     }
 
     private void loginInstagram(long instagramId) {
-        Router.startInstagramLoginActivity(getActivity(), Constants.Values.RC_INSTAGRAM, instagramId);
+        Router.startInstagramLoginActivity(getActivity(), Constants.Values.REQUEST_CODE_INSTAGRAM, instagramId);
     }
 
     private void loginLinkedIn(long linkedInId) {
-        Router.startLinkendInLoginActivity(getActivity(), Constants.Values.RC_LINKEDIN, linkedInId);
+        Router.startLinkendInLoginActivity(getActivity(), Constants.Values.REQUEST_CODE_LINKEDIN, linkedInId);
     }
 
 
@@ -599,7 +599,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(getActivity(), Constants.Values.RC_GPLUS_SIGN_IN);
+                connectionResult.startResolutionForResult(getActivity(), Constants.Values.REQUEST_CODE_GPLUS_SIGN_IN);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
                 mGoogleApiClient.connect();
@@ -645,39 +645,36 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, SocialProfileModel>> {
         @Override
         protected HashMap<Integer, SocialProfileModel> doInBackground(Integer... params) {
-            HashMap<Integer, SocialProfileModel> hm = new HashMap<>();
+            HashMap<Integer, SocialProfileModel> hmPositionToSocialProfile = new HashMap<>();
             ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
                     getSocialPlatforms();
             HashMap<String, SocialPlatform> hmNameToPlatform = new HashMap<>();
             for (SocialPlatform socialPlatform : socialPlatforms) {
-                log(TAG, socialPlatform.getPlatformName());
                 hmNameToPlatform.put(socialPlatform.getPlatformName(), socialPlatform);
             }
             ArrayList<SocialProfile> socialProfiles = ((BaseActivity) CurrentUserSocialProfileEditFragment.this.getActivity()).
                     getCurrentUserSocialProfiles();
             int counter = 0;
             for (SocialProfile socialProfile : socialProfiles) {
-                log(TAG, "user is on " + socialProfile.getSocial_platform() + " as " + socialProfile.getPlatform_id());
-                log(TAG, "size " + hmNameToPlatform.size());
                 if (hmNameToPlatform.containsKey(socialProfile.getSocial_platform())) {
                     String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
                     if (keyLowerCase.contains("google")) {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_GOOGLE));
                     } else if (keyLowerCase.contains("linkedin")) {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_LINKEDIN));
                     } else if (keyLowerCase.contains("facebook")) {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_FACEBOOK));
                     } else if (keyLowerCase.contains("twitter")) {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_TWITTER));
                     } else if (keyLowerCase.contains("instagram")) {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_INSTAGRAM));
                     } else {
-                        hm.put(counter++, new SocialProfileModel
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel
                                 (socialProfile, hmNameToPlatform.get(socialProfile.getSocial_platform()), true, Constants.Types.FIELD_SOCIAL));
                     }
                     hmNameToPlatform.remove(socialProfile.getSocial_platform());
@@ -687,22 +684,22 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 if (hmNameToPlatform.containsKey(socialPlatform.getPlatformName())) {
                     String keyLowerCase = socialPlatform.getPlatformName().toLowerCase();
                     if (keyLowerCase.contains("facebook")) {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_FACEBOOK));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_FACEBOOK));
                     } else if (keyLowerCase.contains("google")) {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_GOOGLE));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_GOOGLE));
                     } else if (keyLowerCase.contains("twitter")) {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_TWITTER));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_TWITTER));
                     } else if (keyLowerCase.contains("instagram")) {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_INSTAGRAM));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_INSTAGRAM));
                     } else if (keyLowerCase.contains("linkedin")) {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_LINKEDIN));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_LINKEDIN));
                     } else {
-                        hm.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_SOCIAL));
+                        hmPositionToSocialProfile.put(counter++, new SocialProfileModel(socialPlatform, false, Constants.Types.FIELD_SOCIAL));
                     }
                 }
             }
 
-            return hm;
+            return hmPositionToSocialProfile;
         }
 
         @Override

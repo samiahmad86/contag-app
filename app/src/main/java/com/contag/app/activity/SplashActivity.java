@@ -19,6 +19,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
         if (isUserLoggedIn()) {
 
             if(PrefUtils.getCurrentUserID() != 0) {

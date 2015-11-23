@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,7 +31,9 @@ import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestSuggestion;
+import com.contag.app.model.Response;
 import com.contag.app.model.User;
+import com.contag.app.request.ImageUploadRequest;
 import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
@@ -44,9 +48,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class UserActivity extends BaseActivity {
+import retrofit.mime.TypedFile;
+
+public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = UserActivity.class.getName();
     private FlowLayout interestsBoxFlowLayout;
@@ -60,7 +67,8 @@ public class UserActivity extends BaseActivity {
             R.id.btn_rm_interest_three};
 
     private boolean isEditModeOn = false;
-    private long userID ;
+    private long userID;
+    private InterestSuggestion currentSuggestion = null ;
 
 
     @Override
@@ -82,10 +90,9 @@ public class UserActivity extends BaseActivity {
         userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0);
 
         if (isUserOnLocal(userID)) {
-            Log.d("myuser", "User is in db") ;
+            Log.d("myuser", "User is in db");
             new LoadUser().execute(userID);
-        }
-        else
+        } else
             Router.startUserService(this, Constants.Types.REQUEST_GET_USER_BY_ID, userID);
 
         hideInterest();
@@ -101,6 +108,7 @@ public class UserActivity extends BaseActivity {
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
+            toolbar.findViewById(R.id.iv_user_photo).setOnClickListener(this);
             ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile);
             ivEditIcon.setVisibility(View.VISIBLE);
             ivEditIcon.setOnClickListener(new View.OnClickListener() {
@@ -118,13 +126,18 @@ public class UserActivity extends BaseActivity {
                         isEditModeOn = true;
                     } else {
 
-                        String name = etUserName.getText().toString() ;
-                        if(name.length()> 0)
+                        String name = etUserName.getText().toString();
+                        if (name.length() > 0){
+
                             sendNameAndStatus(name, etUserStatus.getText().toString());
-                        else {
-                            showToast("Name cannot be blank!");
+
                             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                             setUpInterests();
+                            hideInterestRemoveButton();
+                        }
+                        else {
+                            showToast("Name cannot be blank!") ;
+
                         }
 
 
@@ -134,13 +147,14 @@ public class UserActivity extends BaseActivity {
 
             boolean isComingFromNotification = intent.getBooleanExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, false);
             CurrentUserProfileFragment currentUserProfileFragment;
-            if(isComingFromNotification) {
+            if (isComingFromNotification) {
                 currentUserProfileFragment = CurrentUserProfileFragment.newInstance(true, intent.getIntExtra(Constants.Keys.KEY_FRAGMENT_TYPE, 0),
                         intent.getBundleExtra(Constants.Keys.KEY_DATA), intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME));
             } else {
                 currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
 
-            } transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
+            }
+            transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
     }
 
@@ -189,7 +203,8 @@ public class UserActivity extends BaseActivity {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
             @Override
             protected ArrayList<Interest> doInBackground(Void... params) {
-                interests = getUserInterests(PrefUtils.getCurrentUserID());
+
+                interests = getUserInterests(userID);
                 return interests;
             }
 
@@ -224,7 +239,7 @@ public class UserActivity extends BaseActivity {
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
-        int i = 0;
+        int i = 0 ;
 
         for (Interest userInterest : userInterests) {
             if (i >= 3)
@@ -234,6 +249,12 @@ public class UserActivity extends BaseActivity {
             (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
             (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
             i++;
+        }
+    }
+
+    private void hideInterestRemoveButton(){
+        for(int i: rmInterest){
+            (findViewById(i)).setVisibility(View.GONE);
         }
     }
 
@@ -288,6 +309,18 @@ public class UserActivity extends BaseActivity {
         Log.d("iList", "Interests List: " + interestList);
 
         Router.startInterestUpdateService(this, interestList);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.iv_user_photo: {
+                Intent intentUploadImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
+                break;
+            }
+        }
     }
 
 
@@ -386,10 +419,11 @@ public class UserActivity extends BaseActivity {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
-                                        interestText.setTag(suggestion);
+                                        currentSuggestion = suggestion ;
                                         interestHint.setText(suggestion.name.toLowerCase());
 
                                     } else {
+                                        currentSuggestion = null ;
                                         interestSuggestion.clear();
                                         interestHint.setText("");
                                     }
@@ -410,13 +444,11 @@ public class UserActivity extends BaseActivity {
         addNewInterestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //((EditText) findViewById(R.id.interest_hint)).setText("");
-                interestHint.setText("");
-                interestText.setText("");
-                InterestSuggestion suggestion = (InterestSuggestion) interestText.getTag();
-                if(suggestion != null) {
-                    Interest newInterest = new Interest(suggestion.id);
-                    newInterest.setName(suggestion.name);
+
+                if (currentSuggestion != null) {
+
+                    Interest newInterest = new Interest(currentSuggestion.id);
+                    newInterest.setName(currentSuggestion.name);
                     newInterest.setContagUserId(PrefUtils.getCurrentUserID());
                     newInterest.setContagContag(getCurrentUser());
                     interests.add(newInterest);
@@ -428,6 +460,9 @@ public class UserActivity extends BaseActivity {
                         (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                     }
                     saveInterests();
+
+                    interestHint.setText("");
+                    currentSuggestion = null ;
                 } else {
                     showToast("Please enter a valid interest!");
                 }
@@ -439,15 +474,33 @@ public class UserActivity extends BaseActivity {
     //////////////////////////
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
-                findFragmentByTag(CurrentUserProfileFragment.TAG);
-        if(lf != null) {
-            log(TAG, "fuck bro");
-            lf.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD) {
+            Uri selectedImageUri = data.getData();
+            File selectedImageFile = new File(selectedImageUri.getPath());
+            ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
+                    (new TypedFile("multipart/form-data",selectedImageFile));
+            getSpiceManager().execute(mImageUploadRequest, new RequestListener<Response>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+
+                }
+
+                @Override
+                public void onRequestSuccess(Response response) {
+                    log(TAG, "" + response.result);
+                }
+            });
+
+        } else {
+            CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
+                    findFragmentByTag(CurrentUserProfileFragment.TAG);
+            if (lf != null) {
+                log(TAG, "fuck bro");
+                lf.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -460,15 +513,17 @@ public class UserActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
-            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
-            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-            ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(picaasoTarget);
-            isEditModeOn = false;
+            if(ccUser != null) {
+                Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+                ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
+                ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+                ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
+                Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+                Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(picaasoTarget);
+                isEditModeOn = false;
+            }
         }
     }
 

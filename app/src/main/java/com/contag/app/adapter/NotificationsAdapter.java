@@ -81,7 +81,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         }
 
         Picasso.with(mCtxt).load(Constants.Urls.BASE_URL + notification.avatarUrl).error(R.drawable.default_profile_pic_small).into(mViewHolder.ivUsrProfilePic);
-        mViewHolder.tvNotificationsTxt.setText(notification.text);
+
 
         mViewHolder.ivUsrProfilePic.setTag(position);
         mViewHolder.ivUsrProfilePic.setOnClickListener(this);
@@ -89,8 +89,15 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.btnReject.setTag(position);
         mViewHolder.btnReject.setOnClickListener(this);
 
+        mViewHolder.btnShare.setVisibility(View.INVISIBLE);
+        mViewHolder.tvNotificationsTxt.setText(notification.text);
+        mViewHolder.tvNotificationsTxt.setOnClickListener(null);
+        mViewHolder.tvNotificationsTxt.setTag(null) ;
+
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+
+
 
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setTag(position);
@@ -104,9 +111,9 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else {
-            mViewHolder.btnShare.setVisibility(View.INVISIBLE);
-
+        } else if(notification.notificationType.equals(Constants.Keys.KEY_INTRODUCTION_NOTIFICATION)) {
+            mViewHolder.tvNotificationsTxt.setTag(notification.introducedUserID) ;
+            mViewHolder.tvNotificationsTxt.setOnClickListener(this);
         }
         return convertView;
     }
@@ -155,6 +162,14 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                 notifyDataSetChanged();
                 break;
             }
+
+            case R.id.tv_notification_txt:
+            {
+                if(v.getTag() != null){
+                    int userID = (int) v.getTag() ;
+                }
+
+            }
         }
     }
 
@@ -168,25 +183,26 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
         @Override
         protected void onPostExecute(ContagContag mContagContag) {
-            ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
-            final boolean isContact = mContagContag.getIs_contact();
-            final long id = mContagContag.getId();
-            mSpiceManager.execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    Router.startUserActivity(mCtxt, TAG, id);
-                }
-
-                @Override
-                public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                    if (contactResponses.size() == 1) {
-                        ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                contactResponses.get(0).contagContactUser, isContact);
+            if (mContagContag != null) {
+                ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
+                final boolean isContact = mContagContag.getIs_contact();
+                final long id = mContagContag.getId();
+                mSpiceManager.execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        Router.startUserActivity(mCtxt, TAG, id);
                     }
-                    Router.startUserActivity(mCtxt, TAG, id);
-                }
-            });
 
+                    @Override
+                    public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                        if (contactResponses.size() == 1) {
+                            ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                    contactResponses.get(0).contagContactUser, isContact);
+                        }
+                        Router.startUserActivity(mCtxt, TAG, id);
+                    }
+                });
+            }
         }
     }
 

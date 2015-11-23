@@ -29,6 +29,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by tanay on 30/7/15.
@@ -135,11 +136,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ContagContag getUser(long id) {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         ContagContagDao ccDao = session.getContagContagDao();
-
-        return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+        try {
+            return ccDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+        }   catch (Exception ex) {
+            return null;
+        }
     }
 
     public ArrayList<Interest> getUserInterests(long id) {
+        Log.d("Inter", "In base activity: " + id) ;
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         InterestDao interestDao = session.getInterestDao();
         return (ArrayList<Interest>) interestDao.queryBuilder().

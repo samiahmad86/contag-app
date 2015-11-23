@@ -9,21 +9,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_border_rect_transparent"
-        android:paddingRight="5dp">
+
+        android:padding="10dp">
 
 
 
         <EditText
             android:id="@+id/interest_hint"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:minWidth="60dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_alignTop="@+id/interest_text"
             android:layout_alignLeft="@+id/interest_text"
             android:singleLine="true"
+            android:background="@null"
+            android:layout_centerInParent="true"
             android:theme="@style/EditTextTheme"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -32,14 +35,16 @@
 
         <EditText
             android:id="@+id/interest_text"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:minWidth="60dp"
             android:hint="Add interest"
+            android:layout_centerInParent="true"
             android:singleLine="true"
-            android:textColorHint="@color/black"
-            android:textColor="@color/black"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
             android:textSize="14sp"
+            android:background="@null"
             android:theme="@style/EditTextTheme"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_marginLeft="10dp"

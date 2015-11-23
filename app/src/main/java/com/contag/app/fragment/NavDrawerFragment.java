@@ -84,7 +84,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
 
-        //tvNotificationCount.setText(PrefUtils.getNewNotificationCount()) ;
+        tvNotificationCount.setText(String.valueOf(PrefUtils.getNewNotificationCount())) ;
 
         new LoadUser().execute();
 

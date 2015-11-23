@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_id": "contag-android-app-d5b0e",
-    "project_number": "558166128924",
-    "name": "Contag Android App"
+    "project_id": "steam-capsule-113712",
+    "project_number": "404692829445",
+    "name": "Contag Android Application"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:558166128924:android:ba6637745264003d",
+        "mobilesdk_app_id": "1:404692829445:android:ba6637745264003d",
         "client_id": "android:com.contag.app",
         "client_type": 1,
         "android_client_info": {
@@ -16,11 +16,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "558166128924-ljkers0t1gqv0ektqjq2kas0b2sno180.apps.googleusercontent.com",
+          "client_id": "404692829445-um40hp4fk897l4d80r3io2v0c4fkfr78.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.contag.app",
-            "certificate_hash": "5F692117A05007F0681B81BA490E242D901D49C1"
+            "certificate_hash": "05CD346E91D20C9800ED17EE685511306C2864CF"
           }
         }
       ],
@@ -30,7 +30,7 @@
           "status": 1
         },
         "cloud_messaging_service": {
-          "status": 1,
+          "status": 2,
           "apns_config": []
         },
         "appinvite_service": {
@@ -38,7 +38,7 @@
           "other_platform_oauth_client": []
         },
         "google_signin_service": {
-          "status": 1
+          "status": 2
         },
         "ads_service": {
           "status": 1

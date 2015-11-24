@@ -121,7 +121,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-x
+
         switch (id) {
             case R.id.tv_notification_txt: {
                 //Log.d("NavDrawer", "Notification") ;

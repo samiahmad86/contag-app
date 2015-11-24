@@ -91,9 +91,10 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     public void onResume() {
         super.onResume();
         isLoading = true;
-        feeds.clear();
-        feedsAdapter.notifyDataSetChanged();
-        if(feeds.size()!= 0) {
+
+        if(feeds.size() != 0) {
+            feeds.clear();
+            feedsAdapter.notifyDataSetChanged();
             getFeeds(0,10);
         }
 

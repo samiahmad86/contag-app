@@ -3,6 +3,7 @@ package com.contag.app.service;
 import android.app.Application;
 
 import com.contag.app.config.Constants;
+import com.contag.app.util.ContagConnectionClient;
 import com.contag.app.util.DeviceUtils;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
@@ -13,6 +14,7 @@ import java.io.File;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.Client;
 
 public class APIService extends RetrofitGsonSpiceService {
 
@@ -30,7 +32,8 @@ public class APIService extends RetrofitGsonSpiceService {
 
     @Override
     protected RestAdapter.Builder createRestAdapterBuilder() {
-        RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(getServerUrl()).setConverter(getConverter()).setRequestInterceptor(new RequestInterceptor() {
+        final RestAdapter.Builder builder = new RestAdapter.Builder().setClient(new ContagConnectionClient()).
+                setEndpoint(getServerUrl()).setConverter(getConverter()).setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
                 request.addHeader(Constants.Headers.HEADER_DEVICE_ID, DeviceUtils.getmDeviceId(getBaseContext()));

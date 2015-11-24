@@ -71,6 +71,9 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             }
         });
 
+        //Set new notifications count to 0
+        PrefUtils.setNewNotificationCount(0);
+
     }
 
 
@@ -83,6 +86,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     public void onResume() {
         super.onResume();
         notifications.clear();
+        notificationsAdapter.notifyDataSetChanged();
         NotificationsRequest fr = new NotificationsRequest(0, 10);
         getSpiceManager().execute(fr, NotificationsActivity.this);
     }

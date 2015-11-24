@@ -216,9 +216,6 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                         hmProfileViewModel.put(8, new ProfileViewModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY,
                                 mContagContag.getMarriageAnniversary(), Constants.Types.FIELD_DATE));
 
-                        hmProfileViewModel.put(9, new ProfileViewModel(Constants.Keys.KEY_USER_GENDER,
-                                mContagContag.getGender(), Constants.Types.FIELD_LIST));
-
                         break;
                     }
                     case Constants.Types.PROFILE_PROFESSIONAL: {

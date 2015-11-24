@@ -210,11 +210,13 @@ public class Router {
 
     public static Intent getFacebookIntent(Context context, String facebookId) {
 
+        String url = "https://www.facebook.com/";
+
         try {
             // Check if FB app is even installed
             context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
 
-            String facebookScheme = "fb://profile/" + facebookId;
+            String facebookScheme = "fb://facewebmodal/f?href=" + url + facebookId;
             return new Intent(Intent.ACTION_VIEW, Uri.parse(facebookScheme));
         } catch (Exception e) {
 

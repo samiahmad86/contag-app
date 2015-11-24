@@ -36,7 +36,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         setContentView(R.layout.activity_home);
 
         Intent intent = getIntent();
-        String className = intent.getStringExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY);
+
 
         setUpActionBar(R.id.tb_home);
 

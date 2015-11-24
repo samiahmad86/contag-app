@@ -80,13 +80,24 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        notifications.clear();
+        NotificationsRequest fr = new NotificationsRequest(0, 10);
+        getSpiceManager().execute(fr, NotificationsActivity.this);
+    }
+
+    @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
         Log.d("Nof", String.valueOf(notificationsResponses.size()));
         if (notificationsResponses.size() != 0) {
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();
+            isLoading = false;
+        } else {
+            isLoading = true;
         }
-        isLoading = false;
+
     }
 
     @Override

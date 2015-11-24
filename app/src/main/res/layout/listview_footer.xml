@@ -3,26 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:id="@+id/ll_share"
+    android:paddingLeft="6dp"
     >
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/light_gray"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
     <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/contag_logo"
-        android:layout_marginLeft="5dp"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/icon_intent"
+
         />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_share_intent"
         android:text="Select from Phonebook"
         android:textSize="14sp"
+        android:layout_toRightOf="@id/icon_intent"
+        android:paddingTop="15dp"
         android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+
         />
+    </RelativeLayout>
 
 
 

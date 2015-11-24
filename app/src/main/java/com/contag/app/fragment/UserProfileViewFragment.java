@@ -14,7 +14,7 @@ import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.ProfileModel;
+import com.contag.app.model.ProfileViewModel;
 import com.contag.app.model.SocialPlatform;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.util.DeviceUtils;
@@ -27,30 +27,29 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
     private long userId;
     private int profileType;
 
-    private HashMap<Integer, ProfileModel> hmProfileModel;
+    private HashMap<Integer, ProfileViewModel> hmP2ProfileView;
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     public static final String TAG = UserProfileViewFragment.class.getName();
 
     public static UserProfileViewFragment newInstance(int profileType, long userID) {
-        UserProfileViewFragment upvf = new UserProfileViewFragment();
+        UserProfileViewFragment mUserProfileViewFragment = new UserProfileViewFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.Keys.KEY_USER_PROFILE_TYPE, profileType);
         args.putLong(Constants.Keys.KEY_USER_ID, userID);
-        upvf.setArguments(args);
-        return upvf;
+        mUserProfileViewFragment.setArguments(args);
+        return mUserProfileViewFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
-        hmProfileModel = new HashMap<>();
+        hmP2ProfileView = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         userId = args.getLong(Constants.Keys.KEY_USER_ID);
-
         new LoadUser().execute();
         return view;
     }
@@ -58,55 +57,46 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
 
     private void drawView() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        int size = hmProfileModel.size();
+        llViewContainer.removeAllViews();
+        int size = hmP2ProfileView.size();
         for (int i = 0; i < size; i++) {
             View view = inflater.inflate(R.layout.item_profile_view, llViewContainer, false);
-            llViewContainer.addView(view, i);
-            ViewHolder vh = new ViewHolder();
-            vh.btnSocialGo = (Button) view.findViewById(R.id.btn_social_go);
-            vh.btnRequestField = (Button) view.findViewById(R.id.btn_request);
-            vh.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
-            vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
-            vh.tvFieldValue.setOnClickListener(this);
-            viewHolderArrayList.add(vh);
+            llViewContainer.addView(view);
+            ViewHolder mViewHolder = new ViewHolder();
+            mViewHolder.btnAction = (Button) view.findViewById(R.id.btn_action);
+            mViewHolder.btnRequestField = (Button) view.findViewById(R.id.btn_request);
+            mViewHolder.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
+            mViewHolder.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
+            mViewHolder.tvFieldValue.setOnClickListener(this);
+            mViewHolder.btnAction.setOnClickListener(this);
+            mViewHolder.btnRequestField.setOnClickListener(this);
+            viewHolderArrayList.add(mViewHolder);
         }
     }
 
     private void setViewContent() {
-        int size = hmProfileModel.size();
-        for (int i = 0; i < size; i++) {
-            ViewHolder vh = viewHolderArrayList.get(i);
-            ProfileModel pm = hmProfileModel.get(i);
-            vh.tvFieldLabel.setText(convertKeyToLabel(pm.key));
-            vh.btnRequestField.setTag(pm.key);
-            vh.tvFieldValue.setOnClickListener(this);
-            String value = (String) pm.value;
-            if (profileType == Constants.Types.PROFILE_SOCIAL) {
-                int length = value.length();
-                if (value.lastIndexOf("/") != (length - 1) && value.lastIndexOf("id=") != (length - 3)) {
-                    vh.tvFieldValue.setText((String) pm.value);
-                    String keyLowerCase = pm.key.toLowerCase();
-                    if (keyLowerCase.contains("facebook") || keyLowerCase.contains("google") || keyLowerCase.contains("twitter")
-                            || keyLowerCase.contains("instagram") || keyLowerCase.contains("linkedin")) {
-                        vh.btnSocialGo.setTag(i);
-                        vh.btnSocialGo.setVisibility(View.VISIBLE);
-                        vh.btnSocialGo.setOnClickListener(this);
-                    }
+        int size = hmP2ProfileView.size();
+        for (int position = 0; position < size; position++) {
+            ViewHolder mViewHolder = viewHolderArrayList.get(position);
+            ProfileViewModel mProfileViewModel = hmP2ProfileView.get(position);
+            mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mProfileViewModel.key));
+            if (mProfileViewModel.isAdded) {
+                mViewHolder.btnAction.setTag(position);
+                mViewHolder.btnAction.setVisibility(View.VISIBLE);
+                mViewHolder.btnRequestField.setVisibility(View.GONE);
+                if(mProfileViewModel.fieldType == Constants.Types.FIELD_FACEBOOK || mProfileViewModel.fieldType == Constants.Types.FIELD_GOOGLE
+                        || mProfileViewModel.fieldType == Constants.Types.FIELD_INSTAGRAM || mProfileViewModel.fieldType == Constants.Types.FIELD_LINKEDIN
+                        || mProfileViewModel.fieldType == Constants.Types.FIELD_TWITTER) {
+                    mViewHolder.tvFieldValue.setText(mProfileViewModel.socialProfile.getPlatform_username());
                 } else {
-                    vh.btnRequestField.setVisibility(View.VISIBLE);
-                    vh.btnRequestField.setOnClickListener(this);
-                    vh.tvFieldValue.setVisibility(View.GONE);
+                    mViewHolder.tvFieldValue.setText(mProfileViewModel.value);
                 }
             } else {
-                if (value == null || value.length() == 0) {
-                    vh.btnRequestField.setOnClickListener(this);
-                    vh.btnRequestField.setVisibility(View.VISIBLE);
-                    vh.tvFieldValue.setVisibility(View.GONE);
-                } else {
-                    vh.tvFieldValue.setText(String.valueOf(pm.value));
-                }
+                mViewHolder.btnRequestField.setTag(position);
+                mViewHolder.btnAction.setVisibility(View.GONE);
+                mViewHolder.btnRequestField.setVisibility(View.VISIBLE);
+                mViewHolder.tvFieldValue.setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -129,8 +119,9 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         int id = v.getId();
         switch (id) {
             case R.id.btn_request: {
+                int positon = (int) v.getTag();
                 Router.startProfileRequestService(getActivity(), Constants.Types.SERVICE_MAKE_PROFILE_REQUEST,
-                        userId, (String) v.getTag(), profileType + "");
+                        userId, hmP2ProfileView.get(positon).key, profileType + "");
                 break;
             }
             case R.id.tv_field_value: {
@@ -139,106 +130,196 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 showToast("copied to clipboard");
                 break;
             }
-            case R.id.btn_social_go: {
-                int pos = (Integer) v.getTag();
-                String name = convertKeyToLabel(hmProfileModel.get(pos).key).toLowerCase();
-                log(TAG, name);
-                if (name.contains("facebook")) {
-                    String value = hmProfileModel.get(pos).value.toString();
-                    Router.openFacebookProfile(getActivity(), value.substring(value.lastIndexOf("/") + 1));
-                } else if (name.contains("twitter")) {
-                    String twitterProfile = hmProfileModel.get(pos).value.toString();
-                    Router.openTwitterProfile(getActivity(), twitterProfile.substring(twitterProfile.lastIndexOf("/") + 1));
-                } else if (name.contains("google")) {
-                    Router.openGooglePlusProfile(getActivity(), hmProfileModel.get(pos).value.toString());
-                } else if (name.contains("instagram")) {
-                    String instagramUsername = hmProfileModel.get(pos).value.toString();
-                    Router.openInstagramProfile(getActivity(), instagramUsername.substring(instagramUsername.lastIndexOf("/") + 1));
-                } else if (name.contains("linkedin")) {
-                    String linkedInUsername = hmProfileModel.get(pos).value.toString();
-                    linkedInUsername = linkedInUsername.substring(linkedInUsername.indexOf("id=") + 3);
-                    log(TAG, linkedInUsername);
-                    Router.openLinkedInProfile(getActivity(), linkedInUsername);
+            case R.id.btn_action: {
+                int position = (Integer) v.getTag();
+                ProfileViewModel mProfileViewModel = hmP2ProfileView.get(position);
+                switch (mProfileViewModel.fieldType) {
+                    case Constants.Types.FIELD_EMAIL: {
+                        Router.openGmailForEmailID(getActivity(), mProfileViewModel.value);
+                        break;
+                    }
+                    case Constants.Types.FIELD_ADDRESS: {
+                        Router.openGoogleMapsWithAddress(getActivity(), mProfileViewModel.value);
+                        break;
+                    }
+                    case Constants.Types.FIELD_NUMBER: {
+                        DeviceUtils.dialNumber(getActivity(), mProfileViewModel.value);
+                        break;
+                    }
+                    case Constants.Types.FIELD_GOOGLE: {
+                        Router.openGooglePlusProfile(getActivity(), mProfileViewModel.socialProfile.getPlatform_id());
+                        break;
+                    }
+                    case Constants.Types.FIELD_INSTAGRAM: {
+                        Router.openInstagramProfile(getActivity(), mProfileViewModel.socialProfile.getPlatform_id());
+                        break;
+                    }
+                    case Constants.Types.FIELD_FACEBOOK: {
+                        Router.openFacebookProfile(getActivity(), mProfileViewModel.socialProfile.getPlatform_id());
+                        break;
+                    }
+                    case Constants.Types.FIELD_LINKEDIN: {
+                        Router.openLinkedInProfile(getActivity(), mProfileViewModel.socialProfile.getPlatform_id());
+                        break;
+                    }
+                    case Constants.Types.FIELD_TWITTER: {
+                        Router.openTwitterProfile(getActivity(), mProfileViewModel.socialProfile.getPlatform_id());
+                        break;
+                    }
+                    case Constants.Types.FIELD_SOCIAL: {
+                        Router.openSocialProfile(getActivity(), viewHolderArrayList.get(position).tvFieldValue.toString());
+                        break;
+                    }
+                    default: {
+                        DeviceUtils.copyToClipboard(getActivity(), viewHolderArrayList.get(position).tvFieldValue.getText().toString());
+                        showToast(convertKeyToLabel(mProfileViewModel.key) + " was copied to clipboard");
+                    }
                 }
                 break;
             }
         }
     }
 
-    private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileModel>> {
+    private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, ProfileViewModel>> {
         @Override
-        protected HashMap<Integer, ProfileModel> doInBackground(Integer... params) {
-            ContagContag cc = ((BaseActivity) UserProfileViewFragment.this.getActivity()).getUser(userId);
-            HashMap<Integer, ProfileModel> hm = new HashMap<>();
-            switch (profileType) {
-                case Constants.Types.PROFILE_PERSONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_MOBILE_NUMBER, cc.getMobileNumber()));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL, cc.getPersonalEmail()));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_ADDRESS, cc.getAddress()));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER, cc.getLandLineNumber()));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_BLOOD_GROUP, cc.getBloodGroup()));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH, cc.getDateOfBirth()));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER,
-                            cc.getEmergencyContactNumber()));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY,
-                            cc.getMarriageAnniversary()));
-                    hm.put(8    , new ProfileModel(Constants.Keys.KEY_USER_MARITAL_STATUS, cc.getMaritalStatus()));
-                    hm.put(9, new ProfileModel(Constants.Keys.KEY_USER_GENDER, cc.getGender()));
-                    break;
-                }
-                case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hm.put(0, new ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail()));
-                    hm.put(1, new ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress()));
-                    hm.put(2, new ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER,
-                            cc.getWorkMobileNumber()));
-                    hm.put(3, new ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER,
-                            cc.getWorkLandLineNumber()));
-                    hm.put(4, new ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation()));
-                    hm.put(5, new ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE,
-                            cc.getWorkFacebookPage()));
-                    hm.put(6, new ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink()));
-                    hm.put(7, new ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink()));
-                    break;
-                }
+        protected HashMap<Integer, ProfileViewModel> doInBackground(Integer... params) {
+            ContagContag mContagContag = ((BaseActivity) UserProfileViewFragment.this.getActivity()).getUser(userId);
+            if (mContagContag != null) {
+                HashMap<Integer, ProfileViewModel> hmProfileViewModel = new HashMap<>();
+                switch (profileType) {
+                    case Constants.Types.PROFILE_PERSONAL: {
 
-                case Constants.Types.PROFILE_SOCIAL: {
-                    ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) UserProfileViewFragment.this.getActivity()).
-                            getSocialPlatforms();
-                    HashMap<String, String> hmNameToUrl = new HashMap<>();
-                    for (SocialPlatform sp : socialPlatforms) {
-                        hmNameToUrl.put(sp.getPlatformName(), sp.getPlatformBaseUrl());
+                        hmProfileViewModel.put(0, new ProfileViewModel(Constants.Keys.KEY_USER_MOBILE_NUMBER,
+                                mContagContag.getMobileNumber(), Constants.Types.FIELD_NUMBER));
+
+                        hmProfileViewModel.put(1, new ProfileViewModel(Constants.Keys.KEY_USER_PERSONAL_EMAIL,
+                                mContagContag.getPersonalEmail(), Constants.Types.FIELD_EMAIL));
+
+                        hmProfileViewModel.put(2, new ProfileViewModel(Constants.Keys.KEY_USER_ADDRESS,
+                                mContagContag.getAddress(), Constants.Types.FIELD_ADDRESS));
+
+                        hmProfileViewModel.put(3, new ProfileViewModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER,
+                                mContagContag.getLandLineNumber(), Constants.Types.FIELD_NUMBER));
+
+                        hmProfileViewModel.put(4, new ProfileViewModel(Constants.Keys.KEY_USER_BLOOD_GROUP,
+                                mContagContag.getBloodGroup(), Constants.Types.FIELD_LIST));
+
+                        hmProfileViewModel.put(5, new ProfileViewModel(Constants.Keys.KEY_USER_DATE_OF_BIRTH,
+                                mContagContag.getDateOfBirth(), Constants.Types.FIELD_DATE));
+
+                        hmProfileViewModel.put(6, new ProfileViewModel(Constants.Keys.KEY_USER_EMERGENCY_CONTACT_NUMBER,
+                                mContagContag.getEmergencyContactNumber(), Constants.Types.FIELD_NUMBER));
+
+                        hmProfileViewModel.put(7, new ProfileViewModel(Constants.Keys.KEY_USER_MARITAL_STATUS,
+                                mContagContag.getMaritalStatus(), Constants.Types.FIELD_LIST));
+
+                        hmProfileViewModel.put(8, new ProfileViewModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY,
+                                mContagContag.getMarriageAnniversary(), Constants.Types.FIELD_DATE));
+
+                        hmProfileViewModel.put(9, new ProfileViewModel(Constants.Keys.KEY_USER_GENDER,
+                                mContagContag.getGender(), Constants.Types.FIELD_LIST));
+
+                        break;
                     }
-                    ArrayList<SocialProfile> socialProfiles = ((BaseActivity) UserProfileViewFragment.this.getActivity()).
-                            getSocialProfiles(userId);
-                    int counter = 0;
-                    for (SocialProfile sp : socialProfiles) {
+                    case Constants.Types.PROFILE_PROFESSIONAL: {
 
-                        if (hmNameToUrl.containsKey(sp.getSocial_platform())) {
-                            if (sp.getSocial_platform().contains("linkedin")) {
-                                hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
-                                        hmNameToUrl.get(sp.getSocial_platform()) + sp.getPlatform_id()));
-                            } else {
-                                hm.put(counter++, new ProfileModel(sp.getSocial_platform(),
-                                        hmNameToUrl.get(sp.getSocial_platform()) + "/" + sp.getPlatform_id()));
+                        hmProfileViewModel.put(0, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_EMAIL,
+                                mContagContag.getWorkEmail(), Constants.Types.FIELD_EMAIL));
+
+                        hmProfileViewModel.put(1, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_ADDRESS,
+                                mContagContag.getWorkAddress(), Constants.Types.FIELD_ADDRESS));
+
+                        hmProfileViewModel.put(2, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER,
+                                mContagContag.getWorkMobileNumber(), Constants.Types.FIELD_NUMBER));
+
+                        hmProfileViewModel.put(3, new ProfileViewModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER,
+                                mContagContag.getWorkLandLineNumber(), Constants.Types.FIELD_NUMBER));
+
+                        hmProfileViewModel.put(4, new ProfileViewModel(Constants.Keys.KEY_USER_DESIGNATION,
+                                mContagContag.getDesignation(), Constants.Types.FIELD_STRING));
+
+                        hmProfileViewModel.put(5, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE,
+                                mContagContag.getWorkFacebookPage(), Constants.Types.FIELD_SOCIAL));
+
+                        hmProfileViewModel.put(6, new ProfileViewModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK,
+                                mContagContag.getAndroidAppLink(), Constants.Types.FIELD_SOCIAL));
+
+                        hmProfileViewModel.put(7, new ProfileViewModel(Constants.Keys.KEY_USER_IOS_APP_LINK,
+                                mContagContag.getIosAppLink(), Constants.Types.FIELD_SOCIAL));
+
+                        break;
+                    }
+
+                    case Constants.Types.PROFILE_SOCIAL: {
+                        ArrayList<SocialPlatform> socialPlatforms = ((BaseActivity) getActivity()).getSocialPlatforms();
+                        ArrayList<SocialProfile> socialProfiles = ((BaseActivity) getActivity()).getSocialProfiles(userId);
+                        HashMap<String, SocialPlatform> hmNameToSocialPlatform = new HashMap<>();
+                        for (SocialPlatform socialPlatform : socialPlatforms) {
+                            hmNameToSocialPlatform.put(socialPlatform.getPlatformName(), socialPlatform);
+                        }
+                        int counter = 0;
+                        for (SocialProfile socialProfile : socialProfiles) {
+                            if (hmNameToSocialPlatform.containsKey(socialProfile.getSocial_platform())) {
+                                String keyLowerCase = socialProfile.getSocial_platform().toLowerCase();
+                                log(TAG, "socialProfile  " + keyLowerCase + " username" +
+                                        socialProfile.getPlatform_username() + " user_id " + socialProfile.getPlatform_id());
+                                if (keyLowerCase.contains("google")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
+                                            Constants.Types.FIELD_GOOGLE));
+                                } else if (keyLowerCase.contains("linkedin")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
+                                            Constants.Types.FIELD_LINKEDIN));
+                                } else if (keyLowerCase.contains("facebook")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
+                                            Constants.Types.FIELD_FACEBOOK));
+                                } else if (keyLowerCase.contains("twitter")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
+                                            Constants.Types.FIELD_TWITTER));
+                                } else if (keyLowerCase.contains("instagram")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, socialProfile,
+                                            Constants.Types.FIELD_INSTAGRAM));
+                                } else {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase,
+                                            hmNameToSocialPlatform.get(socialProfile.getSocial_platform()).getPlatformBaseUrl()
+                                                    + "/" + socialProfile.getPlatform_id(),
+                                            Constants.Types.FIELD_SOCIAL));
+                                }
+                                hmNameToSocialPlatform.remove(socialProfile.getSocial_platform());
                             }
-                            hmNameToUrl.remove(sp.getSocial_platform());
                         }
-                    }
-                    for (SocialPlatform sp : socialPlatforms) {
-                        if (hmNameToUrl.containsKey(sp.getPlatformName())) {
-                            hm.put(counter++, new ProfileModel(sp.getPlatformName(), sp.getPlatformBaseUrl() + "/"));
+
+                        for (SocialPlatform socialPlatform : socialPlatforms) {
+                            if (hmNameToSocialPlatform.containsKey(socialPlatform.getPlatformName())) {
+                                String keyLowerCase = socialPlatform.getPlatformName().toLowerCase();
+                                if (keyLowerCase.contains("facebook")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_FACEBOOK));
+                                } else if (keyLowerCase.contains("google")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_GOOGLE));
+                                } else if (keyLowerCase.contains("twitter")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_TWITTER));
+                                } else if (keyLowerCase.contains("instagram")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_INSTAGRAM));
+                                } else if (keyLowerCase.contains("linkedin")) {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_LINKEDIN));
+                                } else {
+                                    hmProfileViewModel.put(counter++, new ProfileViewModel(keyLowerCase, Constants.Types.FIELD_SOCIAL));
+                                }
+                            }
                         }
+
                     }
-                    break;
+
                 }
+
+                return hmProfileViewModel;
             }
-            return hm;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(HashMap<Integer, ProfileModel> hm) {
-            hmProfileModel.clear();
-            hmProfileModel.putAll(hm);
+        protected void onPostExecute(HashMap<Integer, ProfileViewModel> integerP2ProfileViewModelHashMap) {
+            hmP2ProfileView.clear();
+            hmP2ProfileView.putAll(integerP2ProfileViewModelHashMap);
             drawView();
             setViewContent();
         }
@@ -249,7 +330,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         protected TextView tvFieldValue;
         protected TextView tvFieldLabel;
         protected Button btnRequestField;
-        protected Button btnSocialGo;
+        protected Button btnAction;
 
         public ViewHolder() {
 

@@ -30,6 +30,7 @@
                     android:textSize="20sp"
                    />
 
+
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/et_user_name"
                     android:layout_width="150dp"
@@ -77,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:singleLine="true"
+            android:visibility="gone"
             android:layout_marginTop="0dp"
             android:textColor="@color/white"
             android:textSize="14sp"

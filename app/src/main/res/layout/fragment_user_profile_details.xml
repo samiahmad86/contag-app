@@ -42,8 +42,11 @@
         android:background="@drawable/edit_pencil_contag"
         android:visibility="gone" />
 
+
+
     <include
         android:id="@+id/pb_edit_profile"
         layout="@layout/layout_progress_bar" />
+
 
 </RelativeLayout>

@@ -168,25 +168,26 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
         @Override
         protected void onPostExecute(ContagContag mContagContag) {
-            ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
-            final boolean isContact = mContagContag.getIs_contact();
-            final long id = mContagContag.getId();
-            mSpiceManager.execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    Router.startUserActivity(mCtxt, TAG, id);
-                }
-
-                @Override
-                public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                    if (contactResponses.size() == 1) {
-                        ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                contactResponses.get(0).contagContactUser, isContact);
+            if (mContagContag != null) {
+                ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
+                final boolean isContact = mContagContag.getIs_contact();
+                final long id = mContagContag.getId();
+                mSpiceManager.execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        Router.startUserActivity(mCtxt, TAG, id);
                     }
-                    Router.startUserActivity(mCtxt, TAG, id);
-                }
-            });
 
+                    @Override
+                    public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                        if (contactResponses.size() == 1) {
+                            ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                    contactResponses.get(0).contagContactUser, isContact);
+                        }
+                        Router.startUserActivity(mCtxt, TAG, id);
+                    }
+                });
+            }
         }
     }
 

@@ -12,7 +12,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -255,7 +254,10 @@ public class User {
             if (cs.getUser_ids().indexOf(",") == -1) {
                 userIDS.add(cs.getUser_ids());
             } else {
-                userIDS = (ArrayList<String>) Arrays.asList(cs.getUser_ids().split(","));
+                String[] arr = cs.getUser_ids().split(",");
+                for(String str : arr) {
+                    userIDS.add(str);
+                }
             }
             if (!userIDS.contains(userID)) {
                 userIDS.add(userID);
@@ -268,7 +270,6 @@ public class User {
             Log.d(NotificationsAdapter.TAG, "pissu chod 2");
             return userIDS.get(0);
         }
-        Log.d(NotificationsAdapter.TAG, "pissu chod 3 ggg" + cs.getUser_ids() + "ggggg " + userIDS.size());
         return TextUtils.join(",", userIDS);
 
     }

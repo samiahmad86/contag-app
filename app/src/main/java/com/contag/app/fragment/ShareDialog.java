@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.adapter.ShareListAdapter;
@@ -67,7 +66,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        setCancelable(false);
     }
 
     @Override
@@ -87,8 +85,8 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom) ;
         shareText = (TextView) view.findViewById(R.id.tv_share_text) ;
 
-       // String temp=getHashValue(fieldName);
-        shareText.setText("Share your " +/* Html.fromHtml("<b>"+temp+"</b>")*/ " with: ") ;
+        String temp=getHashValue(fieldName);
+        shareText.setText("Share your " + Html.fromHtml("<b>" + temp + "</b>")+ " with: ") ;
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done) ;
 
         sharePublic.setOnClickListener(this);
@@ -204,7 +202,8 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener{
 
     private void setCustomShareCount(){
         shareCustom.setText("Custom(" + shareCount + ")");
-        shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
+        if(!mCustomShare.getIs_public())
+            shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
     }
 
 

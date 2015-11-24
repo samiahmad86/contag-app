@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private void getFeeds(int start, int end){
+        Log.d("FeedsFubar", "Going to request") ;
+        Log.d("FeedsFubar", "Start " + start + " End: "+ end ) ;
         pbFeeds.setVisibility(View.VISIBLE);
         FeedsRequest feedsRequest = new FeedsRequest(start, end);
         getSpiceManager().execute(feedsRequest, FeedsFragment.this);
@@ -120,11 +123,13 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
+        Log.d("FeedsFubar", "Request failed") ;
         pbFeeds.setVisibility(View.GONE);
     }
 
     @Override
     public void onRequestSuccess(FeedsResponse.FeedList feedsResponses) {
+        Log.d("FeedsFubar", "Request was a success") ;
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();

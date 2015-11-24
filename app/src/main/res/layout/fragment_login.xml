@@ -4,35 +4,25 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context="com.contag.app.fragment.LoginFragment"
-    android:background="@drawable/contag_screen">
+    android:background="@drawable/login_splash">
 
-    <ImageView
+  <!--  <ImageView
         android:id="@+id/iv_contag_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:scaleType="centerInside"
-        android:src="@drawable/contag_logo"/>
+        android:src="@drawable/contag_logo"/>-->
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_otp_msg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_contag_logo"
-        android:padding="10dp"
-        android:text="@string/otp_msg"
-        android:textSize="15sp"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        />
+
 
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_phone_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_contag_logo"
+        android:layout_centerInParent="true"
         android:background="@drawable/bg_gray_rect"
         android:hint="@string/enter_phone_num"
         android:inputType="number"
@@ -43,6 +33,7 @@
         android:layout_marginBottom="-10dp"
         android:textColor="@color/black"
         android:textSize="14sp" />
+
 
 
 
@@ -58,6 +49,17 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="20sp" />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_otp_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_login"
+        android:text="@string/otp_msg"
+        android:paddingTop="10dp"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_resend_otp"

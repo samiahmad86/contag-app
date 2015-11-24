@@ -191,9 +191,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case R.id.btn_share: {
-                int position = (int) v.getTag();
-             /*   ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName());
-                share.show(getChildFragmentManager(), TAG);*/
+                int position = (int) v.getTag();ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName(), "");
+                share.show(getChildFragmentManager(), TAG);
                 break;
             }
 

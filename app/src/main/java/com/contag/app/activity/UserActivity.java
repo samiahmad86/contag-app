@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,9 @@ import com.contag.app.config.Router;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
+import com.contag.app.model.ImageUploadResponse;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestSuggestion;
 import com.contag.app.model.Response;
@@ -68,7 +72,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private boolean isEditModeOn = false;
     private long userID;
-    private InterestSuggestion currentSuggestion = null ;
+    private InterestSuggestion currentSuggestion = null;
 
 
     @Override
@@ -127,16 +131,15 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     } else {
 
                         String name = etUserName.getText().toString();
-                        if (name.length() > 0){
+                        if (name.length() > 0) {
 
                             sendNameAndStatus(name, etUserStatus.getText().toString());
 
                             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                             setUpInterests();
                             hideInterestRemoveButton();
-                        }
-                        else {
-                            showToast("Name cannot be blank!") ;
+                        } else {
+                            showToast("Name cannot be blank!");
 
                         }
 
@@ -169,6 +172,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 registerReceiver(brUserUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
         LocalBroadcastManager.getInstance(this).
                 registerReceiver(brInterestUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_interest_updated)));
+        if (userID == PrefUtils.getCurrentUserID()) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(brProfilePictureChanged,
+                    new IntentFilter(getResources().getString(R.string.intent_filter_profile_picture_changed)));
+        }
     }
 
     @Override
@@ -177,6 +184,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brSuggestions);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brInterestUpdated);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brUserUpdated);
+        if (userID == PrefUtils.getCurrentUserID()) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(brProfilePictureChanged);
+        }
     }
 
 
@@ -239,7 +249,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
-        int i = 0 ;
+        int i = 0;
 
         for (Interest userInterest : userInterests) {
             if (i >= 3)
@@ -252,8 +262,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void hideInterestRemoveButton(){
-        for(int i: rmInterest){
+    private void hideInterestRemoveButton() {
+        for (int i : rmInterest) {
             (findViewById(i)).setVisibility(View.GONE);
         }
     }
@@ -317,7 +327,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         switch (id) {
             case R.id.iv_user_photo: {
                 Intent intentUploadImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
+                startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
                 break;
             }
         }
@@ -376,13 +386,25 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     };
 
-    BroadcastReceiver brGetUser = new BroadcastReceiver() {
+    private BroadcastReceiver brGetUser = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             new LoadUser().execute(userID);
         }
     };
 
+
+    private BroadcastReceiver brProfilePictureChanged = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String avatarUrl = intent.getStringExtra(Constants.Keys.KEY_USER_AVATAR_URL);
+            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+            Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
+                    into(picaasoTarget);
+        }
+    };
 
     private void setupNewInterestView() {
         (findViewById(R.id.add_new_interest)).setVisibility(View.VISIBLE);
@@ -419,11 +441,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
-                                        currentSuggestion = suggestion ;
+                                        currentSuggestion = suggestion;
                                         interestHint.setText(suggestion.name.toLowerCase());
 
                                     } else {
-                                        currentSuggestion = null ;
+                                        currentSuggestion = null;
                                         interestSuggestion.clear();
                                         interestHint.setText("");
                                     }
@@ -462,7 +484,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     saveInterests();
 
                     interestHint.setText("");
-                    currentSuggestion = null ;
+                    currentSuggestion = null;
                 } else {
                     showToast("Please enter a valid interest!");
                 }
@@ -471,28 +493,12 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    //////////////////////////
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD) {
-            Uri selectedImageUri = data.getData();
-            File selectedImageFile = new File(selectedImageUri.getPath());
-            ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
-                    (new TypedFile("multipart/form-data",selectedImageFile));
-            getSpiceManager().execute(mImageUploadRequest, new RequestListener<Response>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-
-                }
-
-                @Override
-                public void onRequestSuccess(Response response) {
-                    log(TAG, "" + response.result);
-                }
-            });
+        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {;
+            Router.startProfilePicutreUpload(this, ImageUtils.getRealPathFromUri(this, data.getData()));
 
         } else {
             CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
@@ -513,7 +519,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-            if(ccUser != null) {
+            if (ccUser != null) {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
@@ -544,5 +550,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         }
     };
+
 
 }

@@ -227,8 +227,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 } else if (socialProfileModel.mViewType == Constants.Types.FIELD_INSTAGRAM) {
                     Router.openInstagramProfile(getActivity(), socialProfileModel.mSocialProfile.getPlatform_id());
                 } else if (socialProfileModel.mViewType == Constants.Types.FIELD_GOOGLE) {
-                    Router.openGooglePlusProfile(getActivity(), socialProfileModel.mSocialPlatform.getPlatformBaseUrl()
-                            + "/" + socialProfileModel.mSocialProfile.getPlatform_id() + "/posts");
+                    Router.openGooglePlusProfile(getActivity(), socialProfileModel.mSocialProfile.getPlatform_id());
                 }
                 break;
             }

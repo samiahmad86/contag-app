@@ -19,6 +19,10 @@ public class PrefUtils {
         mEditor.commit();
     }
 
+    public static void clearData() {
+        mEditor.clear().commit();
+    }
+
     public static void setAuthToken(String authToken) {
         mEditor.putString(Constants.Keys.KEY_AUTH_TOKEN, authToken).commit();
     }

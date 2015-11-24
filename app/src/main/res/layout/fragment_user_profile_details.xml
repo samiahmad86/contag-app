@@ -2,16 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_save_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_btn_profile_update"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="@string/save_changes"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
     <ScrollView
         android:id="@+id/sv_user_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginTop="20dp"
         android:padding="10dp"
         android:overScrollMode="never"
+        android:layout_above="@id/btn_save_profile"
         android:scrollbars="none">
 
         <LinearLayout
@@ -21,18 +34,7 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_save_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/filter_selection"
-        android:gravity="center"
-        android:padding="10dp"
-        android:visibility="gone"
-        android:text="@string/save_changes"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_edit_profile"

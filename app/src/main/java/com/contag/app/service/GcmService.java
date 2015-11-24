@@ -15,6 +15,7 @@ import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.util.AtomicIntegerUtils;
+import com.contag.app.util.PrefUtils;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /**
@@ -29,6 +30,8 @@ public class GcmService extends GcmListenerService {
         String notification_type = data.getString("notification_type");
         Log.d(TAG, notification_type);
         Intent intent;
+
+        PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1 ) ;
 
         switch (notification_type) {
             case "new_user": {

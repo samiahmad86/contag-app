@@ -3,7 +3,7 @@
     <!-- app strings -->
     <string name="app_name">Contag</string>
     <string name="facebook_app_id">1487599681495272</string>
-    <string name="gcm_sender_id">684232164335</string>
+    <string name="gcm_sender_id">404692829445</string>
 
     <!-- intent filters -->
     <string name="intent_filter_sms">com.contag.app.sms</string>

@@ -4,10 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/bg_feeds_items"
     android:padding="10dp">
-
-
-
-    <RelativeLayout
+  <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -55,6 +52,19 @@
             android:layout_toRightOf="@id/iv_feeds_usr_img"
             android:textColor="@color/feeds_story"
             android:textSize="14sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_feeds_createdOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7dp"
+            android:text="timestamp"
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+             android:layout_toRightOf="@id/tv_feeds_usr_name"
+            android:textColor="@color/feeds_story"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 

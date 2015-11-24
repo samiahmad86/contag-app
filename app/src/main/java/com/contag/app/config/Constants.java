@@ -95,6 +95,7 @@ public class Constants {
         public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
         public static final String KEY_NOTIF_STATUS = "status";
         public static final String KEY_NOTIF_USER_ID = "user_id";
+        public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
     }
 
     public class Headers {
@@ -117,6 +118,8 @@ public class Constants {
         public static final String FILTER_BLOOD_GROUP = "Blood Group";
         public static final String STATUS_ALLOWED = "allow";
         public static final String STATUS_DECLINE = "declined";
+        public static final int REQUEST_TIMEOUT = 60 * 1000;
+        public static final int READ_TIMEOUT = 60 * 1000;
     }
 
     public class Types {

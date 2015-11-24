@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -51,7 +53,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private boolean isDateShown;
 
     private Button btnEditProfile;
-    private View pbProfileUpdate;
+    private ProgressBar pbProfileUpdate;
     private ScrollView svProfile;
     private int profileType;
     private boolean isComingFromNotification, cameFromNotification;
@@ -90,7 +92,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
-        pbProfileUpdate = view.findViewById(R.id.pb_edit_profile);
+        pbProfileUpdate =(ProgressBar) view.findViewById(R.id.pb_edit_profile);
         svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
@@ -303,6 +305,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 aUser.put(oUser);
             }
             pbProfileUpdate.setVisibility(View.VISIBLE);
+           // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
+
+
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
             ex.printStackTrace();

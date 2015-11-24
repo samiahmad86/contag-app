@@ -69,12 +69,11 @@
         android:textAllCaps="false"
         android:layout_below="@id/ll_two_buttons"
         android:text="Ok"
-<<<<<<< HEAD
-=======
-        android:textAllCaps="false"
+
+      
         android:padding="2dp"
-        android:background="@drawable/bg_grey_border_button"
->>>>>>> f64460e5d92607febdbab4e4ffe8889af18a5f06
+
+
         android:textColor="@color/black"/>
 
 

@@ -262,12 +262,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     }
     }
 
-    private void hideInterestRemoveButton(){
-        for(int i: rmInterest){
-            (findViewById(i)).setVisibility(View.GONE);
-        }
-    }
-
     private void setupEditableInterests() {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
             @Override
@@ -522,19 +516,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-<<<<<<< HEAD
-            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
-            ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
-            ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
 
-          ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
-
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
-            Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                    into(picaasoTarget);
-            isEditModeOn = false;
-=======
             if(ccUser != null) {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
@@ -546,7 +528,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                         into(picaasoTarget);
                 isEditModeOn = false;
             }
->>>>>>> f64460e5d92607febdbab4e4ffe8889af18a5f06
+
         }
     }
 

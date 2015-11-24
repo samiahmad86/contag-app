@@ -148,6 +148,8 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         PrefUtils.clearForLogout();
         DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
         session.clear();
+        ((ContagApplication) getActivity().getApplicationContext()).clearApplicationData();
+        PrefUtils.clearData();
         Router.startLoginActivity(getActivity(), "NavDrawer", Constants.Types.FRAG_LOGIN);
         isLoading = true ;
     }

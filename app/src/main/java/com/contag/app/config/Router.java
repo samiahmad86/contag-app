@@ -94,6 +94,13 @@ public class Router {
         mContext.startService(privacyIntent) ;
     }
 
+    public static void startProfilePicutreUpload(Context mContext, String filePath) {
+        Intent uploadImageIntent = new Intent(mContext, UserService.class);
+        uploadImageIntent.putExtra(Constants.Keys.KEY_IMAGE_PATH, filePath);
+        uploadImageIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.SERVICE_UPLOAD_PROFILE_PICTURE);
+        mContext.startService(uploadImageIntent);
+    }
+
     public static void sendFieldRequestNotificationResponse(Context mContext, long requestID, int serviceType) {
         Intent iFieldRequestNotifResponse = new Intent(mContext, UserService.class);
         iFieldRequestNotifResponse.putExtra(Constants.Keys.KEY_REQUEST_ID, requestID);

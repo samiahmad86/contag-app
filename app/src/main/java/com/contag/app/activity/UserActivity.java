@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -171,6 +172,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 registerReceiver(brUserUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_user_received)));
         LocalBroadcastManager.getInstance(this).
                 registerReceiver(brInterestUpdated, new IntentFilter(getResources().getString(R.string.intent_filter_interest_updated)));
+        if (userID == PrefUtils.getCurrentUserID()) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(brProfilePictureChanged,
+                    new IntentFilter(getResources().getString(R.string.intent_filter_profile_picture_changed)));
+        }
     }
 
     @Override
@@ -179,6 +184,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brSuggestions);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brInterestUpdated);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(brUserUpdated);
+        if (userID == PrefUtils.getCurrentUserID()) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(brProfilePictureChanged);
+        }
     }
 
 
@@ -378,13 +386,25 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     };
 
-    BroadcastReceiver brGetUser = new BroadcastReceiver() {
+    private BroadcastReceiver brGetUser = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             new LoadUser().execute(userID);
         }
     };
 
+
+    private BroadcastReceiver brProfilePictureChanged = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String avatarUrl = intent.getStringExtra(Constants.Keys.KEY_USER_AVATAR_URL);
+            Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+            Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
+                    into(picaasoTarget);
+        }
+    };
 
     private void setupNewInterestView() {
         (findViewById(R.id.add_new_interest)).setVisibility(View.VISIBLE);
@@ -473,42 +493,12 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    //////////////////////////
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD) {
-            Uri selectedImageUri = data.getData();
-            File selectedImageFile = new File(ImageUtils.getRealPathFromUri(this, selectedImageUri));
-            log(TAG, selectedImageFile.getAbsolutePath());
-            String extension = selectedImageFile.getAbsolutePath().
-                    substring(selectedImageFile.getAbsolutePath().lastIndexOf(".") + 1);
-            if (selectedImageFile.length() / 1024 >= 1024) {
-                showToast("The selected image is too big");
-                return;
-            }
-            if(!extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg") && !extension.equalsIgnoreCase("png")) {
-                showToast("Please select a png or jpg format image");
-                return;
-            }
-            ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
-                    (new TypedFile("multipart/form-data", selectedImageFile));
-            getSpiceManager().execute(mImageUploadRequest, new RequestListener<ImageUploadResponse>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-
-                }
-
-                @Override
-                public void onRequestSuccess(ImageUploadResponse response) {
-                    log(TAG, "" + response.result);
-                    if (response.result) {
-                        new ChangeAvatarUrl().execute(response.avatarUrl);
-                    }
-                }
-            });
+        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {;
+            Router.startProfilePicutreUpload(this, ImageUtils.getRealPathFromUri(this, data.getData()));
 
         } else {
             CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
@@ -539,29 +529,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(picaasoTarget);
                 isEditModeOn = false;
-            }
-        }
-    }
-
-    private class ChangeAvatarUrl extends AsyncTask<String, Void, ContagContag> {
-        @Override
-        protected ContagContag doInBackground(String... params) {
-            ContagContag mContagContag = UserActivity.this.getCurrentUser();
-            mContagContag.setAvatarUrl(Constants.Urls.BASE_URL + params[0]);
-            DaoSession session = ((ContagApplication) UserActivity.this.getApplicationContext()).getDaoSession();
-            ContagContagDao mContagContagDao = session.getContagContagDao();
-            mContagContagDao.update(mContagContag);
-            return mContagContag;
-        }
-
-        @Override
-        protected void onPostExecute(ContagContag mContagContag) {
-            if (mContagContag != null) {
-                Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
-                Picasso.with(UserActivity.this).load(mContagContag.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                        into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
-                Picasso.with(UserActivity.this).load(mContagContag.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                        into(picaasoTarget);
             }
         }
     }

@@ -236,7 +236,8 @@ public class Router {
     }
 
     public static void openGooglePlusProfile(Context context, String gPlusId) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(gPlusId)));
+        String link = "https://plus.google.com/" + gPlusId + "/posts";
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
     }
 
     public static void openInstagramProfile(Context context, String userName) {

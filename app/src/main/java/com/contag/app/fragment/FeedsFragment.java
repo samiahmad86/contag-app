@@ -70,11 +70,9 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
-                    log(TAG, "making progress bar visible while getting feeds");
-                    pbFeeds.setVisibility(View.VISIBLE);
-                    FeedsRequest feedsRequest = new FeedsRequest(start, 10);
-                    getSpiceManager().execute(feedsRequest, FeedsFragment.this);
-                    isLoading = true;
+                    int end = start + 10;
+                    getFeeds(start, end);
+
                 }
             }
         });
@@ -95,10 +93,17 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         isLoading = true;
         feeds.clear();
         feedsAdapter.notifyDataSetChanged();
-        pbFeeds.setVisibility(View.VISIBLE);
-        FeedsRequest feedsRequest = new FeedsRequest(0, 10);
-        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
+        if(feeds.size()!= 0) {
+            getFeeds(0,10);
+        }
 
+    }
+
+    private void getFeeds(int start, int end){
+        pbFeeds.setVisibility(View.VISIBLE);
+        FeedsRequest feedsRequest = new FeedsRequest(start, end);
+        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
+        isLoading = true;
     }
 
     private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {

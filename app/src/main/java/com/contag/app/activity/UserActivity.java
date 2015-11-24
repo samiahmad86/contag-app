@@ -29,6 +29,9 @@ import com.contag.app.config.Router;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
+import com.contag.app.model.ContagContagDao;
+import com.contag.app.model.DaoSession;
+import com.contag.app.model.ImageUploadResponse;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestSuggestion;
 import com.contag.app.model.Response;
@@ -68,7 +71,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private boolean isEditModeOn = false;
     private long userID;
-    private InterestSuggestion currentSuggestion = null ;
+    private InterestSuggestion currentSuggestion = null;
 
 
     @Override
@@ -127,16 +130,15 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     } else {
 
                         String name = etUserName.getText().toString();
-                        if (name.length() > 0){
+                        if (name.length() > 0) {
 
                             sendNameAndStatus(name, etUserStatus.getText().toString());
 
                             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
                             setUpInterests();
                             hideInterestRemoveButton();
-                        }
-                        else {
-                            showToast("Name cannot be blank!") ;
+                        } else {
+                            showToast("Name cannot be blank!");
 
                         }
 
@@ -239,7 +241,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
-        int i = 0 ;
+        int i = 0;
 
         for (Interest userInterest : userInterests) {
             if (i >= 3)
@@ -252,8 +254,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void hideInterestRemoveButton(){
-        for(int i: rmInterest){
+    private void hideInterestRemoveButton() {
+        for (int i : rmInterest) {
             (findViewById(i)).setVisibility(View.GONE);
         }
     }
@@ -419,11 +421,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
-                                        currentSuggestion = suggestion ;
+                                        currentSuggestion = suggestion;
                                         interestHint.setText(suggestion.name.toLowerCase());
 
                                     } else {
-                                        currentSuggestion = null ;
+                                        currentSuggestion = null;
                                         interestSuggestion.clear();
                                         interestHint.setText("");
                                     }
@@ -462,7 +464,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     saveInterests();
 
                     interestHint.setText("");
-                    currentSuggestion = null ;
+                    currentSuggestion = null;
                 } else {
                     showToast("Please enter a valid interest!");
                 }
@@ -480,17 +482,31 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD) {
             Uri selectedImageUri = data.getData();
             File selectedImageFile = new File(ImageUtils.getRealPathFromUri(this, selectedImageUri));
+            log(TAG, selectedImageFile.getAbsolutePath());
+            String extension = selectedImageFile.getAbsolutePath().
+                    substring(selectedImageFile.getAbsolutePath().lastIndexOf(".") + 1);
+            if (selectedImageFile.length() / 1024 >= 1024) {
+                showToast("The selected image is too big");
+                return;
+            }
+            if(!extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg") && !extension.equalsIgnoreCase("png")) {
+                showToast("Please select a png or jpg format image");
+                return;
+            }
             ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
-                    (new TypedFile("multipart/form-data",selectedImageFile));
-            getSpiceManager().execute(mImageUploadRequest, new RequestListener<Response>() {
+                    (new TypedFile("multipart/form-data", selectedImageFile));
+            getSpiceManager().execute(mImageUploadRequest, new RequestListener<ImageUploadResponse>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
 
                 }
 
                 @Override
-                public void onRequestSuccess(Response response) {
+                public void onRequestSuccess(ImageUploadResponse response) {
                     log(TAG, "" + response.result);
+                    if (response.result) {
+                        new ChangeAvatarUrl().execute(response.avatarUrl);
+                    }
                 }
             });
 
@@ -513,7 +529,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ContagContag ccUser) {
-            if(ccUser != null) {
+            if (ccUser != null) {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
@@ -523,6 +539,29 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(picaasoTarget);
                 isEditModeOn = false;
+            }
+        }
+    }
+
+    private class ChangeAvatarUrl extends AsyncTask<String, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(String... params) {
+            ContagContag mContagContag = UserActivity.this.getCurrentUser();
+            mContagContag.setAvatarUrl(Constants.Urls.BASE_URL + params[0]);
+            DaoSession session = ((ContagApplication) UserActivity.this.getApplicationContext()).getDaoSession();
+            ContagContagDao mContagContagDao = session.getContagContagDao();
+            mContagContagDao.update(mContagContag);
+            return mContagContag;
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag mContagContag) {
+            if (mContagContag != null) {
+                Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+                Picasso.with(UserActivity.this).load(mContagContag.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+                Picasso.with(UserActivity.this).load(mContagContag.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                        into(picaasoTarget);
             }
         }
     }
@@ -544,5 +583,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         }
     };
+
 
 }

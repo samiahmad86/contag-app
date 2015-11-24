@@ -170,7 +170,6 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         etSearchBox.addTextChangedListener(this);
         pbContacts.setVisibility(View.VISIBLE);
         searchFilter = Constants.Arrays.SEARCH_FILTER[0];
-        new LoadContacts().execute();
         return view;
     }
 
@@ -188,6 +187,12 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brContactsUpdated);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brContactRequestMade);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new LoadContacts().execute();
     }
 
     private void toggleDropDown(Boolean show, View v) {
@@ -395,13 +400,14 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         @Override
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
-            contacts.clear();
-            contacts.addAll(contactListItems);
+            if(contactListItems.size() != 0) {
+                contacts.clear();
+                contacts.addAll(contactListItems);
 
-            pbContacts.setVisibility(View.GONE);
+                pbContacts.setVisibility(View.GONE);
 
-            contactAdapter.notifyDataSetChanged();
-
+                contactAdapter.notifyDataSetChanged();
+            }
         }
     }
 

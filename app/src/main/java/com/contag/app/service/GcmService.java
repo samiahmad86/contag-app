@@ -30,8 +30,9 @@ public class GcmService extends GcmListenerService {
         String notification_type = data.getString("notification_type");
         Log.d(TAG, notification_type);
         Intent intent;
-
-        PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1 ) ;
+        Log.d("GCM", "Current Count: " + PrefUtils.getNewNotificationCount()) ;
+        PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1) ;
+        Log.d("GCM", "Updated Count: " + PrefUtils.getNewNotificationCount()) ;
 
         switch (notification_type) {
             case "new_user": {

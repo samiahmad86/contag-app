@@ -72,9 +72,10 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         });
 
         //Set new notifications count to 0
+        Log.d("GCM", "Setting the new notification count to 0") ;
         PrefUtils.setNewNotificationCount(0);
-
-    }
+        Log.d("GCM", "The new notification count is: " + PrefUtils.getNewNotificationCount()) ;
+     }
 
 
     @Override

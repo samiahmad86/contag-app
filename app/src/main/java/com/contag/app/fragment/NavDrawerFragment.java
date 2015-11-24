@@ -84,8 +84,6 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
 
-        tvNotificationCount.setText(String.valueOf(PrefUtils.getNewNotificationCount())) ;
-
         new LoadUser().execute();
 
         notificationTxt.setOnClickListener(this);
@@ -114,9 +112,16 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("GCM", "Notification count: " + PrefUtils.getNewNotificationCount()) ;
+        tvNotificationCount.setText(String.valueOf(PrefUtils.getNewNotificationCount())) ;
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
-
+x
         switch (id) {
             case R.id.tv_notification_txt: {
                 //Log.d("NavDrawer", "Notification") ;

@@ -8,7 +8,7 @@
         android:id="@+id/sv_user_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:padding="10dp"
         android:overScrollMode="never"
@@ -42,8 +42,11 @@
         android:background="@drawable/edit_pencil_contag"
         android:visibility="gone" />
 
+
+
     <include
         android:id="@+id/pb_edit_profile"
         layout="@layout/layout_progress_bar" />
+
 
 </RelativeLayout>

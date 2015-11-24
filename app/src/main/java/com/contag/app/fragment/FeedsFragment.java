@@ -43,6 +43,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private boolean isLoading = false, isListViewEnabled;
     private View pbFeeds;
 
+
     public static FeedsFragment newInstance() {
         FeedsFragment ff = new FeedsFragment();
         Bundle args = new Bundle();
@@ -69,7 +70,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && isListViewEnabled) {
+                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
+                        && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
                     int end = start + 10;
                     getFeeds(start, end);
@@ -79,6 +81,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         });
         return view;
     }
+
 
     @Override
     public void onStart() {

@@ -77,6 +77,9 @@
     <string name="allow">Allow</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="fieldname">Allow</string>
+    <string name="value">Allow</string>
+
 
     <string name="action_example">Example action</string>
     <string name="label_personal_details">Personal Details</string>

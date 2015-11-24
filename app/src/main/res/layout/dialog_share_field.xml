@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NotificationsButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    style="@style/NotificationsButtonStyle"
     android:padding="2dp"
 
     >
@@ -11,64 +11,83 @@
         android:id="@+id/tv_share_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
         android:padding="10dp"
         android:text="Text"
-        android:textSize="18sp"
-
         android:textColor="@color/black"
-        />
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tv_share_text"
+        android:background="@color/light_gray" />
+
     <LinearLayout
+        android:id="@+id/ll_two_buttons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ll_two_buttons"
-        android:layout_below="@id/tv_share_text"
-        >
-    <Button
-        android:id="@+id/btn_share_public"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_share_text"
-        android:text="Public"
-        android:background="@drawable/bg_grey_border_button"
-        android:layout_weight="0.5"
-         android:textColor="@color/black"/>
+        android:layout_below="@id/tv_share_text">
 
-    <Button
-        android:id="@+id/btn_share_custom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_share_text"
-        android:layout_toRightOf="@id/btn_share_public"
-        android:text="Custom"
-        android:background="@drawable/bg_grey_border_button"
-         android:layout_weight="0.5"
-        android:textColor="@color/black"/>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_share_public"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_share_text"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:text="Public"
+            android:textAllCaps="false"
+            android:textColor="@color/black" />
 
-        </LinearLayout>
-    <Button
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_share_custom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tv_share_text"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:text="Custom"
+            android:textAllCaps="false"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ll_two_buttons"
+        android:background="@color/light_gray" />
+
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_two_buttons"
+        android:background="?android:selectableItemBackground"
         android:text="Ok"
         android:textAllCaps="false"
         android:padding="2dp"
-        android:background="@drawable/bg_grey_border_button"
         android:textColor="@color/black"/>
+
 
     <ListView
         android:id="@+id/lv_contag_share"
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_below="@id/btn_share_done"
         android:layout_margin="10dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
 
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:visibility="visible" />
 
 
 </RelativeLayout>

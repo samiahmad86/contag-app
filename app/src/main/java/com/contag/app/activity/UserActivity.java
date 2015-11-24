@@ -233,6 +233,16 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void hideInterestRemoveButton() {
+
+        int i = 0;
+        do {
+            (findViewById(rmInterest[i])).setVisibility(View.GONE);
+            i++;
+        } while (i < 3);
+    }
+
+
     private void showInterests(ArrayList<Interest> userInterests) {
         int i = 0; //hideInterest();
         for (Interest userInterest : userInterests) {
@@ -259,12 +269,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             (findViewById(rmInterest[i])).setTag(R.id.INTEREST_OBJECT, userInterest);
             (findViewById(rmInterest[i])).setOnClickListener(removeInterestListener);
             i++;
-        }
-    }
-
-    private void hideInterestRemoveButton() {
-        for (int i : rmInterest) {
-            (findViewById(i)).setVisibility(View.GONE);
         }
     }
 
@@ -373,6 +377,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
+            hideInterestRemoveButton();
             new LoadUser().execute(PrefUtils.getCurrentUserID());
         }
     };
@@ -497,7 +502,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {;
+        if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {
+            ;
             Router.startProfilePicutreUpload(this, ImageUtils.getRealPathFromUri(this, data.getData()));
 
         } else {
@@ -530,6 +536,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                         into(picaasoTarget);
                 isEditModeOn = false;
             }
+
         }
     }
 

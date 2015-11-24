@@ -90,7 +90,6 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onResume() {
         super.onResume();
-        isLoading = true;
 
         if(feeds.size() != 0) {
             feeds.clear();

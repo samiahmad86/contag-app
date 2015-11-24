@@ -373,7 +373,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             ContagContagDao mContagContagDao = session.getContagContagDao();
             List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                     where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID()),
-                            ContagContagDao.Properties.Is_contact.eq(true)).list();
+                            ContagContagDao.Properties.Is_contact.eq(true)).orderAsc(ContagContagDao.Properties.Name).list();
 
             if (contagContacts != null) {
                 for (ContagContag mContagContag : contagContacts) {

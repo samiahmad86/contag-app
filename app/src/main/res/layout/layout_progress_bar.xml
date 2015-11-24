@@ -7,6 +7,7 @@
     android:gravity="center"
     android:indeterminateOnly="true"
     android:layout_gravity="center"
+    android:background="@drawable/bg_circle"
     android:indeterminateDrawable="@drawable/pb_animation"
     android:layout_height="32dp"
     android:max="1">

@@ -37,12 +37,10 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
 
         Intent intent = getIntent();
 
-
         setUpActionBar(R.id.tb_home);
 
         setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
-        new LoadUser().execute();
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());
         vpHome.setAdapter(hpa);
@@ -71,6 +69,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new LoadUser().execute();
+    }
 
     @Override
     public void onFragmentInteraction(int value) {

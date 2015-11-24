@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +73,9 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
                         && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
-                    log(TAG, "making progress bar visible while getting feeds");
-                    pbFeeds.setVisibility(View.VISIBLE);
-                    FeedsRequest feedsRequest = new FeedsRequest(start, 10);
-                    getSpiceManager().execute(feedsRequest, FeedsFragment.this);
-                    isLoading = true;
+                    int end = start + 10;
+                    getFeeds(start, end);
+
                 }
             }
         });
@@ -95,13 +94,22 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onResume() {
         super.onResume();
-        isLoading = true;
-        feeds.clear();
-        feedsAdapter.notifyDataSetChanged();
-        pbFeeds.setVisibility(View.VISIBLE);
-        FeedsRequest feedsRequest = new FeedsRequest(0, 10);
-        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
 
+        if(feeds.size() != 0) {
+            feeds.clear();
+            feedsAdapter.notifyDataSetChanged();
+            getFeeds(0,10);
+        }
+
+    }
+
+    private void getFeeds(int start, int end){
+        Log.d("FeedsFubar", "Going to request") ;
+        Log.d("FeedsFubar", "Start " + start + " End: "+ end ) ;
+        pbFeeds.setVisibility(View.VISIBLE);
+        FeedsRequest feedsRequest = new FeedsRequest(start, end);
+        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
+        isLoading = true;
     }
 
     private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {
@@ -118,11 +126,13 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
+        Log.d("FeedsFubar", "Request failed") ;
         pbFeeds.setVisibility(View.GONE);
     }
 
     @Override
     public void onRequestSuccess(FeedsResponse.FeedList feedsResponses) {
+        Log.d("FeedsFubar", "Request was a success") ;
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();

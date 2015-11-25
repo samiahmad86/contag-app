@@ -108,6 +108,13 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
+    @PUT(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList addContagUserFromNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                              @Body NotificationAddContact nac );
+
+    @Headers({
+            "Content-Type: application/json"
+    })
     @GET(Constants.Urls.URL_SOCIAL_PROFILE)
     SocialPlatformResponse.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
 

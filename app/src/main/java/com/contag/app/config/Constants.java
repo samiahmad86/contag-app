@@ -137,6 +137,7 @@ public class Constants {
         public static final int REQUEST_PUT_ADD_USER = 6 ;
         public static final int REQUEST_UPDATE_USER_INTEREST = 7 ;
         public static final int REQUEST_POST_PRIVACY = 8 ;
+        public static final int REQUEST_ADD_CONTAG_NOTIFICATION = 9 ;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int ITEM_ADD_CONTAG = 2 ;

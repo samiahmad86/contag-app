@@ -14,10 +14,13 @@ import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.adapter.NotificationsAdapter;
+import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.NavDrawerFragment;
+import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.NotificationsResponse;
+import com.contag.app.request.ContactRequest;
 import com.contag.app.request.NotificationsRequest;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -117,6 +120,21 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         }) ;
     }
 
+    public void addContagUser(long notificationID){
+        Log.d("notifadd", "Add contag user called with id: "+ notificationID) ;
+        ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION, notificationID) ;
+        getSpiceManager().execute(cr, new RequestListener<ContactResponse.ContactList>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+
+            @Override
+            public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                showToast("Contag user was added to your contact book!");
+            }
+        });
+    }
     @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
         Log.d("Nofubar", "Current size of notifications: " + notifications.size()) ;

@@ -112,7 +112,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else if(notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTAG)) {
+        } else if(notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)) {
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setTag(position);
             mViewHolder.btnShare.setText("Add") ;
@@ -156,7 +156,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     notifyDataSetChanged();
                 } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)){
 
-                    // TODO REQUEST TO
+                    ((NotificationsActivity) mCtxt).addContagUser(notificationsResponse.id);
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
                 }

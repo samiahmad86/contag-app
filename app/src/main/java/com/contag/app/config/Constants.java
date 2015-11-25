@@ -28,7 +28,7 @@ public class Constants {
         public static final String KEY_VIEW_POSITION = "view_position";
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
-        public static final String KEY_ADD_CONTACT = "add_contact";
+        public static final String KEY_ADD_CONTACT = "contact_add_request";
         public static final String KEY_CONTACTS_UPDATED = "contacts_updated";
         public static final String KEY_CONTACT_BY_CONTAG_ID = "contact_contag_id" ;
         public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
@@ -89,15 +89,20 @@ public class Constants {
         public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
         public static final String KEY_PROFILE_REQUEST_ADD = "profile_request_add";
         public static final String KEY_PROFILE_REQUEST_SHARE = "profile_request_share";
+        public static final String KEY_ADD_CONTAG = "contag_add_request" ;
         public static final String KEY_COMING_FROM_NOTIFICATION = "fucking_coming_from_notification";
         public static final String KEY_REQUEST_ID = "request_id";
         public static final String KEY_REQUEST_FROM_USER_ID = "from_user_id";
         public static final String KEY_REQUEST_FROM_USER_NAME = "from_user_name";
         public static final String KEY_NOTIF_STATUS = "status";
+        public static final String KEY_INTRODUCED_USER = "introduced_user" ;
+        public static final String KEY_INTRODUCED_TO_USERS = "introduced_to_users" ;
+        public static final String KEY_INTRODUCTION_MESSAGE = "message";
         public static final String KEY_NOTIF_USER_ID = "user_id";
         public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
         public static final String KEY_IMAGE_PATH = "fucking_profile_image_path";
         public static final String KEY_COMPANY_NAME = "company_name";
+        public static final String KEY_NOTIFICATION_ID = "notification_id";
     }
 
     public class Headers {
@@ -133,10 +138,12 @@ public class Constants {
         public static final int REQUEST_PUT_ADD_USER = 6 ;
         public static final int REQUEST_UPDATE_USER_INTEREST = 7 ;
         public static final int REQUEST_POST_PRIVACY = 8 ;
+        public static final int REQUEST_ADD_CONTAG_NOTIFICATION = 9 ;
         public static final int ITEM_CONTAG = 0;
         public static final int ITEM_NON_CONTAG = 1;
         public static final int ITEM_ADD_CONTAG = 2 ;
         public static final int ITEM_SHARE_CONTAG = 3 ;
+        public static final int ITEM_INTRODUCE_CONTAG = 4;
         public static final int FRAG_LOGIN = 0;
         public static final int FRAG_OTP = 1;
         public static final int FRAG_USER_DETAILS = 2;
@@ -186,7 +193,9 @@ public class Constants {
         public static final String URL_PROFILE_REQUEST = "/profile_request/";
         public static final String URL_PROFILE_PRIVACY = "/privacy/";
         public static final String URL_NOTIFICATIONS = "/notification/" ;
+        public static final String URL_INTRODUCE = "/introduce/" ;
         public static final String URL_IMAGE_UPLOAD = "/image_upload/";
+
     }
 
     public static class Arrays {

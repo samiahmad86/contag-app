@@ -57,6 +57,7 @@
             android:textAllCaps="false"
             android:textColor="@color/black" />
 
+
     </LinearLayout>
 
     <View
@@ -82,7 +83,7 @@
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btn_share_done"
+        android:layout_below="@id/btn_invite"
         android:layout_margin="10dp"
 
         android:divider="@android:color/transparent"

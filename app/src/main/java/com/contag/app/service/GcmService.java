@@ -26,21 +26,13 @@ public class GcmService extends GcmListenerService {
 
     public void onMessageReceived(String from, Bundle data) {
 
-        Log.d(TAG, "GCM received");
+
         String notification_type = data.getString("notification_type");
-        Log.d(TAG, notification_type);
+
         Intent intent;
-        Log.d("GCM", "Current Count: " + PrefUtils.getNewNotificationCount()) ;
-        PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1) ;
-        Log.d("GCM", "Updated Count: " + PrefUtils.getNewNotificationCount()) ;
+
 
         switch (notification_type) {
-            case "new_user": {
-                //Start contact service to fetch records from the server and update the same on local
-                Router.startContactService(this, false);
-                intent = null;
-                break;
-            }
             case "request_granted": {
                 intent = new Intent(this, UserActivity.class);
                 intent.putExtra(Constants.Keys.KEY_USER_ID, data.getString("object_id"));
@@ -49,11 +41,13 @@ public class GcmService extends GcmListenerService {
             case "update_profile": {
                 long userID = data.getLong("profile_id") ;
                 Router.startServiceToGetUserByUserID(this, userID);
-                Log.d("pusher", "Received gcm to update profile for id: " + userID)  ;
+                intent = null ;
+                break ;
             }
             default: {
                 // Takes care of profile request add/share cases
                 intent = new Intent(this, NotificationsActivity.class);
+
                 break;
             }
         }
@@ -84,6 +78,7 @@ public class GcmService extends GcmListenerService {
 
             Log.d(TAG, "notification sent");
             notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
+            PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1) ;
         }
 
     }

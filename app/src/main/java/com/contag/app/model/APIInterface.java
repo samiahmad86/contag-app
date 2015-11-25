@@ -115,6 +115,13 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
+    @PUT(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList addContagUserFromNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                              @Body NotificationAddContact nac );
+
+    @Headers({
+            "Content-Type: application/json"
+    })
     @GET(Constants.Urls.URL_SOCIAL_PROFILE)
     SocialPlatformResponse.List getAllSocialPlatforms(@Header(Constants.Headers.HEADER_TOKEN) String token);
 
@@ -185,8 +192,24 @@ public interface APIInterface {
                                     @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
                                     @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @DELETE(Constants.Urls.URL_NOTIFICATIONS)
+    NotificationsResponse.NotificationList hideNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                            @Query(Constants.Keys.KEY_NOTIFICATION_ID) long notificationID);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @POST(Constants.Urls.URL_INTRODUCE)
+    Response introduceContag(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                               @Body ContagIntroductionRequestModel introduction);
+
+
     @Multipart
     @PUT(Constants.Urls.URL_IMAGE_UPLOAD)
     ImageUploadResponse uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
                          @Part(Constants.Keys.KEY_USER_AVATAR_URL)TypedFile mProfileImage);
+
 }

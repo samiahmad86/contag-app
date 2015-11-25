@@ -158,10 +158,11 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
+        private long userID;
         @Override
         protected ContagContag doInBackground(Long... params) {
-
-            return ((BaseActivity) FeedsFragment.this.getActivity()).getUser(params[0]);
+            userID = params[0];
+            return ((BaseActivity) FeedsFragment.this.getActivity()).getUser(userID);
         }
 
         @Override
@@ -195,6 +196,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 });
 
             } else {
+                Router.startServiceToGetUserByUserID(getActivity(), userID);
                 pbFeeds.setVisibility(View.GONE);
                 showToast("Please wait while we sync your contacts");
             }

@@ -81,7 +81,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         }
 
         Picasso.with(mCtxt).load(Constants.Urls.BASE_URL + notification.avatarUrl).error(R.drawable.default_profile_pic_small).into(mViewHolder.ivUsrProfilePic);
-        mViewHolder.tvNotificationsTxt.setText(notification.text);
+
 
         mViewHolder.ivUsrProfilePic.setTag(position);
         mViewHolder.ivUsrProfilePic.setOnClickListener(this);
@@ -89,8 +89,16 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.btnReject.setTag(position);
         mViewHolder.btnReject.setOnClickListener(this);
 
+        mViewHolder.btnShare.setVisibility(View.INVISIBLE);
+        mViewHolder.tvNotificationsTxt.setText(notification.text);
+        mViewHolder.tvNotificationsTxt.setOnClickListener(null);
+        mViewHolder.tvNotificationsTxt.setTag(null) ;
+        Log.d("notifdelete", "Notification type: " + notification.notificationType) ;
+
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+
+
 
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setTag(position);
@@ -104,8 +112,11 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else {
-            mViewHolder.btnShare.setVisibility(View.INVISIBLE);
+        } else if(notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)) {
+            mViewHolder.btnShare.setVisibility(View.VISIBLE);
+            mViewHolder.btnShare.setTag(position);
+            mViewHolder.btnShare.setText("Add") ;
+            mViewHolder.btnShare.setOnClickListener(this);
 
         }
         return convertView;
@@ -143,27 +154,39 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                             Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
+                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)){
+
+                    ((NotificationsActivity) mCtxt).addContagUser(notificationsResponse.id);
+                    notifications.remove(notificationsResponse);
+                    notifyDataSetChanged();
                 }
                 break;
             }
             case R.id.btn_notif_reject: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
-                        Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
+                if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
+                        notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+                    Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
+                            Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
+                } else if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)){
+                    ((NotificationsActivity) mCtxt).hideNotification(notificationsResponse.id);
+                }
                 notifications.remove(notificationsResponse);
                 notifyDataSetChanged();
                 break;
             }
+
         }
     }
 
 
     private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
+        private long userID;
         @Override
         protected ContagContag doInBackground(Long... params) {
-
-            return ((BaseActivity) mCtxt).getUser(params[0]);
+            userID = params[0];
+            return ((BaseActivity) mCtxt).getUser(userID);
         }
 
         @Override
@@ -187,6 +210,8 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                         Router.startUserActivity(mCtxt, TAG, id);
                     }
                 });
+            } else {
+                Router.startServiceToGetUserByUserID(mCtxt, userID);
             }
         }
     }

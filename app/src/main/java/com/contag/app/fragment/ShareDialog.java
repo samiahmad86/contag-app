@@ -37,6 +37,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.http.HEAD;
+
 /**
  * Created by varunj on 04/11/15.
  */
@@ -96,7 +98,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         shareCustom = (Button) view.findViewById(R.id.btn_share_custom);
         shareText = (TextView) view.findViewById(R.id.tv_share_text);
         shareTextIntent = (TextView) view.findViewById(R.id.tv_share_intent);
-
 
         shareText.setText("Share your " + fieldLabel + " with: ");
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done);

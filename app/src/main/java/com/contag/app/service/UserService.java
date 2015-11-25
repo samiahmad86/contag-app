@@ -187,7 +187,7 @@ public class UserService extends Service implements RequestListener<User> {
                 }
                 case Constants.Types.REQUEST_GET_USER_BY_USER_ID: {
                     ContactRequest contactRequest = new ContactRequest
-                            (requestType, intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l));
+                            (intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l), requestType);
                     mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -322,9 +322,7 @@ public class UserService extends Service implements RequestListener<User> {
     private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
         @Override
         protected Void doInBackground(ContactResponse.ContactList... params) {
-            ContactResponse contactResponse = params[0].get(0);
-            ContactUtils.insertAndReturnContagContag(UserService.this, ContactUtils.getContact(contactResponse),
-                    contactResponse.contagContactResponse, true);
+            ContactUtils.saveSingleContact(UserService.this, params[0], false);
             return null;
         }
     }

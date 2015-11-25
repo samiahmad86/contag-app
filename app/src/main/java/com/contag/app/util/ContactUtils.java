@@ -41,9 +41,24 @@ public class ContactUtils {
 
         for (ContactResponse response : contactResponse) {
             Contact mContact = getContact(response);
-
             if (mContact.getIsOnContag()) {
                 insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, true);
+            }
+            try {
+                mContactDao.insertOrReplace(mContact);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void saveSingleContact(Context mContext, ContactResponse.ContactList contactResponse, boolean isContact) {
+        ContactDao mContactDao = getSession(mContext).getContactDao();
+
+        for (ContactResponse response : contactResponse) {
+            Contact mContact = getContact(response);
+            if (mContact.getIsOnContag()) {
+                insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, isContact);
             }
             try {
                 mContactDao.insertOrReplace(mContact);
@@ -106,17 +121,9 @@ public class ContactUtils {
     }
 
     public static void addContag(Context mContext, ContactListItem contag) {
-        ContactDao mContactDao = getSession(mContext).getContactDao();
-        ContagContagDao ccDao = getSession(mContext).getContagContagDao();
-
-        mContactDao.insertOrReplace(contag.mContact);
-
-        contag.mContagContag.setIs_contact(true);
-        ccDao.insertOrReplace(contag.mContagContag);
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
 
-        Log.d("conadd", "Added the contag user!");
 
 
     }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
-import com.contag.app.config.Router;
+import com.contag.app.fragment.IntroduceContagDialog;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by tanay on 22/9/15.
  */
@@ -33,6 +32,7 @@ public class ContactAdapter extends BaseAdapter {
 
     private ArrayList<ContactListItem> items;
     private Context mContext;
+    private ContactListItem newContactItem  ;
     private static final String TAG = ContactAdapter.class.getName();
 
     public ContactAdapter(ArrayList<ContactListItem> contactListItems, Context context) {
@@ -64,13 +64,13 @@ public class ContactAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position) ;
         if (type == Constants.Types.ITEM_CONTAG || type == Constants.Types.ITEM_ADD_CONTAG) {
-            return getCuntagView(position, convertView, parent, type);
+            return getContagView(position, convertView, parent, type);
         } else {
             return getContactView(position, convertView, parent);
         }
     }
 
-    private View getCuntagView(int position, View convertView, ViewGroup parent, int type) {
+    private View getContagView(int position, View convertView, ViewGroup parent, int type) {
         ContagViewHolder vhCont;
         if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
             vhCont = new ContagViewHolder();
@@ -84,6 +84,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
             vhCont.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
             vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
+            vhCont.btnIntroduceContag = (Button) convertView.findViewById(R.id.btn_share_contag) ;
             convertView.setTag(vhCont);
         } else {
             vhCont = (ContagViewHolder) convertView.getTag();
@@ -115,13 +116,16 @@ public class ContactAdapter extends BaseAdapter {
 
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
-            final ContactListItem item = (ContactListItem) getItem(position) ;
+            vhCont.btnIntroduceContag.setVisibility(View.GONE);
+            newContactItem = (ContactListItem) getItem(position) ;
+
             if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ContactUtils.addContag(mContext.getApplicationContext(), item);
+
+                        ContactUtils.addContag(mContext.getApplicationContext(), newContactItem);
                         Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -129,11 +133,23 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.startUserActivity(mContext, TAG, item.mContagContag.getId());
+                    Toast.makeText(mContext, "You need to add and get approved by the user to view the profile.",
+                            Toast.LENGTH_LONG).show();
                 }
             });
         }else {
+            vhCont.btnIntroduceContag.setVisibility(View.VISIBLE);
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
+            final String shareContagName = contObject.getName() ;
+            final long shareContagID = contObject.getId() ;
+
+            vhCont.btnIntroduceContag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntroduceContagDialog invite = IntroduceContagDialog.newInstance(shareContagName, shareContagID);
+                    invite.show(((BaseActivity) mContext).getSupportFragmentManager(), TAG);
+                }
+            });
         }
         return convertView;
     }
@@ -200,6 +216,7 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest4;
         public ImageView ivPhoto;
         public Button btnAdd ;
+        public Button btnIntroduceContag;
 
         public ContagViewHolder() {
 

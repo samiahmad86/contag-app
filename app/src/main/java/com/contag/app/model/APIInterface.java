@@ -178,6 +178,12 @@ public interface APIInterface {
                                     @Query(Constants.Keys.KEY_FEEDS_START_INDEX) int startIndex,
                                     @Query(Constants.Keys.KEY_FEEDS_END_INDEX) int endIndex);
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @DELETE(Constants.Urls.URL_NOTIFICATIONS)
+    NotificationsResponse.NotificationList hideNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                            @Query(Constants.Keys.KEY_NOTIFICATION_ID) long notificationID);
 
     @Headers({
             "Content-Type: application/json"

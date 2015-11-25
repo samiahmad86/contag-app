@@ -100,6 +100,23 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         getSpiceManager().execute(fr, NotificationsActivity.this);
         isLoading = true;
     }
+
+    public void hideNotification(long notificationID){
+        Log.d("notifdelete", "Activity method called") ;
+        NotificationsRequest fr = new NotificationsRequest(notificationID, "delete");
+        getSpiceManager().execute(fr, new RequestListener<NotificationsResponse.NotificationList>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+
+            @Override
+            public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
+                //showToast("Notification removed!");
+            }
+        }) ;
+    }
+
     @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
         Log.d("Nofubar", "Current size of notifications: " + notifications.size()) ;

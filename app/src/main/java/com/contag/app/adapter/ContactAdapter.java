@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
-import com.contag.app.config.Router;
 import com.contag.app.fragment.IntroduceContagDialog;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
@@ -85,7 +84,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
             vhCont.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
             vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
-            vhCont.btnShareContag = (Button) convertView.findViewById(R.id.btn_share_contag) ;
+            vhCont.btnIntroduceContag = (Button) convertView.findViewById(R.id.btn_share_contag) ;
             convertView.setTag(vhCont);
         } else {
             vhCont = (ContagViewHolder) convertView.getTag();
@@ -115,20 +114,9 @@ public class ContactAdapter extends BaseAdapter {
 
         }
 
-        final String shareContagName = contObject.getName() ;
-        final long shareContagID = contObject.getId() ;
-
-        vhCont.btnShareContag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntroduceContagDialog invite = IntroduceContagDialog.newInstance(shareContagName, shareContagID);
-                invite.show(((BaseActivity) mContext).getSupportFragmentManager(), TAG);
-            }
-        });
-
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
-
+            vhCont.btnIntroduceContag.setVisibility(View.GONE);
             newContactItem = (ContactListItem) getItem(position) ;
 
             if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
@@ -145,12 +133,23 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.startUserActivity(mContext, TAG, newContactItem.mContagContag.getId());
+                    Toast.makeText(mContext, "You need to add and get approved by the user to view the profile.",
+                            Toast.LENGTH_LONG).show();
                 }
             });
         }else {
-            vhCont.btnShareContag.setVisibility(View.VISIBLE);
+            vhCont.btnIntroduceContag.setVisibility(View.VISIBLE);
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
+            final String shareContagName = contObject.getName() ;
+            final long shareContagID = contObject.getId() ;
+
+            vhCont.btnIntroduceContag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntroduceContagDialog invite = IntroduceContagDialog.newInstance(shareContagName, shareContagID);
+                    invite.show(((BaseActivity) mContext).getSupportFragmentManager(), TAG);
+                }
+            });
         }
         return convertView;
     }
@@ -217,7 +216,7 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest4;
         public ImageView ivPhoto;
         public Button btnAdd ;
-        public Button btnShareContag;
+        public Button btnIntroduceContag;
 
         public ContagViewHolder() {
 

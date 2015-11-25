@@ -28,7 +28,7 @@ public class Constants {
         public static final String KEY_VIEW_POSITION = "view_position";
         public static final String KEY_CONTACT_NUMBER = "contact_number";
         public static final String KEY_SEND_CONTACTS = "send_contact";
-        public static final String KEY_ADD_CONTACT = "add_contact";
+        public static final String KEY_ADD_CONTACT = "contact_add_request";
         public static final String KEY_CONTACTS_UPDATED = "contacts_updated";
         public static final String KEY_CONTACT_BY_CONTAG_ID = "contact_contag_id" ;
         public static final String KEY_REQUEST_TYPE = "fuck_all_of_them";
@@ -101,6 +101,7 @@ public class Constants {
         public static final String KEY_NOTIF_USER_ID = "user_id";
         public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
         public static final String KEY_IMAGE_PATH = "fucking_profile_image_path";
+        public static final String KEY_NOTIFICATION_ID = "notification_id";
     }
 
     public class Headers {

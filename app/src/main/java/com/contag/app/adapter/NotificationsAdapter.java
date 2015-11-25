@@ -93,6 +93,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.tvNotificationsTxt.setText(notification.text);
         mViewHolder.tvNotificationsTxt.setOnClickListener(null);
         mViewHolder.tvNotificationsTxt.setTag(null) ;
+        Log.d("notifdelete", "Notification type: " + notification.notificationType) ;
 
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
@@ -154,8 +155,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
                 } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)){
-                    int position = (int) v.getTag();
-                    NotificationsResponse notificationsResponse = notifications.get(position);
+
                     // TODO REQUEST TO
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
@@ -170,7 +170,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
                             Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
                 } else if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)){
-                    // TODO REJECT NOTIFICATION
+                    ((NotificationsActivity) mCtxt).hideNotification(notificationsResponse.id);
                 }
                 notifications.remove(notificationsResponse);
                 notifyDataSetChanged();

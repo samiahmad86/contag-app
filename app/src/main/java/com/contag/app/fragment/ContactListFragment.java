@@ -86,7 +86,6 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long viewID) {
-
                 ContactListItem contactListItem = contacts.get(position);
                 if (DeviceUtils.isWifiConnected(getActivity()) && (contactListItem.type == Constants.Types.ITEM_ADD_CONTAG
                         || contactListItem.type == Constants.Types.ITEM_CONTAG)) {

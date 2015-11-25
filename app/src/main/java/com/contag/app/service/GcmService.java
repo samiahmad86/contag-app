@@ -39,7 +39,8 @@ public class GcmService extends GcmListenerService {
                 break;
             }
             case "update_profile": {
-                long userID = data.getLong("profile_id") ;
+                Log.d("newprofile", "GCM push received") ;
+                long userID = Long.parseLong(data.getString("profile_id")) ;
                 Router.startServiceToGetUserByUserID(this, userID);
                 intent = null ;
                 break ;

@@ -53,16 +53,20 @@ public class ContactUtils {
     }
 
     public static void saveSingleContact(Context mContext, ContactResponse.ContactList contactResponse, boolean isContact) {
-        ContactDao mContactDao = getSession(mContext).getContactDao();
+        ContactDao mContactDao = getSession(mContext.getApplicationContext()).getContactDao();
 
         for (ContactResponse response : contactResponse) {
             Contact mContact = getContact(response);
+            Log.d("newprofile", "Contag user: " + mContact.getIsOnContag()) ;
+            Log.d("newprofile", "Name is: "+ mContact.getContactName()) ;
+
             if (mContact.getIsOnContag()) {
                 insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, isContact);
             }
             try {
                 mContactDao.insertOrReplace(mContact);
             } catch (Exception ex) {
+                Log.d("newprofile", "Exception occurred when insertin contact") ;
                 ex.printStackTrace();
             }
         }
@@ -124,8 +128,6 @@ public class ContactUtils {
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
 
-
-
     }
 
     public static Boolean isExistingContact(String contactNumber, Context mContext) {
@@ -137,7 +139,7 @@ public class ContactUtils {
 
     }
 
-    private static ContagContag getContagContact(ContagContactResponse contagContactResponse, Contact mContact, Boolean isOnContag) {
+    private static ContagContag getContagContact(ContagContactResponse contagContactResponse, Contact mContact, Boolean isContact) {
 
         ContagContag contagContag = new ContagContag(contagContactResponse.id);
         contagContag.setContact(mContact);
@@ -173,7 +175,8 @@ public class ContactUtils {
         contagContag.setPersonalEmail(contagContactResponse.personalEmail);
         contagContag.setWorkAddress(contagContactResponse.workAddress);
         contagContag.setCompanyName(contagContactResponse.companyName);
-        contagContag.setIs_contact(isOnContag);
+        Log.d("newprofile", "Is a contact? : " + isContact) ;
+        contagContag.setIs_contact(isContact);
 
         return contagContag;
 

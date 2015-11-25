@@ -186,6 +186,7 @@ public class UserService extends Service implements RequestListener<User> {
                     break;
                 }
                 case Constants.Types.REQUEST_GET_USER_BY_USER_ID: {
+                    Log.d("newprofile", "Contact request being made") ;
                     ContactRequest contactRequest = new ContactRequest
                             (intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l), requestType);
                     mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
@@ -196,6 +197,8 @@ public class UserService extends Service implements RequestListener<User> {
 
                         @Override
                         public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                            Log.d("newprofile", "Request is successfull" + contactResponses.size()) ;
+
                             if(contactResponses.size() == 1) {
                                 new InsertContagContact().execute(contactResponses);
                             }

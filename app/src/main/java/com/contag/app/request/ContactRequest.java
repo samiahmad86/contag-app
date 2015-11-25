@@ -80,6 +80,7 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
         } else if(Constants.Types.REQUEST_GET_USER_BY_USER_ID == type) {
             return getService().getUserByUserID(PrefUtils.getAuthToken(),userID);
+
         } else if (Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION == type){
             NotificationAddContact nac = new NotificationAddContact(notificationID) ;
             return getService().addContagUserFromNotification(PrefUtils.getAuthToken(), nac) ;

@@ -78,7 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:singleLine="true"
-            android:visibility="gone"
             android:layout_marginTop="0dp"
             android:textColor="@color/white"
             android:textSize="14sp"

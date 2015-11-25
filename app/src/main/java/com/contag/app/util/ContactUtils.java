@@ -39,22 +39,15 @@ public class ContactUtils {
 
         ContactDao mContactDao = getSession(mContext).getContactDao();
 
-        Log.d("Condev", "Current Dao size: " + mContactDao.loadAll().size());
-
         for (ContactResponse response : contactResponse) {
             Contact mContact = getContact(response);
 
             if (mContact.getIsOnContag()) {
                 insertAndReturnContagContag(mContext, mContact, response.contagContactUser, true);
             }
-            Log.d("Condev", "" + mContact.getId() + " " + response.id);
-            Log.d("Condevs", "" + mContact.getContactName() + " " + response.contactName);
-
             try {
                 mContactDao.insertOrReplace(mContact);
-
             } catch (Exception ex) {
-                // TODO : handle this
                 ex.printStackTrace();
             }
         }
@@ -135,47 +128,46 @@ public class ContactUtils {
 
         return (count == 0);
 
-
     }
 
-    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact, Boolean isOnContag) {
+    private static ContagContag getContagContact(ContagContactResponse contagContactResponse, Contact mContact, Boolean isOnContag) {
 
-        ContagContag cc = new ContagContag(ccResponse.id);
-        cc.setContact(mContact);
-        cc.setCreatedOn(ccResponse.createdOn);
-        cc.setUpdatedOn(ccResponse.updatedOn);
-        if (ccResponse.name != null) {
-            cc.setName(ccResponse.name);
+        ContagContag contagContag = new ContagContag(contagContactResponse.id);
+        contagContag.setContact(mContact);
+        contagContag.setCreatedOn(contagContactResponse.createdOn);
+        contagContag.setUpdatedOn(contagContactResponse.updatedOn);
+        if (contagContactResponse.name != null) {
+            contagContag.setName(contagContactResponse.name);
         } else {
-            cc.setName("Contag User");
+            contagContag.setName("Contag User");
         }
-        cc.setRegisteredWith(ccResponse.registeredWith);
-        cc.setMobileNumber(ccResponse.mobileNumber);
-        cc.setContag(ccResponse.contag);
-        cc.setLandLineNumber(ccResponse.landlineNumber);
-        cc.setEmergencyContactNumber(ccResponse.emergencyContactNumber);
-        cc.setIsMobileVerified(ccResponse.isMobileVerified);
-        cc.setGender(ccResponse.gender);
-        cc.setAddress(ccResponse.address);
-        cc.setWorkEmail(ccResponse.workEmail);
-        cc.setWorkMobileNumber(ccResponse.workMobileNumber);
-        cc.setWorkLandLineNumber(ccResponse.workLandlineNumber);
-        cc.setWebsite(ccResponse.website);
-        cc.setDesignation(ccResponse.designation);
-        cc.setWorkFacebookPage(ccResponse.workFacebookPage);
-        cc.setAndroidAppLink(ccResponse.androidAppLink);
-        cc.setIosAppLink(ccResponse.iosAppLink);
-        cc.setAvatarUrl(Constants.Urls.BASE_URL + ccResponse.avatarUrl);
-        cc.setBloodGroup(ccResponse.bloodGroup);
-        cc.setDateOfBirth(ccResponse.dateOfBirth);
-        cc.setIsMobileVerified(ccResponse.isMobileVerified);
-        cc.setMaritalStatus(ccResponse.maritalStatus);
-        cc.setMarriageAnniversary(ccResponse.marriageAnniversary);
-        cc.setPersonalEmail(ccResponse.personalEmail);
-        cc.setWorkAddress(ccResponse.workAddress);
-        cc.setIs_contact(isOnContag);
+        contagContag.setRegisteredWith(contagContactResponse.registeredWith);
+        contagContag.setMobileNumber(contagContactResponse.mobileNumber);
+        contagContag.setContag(contagContactResponse.contag);
+        contagContag.setLandLineNumber(contagContactResponse.landlineNumber);
+        contagContag.setEmergencyContactNumber(contagContactResponse.emergencyContactNumber);
+        contagContag.setIsMobileVerified(contagContactResponse.isMobileVerified);
+        contagContag.setGender(contagContactResponse.gender);
+        contagContag.setAddress(contagContactResponse.address);
+        contagContag.setWorkEmail(contagContactResponse.workEmail);
+        contagContag.setWorkMobileNumber(contagContactResponse.workMobileNumber);
+        contagContag.setWorkLandLineNumber(contagContactResponse.workLandlineNumber);
+        contagContag.setWebsite(contagContactResponse.website);
+        contagContag.setDesignation(contagContactResponse.designation);
+        contagContag.setWorkFacebookPage(contagContactResponse.workFacebookPage);
+        contagContag.setAndroidAppLink(contagContactResponse.androidAppLink);
+        contagContag.setIosAppLink(contagContactResponse.iosAppLink);
+        contagContag.setAvatarUrl(Constants.Urls.BASE_URL + contagContactResponse.avatarUrl);
+        contagContag.setBloodGroup(contagContactResponse.bloodGroup);
+        contagContag.setDateOfBirth(contagContactResponse.dateOfBirth);
+        contagContag.setIsMobileVerified(contagContactResponse.isMobileVerified);
+        contagContag.setMaritalStatus(contagContactResponse.maritalStatus);
+        contagContag.setMarriageAnniversary(contagContactResponse.marriageAnniversary);
+        contagContag.setPersonalEmail(contagContactResponse.personalEmail);
+        contagContag.setWorkAddress(contagContactResponse.workAddress);
+        contagContag.setIs_contact(isOnContag);
 
-        return cc;
+        return contagContag;
 
     }
 

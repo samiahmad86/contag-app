@@ -20,6 +20,7 @@
             android:layout_centerVertical="false"
             android:src="@drawable/default_profile_pic_small" />
 
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_contact_name"
             style="@style/ContactNameStyle"

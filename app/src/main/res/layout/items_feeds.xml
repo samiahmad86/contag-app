@@ -60,6 +60,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="7dp"
             android:text="timestamp"
+            android:singleLine="true"
             android:gravity="right"
             android:layout_alignParentRight="true"
              android:layout_toRightOf="@id/tv_feeds_usr_name"

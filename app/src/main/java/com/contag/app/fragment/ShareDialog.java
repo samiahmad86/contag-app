@@ -52,7 +52,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
     private TextView shareTextIntent;
     private String fieldName;
     private LinearLayout ll_share;
-    private static String fieldLabel;
+    private static String contact_for_share;
 
 
     public static ShareDialog newInstance(String fieldName, String value) {
@@ -60,7 +60,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         ShareDialog share = new ShareDialog();
         Bundle args = new Bundle();
 
-        fieldLabel = getLabel(fieldName) + " : " + value;
+        contact_for_share = getLabel(fieldName) + " : " + value;
         Log.e("fieldname", fieldName);
         Log.e("fieldname", value);
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
@@ -98,7 +98,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         shareTextIntent = (TextView) view.findViewById(R.id.tv_share_intent);
 
 
-        shareText.setText("Share your " + fieldLabel + " with: ");
+        shareText.setText("Share your " + getLabel(fieldName) + " with: ");
         Button shareDone = (Button) view.findViewById(R.id.btn_share_done);
         shareTextIntent.setOnClickListener(this);
         sharePublic.setOnClickListener(this);
@@ -141,7 +141,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
 
             }
             case R.id.tv_share_intent: {
-                ShareUtils.shareText(getActivity(), fieldLabel);
+                ShareUtils.shareText(getActivity(), contact_for_share);
                 getDialog().dismiss();
                 break;
 

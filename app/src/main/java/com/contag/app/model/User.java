@@ -109,6 +109,9 @@ public class User {
     @SerializedName(Constants.Keys.KEY_USER_BLOOD_GROUP)
     @Expose
     public String bloodGroup;
+    @SerializedName(Constants.Keys.KEY_COMPANY_NAME)
+    @Expose
+    public String companyName;
 
 
     public static void saveUserInterest(DaoSession session, ArrayList<Interest> interestList) {
@@ -139,6 +142,7 @@ public class User {
         mContagContag.setIsMobileVerified(user.isMobileVerified);
         mContagContag.setGender(user.gender);
         mContagContag.setAddress(user.address);
+        mContagContag.setCompanyName(user.companyName);
         mContagContag.setWorkEmail(user.workEmail);
         mContagContag.setWorkMobileNumber(user.workMobileNumber);
         mContagContag.setWorkLandLineNumber(user.workLandlineNumber);

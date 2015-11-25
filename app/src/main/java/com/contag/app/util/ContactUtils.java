@@ -165,6 +165,7 @@ public class ContactUtils {
         contagContag.setMarriageAnniversary(contagContactResponse.marriageAnniversary);
         contagContag.setPersonalEmail(contagContactResponse.personalEmail);
         contagContag.setWorkAddress(contagContactResponse.workAddress);
+        contagContag.setCompanyName(contagContactResponse.companyName);
         contagContag.setIs_contact(isOnContag);
 
         return contagContag;

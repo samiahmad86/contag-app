@@ -97,6 +97,7 @@ public class Constants {
         public static final String KEY_NOTIF_USER_ID = "user_id";
         public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
         public static final String KEY_IMAGE_PATH = "fucking_profile_image_path";
+        public static final String KEY_COMPANY_NAME = "company_name";
     }
 
     public class Headers {

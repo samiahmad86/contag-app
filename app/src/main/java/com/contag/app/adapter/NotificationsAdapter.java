@@ -111,9 +111,12 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else if(notification.notificationType.equals(Constants.Keys.KEY_INTRODUCTION_NOTIFICATION)) {
-            mViewHolder.tvNotificationsTxt.setTag(notification.introducedUserID) ;
-            mViewHolder.tvNotificationsTxt.setOnClickListener(this);
+        } else if(notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTAG)) {
+            mViewHolder.btnShare.setVisibility(View.VISIBLE);
+            mViewHolder.btnShare.setTag(position);
+            mViewHolder.btnShare.setText("Add") ;
+            mViewHolder.btnShare.setOnClickListener(this);
+
         }
         return convertView;
     }
@@ -150,26 +153,30 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                             Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
+                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)){
+                    int position = (int) v.getTag();
+                    NotificationsResponse notificationsResponse = notifications.get(position);
+                    // TODO REQUEST TO
+                    notifications.remove(notificationsResponse);
+                    notifyDataSetChanged();
                 }
                 break;
             }
             case R.id.btn_notif_reject: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
-                        Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
+                if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
+                        notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
+                    Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
+                            Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
+                } else if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)){
+                    // TODO REJECT NOTIFICATION
+                }
                 notifications.remove(notificationsResponse);
                 notifyDataSetChanged();
                 break;
             }
 
-            case R.id.tv_notification_txt:
-            {
-                if(v.getTag() != null){
-                    int userID = (int) v.getTag() ;
-                }
-
-            }
         }
     }
 

@@ -89,7 +89,7 @@ public class Constants {
         public static final String KEY_EDIT_MODE_TOGGLE = "fucking_edit_fucker_mode";
         public static final String KEY_PROFILE_REQUEST_ADD = "profile_request_add";
         public static final String KEY_PROFILE_REQUEST_SHARE = "profile_request_share";
-        public static final String KEY_INTRODUCTION_NOTIFICATION = "intro" ;
+        public static final String KEY_ADD_CONTAG = "contag_add_request" ;
         public static final String KEY_COMING_FROM_NOTIFICATION = "fucking_coming_from_notification";
         public static final String KEY_REQUEST_ID = "request_id";
         public static final String KEY_REQUEST_FROM_USER_ID = "from_user_id";

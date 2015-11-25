@@ -78,7 +78,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
                     @Override
                     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                        ContactUtils.saveContact(ContactService.this, contactResponses);
+                        //ContactUtils.saveContact(ContactService.this, contactResponses);
                     }
                 }) ;
             }

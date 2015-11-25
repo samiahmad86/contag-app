@@ -113,22 +113,9 @@ public class ContactUtils {
     }
 
     public static void addContag(Context mContext, ContactListItem contag) {
-        ContactDao mContactDao = getSession(mContext).getContactDao();
-        ContagContagDao ccDao = getSession(mContext).getContagContagDao();
-//        Log.d("conadd", "Printting" + contag.mContagContag.getContact().getContactName()) ;
-//        try {
-//            mContactDao.insertOrReplace(contag.mContagContag.getContact());
-//        }catch (Exception e){
-//            Log.d("conadd", "Exception happened") ;
-//            mContactDao.insert(contag.mContagContag.getContact()) ;
-//        }
-//
-//        contag.mContagContag.setIs_contact(true);
-//        ccDao.insertOrReplace(contag.mContagContag);
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
 
-        Log.d("conadd", "Added the contag user!");
 
 
     }

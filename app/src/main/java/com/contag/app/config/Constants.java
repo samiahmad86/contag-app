@@ -103,6 +103,7 @@ public class Constants {
         public static final String KEY_IMAGE_PATH = "fucking_profile_image_path";
         public static final String KEY_COMPANY_NAME = "company_name";
         public static final String KEY_NOTIFICATION_ID = "notification_id";
+        public static final String KEY_IS_CONTAG_CONTACT = "fucking_chutiya_victor";
     }
 
     public class Headers {

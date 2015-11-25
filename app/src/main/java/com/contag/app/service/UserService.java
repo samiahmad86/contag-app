@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.config.Router;
 import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
@@ -48,6 +49,7 @@ public class UserService extends Service implements RequestListener<User> {
     private static final String TAG = UserService.class.getName();
     private int profileType = 0;
     private int requestType = 0;
+    private boolean isContagContact;
 
     public UserService() {
     }
@@ -189,6 +191,7 @@ public class UserService extends Service implements RequestListener<User> {
                     Log.d("newprofile", "Contact request being made") ;
                     ContactRequest contactRequest = new ContactRequest
                             (intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l), requestType);
+                    isContagContact = intent.getBooleanExtra(Constants.Keys.KEY_IS_CONTAG_CONTACT, false);
                     mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -323,10 +326,20 @@ public class UserService extends Service implements RequestListener<User> {
     }
 
     private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
+        private long userId;
         @Override
         protected Void doInBackground(ContactResponse.ContactList... params) {
-            ContactUtils.saveSingleContact(UserService.this, params[0], false);
+            ContactUtils.saveSingleContact(UserService.this, params[0], isContagContact);
+            userId = params[0].get(0).contagContactResponse.id;
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            if(!isContagContact) {
+                Intent iStartUserActivity = new Intent(getResources().getString(R.string.intent_filter_contag_contact_inserted));
+                iStartUserActivity.putExtra(Constants.Keys.KEY_USER_ID, userId);
+                LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(iStartUserActivity);
+            }
         }
     }
 }

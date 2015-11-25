@@ -94,10 +94,11 @@ public class Router {
         mContext.startService(privacyIntent) ;
     }
 
-    public static void startServiceToGetUserByUserID(Context context, long userID) {
+    public static void startServiceToGetUserByUserID(Context context, long userID, boolean isContagContact) {
         Intent getUserIntent = new Intent(context, UserService.class);
         getUserIntent.putExtra(Constants.Keys.KEY_NOTIF_USER_ID, userID);
         getUserIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_GET_USER_BY_USER_ID);
+        getUserIntent.putExtra(Constants.Keys.KEY_IS_CONTAG_CONTACT, isContagContact);
         context.startService(getUserIntent);
     }
 

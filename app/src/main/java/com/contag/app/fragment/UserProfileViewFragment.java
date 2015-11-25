@@ -315,10 +315,12 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
 
         @Override
         protected void onPostExecute(HashMap<Integer, ProfileViewModel> integerP2ProfileViewModelHashMap) {
-            hmP2ProfileView.clear();
-            hmP2ProfileView.putAll(integerP2ProfileViewModelHashMap);
-            drawView();
-            setViewContent();
+            if(integerP2ProfileViewModelHashMap != null) {
+                hmP2ProfileView.clear();
+                hmP2ProfileView.putAll(integerP2ProfileViewModelHashMap);
+                drawView();
+                setViewContent();
+            }
         }
     }
 

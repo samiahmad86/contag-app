@@ -84,8 +84,6 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
 
-        new LoadUser().execute();
-
         notificationTxt.setOnClickListener(this);
         feedbackTxt.setOnClickListener(this);
         rateTxt.setOnClickListener(this);
@@ -115,6 +113,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     public void onResume(){
         super.onResume();
         Log.d("GCM", "Notification count: " + PrefUtils.getNewNotificationCount()) ;
+        new LoadUser().execute();
         tvNotificationCount.setText(String.valueOf(PrefUtils.getNewNotificationCount())) ;
     }
 
@@ -153,6 +152,8 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         PrefUtils.clearForLogout();
         DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
         session.clear();
+        ((ContagApplication) getActivity().getApplicationContext()).clearApplicationData();
+        PrefUtils.clearData();
         Router.startLoginActivity(getActivity(), "NavDrawer", Constants.Types.FRAG_LOGIN);
         isLoading = true ;
     }

@@ -167,7 +167,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                         break;
                     }
                     case Constants.Types.FIELD_SOCIAL: {
-                        Router.openSocialProfile(getActivity(), viewHolderArrayList.get(position).tvFieldValue.toString());
+                        Router.openSocialProfile(getActivity(), viewHolderArrayList.get(position).tvFieldValue.getText().toString());
                         break;
                     }
                     default: {

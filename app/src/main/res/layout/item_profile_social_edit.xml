@@ -28,7 +28,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:background="@drawable/btn_share_icon"
+        android:background="@drawable/share_icon"
         android:visibility="gone" />
 
 
@@ -39,7 +39,7 @@
         android:layout_below="@id/tv_field_name"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:padding="5dp"
+        android:padding="0dp"
         android:text="@string/connected_as"
         android:textColor="@color/white"
         android:textSize="13sp" />
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_g_plus_btn"
-                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:drawableLeft="@drawable/googleplus_copy"
                 android:padding="5dp"
                 android:text="@string/sync_gplus"
                 android:textColor="@color/white"
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_twitter_btn"
-                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:drawableLeft="@drawable/twitter_copy"
                 android:padding="5dp"
                 android:text="@string/sync_twitter"
                 android:textColor="@color/white"
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_linkedin_btn"
-                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:drawableLeft="@drawable/linkedin"
                 android:padding="5dp"
                 android:text="@string/sync_linkedin"
                 android:textColor="@color/white"
@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_insta_btn"
-                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:drawableLeft="@drawable/twitter_copy"
                 android:padding="5dp"
                 android:text="@string/sync_instagram"
                 android:textColor="@color/white"

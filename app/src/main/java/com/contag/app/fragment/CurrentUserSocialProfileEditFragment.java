@@ -191,8 +191,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case R.id.btn_share: {
-                int position = (int) v.getTag();
-                ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName());
+                int position = (int) v.getTag();ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName(), "");
                 share.show(getChildFragmentManager(), TAG);
                 break;
             }
@@ -227,8 +226,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 } else if (socialProfileModel.mViewType == Constants.Types.FIELD_INSTAGRAM) {
                     Router.openInstagramProfile(getActivity(), socialProfileModel.mSocialProfile.getPlatform_id());
                 } else if (socialProfileModel.mViewType == Constants.Types.FIELD_GOOGLE) {
-                    Router.openGooglePlusProfile(getActivity(), socialProfileModel.mSocialPlatform.getPlatformBaseUrl()
-                            + "/" + socialProfileModel.mSocialProfile.getPlatform_id() + "/posts");
+                    Router.openGooglePlusProfile(getActivity(), socialProfileModel.mSocialProfile.getPlatform_id());
                 }
                 break;
             }

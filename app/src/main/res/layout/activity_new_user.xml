@@ -6,7 +6,7 @@
 
     <FrameLayout
         android:id="@+id/fl_user"
-        android:background="@drawable/contag_screen"
+        android:background="@drawable/login_splash2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

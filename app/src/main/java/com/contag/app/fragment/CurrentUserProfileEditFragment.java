@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +12,12 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -37,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
 
@@ -49,12 +53,15 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private boolean isDateShown;
 
     private Button btnEditProfile;
-    private View pbProfileUpdate;
+    private ProgressBar pbProfileUpdate;
     private ScrollView svProfile;
     private int profileType;
     private boolean isComingFromNotification, cameFromNotification;
     private Bundle requestBundle;
     private String fieldName;
+
+
+
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
@@ -79,12 +86,13 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         hmP2PProfileModel = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
-        pbProfileUpdate = view.findViewById(R.id.pb_edit_profile);
+        pbProfileUpdate =(ProgressBar) view.findViewById(R.id.pb_edit_profile);
         svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
@@ -143,9 +151,14 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_share: {
-                ShareDialog share = ShareDialog.newInstance((String) v.getTag());
+
+
+                    //  ShareDialog share = ShareDialog.newInstance((String) v.getTag(0));
+
+                ShareDialog share = ShareDialog.newInstance((String) v.getTag(R.string.fieldname), (String) v.getTag(R.string.value));
                 share.show(getChildFragmentManager(), TAG);
                 break;
+
             }
         }
     }
@@ -154,7 +167,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private void addViews() {
         llViewContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        for (int i = 0; i < hmP2PProfileModel.size(); i++) {
+            for (int i = 0; i < hmP2PProfileModel.size(); i++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.rlContainer = (RelativeLayout) view.findViewById(R.id.rl_other_container);
@@ -163,7 +176,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
-            vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
+             //vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
+            vh.btnShare.setTag(R.string.fieldname,hmP2PProfileModel.get(i).key) ;
+            vh.btnShare.setTag(R.string.value, hmP2PProfileModel.get(i).value);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnShare.setOnClickListener(this);
             vh.btnAdd.setOnClickListener(this);
@@ -290,6 +305,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 aUser.put(oUser);
             }
             pbProfileUpdate.setVisibility(View.VISIBLE);
+           // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
+
+
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
             ex.printStackTrace();

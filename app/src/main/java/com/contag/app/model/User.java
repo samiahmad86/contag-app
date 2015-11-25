@@ -12,7 +12,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -129,36 +128,36 @@ public class User {
 
     public static ContagContag getContagContagObject(User user) {
 
-        ContagContag cc = new ContagContag(user.id);
-        cc.setCreatedOn(user.createdOn);
-        cc.setUpdatedOn(user.updatedOn);
-        cc.setName(user.name);
-        cc.setMobileNumber(user.mobileNumber);
-        cc.setContag(user.contag);
-        cc.setLandLineNumber(user.landlineNumber);
-        cc.setEmergencyContactNumber(user.emergencyContactNumber);
-        cc.setIsMobileVerified(user.isMobileVerified);
-        cc.setGender(user.gender);
-        cc.setAddress(user.address);
-        cc.setWorkEmail(user.workEmail);
-        cc.setWorkMobileNumber(user.workMobileNumber);
-        cc.setWorkLandLineNumber(user.workLandlineNumber);
-        cc.setWebsite(user.website);
-        cc.setDesignation(user.designation);
-        cc.setWorkFacebookPage(user.workFacebookPage);
-        cc.setAndroidAppLink(user.androidAppLink);
-        cc.setIosAppLink(user.iosAppLink);
-        cc.setAvatarUrl(Constants.Urls.BASE_URL + user.avatarUrl);
-        cc.setBloodGroup(user.bloodGroup);
-        cc.setDateOfBirth(user.dateOfBirth);
-        cc.setIsMobileVerified(user.isMobileVerified);
-        cc.setMaritalStatus(user.maritalStatus);
-        cc.setMarriageAnniversary(user.marriageAnniversary);
-        cc.setPersonalEmail(user.personalEmail);
-        cc.setWorkAddress(user.workAddress);
-        cc.setStatus_update(user.statusUpdate);
+        ContagContag mContagContag = new ContagContag(user.id);
+        mContagContag.setCreatedOn(user.createdOn);
+        mContagContag.setUpdatedOn(user.updatedOn);
+        mContagContag.setName(user.name);
+        mContagContag.setMobileNumber(user.mobileNumber);
+        mContagContag.setContag(user.contag);
+        mContagContag.setLandLineNumber(user.landlineNumber);
+        mContagContag.setEmergencyContactNumber(user.emergencyContactNumber);
+        mContagContag.setIsMobileVerified(user.isMobileVerified);
+        mContagContag.setGender(user.gender);
+        mContagContag.setAddress(user.address);
+        mContagContag.setWorkEmail(user.workEmail);
+        mContagContag.setWorkMobileNumber(user.workMobileNumber);
+        mContagContag.setWorkLandLineNumber(user.workLandlineNumber);
+        mContagContag.setWebsite(user.website);
+        mContagContag.setDesignation(user.designation);
+        mContagContag.setWorkFacebookPage(user.workFacebookPage);
+        mContagContag.setAndroidAppLink(user.androidAppLink);
+        mContagContag.setIosAppLink(user.iosAppLink);
+        mContagContag.setAvatarUrl(Constants.Urls.BASE_URL + user.avatarUrl);
+        mContagContag.setBloodGroup(user.bloodGroup);
+        mContagContag.setDateOfBirth(user.dateOfBirth);
+        mContagContag.setIsMobileVerified(user.isMobileVerified);
+        mContagContag.setMaritalStatus(user.maritalStatus);
+        mContagContag.setMarriageAnniversary(user.marriageAnniversary);
+        mContagContag.setPersonalEmail(user.personalEmail);
+        mContagContag.setWorkAddress(user.workAddress);
+        mContagContag.setStatus_update(user.statusUpdate);
 
-        return cc;
+        return mContagContag;
     }
 
     public static ArrayList<Interest> getInterestList(List<InterestResponse> interests,
@@ -255,7 +254,10 @@ public class User {
             if (cs.getUser_ids().indexOf(",") == -1) {
                 userIDS.add(cs.getUser_ids());
             } else {
-                userIDS = (ArrayList<String>) Arrays.asList(cs.getUser_ids().split(","));
+                String[] arr = cs.getUser_ids().split(",");
+                for(String str : arr) {
+                    userIDS.add(str);
+                }
             }
             if (!userIDS.contains(userID)) {
                 userIDS.add(userID);
@@ -268,7 +270,6 @@ public class User {
             Log.d(NotificationsAdapter.TAG, "pissu chod 2");
             return userIDS.get(0);
         }
-        Log.d(NotificationsAdapter.TAG, "pissu chod 3 ggg" + cs.getUser_ids() + "ggggg " + userIDS.size());
         return TextUtils.join(",", userIDS);
 
     }

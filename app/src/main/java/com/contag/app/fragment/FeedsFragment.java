@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
 
-/**
- * Created by tanay on 23/9/15.
- */
 public class FeedsFragment extends BaseFragment implements AdapterView.OnItemClickListener,
         RequestListener<FeedsResponse.FeedList> {
 
@@ -44,6 +42,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private FeedsAdapter feedsAdapter;
     private boolean isLoading = false, isListViewEnabled;
     private View pbFeeds;
+
 
     public static FeedsFragment newInstance() {
         FeedsFragment ff = new FeedsFragment();
@@ -71,20 +70,18 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading && isListViewEnabled) {
+                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
+                        && !isLoading && isListViewEnabled) {
                     int start = feeds.size() == 0 ? 0 : feeds.size();
-                    log(TAG, "making progress bar visible while getting feeds");
-                    pbFeeds.setVisibility(View.VISIBLE);
-                    FeedsRequest feedsRequest = new FeedsRequest(start, 10);
-                    getSpiceManager().execute(feedsRequest, FeedsFragment.this);
-                    if (start == 0) {
-                        isLoading = true;
-                    }
+                    int end = start + 10;
+                    getFeeds(start, end);
+
                 }
             }
         });
         return view;
     }
+
 
     @Override
     public void onStart() {
@@ -92,6 +89,27 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brContactsUpdated,
                 new IntentFilter(getResources().getString(R.string.intent_filter_contacts_updated)));
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(feeds.size() != 0) {
+            feeds.clear();
+            feedsAdapter.notifyDataSetChanged();
+            getFeeds(0,10);
+        }
+
+    }
+
+    private void getFeeds(int start, int end){
+        Log.d("FeedsFubar", "Going to request") ;
+        Log.d("FeedsFubar", "Start " + start + " End: "+ end ) ;
+        pbFeeds.setVisibility(View.VISIBLE);
+        FeedsRequest feedsRequest = new FeedsRequest(start, end);
+        getSpiceManager().execute(feedsRequest, FeedsFragment.this);
+        isLoading = true;
     }
 
     private BroadcastReceiver brContactsUpdated = new BroadcastReceiver() {
@@ -108,15 +126,20 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
+        Log.d("FeedsFubar", "Request failed") ;
         pbFeeds.setVisibility(View.GONE);
     }
 
     @Override
     public void onRequestSuccess(FeedsResponse.FeedList feedsResponses) {
+        Log.d("FeedsFubar", "Request was a success") ;
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
             feedsAdapter.notifyDataSetChanged();
+            log(TAG, "is loading is set to false");
             isLoading = false;
+        } else {
+            isLoading = true;
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);
@@ -171,6 +194,9 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     }
                 });
 
+            } else {
+                pbFeeds.setVisibility(View.GONE);
+                showToast("Please wait while we sync your contacts");
             }
         }
     }

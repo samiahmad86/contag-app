@@ -62,19 +62,20 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3 && !isLoading) {
+                if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 5 && !isLoading) {
+                    Log.d("Nofubar", "Making the request now") ;
                     int start = notifications.size() == 0 ? 0 : notifications.size();
-                    NotificationsRequest fr = new NotificationsRequest(start, 10);
-                    getSpiceManager().execute(fr, NotificationsActivity.this);
-                    isLoading = true;
+                    int end = start + 10 ;
+                    getNotifications(start, end);
                 }
             }
         });
 
         //Set new notifications count to 0
+
         PrefUtils.setNewNotificationCount(0);
 
-    }
+     }
 
 
     @Override
@@ -83,13 +84,35 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(notifications.size() != 0) {
+            notifications.clear();
+            notificationsAdapter.notifyDataSetChanged();
+            getNotifications(0, 10);
+        }
+    }
+
+    private void getNotifications(int start, int end){
+        Log.d("Nofubar", "Start value is: " + start) ;
+        Log.d("Nofubar", "End value is: "+ end) ;
+        NotificationsRequest fr = new NotificationsRequest(start, end);
+        getSpiceManager().execute(fr, NotificationsActivity.this);
+        isLoading = true;
+    }
+    @Override
     public void onRequestSuccess(NotificationsResponse.NotificationList notificationsResponses) {
-        Log.d("Nof", String.valueOf(notificationsResponses.size()));
+        Log.d("Nofubar", "Current size of notifications: " + notifications.size()) ;
+        Log.d("Nofubar", "Response from server is of size: " + String.valueOf(notificationsResponses.size()));
+
         if (notificationsResponses.size() != 0) {
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();
+            isLoading = false;
+        } else {
+            isLoading = true;
         }
-        isLoading = false;
+
     }
 
     @Override

@@ -33,6 +33,7 @@ public class ContactAdapter extends BaseAdapter {
 
     private ArrayList<ContactListItem> items;
     private Context mContext;
+    private ContactListItem newContactItem  ;
     private static final String TAG = ContactAdapter.class.getName();
 
     public ContactAdapter(ArrayList<ContactListItem> contactListItems, Context context) {
@@ -128,14 +129,15 @@ public class ContactAdapter extends BaseAdapter {
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
 
-            vhCont.btnShareContag.setVisibility(View.GONE);
-            final ContactListItem item = (ContactListItem) getItem(position) ;
+            newContactItem = (ContactListItem) getItem(position) ;
+
             if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ContactUtils.addContag(mContext.getApplicationContext(), item);
+
+                        ContactUtils.addContag(mContext.getApplicationContext(), newContactItem);
                         Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -143,7 +145,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.startUserActivity(mContext, TAG, item.mContagContag.getId());
+                    Router.startUserActivity(mContext, TAG, newContactItem.mContagContag.getId());
                 }
             });
         }else {

@@ -189,7 +189,7 @@ public interface APIInterface {
 
     @Multipart
     @PUT(Constants.Urls.URL_IMAGE_UPLOAD)
-    Response uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
+    ImageUploadResponse uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
                          @Part(Constants.Keys.KEY_USER_AVATAR_URL)TypedFile mProfileImage);
 
 }

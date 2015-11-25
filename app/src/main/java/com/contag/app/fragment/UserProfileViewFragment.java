@@ -167,7 +167,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                         break;
                     }
                     case Constants.Types.FIELD_SOCIAL: {
-                        Router.openSocialProfile(getActivity(), viewHolderArrayList.get(position).tvFieldValue.toString());
+                        Router.openSocialProfile(getActivity(), viewHolderArrayList.get(position).tvFieldValue.getText().toString());
                         break;
                     }
                     default: {
@@ -215,9 +215,6 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
 
                         hmProfileViewModel.put(8, new ProfileViewModel(Constants.Keys.KEY_USER_MARRIAGE_ANNIVERSARY,
                                 mContagContag.getMarriageAnniversary(), Constants.Types.FIELD_DATE));
-
-                        hmProfileViewModel.put(9, new ProfileViewModel(Constants.Keys.KEY_USER_GENDER,
-                                mContagContag.getGender(), Constants.Types.FIELD_LIST));
 
                         break;
                     }

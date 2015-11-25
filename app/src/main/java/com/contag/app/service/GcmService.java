@@ -46,6 +46,11 @@ public class GcmService extends GcmListenerService {
                 intent.putExtra(Constants.Keys.KEY_USER_ID, data.getString("object_id"));
                 break;
             }
+            case "update_profile": {
+                long userID = data.getLong("profile_id") ;
+                Router.startServiceToGetUserByUserID(this, userID);
+                Log.d("pusher", "Received gcm to update profile for id: " + userID)  ;
+            }
             default: {
                 // Takes care of profile request add/share cases
                 intent = new Intent(this, NotificationsActivity.class);

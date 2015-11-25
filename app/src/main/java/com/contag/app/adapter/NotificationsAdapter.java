@@ -182,7 +182,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                         if (contactResponses.size() == 1) {
                             ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                    contactResponses.get(0).contagContactUser, isContact);
+                                    contactResponses.get(0).contagContactResponse, isContact);
                         }
                         Router.startUserActivity(mCtxt, TAG, id);
                     }

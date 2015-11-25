@@ -101,6 +101,13 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
+    @GET(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList getUserByUserID(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                  @Query(Constants.Keys.KEY_NOTIF_USER_ID) long userID);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
     @PUT(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList addContagUser(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                               @Body AddContact userID);

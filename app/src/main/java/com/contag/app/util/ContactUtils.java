@@ -43,7 +43,7 @@ public class ContactUtils {
             Contact mContact = getContact(response);
 
             if (mContact.getIsOnContag()) {
-                insertAndReturnContagContag(mContext, mContact, response.contagContactUser, true);
+                insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, true);
             }
             try {
                 mContactDao.insertOrReplace(mContact);

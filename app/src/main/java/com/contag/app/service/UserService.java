@@ -5,15 +5,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.fragment.NewUserDetailsFragment;
+import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
@@ -28,16 +27,16 @@ import com.contag.app.model.ProfilePrivacyRequestModel;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.User;
+import com.contag.app.request.ContactRequest;
 import com.contag.app.request.FieldRequest;
 import com.contag.app.request.ImageUploadRequest;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.UserRequest;
-import com.contag.app.util.ImageUtils;
+import com.contag.app.util.ContactUtils;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -186,6 +185,24 @@ public class UserService extends Service implements RequestListener<User> {
                     }
                     break;
                 }
+                case Constants.Types.REQUEST_GET_USER_BY_USER_ID: {
+                    ContactRequest contactRequest = new ContactRequest
+                            (requestType, intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l));
+                    mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                            if(contactResponses.size() == 1) {
+                                new InsertContagContact().execute(contactResponses);
+                            }
+                        }
+                    });
+                    break;
+                }
             }
         }
         return START_REDELIVER_INTENT;
@@ -302,4 +319,13 @@ public class UserService extends Service implements RequestListener<User> {
         }
     }
 
+    private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
+        @Override
+        protected Void doInBackground(ContactResponse.ContactList... params) {
+            ContactResponse contactResponse = params[0].get(0);
+            ContactUtils.insertAndReturnContagContag(UserService.this, ContactUtils.getContact(contactResponse),
+                    contactResponse.contagContactResponse, true);
+            return null;
+        }
+    }
 }

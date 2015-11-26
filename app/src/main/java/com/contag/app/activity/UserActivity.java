@@ -494,7 +494,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {
-            Router.startProfilePicutreUpload(this, ImageUtils.getCompressedImagePath(data.getData(), this));
+            String compressedImagePath = ImageUtils.getCompressedImagePath(data.getData(), this);
+            if(compressedImagePath != null) {
+                Router.startProfilePicutreUpload(this, compressedImagePath);
+            }
         } else {
             CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
                     findFragmentByTag(CurrentUserProfileFragment.TAG);

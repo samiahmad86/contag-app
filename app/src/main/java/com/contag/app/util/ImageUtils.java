@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +72,11 @@ public class ImageUtils {
         Bitmap scaledBitmap = null;
 
         String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+
+        if (!extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg") && !extension.equalsIgnoreCase("png")) {
+            Toast.makeText(mContext, "Please select a png or jpg format image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
 

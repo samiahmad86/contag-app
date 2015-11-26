@@ -159,9 +159,7 @@ public class UserService extends Service implements RequestListener<User> {
                             substring(selectedImageFile.getAbsolutePath().lastIndexOf(".") + 1);
                     if (selectedImageFile.length() / 1024 >= 1024) {
                         Toast.makeText(this, "The selected image is too big", Toast.LENGTH_SHORT).show();
-                    } else if (!extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg") && !extension.equalsIgnoreCase("png")) {
-                        Toast.makeText(this, "Please select a png or jpg format image", Toast.LENGTH_SHORT).show();
-                    } else {
+                    }  else {
                         Log.d(TAG, "Starting image upload");
                         ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
                                 (new TypedFile("multipart/form-data", selectedImageFile));

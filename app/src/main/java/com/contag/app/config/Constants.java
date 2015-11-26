@@ -101,7 +101,9 @@ public class Constants {
         public static final String KEY_NOTIF_USER_ID = "user_id";
         public static final String KEY_NOTIFICATION_COUNT = "notification_count" ;
         public static final String KEY_IMAGE_PATH = "fucking_profile_image_path";
+        public static final String KEY_COMPANY_NAME = "company_name";
         public static final String KEY_NOTIFICATION_ID = "notification_id";
+        public static final String KEY_IS_CONTAG_CONTACT = "fucking_chutiya_victor";
     }
 
     public class Headers {
@@ -152,6 +154,7 @@ public class Constants {
         public static final int SERVICE_MAKE_PROFILE_REQUEST = 3;
         public static final int SERVICE_ADD_SOCIAL_PROFILE = 4;
         public static final int SERVICE_POST_INTERESTS = 5;
+        public static final int REQUEST_GET_USER_BY_USER_ID = 79;
         public static final int SERVICE_UPLOAD_PROFILE_PICTURE = 69;
         public static final int SERVICE_REJECT_FIELD_REQUEST = 6;
         public static final int SERVICE_ALLOW_FIELD_REQUEST = 37;

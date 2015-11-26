@@ -20,11 +20,19 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
     private int type;
     private String contagID ;
     private AddContact contact ;
+    private long userID;
+
     private long notificationID ;
 
     public ContactRequest(int type) {
         super(ContactResponse.ContactList.class, APIInterface.class);
         this.type = type;
+    }
+
+    public ContactRequest(long userID, int type) {
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
+        this.userID = userID;
     }
 
     public ContactRequest(int type, HashSet<RawContacts> mRawContactsArrayList) {
@@ -70,10 +78,14 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
             return getService().getUserByContagID(PrefUtils.getAuthToken(), contagID);
 
+        } else if(Constants.Types.REQUEST_GET_USER_BY_USER_ID == type) {
+            return getService().getUserByUserID(PrefUtils.getAuthToken(),userID);
+
         } else if (Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION == type){
             NotificationAddContact nac = new NotificationAddContact(notificationID) ;
             return getService().addContagUserFromNotification(PrefUtils.getAuthToken(), nac) ;
         }
+
         return null;
     }
 }

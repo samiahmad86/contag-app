@@ -13,6 +13,7 @@ import com.contag.app.R;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
 import com.contag.app.util.AtomicIntegerUtils;
 import com.contag.app.util.PrefUtils;
 import com.google.android.gms.gcm.GcmListenerService;
@@ -38,8 +39,9 @@ public class GcmService extends GcmListenerService {
                 break;
             }
             case "update_profile": {
-                long userID = data.getLong("profile_id") ;
-                Log.d("pusher", "Received gcm to update profile for id: " + userID)  ;
+                Log.d("newprofile", "GCM push received") ;
+                long userID = Long.parseLong(data.getString("profile_id")) ;
+                Router.startServiceToGetUserByUserID(this, userID, true);
                 intent = null ;
                 break ;
             }

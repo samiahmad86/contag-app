@@ -1,7 +1,12 @@
 package com.contag.app.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -82,6 +87,19 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver(brNonContactContagUserCreated,
+                new IntentFilter(getResources().getString(R.string.intent_filter_contag_contact_inserted)));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(brNonContactContagUserCreated);
+    }
+
+    @Override
     public void onRequestFailure(SpiceException spiceException) {
 
     }
@@ -121,7 +139,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     }
 
     public void addContagUser(long notificationID){
-        Log.d("notifadd", "Add contag user called with id: "+ notificationID) ;
+        Log.d("notifadd", "Add contag user called with id: " + notificationID) ;
         ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION, notificationID) ;
         getSpiceManager().execute(cr, new RequestListener<ContactResponse.ContactList>() {
             @Override
@@ -175,6 +193,14 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             }
         }
     }
+
+    private BroadcastReceiver brNonContactContagUserCreated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0l);
+            Router.startUserActivity(NotificationsActivity.this, TAG, userID);
+        }
+    };
 
     private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
         @Override

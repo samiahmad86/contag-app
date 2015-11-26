@@ -107,7 +107,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                         public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                             if (contactResponses.size() == 1) {
                                 ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                        contactResponses.get(0).contagContactUser, isContact);
+                                        contactResponses.get(0).contagContactResponse, isContact);
                             }
                             pbContacts.setVisibility(View.GONE);
                             isListViewEnabled = true;
@@ -319,7 +319,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             ContactResponse mContactResponse = contactResponses.get(0);
             Contact mContact = ContactUtils.getContact(mContactResponse);
             ContagContag mContagContag = ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), mContact,
-                    mContactResponse.contagContactUser, false);
+                    mContactResponse.contagContactResponse, false);
             addContagContagToList(mContagContag);
         } else {
             showToast("No users found with that Contag id!");

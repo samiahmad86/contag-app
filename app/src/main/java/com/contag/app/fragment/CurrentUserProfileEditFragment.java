@@ -413,28 +413,32 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     break;
                 }
                 case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
+                    log(TAG, "company name is  " + cc.getCompanyName());
+                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_COMPANY_NAME, cc.getCompanyName(),
+                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+
+                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
 
-                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
+                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
 
-                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
+                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
+                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
+                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
+                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
+                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
+                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
                     break;

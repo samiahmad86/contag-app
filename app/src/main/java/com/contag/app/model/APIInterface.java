@@ -72,7 +72,7 @@ public interface APIInterface {
             "Content-Type: application/json"
     })
     @GET(Constants.Urls.URL_USER)
-    User getUserByUserID(@Header(Constants.Headers.HEADER_TOKEN) String token,
+    User getUserByID(@Header(Constants.Headers.HEADER_TOKEN) String token,
                          @Query(Constants.Keys.KEY_USER_ID) Long userID);
 
 
@@ -97,6 +97,13 @@ public interface APIInterface {
     @GET(Constants.Urls.URL_CONTACT)
     ContactResponse.ContactList getUserByContagID(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                                   @Query(Constants.Keys.KEY_CONTAG_ID) String contagID);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_CONTACT)
+    ContactResponse.ContactList getUserByUserID(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                                  @Query(Constants.Keys.KEY_NOTIF_USER_ID) long userID);
 
     @Headers({
             "Content-Type: application/json"

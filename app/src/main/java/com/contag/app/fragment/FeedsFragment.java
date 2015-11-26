@@ -88,7 +88,15 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brContactsUpdated,
                 new IntentFilter(getResources().getString(R.string.intent_filter_contacts_updated)));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brNonContactContagUserCreated,
+                new IntentFilter(getResources().getString(R.string.intent_filter_contag_contact_inserted)));
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brNonContactContagUserCreated);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brContactsUpdated);
     }
 
     @Override
@@ -120,6 +128,16 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 getSpiceManager().execute(fr, FeedsFragment.this);
                 isLoading = true;
             }
+        }
+    };
+
+
+    private BroadcastReceiver brNonContactContagUserCreated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0l);
+            Router.startUserActivity(getActivity(), TAG, userID);
+            pbFeeds.setVisibility(View.GONE);
         }
     };
 
@@ -158,10 +176,11 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
+        private long userID;
         @Override
         protected ContagContag doInBackground(Long... params) {
-
-            return ((BaseActivity) FeedsFragment.this.getActivity()).getUser(params[0]);
+            userID = params[0];
+            return ((BaseActivity) FeedsFragment.this.getActivity()).getUser(userID);
         }
 
         @Override
@@ -185,7 +204,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                         if (contactResponses.size() == 1) {
                             ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                    contactResponses.get(0).contagContactUser, isContact);
+                                    contactResponses.get(0).contagContactResponse, isContact);
                         }
                         log(TAG, "hiding progress bar afer user fetched");
                         pbFeeds.setVisibility(View.GONE);
@@ -195,7 +214,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 });
 
             } else {
-                pbFeeds.setVisibility(View.GONE);
+                Router.startServiceToGetUserByUserID(getActivity(), userID, false);
                 showToast("Please wait while we sync your contacts");
             }
         }

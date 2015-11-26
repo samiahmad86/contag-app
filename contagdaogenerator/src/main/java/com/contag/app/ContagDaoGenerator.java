@@ -53,7 +53,7 @@ public class ContagDaoGenerator {
         contagContact.addStringProperty("marriageAnniversary");
         contagContact.addStringProperty("status_update");
         contagContact.addBooleanProperty("is_contact") ;
-
+        contagContact.addStringProperty("companyName");
 
         Entity customShare = schema.addEntity("CustomShare") ;
         customShare.addIdProperty() ;

@@ -182,10 +182,11 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
 
     private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
+        private long userID;
         @Override
         protected ContagContag doInBackground(Long... params) {
-
-            return ((BaseActivity) mCtxt).getUser(params[0]);
+            userID = params[0];
+            return ((BaseActivity) mCtxt).getUser(userID);
         }
 
         @Override
@@ -204,11 +205,13 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
                         if (contactResponses.size() == 1) {
                             ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                    contactResponses.get(0).contagContactUser, isContact);
+                                    contactResponses.get(0).contagContactResponse, isContact);
                         }
                         Router.startUserActivity(mCtxt, TAG, id);
                     }
                 });
+            } else {
+                Router.startServiceToGetUserByUserID(mCtxt, userID, false);
             }
         }
     }

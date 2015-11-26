@@ -47,7 +47,7 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
         }
         else if (Constants.Types.REQUEST_GET_USER_BY_ID == type){
 
-            return getService().getUserByUserID(PrefUtils.getAuthToken(), userID) ;
+            return getService().getUserByID(PrefUtils.getAuthToken(), userID) ;
         }
         else if(Constants.Types.REQUEST_PUT == type) {
 

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,14 +29,9 @@ import com.contag.app.config.Router;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.ContagContagDao;
-import com.contag.app.model.DaoSession;
-import com.contag.app.model.ImageUploadResponse;
 import com.contag.app.model.Interest;
 import com.contag.app.model.InterestSuggestion;
-import com.contag.app.model.Response;
 import com.contag.app.model.User;
-import com.contag.app.request.ImageUploadRequest;
 import com.contag.app.request.InterestSuggestionRequest;
 import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
@@ -52,10 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import retrofit.mime.TypedFile;
 
 public class UserActivity extends BaseActivity implements View.OnClickListener {
 
@@ -503,9 +494,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {
-            ;
-            Router.startProfilePicutreUpload(this, ImageUtils.getRealPathFromUri(this, data.getData()));
-
+            Router.startProfilePicutreUpload(this, ImageUtils.getCompressedImagePath(data.getData(), this));
         } else {
             CurrentUserProfileFragment lf = (CurrentUserProfileFragment) getSupportFragmentManager().
                     findFragmentByTag(CurrentUserProfileFragment.TAG);

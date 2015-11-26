@@ -36,7 +36,7 @@ public class PrefUtils {
     }
 
     public static String getGcmToken() {
-        return mSharedPref.getString(Constants.Keys.KEY_GCM_TOKEN, null);
+        return mSharedPref.getString(Constants.Keys.KEY_GCM_TOKEN, "abc");
     }
 
     public static void setContactBookUpdated(boolean val) {

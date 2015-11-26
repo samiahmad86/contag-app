@@ -91,6 +91,7 @@ public class ContactAdapter extends BaseAdapter {
         }
 
         ContagContag contObject = ((ContactListItem) getItem(position)).mContagContag;
+
         Picasso.with(mContext).load(contObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
                 .into(vhCont.ivPhoto);
         vhCont.tvContactId.setText(contObject.getContag());

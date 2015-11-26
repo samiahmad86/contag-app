@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -62,6 +63,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
 
     private final SlidingTabStrip mTabStrip;
+    private Context mContext;
+
 
     public SlidingTabLayout(Context context) {
         this(context, null);
@@ -73,8 +76,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        isEnabled = true;
+        this.mContext = context;
+        this.isEnabled = true;
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
@@ -307,6 +310,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 if (v == mTabStrip.getChildAt(i) && isEnabled) {
                     mViewPager.setCurrentItem(i);
                     return;
+                } else if(v == mTabStrip.getChildAt(i) && !isEnabled) {
+                    Toast.makeText(mContext, "You cannot navigate while you are editing your profile", Toast.LENGTH_SHORT).show();
                 }
             }
         }

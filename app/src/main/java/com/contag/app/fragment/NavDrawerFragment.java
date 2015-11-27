@@ -147,7 +147,6 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     }
 
     private void logout(){
-//
         Log.d("logout", "going to clear pref utils");
         PrefUtils.clearForLogout();
         DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
@@ -157,22 +156,6 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         Router.startLoginActivity(getActivity(), "NavDrawer", Constants.Types.FRAG_LOGIN);
         isLoading = true ;
     }
-//
-//    RequestListener<MessageResponse> nr = new RequestListener<>({
-//
-//
-//        @Override
-//        public void onRequestFailure (SpiceException spiceException){
-//
-//    }
-//
-//        @Override
-//        public void onRequestSuccess (MessageResponse messageResponse){
-//        Log.d("NavDrawer", messageResponse.message);
-//        isLoading = false;
-//    }
-//    })  ;
-
 
     /**
      * This interface must be implemented by activities that contain this

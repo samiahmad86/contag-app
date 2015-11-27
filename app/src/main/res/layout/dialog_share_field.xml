@@ -72,10 +72,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_two_buttons"
         android:background="?android:selectableItemBackground"
+        android:padding="2dp"
         android:text="Ok"
         android:textAllCaps="false"
-        android:padding="2dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black" />
 
 
     <ListView
@@ -83,7 +83,7 @@
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btn_invite"
+        android:layout_below="@id/btn_share_done"
         android:layout_margin="10dp"
 
         android:divider="@android:color/transparent"

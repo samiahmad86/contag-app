@@ -37,9 +37,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by varunj on 04/11/15.
- */
 public class ShareDialog extends DialogFragment implements View.OnClickListener {
     private CustomShare mCustomShare;
     private ListView lvContags;
@@ -59,10 +56,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
 
         ShareDialog share = new ShareDialog();
         Bundle args = new Bundle();
-
         fieldLabel = getLabel(fieldName) + " : " + value;
-        Log.e("fieldname", fieldName);
-        Log.e("fieldname", value);
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
         share.setArguments(args);
         return share;
@@ -79,10 +73,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.dialog_share_field, container, false);
-
-
         fieldName = getArguments().getString(Constants.Keys.KEY_FIELD_NAME);
-        Log.e("fieldname", fieldName);
         new LoadContags().execute(fieldName);
         shareListAdapter = new ShareListAdapter(shareList, getActivity());
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
@@ -187,8 +178,6 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         if (mCustomShare.getIs_public() || lvContags.getVisibility() == View.VISIBLE) {
             //Hide contag list
             lvContags.setVisibility(View.GONE);
-            //ll_share.setVisibility(View.GONE);
-
             // Toggle Color
             sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
             shareCustom.setTextColor(getResources().getColor(R.color.black));

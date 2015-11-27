@@ -151,7 +151,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             case R.id.btn_share: {
                 int position = (int) v.getTag();
                 P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
-                ShareDialog share = ShareDialog.newInstance(convertKeyToLabel(mP2ProfileModel.key), mP2ProfileModel.value);
+                ShareDialog share = ShareDialog.newInstance(mP2ProfileModel.key, mP2ProfileModel.value);
                 share.show(getChildFragmentManager(), TAG);
                 break;
 

@@ -143,6 +143,7 @@ public class ContactUtils {
 
         ContagContag contagContag = new ContagContag(contagContactResponse.id);
         contagContag.setContact(mContact);
+        contagContag.setStatus_update(contagContactResponse.statusUpdate);
         contagContag.setCreatedOn(contagContactResponse.createdOn);
         contagContag.setUpdatedOn(contagContactResponse.updatedOn);
         if (contagContactResponse.name != null) {

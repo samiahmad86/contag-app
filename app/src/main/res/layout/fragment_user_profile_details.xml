@@ -6,7 +6,10 @@
         android:id="@+id/btn_save_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_alignParentBottom="true"
+        android:textAllCaps="false"
         android:background="@drawable/bg_btn_profile_update"
         android:layout_centerHorizontal="true"
         android:gravity="center"
@@ -14,7 +17,16 @@
         android:visibility="gone"
         android:text="@string/save_changes"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_edit_profile"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/edit_pencil_contag"
+        android:visibility="gone" />
+
 
     <ScrollView
         android:id="@+id/sv_user_details"
@@ -22,7 +34,8 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
-        android:padding="10dp"
+        android:layout_below="@id/btn_edit_profile"
+        android:padding="5dp"
         android:overScrollMode="never"
         android:layout_above="@id/btn_save_profile"
         android:scrollbars="none">
@@ -36,13 +49,7 @@
 
 
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_edit_profile"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/edit_pencil_contag"
-        android:visibility="gone" />
+
 
 
 

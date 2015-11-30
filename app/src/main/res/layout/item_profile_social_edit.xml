@@ -71,9 +71,21 @@
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/et_field_base_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+
+
+
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_edit_text"
+                android:theme="@style/EditTextTheme"
+
                 android:textColor="@color/white"
+
                 android:textSize="13sp"
                 android:visibility="gone" />
 
@@ -81,6 +93,12 @@
                 android:id="@+id/et_field_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_edit_text"
+                android:theme="@style/EditTextTheme"
                 android:layout_toRightOf="@id/et_field_base_value"
                 android:singleLine="true"
                 android:textColor="@color/white"
@@ -91,10 +109,11 @@
                 android:id="@+id/btn_g_plus_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_g_plus_btn"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_google_plus"
                 android:drawableLeft="@drawable/googleplus_copy"
-                android:padding="5dp"
                 android:text="@string/sync_gplus"
+                android:gravity="left|center"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:visibility="gone" />
@@ -103,9 +122,10 @@
                 android:id="@+id/btn_twitter_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_twitter_btn"
+                android:background="@drawable/bg_twitter"
                 android:drawableLeft="@drawable/twitter_copy"
-                android:padding="5dp"
+                android:textAllCaps="false"
+                android:gravity="center"
                 android:text="@string/sync_twitter"
                 android:textColor="@color/white"
                 android:textSize="13sp"
@@ -115,9 +135,9 @@
                 android:id="@+id/btn_linkedin_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_linkedin_btn"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_linkedin"
                 android:drawableLeft="@drawable/linkedin"
-                android:padding="5dp"
                 android:text="@string/sync_linkedin"
                 android:textColor="@color/white"
                 android:textSize="13sp"
@@ -127,20 +147,25 @@
                 android:id="@+id/btn_instagram_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_insta_btn"
+                android:background="@drawable/bg_insta"
+                android:textAllCaps="false"
                 android:drawableLeft="@drawable/instagram"
-                android:padding="5dp"
                 android:text="@string/sync_instagram"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:visibility="gone" />
 
-            <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
+            <com.facebook.login.widget.LoginButton
+                xmlns:fb="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/btn_facebook_login"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
+
+                android:textSize="13sp"
+                 android:gravity="center"
+                android:drawableLeft="@drawable/com_facebook_button_icon"
                 fb:login_text="@string/sync_fb"
                 fb:logout_text="@string/fb_unsync_msg" />
         </RelativeLayout>

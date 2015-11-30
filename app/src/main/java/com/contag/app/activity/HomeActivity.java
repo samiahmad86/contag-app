@@ -1,6 +1,5 @@
 package com.contag.app.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,12 +33,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        Intent intent = getIntent();
-
         setUpActionBar(R.id.tb_home);
-
-        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());
@@ -59,7 +53,6 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         stl.setViewPager(vpHome);
 
 
-
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
         } else {
@@ -74,6 +67,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     public void onResume() {
         super.onResume();
         new LoadUser().execute();
+        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
     }
 
     @Override
@@ -82,7 +76,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.closeDrawers();

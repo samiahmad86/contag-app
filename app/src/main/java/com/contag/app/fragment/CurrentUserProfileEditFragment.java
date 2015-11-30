@@ -61,8 +61,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private String fieldName;
 
 
-
-
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
         Bundle args = new Bundle();
@@ -92,7 +90,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
-        pbProfileUpdate =(ProgressBar) view.findViewById(R.id.pb_edit_profile);
+        pbProfileUpdate = (ProgressBar) view.findViewById(R.id.pb_edit_profile);
         svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
@@ -151,11 +149,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_share: {
-
-
-                    //  ShareDialog share = ShareDialog.newInstance((String) v.getTag(0));
-
-                ShareDialog share = ShareDialog.newInstance((String) v.getTag(R.string.fieldname), (String) v.getTag(R.string.value));
+                int position = (int) v.getTag();
+                P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
+                ShareDialog share = ShareDialog.newInstance(mP2ProfileModel.key, mP2ProfileModel.value);
                 share.show(getChildFragmentManager(), TAG);
                 break;
 
@@ -167,7 +163,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private void addViews() {
         llViewContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-            for (int i = 0; i < hmP2PProfileModel.size(); i++) {
+        for (int position = 0; position < hmP2PProfileModel.size(); position++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
             ViewHolder vh = new ViewHolder();
             vh.rlContainer = (RelativeLayout) view.findViewById(R.id.rl_other_container);
@@ -176,9 +172,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
-             //vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
-            vh.btnShare.setTag(R.string.fieldname,hmP2PProfileModel.get(i).key) ;
-            vh.btnShare.setTag(R.string.value, hmP2PProfileModel.get(i).value);
+            //vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
+            vh.btnShare.setTag(position);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnShare.setOnClickListener(this);
             vh.btnAdd.setOnClickListener(this);
@@ -236,7 +231,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
             mViewHolder.tvFieldValue.setText(mP2ProfileModel.value);
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
-           // mViewHolder.btnShare.setTag(position);
+            // mViewHolder.btnShare.setTag(position);
         } else {
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
             mViewHolder.btnAdd.setVisibility(View.VISIBLE);
@@ -293,9 +288,9 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 int fieldType = p2ProfileModel.viewType;
                 if (fieldType == Constants.Types.FIELD_LIST) {
                     String selectionValue = "";
-                    if(vh.spFieldValue.getSelectedItemPosition() != 0) {
+                    if (vh.spFieldValue.getSelectedItemPosition() != 0) {
                         selectionValue = vh.spFieldValue.getSelectedItem().toString();
-                    } else if(p2ProfileModel.value != null && p2ProfileModel.value.length() != 0) {
+                    } else if (p2ProfileModel.value != null && p2ProfileModel.value.length() != 0) {
                         selectionValue = p2ProfileModel.value;
                     }
                     oUser.put(p2ProfileModel.key, selectionValue);
@@ -305,7 +300,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 aUser.put(oUser);
             }
             pbProfileUpdate.setVisibility(View.VISIBLE);
-           // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
+            // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
 
 
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
@@ -326,7 +321,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         String str = key.replace("_", " ");
         str = str.toLowerCase();
         char ch = str.charAt(0);
-        str= ((char) (ch - 32)) + str.substring(1);
+        str = ((char) (ch - 32)) + str.substring(1);
         int position = str.indexOf(" ");
         while (position != -1) {
             ch = str.charAt(position + 1);
@@ -413,28 +408,32 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     break;
                 }
                 case Constants.Types.PROFILE_PROFESSIONAL: {
-                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
+                    log(TAG, "company name is  " + cc.getCompanyName());
+                    hmP2ProfileModel.put(0, new P2ProfileModel(Constants.Keys.KEY_COMPANY_NAME, cc.getCompanyName(),
+                            Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+
+                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_EMAIL, cc.getWorkEmail(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
 
-                    hmP2ProfileModel.put(1, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
+                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_ADDRESS, cc.getWorkAddress(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS));
 
-                    hmP2ProfileModel.put(2, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
+                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER, cc.getWorkMobileNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(3, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
+                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_LANDLINE_NUMBER, cc.getWorkLandLineNumber(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_PHONE));
 
-                    hmP2ProfileModel.put(4, new P2ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
+                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_DESIGNATION, cc.getDesignation(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(5, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
+                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE, cc.getWorkFacebookPage(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(6, new P2ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
+                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK, cc.getAndroidAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
-                    hmP2ProfileModel.put(7, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
+                    hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
 
                     break;
@@ -462,10 +461,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
             btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
-            if(cameFromNotification) {
+            if (cameFromNotification) {
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
                     P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
-                    if(mP2ProfileModel.key.equalsIgnoreCase(fieldName) && mP2ProfileModel.value != null
+                    if (mP2ProfileModel.key.equalsIgnoreCase(fieldName) && mP2ProfileModel.value != null
                             && mP2ProfileModel.value.length() != 0) {
                         ShareFieldDialog mShareFieldDialog = ShareFieldDialog.newInstance(requestBundle, fieldName);
                         mShareFieldDialog.show(getChildFragmentManager(), "share_dialog");

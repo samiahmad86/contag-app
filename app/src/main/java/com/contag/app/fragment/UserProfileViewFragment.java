@@ -220,28 +220,31 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                     }
                     case Constants.Types.PROFILE_PROFESSIONAL: {
 
-                        hmProfileViewModel.put(0, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_EMAIL,
+                        hmProfileViewModel.put(0, new ProfileViewModel(Constants.Keys.KEY_COMPANY_NAME,
+                                mContagContag.getCompanyName(), Constants.Types.FIELD_STRING));
+
+                        hmProfileViewModel.put(1, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_EMAIL,
                                 mContagContag.getWorkEmail(), Constants.Types.FIELD_EMAIL));
 
-                        hmProfileViewModel.put(1, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_ADDRESS,
+                        hmProfileViewModel.put(2, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_ADDRESS,
                                 mContagContag.getWorkAddress(), Constants.Types.FIELD_ADDRESS));
 
-                        hmProfileViewModel.put(2, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER,
+                        hmProfileViewModel.put(3, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_MOBILE_NUMBER,
                                 mContagContag.getWorkMobileNumber(), Constants.Types.FIELD_NUMBER));
 
-                        hmProfileViewModel.put(3, new ProfileViewModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER,
+                        hmProfileViewModel.put(4, new ProfileViewModel(Constants.Keys.KEY_USER_LANDLINE_NUMBER,
                                 mContagContag.getWorkLandLineNumber(), Constants.Types.FIELD_NUMBER));
 
-                        hmProfileViewModel.put(4, new ProfileViewModel(Constants.Keys.KEY_USER_DESIGNATION,
+                        hmProfileViewModel.put(5, new ProfileViewModel(Constants.Keys.KEY_USER_DESIGNATION,
                                 mContagContag.getDesignation(), Constants.Types.FIELD_STRING));
 
-                        hmProfileViewModel.put(5, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE,
+                        hmProfileViewModel.put(6, new ProfileViewModel(Constants.Keys.KEY_USER_WORK_FACEBOOK_PAGE,
                                 mContagContag.getWorkFacebookPage(), Constants.Types.FIELD_SOCIAL));
 
-                        hmProfileViewModel.put(6, new ProfileViewModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK,
+                        hmProfileViewModel.put(7, new ProfileViewModel(Constants.Keys.KEY_USER_ANDROID_APP_LINK,
                                 mContagContag.getAndroidAppLink(), Constants.Types.FIELD_SOCIAL));
 
-                        hmProfileViewModel.put(7, new ProfileViewModel(Constants.Keys.KEY_USER_IOS_APP_LINK,
+                        hmProfileViewModel.put(8, new ProfileViewModel(Constants.Keys.KEY_USER_IOS_APP_LINK,
                                 mContagContag.getIosAppLink(), Constants.Types.FIELD_SOCIAL));
 
                         break;
@@ -315,10 +318,12 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
 
         @Override
         protected void onPostExecute(HashMap<Integer, ProfileViewModel> integerP2ProfileViewModelHashMap) {
-            hmP2ProfileView.clear();
-            hmP2ProfileView.putAll(integerP2ProfileViewModelHashMap);
-            drawView();
-            setViewContent();
+            if(integerP2ProfileViewModelHashMap != null) {
+                hmP2ProfileView.clear();
+                hmP2ProfileView.putAll(integerP2ProfileViewModelHashMap);
+                drawView();
+                setViewContent();
+            }
         }
     }
 

@@ -78,7 +78,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
                     @Override
                     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                        Log.d("conadd", "User added on server") ;
+                        //ContactUtils.saveContact(ContactService.this, contactResponses);
                     }
                 }) ;
             }

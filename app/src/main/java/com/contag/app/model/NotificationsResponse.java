@@ -1,6 +1,5 @@
 package com.contag.app.model;
 
-import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -53,6 +52,11 @@ public class NotificationsResponse {
     @SerializedName("field_name")
     @Expose
     public String fieldName;
+
+    @SerializedName("introduced_user_id")
+    @Expose
+    public Long introducedUserID ;
+
 
     public static class NotificationList extends ArrayList<NotificationsResponse> {
 

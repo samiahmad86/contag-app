@@ -1,6 +1,5 @@
 package com.contag.app.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,17 +26,10 @@ public class ContactListItem {
         this.mContagContag = contagContag;
     }
 
-    public ContactListItem(ArrayList<Interest> interests, ContagContag contagContag, Contact contact, ArrayList<SocialProfile> profiles, int type) {
-        this.type = type;
-        this.interests = interests;
-        this.profiles = profiles ;
-        this.mContagContag = contagContag;
-        this.mContact = contact ;
-    }
-
     public ContactListItem(ContagContag contagContag, boolean isSharedWith, int type){
         this.type = type ;
         this.isSharedWith = isSharedWith ;
         this.mContagContag = contagContag ;
     }
+
 }

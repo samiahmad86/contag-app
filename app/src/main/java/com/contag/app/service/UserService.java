@@ -5,15 +5,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.config.Router;
 import com.contag.app.fragment.NewUserDetailsFragment;
+import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
@@ -28,16 +28,16 @@ import com.contag.app.model.ProfilePrivacyRequestModel;
 import com.contag.app.model.Response;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.User;
+import com.contag.app.request.ContactRequest;
 import com.contag.app.request.FieldRequest;
 import com.contag.app.request.ImageUploadRequest;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.UserRequest;
-import com.contag.app.util.ImageUtils;
+import com.contag.app.util.ContactUtils;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ public class UserService extends Service implements RequestListener<User> {
     private static final String TAG = UserService.class.getName();
     private int profileType = 0;
     private int requestType = 0;
+    private boolean isContagContact;
 
     public UserService() {
     }
@@ -159,9 +160,7 @@ public class UserService extends Service implements RequestListener<User> {
                             substring(selectedImageFile.getAbsolutePath().lastIndexOf(".") + 1);
                     if (selectedImageFile.length() / 1024 >= 1024) {
                         Toast.makeText(this, "The selected image is too big", Toast.LENGTH_SHORT).show();
-                    } else if (!extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg") && !extension.equalsIgnoreCase("png")) {
-                        Toast.makeText(this, "Please select a png or jpg format image", Toast.LENGTH_SHORT).show();
-                    } else {
+                    }  else {
                         Log.d(TAG, "Starting image upload");
                         ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
                                 (new TypedFile("multipart/form-data", selectedImageFile));
@@ -184,6 +183,28 @@ public class UserService extends Service implements RequestListener<User> {
                         });
 
                     }
+                    break;
+                }
+                case Constants.Types.REQUEST_GET_USER_BY_USER_ID: {
+                    Log.d("newprofile", "Contact request being made") ;
+                    ContactRequest contactRequest = new ContactRequest
+                            (intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l), requestType);
+                    isContagContact = intent.getBooleanExtra(Constants.Keys.KEY_IS_CONTAG_CONTACT, false);
+                    mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
+                            Log.d("newprofile", "Request is successfull" + contactResponses.size()) ;
+
+                            if(contactResponses.size() == 1) {
+                                new InsertContagContact().execute(contactResponses);
+                            }
+                        }
+                    });
                     break;
                 }
             }
@@ -302,4 +323,21 @@ public class UserService extends Service implements RequestListener<User> {
         }
     }
 
+    private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
+        private long userId;
+        @Override
+        protected Void doInBackground(ContactResponse.ContactList... params) {
+            ContactUtils.saveSingleContact(UserService.this, params[0], isContagContact);
+            userId = params[0].get(0).contagContactResponse.id;
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            if(!isContagContact) {
+                Intent iStartUserActivity = new Intent(getResources().getString(R.string.intent_filter_contag_contact_inserted));
+                iStartUserActivity.putExtra(Constants.Keys.KEY_USER_ID, userId);
+                LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(iStartUserActivity);
+            }
+        }
+    }
 }

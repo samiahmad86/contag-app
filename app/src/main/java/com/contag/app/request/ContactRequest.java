@@ -4,6 +4,7 @@ import com.contag.app.config.Constants;
 import com.contag.app.model.APIInterface;
 import com.contag.app.model.AddContact;
 import com.contag.app.model.ContactResponse;
+import com.contag.app.model.NotificationAddContact;
 import com.contag.app.model.RawContacts;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
@@ -19,10 +20,19 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
     private int type;
     private String contagID ;
     private AddContact contact ;
+    private long userID;
+
+    private long notificationID ;
 
     public ContactRequest(int type) {
         super(ContactResponse.ContactList.class, APIInterface.class);
         this.type = type;
+    }
+
+    public ContactRequest(long userID, int type) {
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
+        this.userID = userID;
     }
 
     public ContactRequest(int type, HashSet<RawContacts> mRawContactsArrayList) {
@@ -43,6 +53,13 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
         this.contact = contact ;
     }
 
+
+    public ContactRequest(int type, long notificationID){
+        super(ContactResponse.ContactList.class, APIInterface.class) ;
+        this.type = type ;
+        this.notificationID = notificationID ;
+    }
+
     @Override
     public ContactResponse.ContactList loadDataFromNetwork() throws Exception {
         if (type == Constants.Types.REQUEST_GET_CURRENT_USER) {
@@ -61,7 +78,14 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
 
             return getService().getUserByContagID(PrefUtils.getAuthToken(), contagID);
 
+        } else if(Constants.Types.REQUEST_GET_USER_BY_USER_ID == type) {
+            return getService().getUserByUserID(PrefUtils.getAuthToken(),userID);
+
+        } else if (Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION == type){
+            NotificationAddContact nac = new NotificationAddContact(notificationID) ;
+            return getService().addContagUserFromNotification(PrefUtils.getAuthToken(), nac) ;
         }
+
         return null;
     }
 }

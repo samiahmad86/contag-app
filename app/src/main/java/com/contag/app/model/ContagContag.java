@@ -38,6 +38,7 @@ public class ContagContag {
     private String marriageAnniversary;
     private String status_update;
     private Boolean is_contact;
+    private String companyName;
     private Long contactId;
 
     /** Used to resolve relations */
@@ -57,7 +58,7 @@ public class ContagContag {
         this.id = id;
     }
 
-    public ContagContag(Long id, String createdOn, String updatedOn, String name, String mobileNumber, String registeredWith, String contag, String landLineNumber, String emergencyContactNumber, Boolean isMobileVerified, String gender, String personalEmail, String address, String workEmail, String workMobileNumber, String workLandLineNumber, String workAddress, String website, String designation, String workFacebookPage, String androidAppLink, String iosAppLink, String avatarUrl, String bloodGroup, String dateOfBirth, String maritalStatus, String marriageAnniversary, String status_update, Boolean is_contact, Long contactId) {
+    public ContagContag(Long id, String createdOn, String updatedOn, String name, String mobileNumber, String registeredWith, String contag, String landLineNumber, String emergencyContactNumber, Boolean isMobileVerified, String gender, String personalEmail, String address, String workEmail, String workMobileNumber, String workLandLineNumber, String workAddress, String website, String designation, String workFacebookPage, String androidAppLink, String iosAppLink, String avatarUrl, String bloodGroup, String dateOfBirth, String maritalStatus, String marriageAnniversary, String status_update, Boolean is_contact, String companyName, Long contactId) {
         this.id = id;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
@@ -87,6 +88,7 @@ public class ContagContag {
         this.marriageAnniversary = marriageAnniversary;
         this.status_update = status_update;
         this.is_contact = is_contact;
+        this.companyName = companyName;
         this.contactId = contactId;
     }
 
@@ -326,6 +328,14 @@ public class ContagContag {
 
     public void setIs_contact(Boolean is_contact) {
         this.is_contact = is_contact;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public Long getContactId() {

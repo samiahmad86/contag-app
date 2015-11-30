@@ -39,22 +39,34 @@ public class ContactUtils {
 
         ContactDao mContactDao = getSession(mContext).getContactDao();
 
-        Log.d("Condev", "Current Dao size: " + mContactDao.loadAll().size());
+        for (ContactResponse response : contactResponse) {
+            Contact mContact = getContact(response);
+            if (mContact.getIsOnContag()) {
+                insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, true);
+            }
+            try {
+                mContactDao.insertOrReplace(mContact);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void saveSingleContact(Context mContext, ContactResponse.ContactList contactResponse, boolean isContact) {
+        ContactDao mContactDao = getSession(mContext.getApplicationContext()).getContactDao();
 
         for (ContactResponse response : contactResponse) {
             Contact mContact = getContact(response);
+            Log.d("newprofile", "Contag user: " + mContact.getIsOnContag()) ;
+            Log.d("newprofile", "Name is: "+ mContact.getContactName()) ;
 
             if (mContact.getIsOnContag()) {
-                insertAndReturnContagContag(mContext, mContact, response.contagContactUser, true);
+                insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, isContact);
             }
-            Log.d("Condev", "" + mContact.getId() + " " + response.id);
-            Log.d("Condevs", "" + mContact.getContactName() + " " + response.contactName);
-
             try {
                 mContactDao.insertOrReplace(mContact);
-
             } catch (Exception ex) {
-                // TODO : handle this
+                Log.d("newprofile", "Exception occurred when insertin contact") ;
                 ex.printStackTrace();
             }
         }
@@ -113,18 +125,8 @@ public class ContactUtils {
     }
 
     public static void addContag(Context mContext, ContactListItem contag) {
-        ContactDao mContactDao = getSession(mContext).getContactDao();
-        ContagContagDao ccDao = getSession(mContext).getContagContagDao();
-
-        mContactDao.insertOrReplace(contag.mContact);
-
-        contag.mContagContag.setIs_contact(true);
-        ccDao.insertOrReplace(contag.mContagContag);
 
         Router.addContagUser(mContext, contag.mContagContag.getId());
-
-        Log.d("conadd", "Added the contag user!");
-
 
     }
 
@@ -135,47 +137,49 @@ public class ContactUtils {
 
         return (count == 0);
 
-
     }
 
-    private static ContagContag getContagContact(ContagContactResponse ccResponse, Contact mContact, Boolean isOnContag) {
+    private static ContagContag getContagContact(ContagContactResponse contagContactResponse, Contact mContact, Boolean isContact) {
 
-        ContagContag cc = new ContagContag(ccResponse.id);
-        cc.setContact(mContact);
-        cc.setCreatedOn(ccResponse.createdOn);
-        cc.setUpdatedOn(ccResponse.updatedOn);
-        if (ccResponse.name != null) {
-            cc.setName(ccResponse.name);
+        ContagContag contagContag = new ContagContag(contagContactResponse.id);
+        contagContag.setContact(mContact);
+        contagContag.setStatus_update(contagContactResponse.statusUpdate);
+        contagContag.setCreatedOn(contagContactResponse.createdOn);
+        contagContag.setUpdatedOn(contagContactResponse.updatedOn);
+        if (contagContactResponse.name != null) {
+            contagContag.setName(contagContactResponse.name);
         } else {
-            cc.setName("Contag User");
+            contagContag.setName("Contag User");
         }
-        cc.setRegisteredWith(ccResponse.registeredWith);
-        cc.setMobileNumber(ccResponse.mobileNumber);
-        cc.setContag(ccResponse.contag);
-        cc.setLandLineNumber(ccResponse.landlineNumber);
-        cc.setEmergencyContactNumber(ccResponse.emergencyContactNumber);
-        cc.setIsMobileVerified(ccResponse.isMobileVerified);
-        cc.setGender(ccResponse.gender);
-        cc.setAddress(ccResponse.address);
-        cc.setWorkEmail(ccResponse.workEmail);
-        cc.setWorkMobileNumber(ccResponse.workMobileNumber);
-        cc.setWorkLandLineNumber(ccResponse.workLandlineNumber);
-        cc.setWebsite(ccResponse.website);
-        cc.setDesignation(ccResponse.designation);
-        cc.setWorkFacebookPage(ccResponse.workFacebookPage);
-        cc.setAndroidAppLink(ccResponse.androidAppLink);
-        cc.setIosAppLink(ccResponse.iosAppLink);
-        cc.setAvatarUrl(Constants.Urls.BASE_URL + ccResponse.avatarUrl);
-        cc.setBloodGroup(ccResponse.bloodGroup);
-        cc.setDateOfBirth(ccResponse.dateOfBirth);
-        cc.setIsMobileVerified(ccResponse.isMobileVerified);
-        cc.setMaritalStatus(ccResponse.maritalStatus);
-        cc.setMarriageAnniversary(ccResponse.marriageAnniversary);
-        cc.setPersonalEmail(ccResponse.personalEmail);
-        cc.setWorkAddress(ccResponse.workAddress);
-        cc.setIs_contact(isOnContag);
+        contagContag.setRegisteredWith(contagContactResponse.registeredWith);
+        contagContag.setMobileNumber(contagContactResponse.mobileNumber);
+        contagContag.setContag(contagContactResponse.contag);
+        contagContag.setLandLineNumber(contagContactResponse.landlineNumber);
+        contagContag.setEmergencyContactNumber(contagContactResponse.emergencyContactNumber);
+        contagContag.setIsMobileVerified(contagContactResponse.isMobileVerified);
+        contagContag.setGender(contagContactResponse.gender);
+        contagContag.setAddress(contagContactResponse.address);
+        contagContag.setWorkEmail(contagContactResponse.workEmail);
+        contagContag.setWorkMobileNumber(contagContactResponse.workMobileNumber);
+        contagContag.setWorkLandLineNumber(contagContactResponse.workLandlineNumber);
+        contagContag.setWebsite(contagContactResponse.website);
+        contagContag.setDesignation(contagContactResponse.designation);
+        contagContag.setWorkFacebookPage(contagContactResponse.workFacebookPage);
+        contagContag.setAndroidAppLink(contagContactResponse.androidAppLink);
+        contagContag.setIosAppLink(contagContactResponse.iosAppLink);
+        contagContag.setAvatarUrl(Constants.Urls.BASE_URL + contagContactResponse.avatarUrl);
+        contagContag.setBloodGroup(contagContactResponse.bloodGroup);
+        contagContag.setDateOfBirth(contagContactResponse.dateOfBirth);
+        contagContag.setIsMobileVerified(contagContactResponse.isMobileVerified);
+        contagContag.setMaritalStatus(contagContactResponse.maritalStatus);
+        contagContag.setMarriageAnniversary(contagContactResponse.marriageAnniversary);
+        contagContag.setPersonalEmail(contagContactResponse.personalEmail);
+        contagContag.setWorkAddress(contagContactResponse.workAddress);
+        contagContag.setCompanyName(contagContactResponse.companyName);
+        Log.d("newprofile", "Is a contact? : " + isContact) ;
+        contagContag.setIs_contact(isContact);
 
-        return cc;
+        return contagContag;
 
     }
 

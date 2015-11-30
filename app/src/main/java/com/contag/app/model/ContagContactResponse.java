@@ -1,5 +1,6 @@
 package com.contag.app.model;
 
+import com.contag.app.config.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +19,9 @@ public class ContagContactResponse {
     @Expose
     @SerializedName("social_profile")
     public ArrayList<SocialProfileResponse> socialProfile = new ArrayList<>();
+    @Expose
+    @SerializedName("status_update")
+    public String statusUpdate;
     @SerializedName("created_on")
     @Expose
     public String createdOn;
@@ -90,4 +94,8 @@ public class ContagContactResponse {
     @SerializedName("marriage_anniversary")
     @Expose
     public String marriageAnniversary;
+    @SerializedName(Constants.Keys.KEY_COMPANY_NAME)
+    @Expose
+    public String companyName;
+
 }

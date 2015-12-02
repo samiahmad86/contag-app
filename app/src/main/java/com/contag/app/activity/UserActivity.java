@@ -90,8 +90,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         } else
             Router.startUserService(this, Constants.Types.REQUEST_GET_USER_BY_ID, userID);
 
-        hideInterest();
-        setUpInterests();
+
 
         if (userID != PrefUtils.getCurrentUserID()) {
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
@@ -150,6 +149,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             }
             transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
+        hideInterest();
+        setUpInterests();
     }
 
     @Override
@@ -206,6 +207,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             protected ArrayList<Interest> doInBackground(Void... params) {
 
                 interests = getUserInterests(userID);
+                Log.d("iList", "Size of interests in setUpinterests: " + interests.size());
                 return interests;
             }
 
@@ -235,13 +237,13 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
 
     private void showInterests(ArrayList<Interest> userInterests) {
-        int i = 0; //hideInterest();
+        int i = 0;
         for (Interest userInterest : userInterests) {
             if (i >= 3)
                 return;
             // Set interest on the text views
             ((TextView) findViewById(interestText[i])).setText(userInterest.getName());
-            Log.d("interest", userInterest.getName());
+            Log.d("iList", userInterest.getName());
             // make the interest boxes visible
             (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
             i++;
@@ -521,7 +523,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-                log(TAG, ccUser.getStatus_update());
                 ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));

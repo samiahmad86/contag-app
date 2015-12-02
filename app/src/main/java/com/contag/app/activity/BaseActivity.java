@@ -29,7 +29,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by tanay on 30/7/15.
@@ -144,7 +143,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public ArrayList<Interest> getUserInterests(long id) {
-        Log.d("Inter", "In base activity: " + id) ;
+        Log.d("iList", "In base activity: " + id) ;
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         InterestDao interestDao = session.getInterestDao();
         return (ArrayList<Interest>) interestDao.queryBuilder().

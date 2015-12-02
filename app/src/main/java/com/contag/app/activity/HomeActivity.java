@@ -67,7 +67,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     public void onResume() {
         super.onResume();
         new LoadUser().execute();
-        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
+
     }
 
     @Override
@@ -151,6 +151,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
             Picasso.with(HomeActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         }
     }

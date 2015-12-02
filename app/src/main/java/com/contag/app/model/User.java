@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.contag.app.adapter.NotificationsAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.util.PrefUtils;
@@ -183,6 +182,8 @@ public class User {
             Log.d("myuser", "Going to store interests now");
             InterestDao interestDao = session.getInterestDao();
             for (Interest interest : interestList) {
+                Log.d("myuser", interest.getName()) ;
+                Log.d("myuser", "Is db read only?" + session.getDatabase().isReadOnly()) ;
                 interestDao.insertOrReplace(interest);
             }
         }
@@ -211,6 +212,7 @@ public class User {
         if (socialProfileList != null) {
             Log.d("myuser", "Going to store social profiles");
             SocialProfileDao spDao = session.getSocialProfileDao();
+            Log.d("myuser", "Is db read only?" + session.getDatabase().isReadOnly()) ;
             for (SocialProfile profile : socialProfileList) {
                 spDao.insertOrReplace(profile);
             }
@@ -267,11 +269,11 @@ public class User {
                 userIDS.add(userID);
             }
         } else {
-            Log.d(NotificationsAdapter.TAG, "pissu chod");
+
             return userID;
         }
         if(userIDS.size() == 1) {
-            Log.d(NotificationsAdapter.TAG, "pissu chod 2");
+
             return userIDS.get(0);
         }
         return TextUtils.join(",", userIDS);

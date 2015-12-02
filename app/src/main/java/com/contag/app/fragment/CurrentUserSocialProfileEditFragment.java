@@ -477,6 +477,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case Constants.Types.FIELD_TWITTER: {
+                log(TAG, "gimme some twitter fun babby");
                 loginTwitter(platformId);
                 break;
             }

@@ -238,7 +238,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
             case R.id.btn_disconnect: {
                 final int position = (int) v.getTag();
-
+                v.setEnabled(false);
 //                DeleteSocialProfile mDeleteSocialProfile = new DeleteSocialProfile(hmSocialProfileModel.get(position).mSocialPlatform.getId());
                 long platformId = hmSocialProfileModel.get(position).mSocialPlatform.getId() ;
                 Log.d("DeleteSocial", "Going to delete platfrom id with number: " + platformId ) ;
@@ -247,7 +247,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 getSpiceManager().execute(mDeleteSocialProfileRequest, new RequestListener<Response>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-
+                        viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
                     }
 
                     @Override
@@ -255,6 +255,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                         log(TAG, String.valueOf(response.result));
                         if (response.result) {
                             new DeleteSocialProfile().execute(position);
+                        } else {
+                            viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
                         }
                     }
                 });
@@ -308,7 +310,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
-                addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_INSTAGRAM);
+                addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_TWITTER);
             }
 
             @Override
@@ -874,6 +876,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
             SocialProfileModel newSocialProfileModel = new SocialProfileModel(mSocialProfileModel.mSocialPlatform, false, mSocialProfileModel.mViewType);
             viewHolderArrayList.get(position).btnDisconnect.setVisibility(View.GONE);
+            viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
             hmSocialProfileModel.remove(position);
             hmSocialProfileModel.put(position, newSocialProfileModel);
             log(TAG, "calling edit mode " + hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName()

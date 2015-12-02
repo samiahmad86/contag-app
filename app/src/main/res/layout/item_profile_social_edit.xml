@@ -3,7 +3,8 @@
     android:id="@+id/rl_social_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="20dp"
+    android:paddingTop="20dp">
 
 
     <android.support.v7.widget.AppCompatTextView
@@ -49,11 +50,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tv_connected_as"
-
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tv_connected_as"
         android:background="?android:selectableItemBackground"
         android:gravity="center"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
         android:text="@string/abc_action_bar_home_description"
         android:textColor="@color/white" />
 
@@ -81,7 +82,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_edit_text"
+                android:background="@null"
                 android:theme="@style/EditTextTheme"
 
                 android:textColor="@color/white"

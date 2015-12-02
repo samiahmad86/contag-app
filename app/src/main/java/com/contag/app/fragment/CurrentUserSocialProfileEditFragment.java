@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -72,7 +73,8 @@ import java.util.List;
 
 public class CurrentUserSocialProfileEditFragment extends BaseFragment implements View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
+        FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback,
+        View.OnTouchListener{
 
     public static final String TAG = CurrentUserSocialProfileEditFragment.class.getName();
 
@@ -93,6 +95,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private GoogleApiClient mGoogleApiClient;
     private HashMap<Integer, SocialProfileModel> hmSocialProfileModel;
     private ArrayList<Bundle> bSocialProfileInfo;
+
+    private float x1, x2, y1, y2;
 
     public static CurrentUserSocialProfileEditFragment newInstance() {
         CurrentUserSocialProfileEditFragment currentUserSocialProfileEditFragment = new CurrentUserSocialProfileEditFragment();
@@ -142,6 +146,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         btnSaveProfile = (Button) view.findViewById(R.id.btn_save_profile);
+        view.findViewById(R.id.sv_user_details).setOnTouchListener(this);
         btnEditProfile.setOnClickListener(this);
         btnSaveProfile.setOnClickListener(this);
         btnEditProfile.setTag(0);
@@ -637,6 +642,31 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, "email, public_profile");
         addBundletoList(args, fbViewPosition, Constants.Types.FIELD_FACEBOOK);
         isFbSync = false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v.getId() == R.id.sv_user_details && isEditModeOn) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    x1 = event.getX();
+                    y1 = event.getY();
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    x2 = event.getX();
+                    y2 = event.getY();
+                    float deltaY = Math.abs(y2 - y1);
+                    float deltaX = Math.abs(x2 -x1);
+                    if(deltaY < deltaX && deltaX > 100) {
+                        showToast("You cannnot navigate while in edit mode");
+                        return false;
+                    }
+                    break;
+                }
+            }
+        }
+        return v.onTouchEvent(event);
     }
 
 

@@ -1,3 +1,5 @@
+
+
 package com.contag.app.activity;
 
 import android.app.Activity;
@@ -94,7 +96,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         if (userID != PrefUtils.getCurrentUserID()) {
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
-            transaction.add(R.id.root_user_fragment, userFragment);
+            transaction.replace(R.id.root_user_fragment, userFragment);
             transaction.commit();
         } else {
 
@@ -147,7 +149,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
 
             }
-            transaction.add(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
+            transaction.replace(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
         hideInterest();
         setUpInterests();

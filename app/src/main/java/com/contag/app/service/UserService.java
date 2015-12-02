@@ -266,6 +266,10 @@ public class UserService extends Service implements RequestListener<User> {
             DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
 
             ContagContag cc = User.getContagContagObject(user);
+
+            ContagContagDao ccDao = session.getContagContagDao();
+            ccDao.insertOrReplace(cc);
+
             ArrayList<Interest> interestList = User.getInterestList(user.userInterest, user, cc);
             ArrayList<SocialProfile> socialProfiles = User.getSocialProfileList(user.socialProfile, user, cc);
             ArrayList<CustomShare> customShares = User.getCustomShareList(user.customShares, cc);
@@ -273,9 +277,6 @@ public class UserService extends Service implements RequestListener<User> {
             User.storeInterests(interestList, session);
             User.storeSocialProfile(socialProfiles, session);
             User.storeCustomShare(customShares, session);
-
-            ContagContagDao ccDao = session.getContagContagDao();
-            ccDao.insertOrReplace(cc);
 
             return null;
         }

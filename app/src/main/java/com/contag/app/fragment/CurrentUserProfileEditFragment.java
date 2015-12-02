@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -42,7 +43,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener {
+public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
 
     public static final String TAG = CurrentUserProfileEditFragment.class.getName();
 
@@ -59,7 +60,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private boolean isComingFromNotification, cameFromNotification;
     private Bundle requestBundle;
     private String fieldName;
-
+    private float x1, x2, y1, y2;
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
@@ -92,6 +93,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         pbProfileUpdate = (ProgressBar) view.findViewById(R.id.pb_edit_profile);
         svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
+        svProfile.setOnTouchListener(this);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         btnEditProfile.setVisibility(View.VISIBLE);
         btnEditProfile.setTag(0);
@@ -369,6 +371,31 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             }
         }
     };
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v.getId() == R.id.sv_user_details && isEditModeOn) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    x1 = event.getX();
+                    y1 = event.getY();
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    x2 = event.getX();
+                    y2 = event.getY();
+                    float deltaY = Math.abs(y2 - y1);
+                    float deltaX = Math.abs(x2 -x1);
+                    if(deltaY < deltaX && deltaX > 100) {
+                        showToast("You cannnot navigate while in edit mode");
+                        return false;
+                    }
+                    break;
+                }
+            }
+        }
+        return v.onTouchEvent(event);
+    }
 
     private class LoadUser extends AsyncTask<Integer, Void, HashMap<Integer, P2ProfileModel>> {
         @Override

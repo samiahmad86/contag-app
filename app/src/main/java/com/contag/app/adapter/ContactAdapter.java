@@ -96,7 +96,6 @@ public class ContactAdapter extends BaseAdapter {
                 .into(vhCont.ivPhoto);
         vhCont.tvContactId.setText(contObject.getContag());
         vhCont.tvContactName.setText(contObject.getName());
-
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
         if (interests != null && interests.size() > 0) {
             try {
@@ -141,6 +140,7 @@ public class ContactAdapter extends BaseAdapter {
         }else {
             vhCont.btnIntroduceContag.setVisibility(View.VISIBLE);
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
+
             final String shareContagName = contObject.getName() ;
             final long shareContagID = contObject.getId() ;
 
@@ -151,6 +151,7 @@ public class ContactAdapter extends BaseAdapter {
                     invite.show(((BaseActivity) mContext).getSupportFragmentManager(), TAG);
                 }
             });
+
         }
         return convertView;
     }
@@ -164,6 +165,7 @@ public class ContactAdapter extends BaseAdapter {
             vhContact.tvContactName = (TextView) convertView.findViewById(R.id.tv_contact_name);
             vhContact.tvContactNumber = (TextView) convertView.findViewById(R.id.tv_contact_num);
             vhContact.btnInvite = (Button) convertView.findViewById(R.id.btn_cuntag_invite);
+            vhContact.tvAlpha = (TextView) convertView.findViewById(R.id.tv_user_initial);
             vhContact.btnInvite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -178,7 +180,9 @@ public class ContactAdapter extends BaseAdapter {
         }
         Contact contact = ((ContactListItem) getItem(position)).mContact;
         vhContact.tvContactName.setText(contact.getContactName());
+        Log.e("character",contact.getContactName().substring(0,1));
         vhContact.tvContactNumber.setText(contact.getContactNumber());
+        vhContact.tvAlpha.setText(contact.getContactName().substring(0,1).toUpperCase());
         vhContact.btnInvite.setTag(contact);
         return convertView;
     }
@@ -201,6 +205,8 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvContactName;
         public TextView tvContactNumber;
         public Button btnInvite;
+        public TextView tvAlpha;
+
 
         public ContactViewHolder() {
 
@@ -217,7 +223,9 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest4;
         public ImageView ivPhoto;
         public Button btnAdd ;
+
         public Button btnIntroduceContag;
+
 
         public ContagViewHolder() {
 

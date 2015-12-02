@@ -11,13 +11,15 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="70dp"
         android:background="@color/light_gray"
         />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
 
     <ImageView
         android:layout_width="64dp"
@@ -29,7 +31,7 @@
         />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_share_intent"
-        android:text="Select from Phonebook"
+        android:text="Select from Phone"
         android:textSize="14sp"
         android:layout_toRightOf="@id/icon_intent"
         android:paddingTop="15dp"

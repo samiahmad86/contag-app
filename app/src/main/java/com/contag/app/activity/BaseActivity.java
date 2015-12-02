@@ -113,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void log(String tag, String message) {
         if (BuildConfig.DEBUG) {
-            Log.d(tag, message);
+//            Log.d(tag, message);
         }
     }
 

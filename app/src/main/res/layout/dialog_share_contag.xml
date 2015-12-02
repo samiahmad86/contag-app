@@ -6,14 +6,19 @@
     android:padding="2dp"
     >
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_invite_message"
         android:inputType="text"
         android:layout_width="300dp"
-        android:layout_marginLeft="40dp"
+        android:layout_marginRight="20dp"
+        android:padding="10dp"
+
+        android:layout_marginLeft="20dp"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
     />
-    <Button
+
+     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_invite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,9 +27,18 @@
         android:visibility="visible"
         android:text="Invite"
         android:padding="2dp"
-        android:background="@drawable/bg_grey_border_button"
+         android:background="?android:selectableItemBackground"
         android:textColor="@color/black"/>
-
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        android:layout_above="@id/btn_invite"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        android:layout_below="@id/btn_invite"/>
     <ListView
         android:id="@+id/lv_contag_share"
         style="@style/ContactScrollBarStyle"

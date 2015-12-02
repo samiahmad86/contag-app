@@ -276,7 +276,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
-        btnEditProfile.setBackgroundResource(R.drawable.btn_add);
+        btnEditProfile.setBackgroundResource(R.drawable.btn_save);
     }
 
     private void sendData() {

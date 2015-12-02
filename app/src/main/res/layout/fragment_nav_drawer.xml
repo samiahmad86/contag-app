@@ -10,28 +10,29 @@
         android:layout_height="wrap_content"
         android:scrollbars="none">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            >
 
             <RelativeLayout
                 android:id="@+id/rl_drawer_header"
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:layout_height="200dp">
 
                 <ImageView
                     android:id="@+id/iv_nav_drawer_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:background="@drawable/contag_screen"
                     android:scaleType="centerCrop"
                      />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
                     android:background="@color/bg_user_activity"
-                    android:orientation="vertical"
+                     android:orientation="vertical"
                     android:paddingLeft="30dp">
 
                     <android.support.v7.widget.AppCompatTextView
@@ -40,17 +41,26 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:textColor="@color/white"
+                        android:paddingLeft="9dp"
                         android:text="Name"
-                        android:textSize="20sp" />
+                        android:textSize="25sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_usr_cunt_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="5dp"
+                        android:text="sami1234"
+                        android:paddingLeft="10dp"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
+
+
+
+
+
                 </LinearLayout>
+
 
             </RelativeLayout>
 
@@ -59,7 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/light_blue"
-                android:padding="10dp">
+                android:layout_below="@id/rl_drawer_header"
+                android:padding="10dp"
+                android:layout_marginTop="0dp">
 
                 <TextView
                     android:id="@+id/tv_notification_txt"
@@ -76,10 +88,12 @@
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_notification_count"
                     android:background="@drawable/bg_indicator_white"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:gravity="center"
-                    android:layout_marginLeft="10dp"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@id/tv_notification_txt"
                     android:text="0"
                     android:shadowColor="@color/white"
@@ -92,7 +106,8 @@
                 android:id="@+id/rl_extras"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="15dp">
+                android:padding="10dp"
+                android:layout_below="@id/rl_notification_container">
 
                 <TextView
                     android:id="@+id/tv_feedback_txt"
@@ -235,6 +250,6 @@
 
             <!--</LinearLayout>-->
 
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

@@ -71,6 +71,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+
+
         // adding @UserProfileFragment
 
         FragmentManager manager = getSupportFragmentManager();
@@ -111,7 +113,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 public void onClick(View v) {
                     if (!isEditModeOn) {
                         setupEditableInterests();
-                        ivEditIcon.setImageResource(R.drawable.btn_add);
+                        ivEditIcon.setImageResource(R.drawable.btn_save);
                         etUserName.setText(tvUserName.getText().toString());
                         etUserStatus.setText(tvUserStatus.getText().toString());
                         etUserName.setVisibility(View.VISIBLE);
@@ -199,6 +201,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     /////////////////////////
 
 
+    @Override
+    public void onSaveInstanceState(final Bundle savedInstance)
+    {
+        super.onSaveInstanceState(savedInstance);
+    }
     // Show a user's interests
     private void setUpInterests() {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
@@ -521,7 +528,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
-                log(TAG, ccUser.getStatus_update());
+//                log(TAG, ccUser.getStatus_update());
                 ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));

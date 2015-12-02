@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_contacts"
     android:padding="10dp">
 
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
 
         <com.contag.app.view.CircularImageView
             android:id="@+id/iv_user_photo"
@@ -26,6 +27,8 @@
             style="@style/ContactNameStyle"
             android:layout_width="wrap_content"
             android:layout_toRightOf="@id/iv_user_photo"
+            android:text="adf"
+            android:textColor="@color/light_blue"
             android:layout_marginLeft="5dp"
             android:layout_height="wrap_content" />
 
@@ -37,14 +40,6 @@
             android:layout_alignParentRight="true"
             android:visibility="gone"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_share_contag"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:focusable="false"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/share_icon"
-            android:visibility="visible" />
 
 
         <android.support.v7.widget.AppCompatTextView
@@ -53,24 +48,45 @@
             android:layout_below="@id/tv_contact_name"
             android:layout_toRightOf="@id/iv_user_photo"
             android:layout_marginLeft="5dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"/>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_below="@id/tv_contact_id"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_user_photo"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_int">
 
             <include layout="@layout/layout_user_interest"
+
                 />
 
         </RelativeLayout>
 
+
     </RelativeLayout>
+    <View
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"
+        android:background="@color/light_gray"
+        android:layout_below="@id/rv_user_basics"
+        android:layout_marginTop="10dp"
+        android:id="@+id/view_1"/>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_share_contag"
+        android:layout_width="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="30dp"
+        android:focusable="false"
+         android:layout_below="@id/view_1"
+        android:background="@drawable/btn_social_go"
+        android:visibility="visible" />
 
 
 

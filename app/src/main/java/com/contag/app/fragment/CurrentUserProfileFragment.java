@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +38,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     private int fragmentToBeOpened;
     private String fieldName;
 
+
     public static CurrentUserProfileFragment newInstance() {
         CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
         Bundle args = new Bundle();
@@ -59,6 +61,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("on create", "currentuserprofilefragment");
 
     }
 
@@ -66,7 +69,10 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_current_user_profile, container, false);
+
+
+
+            View view = inflater.inflate(R.layout.fragment_current_user_profile, container, false);
 
         mEditViewPager = (EditViewPager) view.findViewById(R.id.root_pager);
 
@@ -123,6 +129,17 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brToggleSwipe);
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.e("on pause", "currentuserprofilefragment");
+    }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
     }
 
     @Override

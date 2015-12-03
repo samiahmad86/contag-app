@@ -52,7 +52,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         });
         stl.setViewPager(vpHome);
 
+    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
         } else {
@@ -60,12 +65,6 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
                 Router.startContactService(this, false);
             }
         }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new LoadUser().execute();
         setUpDrawer(R.id.drawer_layout, R.id.tb_home);
     }

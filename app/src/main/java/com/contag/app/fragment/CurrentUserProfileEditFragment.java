@@ -199,6 +199,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         mViewHolder.spFieldValue.setVisibility(View.GONE);
         mViewHolder.btnAdd.setVisibility(View.GONE);
 
+        String message = mP2ProfileModel.key + " is " + mP2ProfileModel.value;
+        log(TAG, message);
+        Router.sendLogs(getActivity(), message, System.currentTimeMillis());
+
         mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mP2ProfileModel.key));
 
         int viewType = mP2ProfileModel.viewType;

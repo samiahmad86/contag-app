@@ -207,9 +207,18 @@ public interface APIInterface {
                                @Body ContagIntroductionRequestModel introduction);
 
 
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @GET(Constants.Urls.URL_LOG)
+    MessageResponse logFuckingMessage(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                      @Query("logged_at") long timestamp, @Query("message") String message);
+
+
     @Multipart
     @PUT(Constants.Urls.URL_IMAGE_UPLOAD)
     ImageUploadResponse uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
                          @Part(Constants.Keys.KEY_USER_AVATAR_URL)TypedFile mProfileImage);
+
 
 }

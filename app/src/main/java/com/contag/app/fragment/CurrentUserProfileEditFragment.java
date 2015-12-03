@@ -243,10 +243,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
     private void showDate(int position) {
         String date = hmP2PProfileModel.get(position).value;
-        if (date == null || date.length() == 0) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            Calendar calendar = Calendar.getInstance();
-            date = dateFormat.format(calendar.getTime()).toString();
+        if (date == null) {
+            date = "";
         }
         DateFragment df = DateFragment.newInstance(date, position, profileType);
         df.show(getChildFragmentManager(), "Date");
@@ -364,9 +362,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 if (type == CurrentUserProfileEditFragment.this.profileType) {
                     int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, 0);
                     ViewHolder vh = viewHolderArrayList.get(position);
+                    log(DateFragment.TAG, "date is " + intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
                     vh.etFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
                     isDateShown = false;
+                    ((BaseActivity) getActivity()).hideKeyboard(vh.etFieldValue.getWindowToken());
                 }
             }
         }

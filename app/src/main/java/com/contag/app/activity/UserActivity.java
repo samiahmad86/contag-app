@@ -152,7 +152,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             }
             transaction.replace(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
         }
-        hideInterest();
+
         setUpInterests();
     }
 
@@ -242,6 +242,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private void showInterests(ArrayList<Interest> userInterests) {
         int i = 0;
         interestIDS.clear();
+        hideInterest();
         for (Interest userInterest : userInterests) {
             if (i >= 3)
                 return;
@@ -483,6 +484,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     newInterest.setContagContag(getCurrentUser());
                     interests.add(newInterest);
                     Log.d("iList", "New interest object created:" + newInterest.getInterest_id())  ;
+
+
                     showInterests(interests);
                     setupInterestRemoveButton(interests);
 

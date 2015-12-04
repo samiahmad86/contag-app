@@ -304,4 +304,13 @@ public class Router {
         context.startService(iPostSuggestions);
     }
 
+    public static void sendLogs(Context context, String message, long timestamp) {
+        Intent iLog = new Intent(context, CustomService.class);
+        iLog.putExtra(Constants.Keys.KEY_SERVICE_TYPE, Constants.Types.SERVICE_SEND_LOG_MESSAGES);
+        iLog.putExtra(Constants.Keys.KEY_MESSAGE, message);
+        iLog.putExtra(Constants.Keys.KEY_TIMESTAMP, timestamp);
+        context.startService(iLog);
+    }
+
 }
+

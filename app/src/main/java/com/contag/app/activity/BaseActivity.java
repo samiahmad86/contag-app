@@ -1,11 +1,14 @@
 package com.contag.app.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -112,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void log(String tag, String message) {
         if (BuildConfig.DEBUG) {
-            Log.d(tag, message);
+//            Log.d(tag, message);
         }
     }
 
@@ -138,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             return contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
         }   catch (Exception ex) {
+            log("BaseActivity", "user is null");
             return null;
         }
     }
@@ -200,6 +204,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         socialProfileDao.deleteByKey(id);
     }
 
-
+    public void hideKeyboard(IBinder token) {
+        InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager.hideSoftInputFromWindow(token, 0);
+    }
 
 }

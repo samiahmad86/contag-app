@@ -21,6 +21,8 @@
             android:textSize="14sp"
             android:textColor="@color/black"
             android:minWidth="60dp"
+
+
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_alignTop="@+id/interest_text"
             android:layout_alignLeft="@+id/interest_text"
@@ -41,6 +43,7 @@
             android:hint="Add interest"
             android:layout_centerInParent="true"
             android:singleLine="true"
+
             android:textColorHint="@color/white"
             android:textColor="@color/white"
             android:textSize="14sp"

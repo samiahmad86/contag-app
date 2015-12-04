@@ -199,6 +199,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         mViewHolder.spFieldValue.setVisibility(View.GONE);
         mViewHolder.btnAdd.setVisibility(View.GONE);
 
+        String message = mP2ProfileModel.key + " is " + mP2ProfileModel.value;
+        log(TAG, message);
+        Router.sendLogs(getActivity(), message, System.currentTimeMillis());
+
         mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mP2ProfileModel.key));
 
         int viewType = mP2ProfileModel.viewType;
@@ -243,10 +247,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
     private void showDate(int position) {
         String date = hmP2PProfileModel.get(position).value;
-        if (date == null || date.length() == 0) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            Calendar calendar = Calendar.getInstance();
-            date = dateFormat.format(calendar.getTime()).toString();
+        if (date == null) {
+            date = "";
         }
         DateFragment df = DateFragment.newInstance(date, position, profileType);
         df.show(getChildFragmentManager(), "Date");
@@ -276,7 +278,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
-        btnEditProfile.setBackgroundResource(R.drawable.btn_add);
+        btnEditProfile.setBackgroundResource(R.drawable.btn_save);
     }
 
     private void sendData() {
@@ -364,9 +366,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 if (type == CurrentUserProfileEditFragment.this.profileType) {
                     int position = intent.getIntExtra(Constants.Keys.KEY_VIEW_POSITION, 0);
                     ViewHolder vh = viewHolderArrayList.get(position);
+                    log(DateFragment.TAG, "date is " + intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
                     vh.etFieldValue.
                             setText(intent.getStringExtra(Constants.Keys.KEY_DATE_VALUE));
                     isDateShown = false;
+                    ((BaseActivity) getActivity()).hideKeyboard(vh.etFieldValue.getWindowToken());
                 }
             }
         }

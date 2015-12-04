@@ -1,6 +1,7 @@
 package com.contag.app.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class FeedsAdapter extends BaseAdapter {
 
@@ -84,20 +86,55 @@ public class FeedsAdapter extends BaseAdapter {
     public String formatTime(String time)
     {
         String suffix;
-        String temp1= StringUtils.substringBefore(time, "T");
+        String temp= StringUtils.substringBefore(time, "T");
+       // String temp1=temp.replace("-","/");
        // temp1.replace("-","/");
         String temp2=StringUtils.substringAfter(time, "T");
         int pos = temp2.indexOf(":");
         String temp3= StringUtils.substring(temp2, 0, pos + 3);
 
-        String temp=temp1+" "+temp3;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String today_date = df.format(c.getTime());
+
+        today_date=today_date.trim();
+
+        temp=temp.trim();
+        temp=temp.trim();
+        Log.e("today date", today_date);
+        if(today_date.equals(temp))
+        {
+            Log.e("time", temp3);
+
+            DateFormat inputFormat = new SimpleDateFormat("HH:mm");
+            DateFormat outputFormat = new SimpleDateFormat("KK:mm a");
+            try {
+                return outputFormat.format(inputFormat.parse(temp3));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yy");
+            try {
+                return outputFormat.format(inputFormat.parse(temp));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+       /* String temp=temp1+" "+temp3;
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         DateFormat outputFormat = new SimpleDateFormat("KK:mm a dd-MM-yy");
         try {
             return outputFormat.format(inputFormat.parse(temp));
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
        // System.out.println(outputFormat.format(inputFormat.parse(input)));
         //return temp3+" "+temp1;
         return "";

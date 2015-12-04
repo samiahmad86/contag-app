@@ -104,6 +104,8 @@ public class Constants {
         public static final String KEY_COMPANY_NAME = "company_name";
         public static final String KEY_NOTIFICATION_ID = "notification_id";
         public static final String KEY_IS_CONTAG_CONTACT = "fucking_chutiya_victor";
+        public static final String KEY_MESSAGE = "send_this_azel_message";
+        public static final String KEY_TIMESTAMP = "bloody_fucking_message_timestamp";
     }
 
     public class Headers {
@@ -158,6 +160,7 @@ public class Constants {
         public static final int SERVICE_UPLOAD_PROFILE_PICTURE = 69;
         public static final int SERVICE_REJECT_FIELD_REQUEST = 6;
         public static final int SERVICE_ALLOW_FIELD_REQUEST = 37;
+        public static final int SERVICE_SEND_LOG_MESSAGES = 6600;
         public static final int PROFILE_PERSONAL = 1;
         public static final int PROFILE_PROFESSIONAL = 2;
         public static final int PROFILE_SOCIAL = 3;
@@ -196,7 +199,7 @@ public class Constants {
         public static final String URL_NOTIFICATIONS = "/notification/" ;
         public static final String URL_INTRODUCE = "/introduce/" ;
         public static final String URL_IMAGE_UPLOAD = "/image_upload/";
-
+        public static final String URL_LOG = "/log/";
     }
 
     public static class Arrays {

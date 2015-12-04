@@ -52,7 +52,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         });
         stl.setViewPager(vpHome);
 
+    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
         } else {
@@ -60,12 +65,6 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
                 Router.startContactService(this, false);
             }
         }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new LoadUser().execute();
 
     }
@@ -146,6 +145,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         @Override
         protected void onPostExecute(ContagContag ccUser) {
             log(TAG, "wtf2");
+
             Toolbar tbHome = (Toolbar) HomeActivity.this.findViewById(R.id.tb_home);
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());

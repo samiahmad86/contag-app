@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.fragment.CurrentUserProfileEditFragment;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
@@ -32,6 +33,7 @@ import com.contag.app.model.SocialRequestModel;
 import com.contag.app.model.User;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.InterestSuggestionRequest;
+import com.contag.app.request.LogMessageRequest;
 import com.contag.app.request.ProfileRequest;
 import com.contag.app.request.SocialPlatformRequest;
 import com.contag.app.request.SocialProfileRequest;
@@ -64,7 +66,7 @@ public class CustomService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, final int startId) {
         if (intent != null) {
             final int serviceID = startId;
             int type = intent.getIntExtra(Constants.Keys.KEY_SERVICE_TYPE, 0);
@@ -181,6 +183,25 @@ public class CustomService extends Service {
                         CustomService.this.stopSelf(serviceID);
                     }
                 });
+            } else if(type == Constants.Types.SERVICE_SEND_LOG_MESSAGES) {
+                long timestamp = intent.getLongExtra(Constants.Keys.KEY_TIMESTAMP, 0l);
+                String logMessage = intent.getStringExtra(Constants.Keys.KEY_MESSAGE);
+                if(logMessage != null && timestamp != 0l) {
+                    Log.d(CurrentUserProfileEditFragment.TAG, "fuck this world " + logMessage + " " + timestamp);
+                    LogMessageRequest mLogMessageRequest = new LogMessageRequest(logMessage, timestamp);
+                    mSpiceManager.execute(mLogMessageRequest, new RequestListener<MessageResponse>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(MessageResponse messageResponse) {
+                            Log.d(CurrentUserProfileEditFragment.TAG, "Fuck me "  + messageResponse.message);
+                            CustomService.this.stopSelf(startId);
+                        }
+                    });
+                }
             }
         }
         return START_REDELIVER_INTENT;

@@ -6,54 +6,65 @@
     android:paddingLeft="5dp"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_profile_label_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
 
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_field_name"
-            android:layout_width="0dp"
-            android:layout_weight="8"
-            android:layout_marginTop="10dp"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="65dp"
             android:layout_height="wrap_content"
+            android:text="check"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_field_value"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_field_name"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="65dp"
+
+            android:text="check"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_request"
-            android:layout_width="0dp"
-            android:layout_weight="4"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_btn_profile_update"
-            android:text="@string/request"
+            android:layout_width="25dp"
+            android:layout_alignParentRight="true"
+
+            android:layout_marginTop="15dp"
+            android:layout_height="25dp"
+            android:background="@drawable/btn_add"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_marginRight="40dp"
             android:textAllCaps="false"
-            android:padding="5dp"
+            android:padding="0dp"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:visibility="gone" />
+            android:textSize="13sp"
+            android:visibility="visible" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_action"
-            android:layout_width="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="25dp"
+            android:layout_marginRight="40dp"
             android:background="@drawable/btn_social_go"
             android:visibility="gone" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_field_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_profile_label_container"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+
 
 
 </RelativeLayout>

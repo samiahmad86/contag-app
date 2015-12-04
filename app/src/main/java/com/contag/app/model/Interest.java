@@ -11,6 +11,7 @@ public class Interest {
 
     private Long id;
     private String name;
+    private Long interest_id;
     private Long contagUserId;
 
     /** Used to resolve relations */
@@ -30,9 +31,10 @@ public class Interest {
         this.id = id;
     }
 
-    public Interest(Long id, String name, Long contagUserId) {
+    public Interest(Long id, String name, Long interest_id, Long contagUserId) {
         this.id = id;
         this.name = name;
+        this.interest_id = interest_id;
         this.contagUserId = contagUserId;
     }
 
@@ -56,6 +58,14 @@ public class Interest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getInterest_id() {
+        return interest_id;
+    }
+
+    public void setInterest_id(Long interest_id) {
+        this.interest_id = interest_id;
     }
 
     public Long getContagUserId() {

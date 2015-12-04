@@ -9,8 +9,12 @@ import com.google.gson.annotations.SerializedName;
 public class InterestResponse {
 
     @Expose
+    @SerializedName("id")
+    public long id ;
+
+    @Expose
     @SerializedName("interest_id")
-    public long id;
+    public long interest_id;
 
     @Expose
     @SerializedName("interest_name")

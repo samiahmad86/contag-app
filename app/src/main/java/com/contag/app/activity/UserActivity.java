@@ -43,6 +43,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,9 +129,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
                             sendNameAndStatus(name, etUserStatus.getText().toString());
 
-                            (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
-                            setUpInterests();
-                            hideInterestRemoveButton();
+
+
                         } else {
                             showToast("Name cannot be blank!");
 
@@ -241,18 +241,21 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private void showInterests(ArrayList<Interest> userInterests) {
         int i = 0;
+        interestIDS.clear();
         for (Interest userInterest : userInterests) {
             if (i >= 3)
                 return;
             // Set interest on the text views
             ((TextView) findViewById(interestText[i])).setText(userInterest.getName());
-            Log.d("iList", userInterest.getName());
+            Log.d("iList", "Showing interest with name" + userInterest.getName());
+            Log.d("iList", "Showing interest with interest id: " + userInterest.getInterest_id());
+
             // make the interest boxes visible
             (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
-            interestIDS.add(userInterest.getId()) ;
+            interestIDS.add(userInterest.getInterest_id()) ;
             i++;
         }
-        Log.d("iList", "Number of interestes: " + i);
+        Log.d("iList", "Showed interests with interestids being: " + StringUtils.join(interestIDS,",") );
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
@@ -309,19 +312,13 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private void saveInterests() {
         Log.d("iList", "Going to save the interest list");
 
-        String interestList = "";
         interestIDS.clear();
-        int i = 0;
         for (Interest interest : interests) {
-            if (i == 0)
-                interestList += String.valueOf(interest.getId());
-            else
-                interestList += "," + String.valueOf(interest.getId());
 
-            interestIDS.add(interest.getId()) ;
-            i++;
+            interestIDS.add(interest.getInterest_id()) ;
         }
-        Log.d("iList", "Interests ids:" + interestIDS.toString());
+        String interestList = StringUtils.join(interestIDS,",") ;
+        Log.d("iList", "The request string has this: " + interestList );
 
         Router.startInterestUpdateService(this, interestList);
     }
@@ -376,6 +373,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
             ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
+
             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
             hideInterestRemoveButton();
@@ -387,10 +385,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            showToast("Interests updated!");
-            User.saveUserInterest(((ContagApplication) getApplicationContext()).getDaoSession(), interests);
+            User.storeInterests(((ContagApplication) getApplicationContext()).getDaoSession(), interests);
             ((EditText) findViewById(R.id.interest_hint)).setText("");
             ((EditText) findViewById(R.id.interest_text)).setText("");
+            showToast("Interests updated!");
         }
     };
 
@@ -446,7 +444,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                                 public void onRequestSuccess(InterestSuggestion.List suggestions) {
 
                                     if (suggestions.size() > 0 && interestText.getText().length() > 0 &&
-                                            !interestIDS.contains(suggestions.get(0).id)) {
+                                            !interestIDS.contains(suggestions.get(0).interest_id)) {
                                         InterestSuggestion suggestion = suggestions.get(0);
                                         interestSuggestion.set(suggestion);
                                         Log.d("coninterest", "Current top suggestion: " + suggestions.get(0).name);
@@ -478,12 +476,13 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
                 if (currentSuggestion != null) {
 
-                    Interest newInterest = new Interest(currentSuggestion.id);
+                    Interest newInterest = new Interest();
+                    newInterest.setInterest_id(currentSuggestion.interest_id);
                     newInterest.setName(currentSuggestion.name);
                     newInterest.setContagUserId(PrefUtils.getCurrentUserID());
                     newInterest.setContagContag(getCurrentUser());
                     interests.add(newInterest);
-
+                    Log.d("iList", "New interest object created:" + newInterest.getInterest_id())  ;
                     showInterests(interests);
                     setupInterestRemoveButton(interests);
 

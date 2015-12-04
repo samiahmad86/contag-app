@@ -789,7 +789,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             ArrayList<SocialProfile> socialProfiles = User.getSocialProfileList(user.socialProfile, user, cc) ;
             ArrayList<CustomShare> customShares = User.getCustomShareList(user.customShares, cc) ;
 
-            User.storeInterests(interestList, session);
+            User.storeInterests(session,interestList);
             User.storeSocialProfile(socialProfiles, session);
             User.storeCustomShare(customShares, session);
 

@@ -89,11 +89,13 @@ public class ContactUtils {
 
         if (mContagContactRespone.userInterest != null && mContagContactRespone.userInterest.size() > 0) {
             InterestDao interestDao = getSession(mContext).getInterestDao();
-
+            Log.d("ConFetch", "Name of contact: " + mContagContag.getName()) ;
             List<Interest> interests = getInterestList(mContagContactRespone.userInterest,
                     mContagContactRespone, mContagContag);
-
+            removeExistingInterests(mContagContag.getId(), interestDao);
             for (Interest interest : interests) {
+                Log.d("ConFetch", "interest is: "+ interest.getName()) ;
+                Log.d("ConFetch", "interest id is: "+ interest.getId()) ;
                 interestDao.insertOrReplace(interest);
             }
         }
@@ -110,8 +112,17 @@ public class ContactUtils {
         return mContagContag;
     }
 
+    private static void removeExistingInterests(long userID, InterestDao mInterestDao){
+        List<Interest> interests = mInterestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(userID)).list() ;
+
+        for(Interest i: interests){
+            mInterestDao.delete(i) ;
+        }
+    }
+
     public static ContactListItem getContactListItem(Context mContext, ContagContag mContagContag) {
         InterestDao mInterestDao = getSession(mContext).getInterestDao();
+
         List<Interest> interests = mInterestDao.queryBuilder().
                 where(InterestDao.Properties.ContagUserId.eq(mContagContag.getId())).
                 orderAsc(InterestDao.Properties.Name).list();
@@ -194,6 +205,7 @@ public class ContactUtils {
         ArrayList<Interest> mInterest = new ArrayList<>();
         for (InterestResponse ir : interests) {
             Interest interest = new Interest(ir.id);
+            interest.setInterest_id(ir.interest_id);
             interest.setName(ir.name);
             interest.setContagUserId(ccResponse.id);
             interest.setContagContag(cc);

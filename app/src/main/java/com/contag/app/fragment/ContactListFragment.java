@@ -38,6 +38,8 @@ import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.DaoSession;
+import com.contag.app.model.Interest;
+import com.contag.app.model.InterestDao;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.request.ContactRequest;
@@ -384,6 +386,14 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                     ContactListItem mContactListItem = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                     contactListItems.add(mContactListItem);
                 }
+            }
+            InterestDao mInterestDao = session.getInterestDao();
+            List<Interest> interests = mInterestDao.queryBuilder().
+                    orderAsc(InterestDao.Properties.ContagUserId).list();
+
+            for(Interest i: interests){
+                Log.d("ConList", "The interest user id is: " + i.getContagUserId()) ;
+                Log.d("ConList", "The interest is: " + i.getName()) ;
             }
 
             ContactDao mContactDao = session.getContactDao();

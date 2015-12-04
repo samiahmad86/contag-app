@@ -96,8 +96,10 @@ public class ContactAdapter extends BaseAdapter {
                 .into(vhCont.ivPhoto);
         vhCont.tvContactId.setText(contObject.getContag());
         vhCont.tvContactName.setText(contObject.getName());
+        Log.d("ConAdap", "Name of contag is: " + contObject.getName()) ;
 
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
+        Log.d("ConAdap", "Size of intersts is: " + interests.size()) ;
         if (interests != null && interests.size() > 0) {
             try {
                 setInterestElseHide(interests.get(0), vhCont.tvInterest1);
@@ -106,6 +108,7 @@ public class ContactAdapter extends BaseAdapter {
                 setInterestElseHide(interests.get(3), vhCont.tvInterest4);
             } catch (IndexOutOfBoundsException ex) {
                 ex.printStackTrace();
+                Log.d("ConAdap", "Exception occurred") ;
             }
         } else {
             vhCont.tvInterest1.setVisibility(View.GONE);
@@ -186,7 +189,7 @@ public class ContactAdapter extends BaseAdapter {
     private void setInterestElseHide(Interest interest, TextView tv) {
 
         if (interest != null) {
-            Log.d("ConAdap", "Interest is not null") ;
+            Log.d("ConAdap", "Interest is not null :" + interest.getName()) ;
             tv.setText(interest.getName());
             tv.setVisibility(View.VISIBLE);
         } else

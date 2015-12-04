@@ -112,22 +112,6 @@ public class User {
     @Expose
     public String companyName;
 
-
-    public static void saveUserInterest(DaoSession session, ArrayList<Interest> interestList) {
-        InterestDao interestDao = session.getInterestDao();
-        interestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(PrefUtils.getCurrentUserID())).buildDelete().executeDeleteWithoutDetachingEntities();
-        session.clear();
-        Log.d("iList", "Deleted interests");
-
-        if (interestList != null && interestList.size() > 0) {
-            Log.d("iList", "Saving user interest");
-            for (Interest interest : interestList) {
-                interestDao.insertOrReplace(interest);
-                Log.d("iList", "Interest inserted: " + interest.getName());
-            }
-        }
-    }
-
     public static ContagContag getContagContagObject(User user) {
 
         ContagContag mContagContag = new ContagContag(user.id);
@@ -167,7 +151,10 @@ public class User {
                                                       User user, ContagContag cc) {
         ArrayList<Interest> mInterest = new ArrayList<>();
         for (InterestResponse ir : interests) {
+            Log.d("myuser", "Interest" + ir.toString()) ;
             Interest interest = new Interest(ir.id);
+            //Log.d("myuser", "Interest admin id: " + ir.interest_id) ;
+            interest.setInterest_id(ir.interest_id);
             interest.setName(ir.name);
             interest.setContagUserId(user.id);
             interest.setContagContag(cc);
@@ -177,17 +164,47 @@ public class User {
         return mInterest;
     }
 
-    public static void storeInterests(ArrayList<Interest> interestList, DaoSession session) {
-        if (interestList != null) {
-            Log.d("myuser", "Going to store interests now");
-            InterestDao interestDao = session.getInterestDao();
+//    public static void storeInterests(ArrayList<Interest> interestList, DaoSession session) {
+//        if (interestList != null) {
+//
+//            Log.d("myuser", "Going to store current users interests now");
+//            InterestDao interestDao = session.getInterestDao();
+//
+//            for (Interest interest : interestList) {
+//                Log.d("myuser", "Interest id is: " + interest.getId()) ;
+//                Log.d("myuser",  "Interest id is: " + interest.getName()) ;
+//
+//
+//                interestDao.insertOrReplace(interest);
+//            }
+//        }
+//    }
+    public static void storeInterests(DaoSession session, ArrayList<Interest> interestList) {
+        InterestDao interestDao = session.getInterestDao();
+        removeExistingInterests(PrefUtils.getCurrentUserID(), interestDao);
+        Log.d("iList", "Deleted existing interests");
+
+        if (interestList != null && interestList.size() > 0) {
+            Log.d("iList", "Saving user interest");
             for (Interest interest : interestList) {
-                Log.d("myuser", interest.getName()) ;
-                Log.d("myuser", "Is db read only?" + session.getDatabase().isReadOnly()) ;
+                Log.d("iList", "Interest id: " + interest.getId());
+                Log.d("iList", "Interest admin id: " + interest.getInterest_id());
+                Log.d("iList", "Interest name: " + interest.getName());
                 interestDao.insertOrReplace(interest);
             }
         }
     }
+
+    private static void removeExistingInterests(long userID, InterestDao mInterestDao){
+        List<Interest> interests = mInterestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(userID)).list() ;
+        Log.d("iList", "Removing interests") ;
+        for(Interest i: interests){
+            Log.d("iList", "Deleting interest with id: " + i.getId()) ;
+            Log.d("iList", "Deleting interest with name: " + i.getName()) ;
+            mInterestDao.delete(i) ;
+        }
+    }
+
 
 
     public static ArrayList<SocialProfile> getSocialProfileList(List<SocialProfileResponse> socialProfiles, User user, ContagContag cc) {

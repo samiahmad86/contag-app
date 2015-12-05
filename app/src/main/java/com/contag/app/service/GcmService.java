@@ -36,14 +36,23 @@ public class GcmService extends GcmListenerService {
             switch (notification_type) {
                 case "update_profile": {
                     Log.d("newprofile", "GCM push received");
-                    long userID = Long.parseLong(data.getString("profile_id"));
+                    long userID = Long.parseLong(data.getString("user_id"));
                     Router.startServiceToGetUserByUserID(this, userID, true);
                     intent = null;
                     break;
                 }
                 case "introduction": {
                     Log.d("GCMPUSH", "GCM push received for introductin");
-                    long userID = Long.parseLong(data.getString("profile_id"));
+                    long userID = Long.parseLong(data.getString("user_id"));
+                    Router.startServiceToGetUserByUserID(this, userID, true);
+                    intent = new Intent(this, UserActivity.class) ;
+                    intent.putExtra(Constants.Keys.KEY_USER_ID, userID);
+                    Log.d("GCMPUSH", "User id for profile is: " + userID) ;
+                    break;
+                }
+                case "request_granted": {
+                    Log.d("GCMPUSH", "GCM push received for introductin");
+                    long userID = Long.parseLong(data.getString("user_id"));
                     Router.startServiceToGetUserByUserID(this, userID, true);
                     intent = new Intent(this, UserActivity.class) ;
                     intent.putExtra(Constants.Keys.KEY_USER_ID, userID);
@@ -53,7 +62,7 @@ public class GcmService extends GcmListenerService {
                 default: {
 
                     if(notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
-                            notification_type.equals("anniversary") || notification_type.equals("request_granted")){
+                            notification_type.equals("anniversary")){
                         Log.d("GCMPUSH", "Push received for:  "+ notification_type) ;
                         intent = new Intent(this, UserActivity.class);
                         intent.putExtra(Constants.Keys.KEY_USER_ID, data.getString("user_id"));

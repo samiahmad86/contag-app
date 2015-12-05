@@ -57,7 +57,7 @@ public class GcmService extends GcmListenerService {
                 default: {
 
                     if(notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
-                            notification_type.equals("anniversary") || notification_type.equals("request_granted")){
+                            notification_type.equals("anniversary")){
                         intent = new Intent(this, HomeActivity.class) ;
                     }else {
                         intent = new Intent(this, NotificationsActivity.class);

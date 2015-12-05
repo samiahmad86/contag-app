@@ -27,6 +27,7 @@ public class GcmService extends GcmListenerService {
 
     public void onMessageReceived(String from, Bundle data) {
         Log.d(TAG, "notification got me " + PrefUtils.getCurrentUserID());
+        int notificationCount = PrefUtils.getNewNotificationCount() ;
         if (PrefUtils.getAuthToken() != null) {
             String notification_type = data.getString("notification_type");
 
@@ -60,6 +61,7 @@ public class GcmService extends GcmListenerService {
                         intent = new Intent(this, HomeActivity.class) ;
                     }else {
                         intent = new Intent(this, NotificationsActivity.class);
+                        notificationCount += 1 ;
                     }
 
                     break;
@@ -92,7 +94,7 @@ public class GcmService extends GcmListenerService {
 
                 Log.d(TAG, "notification sent");
                 notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
-                PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1);
+                PrefUtils.setNewNotificationCount(notificationCount);
             }
 
         }

@@ -1,5 +1,7 @@
 package com.contag.app.activity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,6 +53,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             }
         });
         stl.setViewPager(vpHome);
+        clearNotificationBar();
 
     }
 
@@ -66,7 +69,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             }
         }
         new LoadUser().execute();
+        clearNotificationBar();
+    }
 
+    private void clearNotificationBar(){
+        NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notifManager.cancelAll();
     }
 
     @Override

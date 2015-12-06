@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -85,6 +86,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         //Set new notifications count to 0
 
         PrefUtils.setNewNotificationCount(0);
+        clearNotificationBar();
 
      }
 
@@ -114,6 +116,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             notifications.clear();
             notificationsAdapter.notifyDataSetChanged();
             getNotifications(0, 10);
+            clearNotificationBar();
         }
     }
 
@@ -124,6 +127,11 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         getSpiceManager().execute(fr, NotificationsActivity.this);
         isLoading = true;
     //  progressbar.setVisibility(View.VISIBLE);
+    }
+
+    private void clearNotificationBar(){
+        NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notifManager.cancelAll();
     }
 
     public void hideNotification(long notificationID){
@@ -222,6 +230,14 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+            tbHome.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+            tbHome.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //What to do on back clicked
+                    finish();
+                }
+            });
 
             Picasso.with(NotificationsActivity.this)
                     .load(ccUser.getAvatarUrl())

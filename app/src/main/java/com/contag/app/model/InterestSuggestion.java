@@ -12,7 +12,7 @@ public class InterestSuggestion {
 
     @Expose
     @SerializedName("id")
-    public long id;
+    public long interest_id;
 
     @Expose
     @SerializedName("interest")

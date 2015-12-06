@@ -99,6 +99,8 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+
+
     /**
      * @return an instance of {@link Resources}
      */

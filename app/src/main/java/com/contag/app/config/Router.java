@@ -207,6 +207,7 @@ public class Router {
     }
 
     public static void startLinkendInLoginActivity(Context context, int requestCode, long linkedInId) {
+        Log.d(LinkedInActivity.TAG, "linkedin activity started");
         Intent iLinkedIn = new Intent(context, LinkedInActivity.class);
         iLinkedIn.putExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, linkedInId);
         ((BaseActivity) context).startActivityForResult(iLinkedIn, requestCode);
@@ -304,4 +305,13 @@ public class Router {
         context.startService(iPostSuggestions);
     }
 
+    public static void sendLogs(Context context, String message, long timestamp) {
+        Intent iLog = new Intent(context, CustomService.class);
+        iLog.putExtra(Constants.Keys.KEY_SERVICE_TYPE, Constants.Types.SERVICE_SEND_LOG_MESSAGES);
+        iLog.putExtra(Constants.Keys.KEY_MESSAGE, message);
+        iLog.putExtra(Constants.Keys.KEY_TIMESTAMP, timestamp);
+        context.startService(iLog);
+    }
+
 }
+

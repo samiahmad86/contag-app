@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.contag.app.adapter.NotificationsAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.util.PrefUtils;
@@ -113,22 +112,6 @@ public class User {
     @Expose
     public String companyName;
 
-
-    public static void saveUserInterest(DaoSession session, ArrayList<Interest> interestList) {
-        InterestDao interestDao = session.getInterestDao();
-        interestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(PrefUtils.getCurrentUserID())).buildDelete().executeDeleteWithoutDetachingEntities();
-        session.clear();
-        Log.d("iList", "Deleted interests");
-
-        if (interestList != null && interestList.size() > 0) {
-            Log.d("iList", "Saving user interest");
-            for (Interest interest : interestList) {
-                interestDao.insertOrReplace(interest);
-                Log.d("iList", "Interest inserted: " + interest.getName());
-            }
-        }
-    }
-
     public static ContagContag getContagContagObject(User user) {
 
         ContagContag mContagContag = new ContagContag(user.id);
@@ -168,7 +151,10 @@ public class User {
                                                       User user, ContagContag cc) {
         ArrayList<Interest> mInterest = new ArrayList<>();
         for (InterestResponse ir : interests) {
+            Log.d("myuser", "Interest" + ir.toString()) ;
             Interest interest = new Interest(ir.id);
+            //Log.d("myuser", "Interest admin id: " + ir.interest_id) ;
+            interest.setInterest_id(ir.interest_id);
             interest.setName(ir.name);
             interest.setContagUserId(user.id);
             interest.setContagContag(cc);
@@ -178,15 +164,47 @@ public class User {
         return mInterest;
     }
 
-    public static void storeInterests(ArrayList<Interest> interestList, DaoSession session) {
-        if (interestList != null) {
-            Log.d("myuser", "Going to store interests now");
-            InterestDao interestDao = session.getInterestDao();
+//    public static void storeInterests(ArrayList<Interest> interestList, DaoSession session) {
+//        if (interestList != null) {
+//
+//            Log.d("myuser", "Going to store current users interests now");
+//            InterestDao interestDao = session.getInterestDao();
+//
+//            for (Interest interest : interestList) {
+//                Log.d("myuser", "Interest id is: " + interest.getId()) ;
+//                Log.d("myuser",  "Interest id is: " + interest.getName()) ;
+//
+//
+//                interestDao.insertOrReplace(interest);
+//            }
+//        }
+//    }
+    public static void storeInterests(DaoSession session, ArrayList<Interest> interestList) {
+        InterestDao interestDao = session.getInterestDao();
+        removeExistingInterests(PrefUtils.getCurrentUserID(), interestDao);
+        Log.d("iList", "Deleted existing interests");
+
+        if (interestList != null && interestList.size() > 0) {
+            Log.d("iList", "Saving user interest");
             for (Interest interest : interestList) {
+                Log.d("iList", "Interest id: " + interest.getId());
+                Log.d("iList", "Interest admin id: " + interest.getInterest_id());
+                Log.d("iList", "Interest name: " + interest.getName());
                 interestDao.insertOrReplace(interest);
             }
         }
     }
+
+    private static void removeExistingInterests(long userID, InterestDao mInterestDao){
+        List<Interest> interests = mInterestDao.queryBuilder().where(InterestDao.Properties.ContagUserId.eq(userID)).list() ;
+        Log.d("iList", "Removing interests") ;
+        for(Interest i: interests){
+            Log.d("iList", "Deleting interest with id: " + i.getId()) ;
+            Log.d("iList", "Deleting interest with name: " + i.getName()) ;
+            mInterestDao.delete(i) ;
+        }
+    }
+
 
 
     public static ArrayList<SocialProfile> getSocialProfileList(List<SocialProfileResponse> socialProfiles, User user, ContagContag cc) {
@@ -211,6 +229,7 @@ public class User {
         if (socialProfileList != null) {
             Log.d("myuser", "Going to store social profiles");
             SocialProfileDao spDao = session.getSocialProfileDao();
+            Log.d("myuser", "Is db read only?" + session.getDatabase().isReadOnly()) ;
             for (SocialProfile profile : socialProfileList) {
                 spDao.insertOrReplace(profile);
             }
@@ -223,7 +242,8 @@ public class User {
         for (CustomShareResponse csr : customShares) {
             CustomShare cs = new CustomShare();
             cs.setField_name(csr.fieldName);
-            Log.d("ShareFubar", "FieldName: "+  csr.fieldName) ;
+            Log.d("ShareFubar", "FieldName: " + csr.fieldName) ;
+            Log.d("ShareFubar", "FieldName: "+  csr.userIDS) ;
             cs.setUser_ids(csr.userIDS);
             cs.setIs_public(csr.isPublic);
             cs.setIs_private(csr.isPrivate);
@@ -267,11 +287,11 @@ public class User {
                 userIDS.add(userID);
             }
         } else {
-            Log.d(NotificationsAdapter.TAG, "pissu chod");
+
             return userID;
         }
         if(userIDS.size() == 1) {
-            Log.d(NotificationsAdapter.TAG, "pissu chod 2");
+
             return userIDS.get(0);
         }
         return TextUtils.join(",", userIDS);

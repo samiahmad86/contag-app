@@ -29,16 +29,31 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="2dp"
                 android:src="@drawable/default_profile_pic_small" />
+            <ImageView
+                android:id="@+id/iv_edit_profile"
+                android:layout_width="34dp"
+                android:layout_height="17dp"
+
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_toLeftOf="@id/iv_user_photo"
+                android:src="@drawable/edit_contag_profile"
+
+                android:visibility="visible" />
+
 
             <LinearLayout
                 android:id="@+id/ll_user_name_container"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/btn_back"
+                android:layout_toLeftOf="@id/iv_edit_profile"
 
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="2dp"
+
 
                 android:orientation="vertical">
 
@@ -76,16 +91,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_edit_profile"
-                android:layout_width="34dp"
-                android:layout_height="17dp"
-                android:layout_alignTop="@id/ll_user_name_container"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="2dp"
-                android:layout_toRightOf="@id/ll_user_name_container"
-                android:src="@drawable/edit_contag_profile"
-                android:visibility="invisible" />
 
 
 

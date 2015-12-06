@@ -108,6 +108,7 @@
         android:layout_below="@id/view_1"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
+        android:gravity="center"
         android:id="@+id/tv_share_contag"
         android:textColor="@color/light_blue"
         android:text="&#10140; Introduce"

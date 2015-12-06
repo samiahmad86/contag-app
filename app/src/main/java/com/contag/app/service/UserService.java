@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
-import com.contag.app.config.Router;
 import com.contag.app.fragment.NewUserDetailsFragment;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
@@ -274,7 +273,7 @@ public class UserService extends Service implements RequestListener<User> {
             ArrayList<SocialProfile> socialProfiles = User.getSocialProfileList(user.socialProfile, user, cc);
             ArrayList<CustomShare> customShares = User.getCustomShareList(user.customShares, cc);
 
-            User.storeInterests(interestList, session);
+            User.storeInterests(session, interestList);
             User.storeSocialProfile(socialProfiles, session);
             User.storeCustomShare(customShares, session);
 

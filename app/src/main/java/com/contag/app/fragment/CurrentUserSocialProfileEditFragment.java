@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
+import com.contag.app.activity.LinkedInActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
@@ -238,7 +239,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
 
             case R.id.btn_disconnect: {
                 final int position = (int) v.getTag();
-
+                v.setEnabled(false);
 //                DeleteSocialProfile mDeleteSocialProfile = new DeleteSocialProfile(hmSocialProfileModel.get(position).mSocialPlatform.getId());
                 long platformId = hmSocialProfileModel.get(position).mSocialPlatform.getId() ;
                 Log.d("DeleteSocial", "Going to delete platfrom id with number: " + platformId ) ;
@@ -247,7 +248,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 getSpiceManager().execute(mDeleteSocialProfileRequest, new RequestListener<Response>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-
+                        viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
                     }
 
                     @Override
@@ -255,6 +256,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                         log(TAG, String.valueOf(response.result));
                         if (response.result) {
                             new DeleteSocialProfile().execute(position);
+                        } else {
+                            viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
                         }
                     }
                 });
@@ -272,6 +275,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
         } else if (requestCode == Constants.Values.REQUEST_CODE_LINKEDIN) {
             if (resultCode == Activity.RESULT_OK) {
+                log(TAG, data.getBundleExtra(Constants.Keys.KEY_BUNDLE).getString(LinkedInActivity.TAG));
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), linkedInViewPosition, Constants.Types.FIELD_LINKEDIN);
             }
         } else if (requestCode == Constants.Values.REQUEST_CODE_GPLUS_SIGN_IN) {
@@ -308,7 +312,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 args.putString(Constants.Keys.KEY_USER_PLATFORM_USERNAME, session.getUserName());
                 args.putString(Constants.Keys.KEY_PLATFORM_SECRET, session.getAuthToken().secret);
                 args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, session.getAuthToken().token);
-                addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_INSTAGRAM);
+                addBundletoList(args, twitterViewPosition, Constants.Types.FIELD_TWITTER);
             }
 
             @Override
@@ -389,7 +393,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             mViewHolder.btnAdd.setVisibility(View.GONE);
         } else {
             mViewHolder.btnAdd.setTag(position);
-            mViewHolder.btnAdd.setVisibility(View.VISIBLE);
+            mViewHolder.btnAdd.setVisibility(View.GONE);
             mViewHolder.btnShare.setVisibility(View.GONE);
             mViewHolder.tvConnectedAs.setVisibility(View.GONE);
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
@@ -475,6 +479,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case Constants.Types.FIELD_TWITTER: {
+                log(TAG, "gimme some twitter fun babby");
                 loginTwitter(platformId);
                 break;
             }
@@ -789,7 +794,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             ArrayList<SocialProfile> socialProfiles = User.getSocialProfileList(user.socialProfile, user, cc) ;
             ArrayList<CustomShare> customShares = User.getCustomShareList(user.customShares, cc) ;
 
-            User.storeInterests(interestList, session);
+            User.storeInterests(session,interestList);
             User.storeSocialProfile(socialProfiles, session);
             User.storeCustomShare(customShares, session);
 
@@ -874,6 +879,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
             SocialProfileModel newSocialProfileModel = new SocialProfileModel(mSocialProfileModel.mSocialPlatform, false, mSocialProfileModel.mViewType);
             viewHolderArrayList.get(position).btnDisconnect.setVisibility(View.GONE);
+            viewHolderArrayList.get(position).btnDisconnect.setEnabled(true);
             hmSocialProfileModel.remove(position);
             hmSocialProfileModel.put(position, newSocialProfileModel);
             log(TAG, "calling edit mode " + hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName()

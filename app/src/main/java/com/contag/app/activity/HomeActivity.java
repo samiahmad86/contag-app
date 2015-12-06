@@ -1,5 +1,7 @@
 package com.contag.app.activity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,8 +53,14 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             }
         });
         stl.setViewPager(vpHome);
+        clearNotificationBar();
+
+    }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
         if (PrefUtils.isContactBookUpdated()) {
             Router.startContactService(this, true);
         } else {
@@ -60,14 +68,13 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
                 Router.startContactService(this, false);
             }
         }
+        new LoadUser().execute();
+        clearNotificationBar();
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new LoadUser().execute();
-        setUpDrawer(R.id.drawer_layout, R.id.tb_home);
+    private void clearNotificationBar(){
+        NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notifManager.cancelAll();
     }
 
     @Override
@@ -146,11 +153,13 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         @Override
         protected void onPostExecute(ContagContag ccUser) {
             log(TAG, "wtf2");
+
             Toolbar tbHome = (Toolbar) HomeActivity.this.findViewById(R.id.tb_home);
             ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
             ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
             Picasso.with(HomeActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         }
     }

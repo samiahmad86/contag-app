@@ -44,6 +44,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private View pbFeeds;
 
 
+
     public static FeedsFragment newInstance() {
         FeedsFragment ff = new FeedsFragment();
         Bundle args = new Bundle();
@@ -72,6 +73,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
                         && !isLoading && isListViewEnabled) {
+                    Log.d("FeedSizeDebug", "Inside onCreate view going to fetch feeds") ;
                     int start = feeds.size() == 0 ? 0 : feeds.size();
                     int end = start + 10;
                     getFeeds(start, end);
@@ -104,7 +106,9 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         super.onResume();
 
         if(feeds.size() != 0) {
+            Log.d("FeedSizeDebug", "Feeds size in onResume: " + feeds.size()) ;
             feeds.clear();
+            Log.d("FeedSizeDebug", "Feeds size after clearing in onResume: " + feeds.size()) ;
             feedsAdapter.notifyDataSetChanged();
             getFeeds(0,10);
         }
@@ -112,8 +116,8 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private void getFeeds(int start, int end){
-        Log.d("FeedsFubar", "Going to request") ;
-        Log.d("FeedsFubar", "Start " + start + " End: "+ end ) ;
+        Log.d("FeedSizeDebug", "Going to request") ;
+        Log.d("FeedSizeDebug", "Start " + start + " End: "+ end ) ;
         pbFeeds.setVisibility(View.VISIBLE);
         FeedsRequest feedsRequest = new FeedsRequest(start, end);
         getSpiceManager().execute(feedsRequest, FeedsFragment.this);
@@ -144,17 +148,19 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-        Log.d("FeedsFubar", "Request failed") ;
+        Log.d("FeedSizeDebug", "Request failed") ;
         pbFeeds.setVisibility(View.GONE);
     }
 
     @Override
     public void onRequestSuccess(FeedsResponse.FeedList feedsResponses) {
-        Log.d("FeedsFubar", "Request was a success") ;
+        Log.d("FeedSizeDebug", "Request was a success") ;
+        Log.d("FeedSizeDebug", "Feeds size in onRequestSuccess: " + feeds.size()) ;
         if (feedsResponses.size() != 0) {
             feeds.addAll(feedsResponses);
+            Log.d("FeedSizeDebug", "Feeds size in onRequestSuccess: " + feeds.size()) ;
             feedsAdapter.notifyDataSetChanged();
-            log(TAG, "is loading is set to false");
+
             isLoading = false;
         } else {
             isLoading = true;

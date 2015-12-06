@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_feeds_items"
+    android:background="@drawable/bg_shadow"
     android:padding="10dp">
 
     <com.contag.app.view.CircularImageView

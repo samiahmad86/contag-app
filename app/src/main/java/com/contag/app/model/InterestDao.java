@@ -28,7 +28,8 @@ public class InterestDao extends AbstractDao<Interest, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property ContagUserId = new Property(2, Long.class, "contagUserId", false, "CONTAG_USER_ID");
+        public final static Property Interest_id = new Property(2, Long.class, "interest_id", false, "INTEREST_ID");
+        public final static Property ContagUserId = new Property(3, Long.class, "contagUserId", false, "CONTAG_USER_ID");
     };
 
     private DaoSession daoSession;
@@ -49,7 +50,8 @@ public class InterestDao extends AbstractDao<Interest, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"INTEREST\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
-                "\"CONTAG_USER_ID\" INTEGER);"); // 2: contagUserId
+                "\"INTEREST_ID\" INTEGER," + // 2: interest_id
+                "\"CONTAG_USER_ID\" INTEGER);"); // 3: contagUserId
     }
 
     /** Drops the underlying database table. */
@@ -73,9 +75,14 @@ public class InterestDao extends AbstractDao<Interest, Long> {
             stmt.bindString(2, name);
         }
  
+        Long interest_id = entity.getInterest_id();
+        if (interest_id != null) {
+            stmt.bindLong(3, interest_id);
+        }
+ 
         Long contagUserId = entity.getContagUserId();
         if (contagUserId != null) {
-            stmt.bindLong(3, contagUserId);
+            stmt.bindLong(4, contagUserId);
         }
     }
 
@@ -97,7 +104,8 @@ public class InterestDao extends AbstractDao<Interest, Long> {
         Interest entity = new Interest( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // contagUserId
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // interest_id
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // contagUserId
         );
         return entity;
     }
@@ -107,7 +115,8 @@ public class InterestDao extends AbstractDao<Interest, Long> {
     public void readEntity(Cursor cursor, Interest entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setContagUserId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setInterest_id(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setContagUserId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */

@@ -72,6 +72,7 @@ public class ContagDaoGenerator {
         Entity interest = schema.addEntity("Interest");
         interest.addIdProperty();
         interest.addStringProperty("name");
+        interest.addLongProperty("interest_id");
 
         Property interestToCuntag = interest.addLongProperty("contagUserId").getProperty();
         interest.addToOne(contagContact, interestToCuntag);

@@ -28,7 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class LinkedInActivity extends BaseActivity {
 
-    private static final String TAG = LinkedInActivity.class.getName();
+    public static final String TAG = LinkedInActivity.class.getName();
 
     /****
      * YOUR LINKEDIN APP INFO HERE
@@ -70,6 +70,7 @@ public class LinkedInActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        log(TAG, "fuck me");
         setContentView(R.layout.activity_social_login);
         webView = (WebView) findViewById(R.id.wv_social_login);
         pb = (ProgressBar) findViewById(R.id.pb_social_login);
@@ -227,6 +228,7 @@ public class LinkedInActivity extends BaseActivity {
         protected void onPostExecute(String accessToken) {
             if (accessToken != null) {
                 LinkedInActivity.this.accessToken = accessToken;
+                log(TAG, "executing profile request");
                 new ProfileRequest().execute(getProfileUrl(accessToken));
             }
         }
@@ -260,6 +262,7 @@ public class LinkedInActivity extends BaseActivity {
                     }
                     String result = sb.toString();
                     //Convert the string result to a JSON Object
+                    log(TAG, result);
                     return  new JSONObject(result);
 
 
@@ -296,6 +299,7 @@ public class LinkedInActivity extends BaseActivity {
                     args.putString(Constants.Keys.KEY_PLATFORM_SECRET, accessSecret);
                     args.putString(Constants.Keys.KEY_PLATFORM_TOKEN, accessToken);
                     args.putString(Constants.Keys.KEY_PLATFORM_PERMISSION, SCOPES);
+                    args.putString(LinkedInActivity.TAG, data.toString());
                     Intent intent = new Intent();
                     intent.putExtra(Constants.Keys.KEY_BUNDLE, args);
                     setResult(Activity.RESULT_OK, intent);
@@ -304,6 +308,8 @@ public class LinkedInActivity extends BaseActivity {
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
+
+
             } else {
                 log(TAG, "something went wrong");
             }

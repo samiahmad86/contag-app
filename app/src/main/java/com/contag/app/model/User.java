@@ -242,7 +242,8 @@ public class User {
         for (CustomShareResponse csr : customShares) {
             CustomShare cs = new CustomShare();
             cs.setField_name(csr.fieldName);
-            Log.d("ShareFubar", "FieldName: "+  csr.fieldName) ;
+            Log.d("ShareFubar", "FieldName: " + csr.fieldName) ;
+            Log.d("ShareFubar", "FieldName: "+  csr.userIDS) ;
             cs.setUser_ids(csr.userIDS);
             cs.setIs_public(csr.isPublic);
             cs.setIs_private(csr.isPrivate);

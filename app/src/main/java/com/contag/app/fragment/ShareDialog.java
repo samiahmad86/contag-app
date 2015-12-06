@@ -58,8 +58,8 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         Bundle args = new Bundle();
 
         contact_for_share = getLabel(fieldName) + " : " + value;
-        Log.e("fieldname", fieldName);
-        Log.e("fieldname", value);
+//        Log.e("fieldname", fieldName);
+//        Log.e("fieldname", value);
 
         args.putString(Constants.Keys.KEY_FIELD_NAME, fieldName);
         share.setArguments(args);
@@ -81,6 +81,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         new LoadContags().execute(fieldName);
         shareListAdapter = new ShareListAdapter(shareList, getActivity());
         lvContags = (ListView) view.findViewById(R.id.lv_contag_share);
+        lvContags.setVisibility(View.GONE);
         ll_share = (LinearLayout) view.findViewById(R.id.ll_share);
         View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
         lvContags.addFooterView(footerView);
@@ -121,6 +122,7 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.btn_share_public: {
+
                 mCustomShare.setIs_public(!mCustomShare.getIs_public());
                 setPublicButton();
                 break;
@@ -146,13 +148,12 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
 
     private void savePrivacySettings() {
 
-        if (shareCount > 0)
-            mCustomShare.setIs_public(false);
-
         mCustomShare.setUser_ids(getSharesAsString());
 
-        Log.d("shave", "Is Public: " + mCustomShare.getIs_public());
-        Log.d("shave", "Share Count: " + shareCount);
+//        Log.d("ShareFubar", "Is Public: " + mCustomShare.getIs_public());
+//        Log.d("ShareFubar", "Share Count: " + shareCount);
+//        Log.d("ShareFubar", "Share user id string: " + mCustomShare.getUser_ids());
+
 
         Router.startUserServiceForPrivacy(getActivity(), mCustomShare.getField_name(), mCustomShare.getIs_public(),
                 mCustomShare.getUser_ids());
@@ -215,8 +216,11 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
 
     private void setCustomShareCount() {
         shareCustom.setText("Custom(" + shareCount + ")");
-        if (!mCustomShare.getIs_public())
+        if(mCustomShare.getIs_public()){
+            sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
+        } else if(shareCount > 0)
             shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
+
     }
 
 
@@ -255,11 +259,12 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
             } catch (Exception e) {
                 sharedWith = new String[1];
                 sharedWith[0] = "";
+                Log.d("ShareFubar", "Exception occurred") ;
             }
 
 
             for (ContagContag cc : contagContacts) {
-                Log.d("share", "Status with: " + cc.getName() + " :" + ArrayUtils.contains(sharedWith, cc.getId().toString()));
+                Log.d("ShareFubar", "Status with: " + cc.getName() + " :" + ArrayUtils.contains(sharedWith, cc.getId().toString()));
                 items.add(new ContactListItem(cc, ArrayUtils.contains(sharedWith, cc.getId().toString()),
                         Constants.Types.ITEM_SHARE_CONTAG));
             }
@@ -270,10 +275,11 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         @Override
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
 
-            setPublicButton();
-
             if (mCustomShare.getUser_ids().length() > 0)
                 shareCount = mCustomShare.getUser_ids().split(",").length;
+
+            Log.d("ShareFubar", "Is Public? : " + mCustomShare.getIs_public()) ;
+            Log.d("ShareFubar", "Share count is set at: " + shareCount) ;
 
             setCustomShareCount();
             shareList.clear();

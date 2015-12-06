@@ -10,6 +10,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.contag.app.R;
+import com.contag.app.activity.HomeActivity;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
@@ -26,6 +27,7 @@ public class GcmService extends GcmListenerService {
 
     public void onMessageReceived(String from, Bundle data) {
         Log.d(TAG, "notification got me " + PrefUtils.getCurrentUserID());
+        int notificationCount = PrefUtils.getNewNotificationCount() ;
         if (PrefUtils.getAuthToken() != null) {
             String notification_type = data.getString("notification_type");
 
@@ -45,9 +47,22 @@ public class GcmService extends GcmListenerService {
                     intent = null;
                     break;
                 }
+                case "introduction": {
+                    Log.d("newprofile", "GCM push received");
+                    long userID = Long.parseLong(data.getString("profile_id"));
+                    Router.startServiceToGetUserByUserID(this, userID, true);
+                    intent = new Intent(this, HomeActivity.class) ;
+                    break;
+                }
                 default: {
-                    // Takes care of profile request add/share cases
-                    intent = new Intent(this, NotificationsActivity.class);
+
+                    if(notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
+                            notification_type.equals("anniversary")){
+                        intent = new Intent(this, HomeActivity.class) ;
+                    }else {
+                        intent = new Intent(this, NotificationsActivity.class);
+                        notificationCount += 1 ;
+                    }
 
                     break;
                 }
@@ -79,7 +94,7 @@ public class GcmService extends GcmListenerService {
 
                 Log.d(TAG, "notification sent");
                 notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
-                PrefUtils.setNewNotificationCount(PrefUtils.getNewNotificationCount() + 1);
+                PrefUtils.setNewNotificationCount(notificationCount);
             }
 
         }

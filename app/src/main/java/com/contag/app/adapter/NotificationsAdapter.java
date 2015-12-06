@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -45,6 +46,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         this.mCtxt = mContext;
         this.notifications = notifications;
         this.mSpiceManager = mSpiceManager;
+
     }
 
     @Override
@@ -66,6 +68,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mViewHolder;
         NotificationsResponse notification = (NotificationsResponse) getItem(position);
+
 
         if (convertView == null) {
             mViewHolder = new ViewHolder();

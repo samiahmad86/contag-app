@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_feeds_items"
+    android:background="@drawable/bg_shadow"
     android:padding="10dp">
   <RelativeLayout
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:id="@+id/tv_feeds_story"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="10dp"
             android:text="@string/hello_world"
 
@@ -61,12 +61,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="5dp"
             android:text="timestamp"
             android:singleLine="true"
-            android:gravity="right"
-            android:layout_alignParentRight="true"
-             android:layout_toRightOf="@id/tv_feeds_usr_name"
+                android:layout_below="@id/tv_feeds_story"
+             android:layout_toRightOf="@id/iv_feeds_usr_img"
 
             android:textSize="13sp" />
 

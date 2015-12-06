@@ -13,8 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
@@ -25,6 +29,7 @@ import com.contag.app.model.ContagContag;
 import com.contag.app.model.DaoSession;
 import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
+import com.contag.app.util.ShareUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -42,8 +47,10 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt, logoutTxt;
     private Boolean isLoading ;
     private TextView tvNotificationCount ;
-
-
+    private RadioGroup radioSexGroup;
+    private RadioButton radioButton;
+    private TextView share_contag;
+    public static final String TAG = NavDrawerFragment.class.getName();
 
     /**
      * Use this factory method to create a new instance of
@@ -83,7 +90,13 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         logoutTxt = (TextView) view.findViewById(R.id.tv_logout_txt) ;
         tvUsrCuntId = (TextView) view.findViewById(R.id.tv_usr_cunt_id);
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
+        radioSexGroup=(RadioGroup)view.findViewById(R.id.radioSex);
+        share_contag=(TextView)view.findViewById(R.id.share_contag);
 
+        tvUsrName.setOnClickListener(this);
+        tvUsrCuntId.setOnClickListener(this);
+
+        share_contag.setOnClickListener(this);
         notificationTxt.setOnClickListener(this);
         feedbackTxt.setOnClickListener(this);
         rateTxt.setOnClickListener(this);
@@ -137,10 +150,35 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
                         Uri.parse("market://details?id=com.android.contag")));
                 break ;
             }
+            case R.id.tv_usr_name: {
+                Router.startUserActivity(getActivity(), TAG, PrefUtils.getCurrentUserID());
+
+                break ;
+            }
+            case R.id.tv_usr_cunt_id: {
+                Router.startUserActivity(getActivity(), TAG, PrefUtils.getCurrentUserID());
+                break ;
+            }
             case R.id.tv_logout_txt: {
                 Log.d("logout", "Logout called") ;
-                    logout() ;
+                logout() ;
                 break ;
+            }
+            case R.id.share_contag: {
+                int selectedId = radioSexGroup.getCheckedRadioButtonId();
+                String category="";
+                if(selectedId==R.id.radio_personal)
+                    category=" Personal";
+                if(selectedId==R.id.radio_social)
+                    category=" Social";
+                if(selectedId==R.id.radio_professional)
+                    category=" Professional";
+
+
+                ShareUtils.shareText(getActivity(),tvUsrName.getText()+ "has shared his"+ category +" information with you on Contag. \n Download link:https://play.google.com/store/apps/details?id=com.contag.app" );
+
+
+
             }
 
         }

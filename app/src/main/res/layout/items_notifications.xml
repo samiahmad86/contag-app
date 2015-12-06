@@ -12,15 +12,15 @@
         android:src="@drawable/default_profile_pic" />
 
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_notifications_txt"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_notif_reject"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/iv_notifications_usr_img"
-        android:textColor="@color/notifications_story"
-        android:textSize="14sp" />
+        android:layout_alignParentRight="true"
+        android:background="@drawable/btn_cross" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share"
@@ -28,22 +28,25 @@
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/tv_notifications_txt"
-        android:padding="5dp"
+        android:layout_toLeftOf="@id/btn_notif_reject"
+        android:padding="2dp"
         android:text="@string/allow"
         android:textAllCaps="false"
         android:textSize="14sp"
         android:visibility="visible" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_notif_reject"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="10dp"
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_notifications_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/btn_share"
-        android:background="@drawable/btn_cross" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/iv_notifications_usr_img"
+        android:layout_toLeftOf="@id/btn_share"
+        android:textColor="@color/notifications_story"
+        android:textSize="14sp" />
+
+
 
 
 </RelativeLayout>

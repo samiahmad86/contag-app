@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -42,6 +43,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     private boolean isLoading = false;
     private ArrayList<NotificationsResponse> notifications;
     private NotificationsAdapter notificationsAdapter;
+    private View progressbar;
 
 
     @Override
@@ -55,7 +57,8 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
         Button btnBack = (Button) findViewById(R.id.btn_back);
-
+        progressbar=findViewById(R.id.pb_edit_profile_1);
+        progressbar.setVisibility(View.VISIBLE);
         ListView lvNotifications = (ListView) findViewById(R.id.lv_notifications);
         notifications = new ArrayList<>();
         notificationsAdapter = new NotificationsAdapter(this, notifications, getSpiceManager());
@@ -120,6 +123,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         NotificationsRequest fr = new NotificationsRequest(start, end);
         getSpiceManager().execute(fr, NotificationsActivity.this);
         isLoading = true;
+    //  progressbar.setVisibility(View.VISIBLE);
     }
 
     public void hideNotification(long notificationID){
@@ -162,8 +166,11 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();
             isLoading = false;
+            progressbar.setVisibility(View.GONE);
         } else {
             isLoading = true;
+          //  progressbar.setVisibility(View.VISIBLE);
+
         }
 
     }

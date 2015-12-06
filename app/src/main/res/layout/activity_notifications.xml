@@ -50,6 +50,10 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="8dp"
             android:scrollbars="none" />
+        <include
+            android:id="@+id/pb_edit_profile_1"
+            layout="@layout/layout_progress_bar" />
+
 
     </RelativeLayout>
 

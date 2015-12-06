@@ -1,6 +1,5 @@
 package com.contag.app.fragment;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 
 public class CurrentUserProfileEditFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
 
@@ -487,7 +485,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             setViewContent();
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
-            btnEditProfile.setBackgroundResource(R.drawable.edit_pencil_contag);
+            btnEditProfile.setBackgroundResource(R.drawable.edit_contag_profile);
             if (cameFromNotification) {
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
                     P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);

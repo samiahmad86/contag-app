@@ -20,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -107,6 +108,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
+            /*final Button backButton=(Button) findViewById(R.id.btn_back);
+            backButton.setVisibility(View.GONE);
+            backButton.setOnClickListener(this);*/
             toolbar.findViewById(R.id.iv_user_photo).setOnClickListener(this);
             ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile);
             ivEditIcon.setVisibility(View.VISIBLE);
@@ -334,6 +338,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 startActivityForResult(intentUploadImage, Constants.Values.REQUEST_CODE_IMAGE_UPLOAD);
                 break;
             }
+            case R.id.btn_back: {
+                this.finish();
+                break;
+            }
         }
     }
 
@@ -374,7 +382,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.tv_user_status).setVisibility(View.VISIBLE);
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
-            ivEditIcon.setImageResource(R.drawable.edit_pencil_contag);
+            ivEditIcon.setImageResource(R.drawable.edit_contag_profile);
             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
             hideInterestRemoveButton();
@@ -404,6 +412,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String avatarUrl = intent.getStringExtra(Constants.Keys.KEY_USER_AVATAR_URL);
             Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
+
             Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
                     into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
             Picasso.with(UserActivity.this).load(avatarUrl).placeholder(R.drawable.default_profile_pic_small).
@@ -530,8 +539,28 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+                tbHome.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+                tbHome.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //What to do on back clicked
+                        finish();
+                    }
+                });
+
 
                 ((TextView) tbHome.findViewById(R.id.tv_user_status)).setText(ccUser.getStatus_update());
+              /*  Button backButton=(Button) tbHome.findViewById(R.id.btn_back);
+                backButton.setVisibility(View.VISIBLE);
+                backButton.setOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                             public void onClick(View v)
+
+                                                 {
+                                                    finish();
+                                                 }
+                });*/
+
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).

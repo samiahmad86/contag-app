@@ -20,6 +20,7 @@ import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.Interest;
 import com.contag.app.util.ContactUtils;
+import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.ShareUtils;
 import com.squareup.picasso.Picasso;
 
@@ -84,18 +85,35 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.tvInterest3 = (TextView) convertView.findViewById(R.id.tv_user_interest_3);
             vhCont.tvInterest4 = (TextView) convertView.findViewById(R.id.tv_user_interest_4);
             vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
-            vhCont.btnIntroduceContag = (Button) convertView.findViewById(R.id.btn_share_contag) ;
+            vhCont.btnMsg = (Button) convertView.findViewById(R.id.btn_msg);
+            vhCont.btnCall = (Button) convertView.findViewById(R.id.btn_call);
+
+
+            vhCont.btnIntroduceContag = (TextView) convertView.findViewById(R.id.tv_share_contag) ;
             convertView.setTag(vhCont);
         } else {
             vhCont = (ContagViewHolder) convertView.getTag();
         }
 
-        ContagContag contObject = ((ContactListItem) getItem(position)).mContagContag;
+        final ContagContag contObject = ((ContactListItem) getItem(position)).mContagContag;
 
         Picasso.with(mContext).load(contObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
                 .into(vhCont.ivPhoto);
         vhCont.tvContactId.setText(contObject.getContag());
         vhCont.tvContactName.setText(contObject.getName());
+        vhCont.btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DeviceUtils.dialNumber(mContext, contObject.getMobileNumber());
+            }
+        });
+        vhCont.btnMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
+            }
+        });
         List<Interest> interests = ((ContactListItem) getItem(position)).interests;
         if (interests != null && interests.size() > 0) {
             try {
@@ -121,6 +139,8 @@ public class ContactAdapter extends BaseAdapter {
 
             if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
                 vhCont.btnAdd.setVisibility(View.VISIBLE);
+                vhCont.btnMsg.setVisibility(View.INVISIBLE);
+                vhCont.btnCall.setVisibility(View.INVISIBLE);
                 vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,6 +160,8 @@ public class ContactAdapter extends BaseAdapter {
         }else {
             vhCont.btnIntroduceContag.setVisibility(View.VISIBLE);
             vhCont.btnAdd.setVisibility(View.INVISIBLE);
+           /* vhCont.btnCall.setVisibility(View.VISIBLE);
+            vhCont.btnMsg.setVisibility(View.VISIBLE);*/
 
             final String shareContagName = contObject.getName() ;
             final long shareContagID = contObject.getId() ;
@@ -166,6 +188,23 @@ public class ContactAdapter extends BaseAdapter {
             vhContact.tvContactNumber = (TextView) convertView.findViewById(R.id.tv_contact_num);
             vhContact.btnInvite = (Button) convertView.findViewById(R.id.btn_cuntag_invite);
             vhContact.tvAlpha = (TextView) convertView.findViewById(R.id.tv_user_initial);
+            vhContact.btnCallContact = (Button) convertView.findViewById(R.id.btn_call);
+            vhContact.btnMsgContact = (Button) convertView.findViewById(R.id.btn_msg);
+
+            vhContact.btnCallContact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Contact contact = (Contact) v.getTag();
+                    DeviceUtils.dialNumber(mContext, contact.getContactNumber());
+                }
+            });
+            vhContact.btnMsgContact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Contact contact = (Contact) v.getTag();
+                    DeviceUtils.sendSms(mContext, contact.getContactNumber(), null);
+                }
+            });
             vhContact.btnInvite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -180,10 +219,12 @@ public class ContactAdapter extends BaseAdapter {
         }
         Contact contact = ((ContactListItem) getItem(position)).mContact;
         vhContact.tvContactName.setText(contact.getContactName());
-        Log.e("character",contact.getContactName().substring(0,1));
+        Log.e("character", contact.getContactName().substring(0, 1));
         vhContact.tvContactNumber.setText(contact.getContactNumber());
         vhContact.tvAlpha.setText(contact.getContactName().substring(0,1).toUpperCase());
         vhContact.btnInvite.setTag(contact);
+        vhContact.btnMsgContact.setTag(contact);
+        vhContact.btnCallContact.setTag(contact);
         return convertView;
     }
 
@@ -206,6 +247,8 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvContactNumber;
         public Button btnInvite;
         public TextView tvAlpha;
+        public Button btnMsgContact;
+        public Button btnCallContact;
 
 
         public ContactViewHolder() {
@@ -223,8 +266,10 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvInterest4;
         public ImageView ivPhoto;
         public Button btnAdd ;
+        private Button btnMsg;
+        private Button btnCall;
 
-        public Button btnIntroduceContag;
+        public TextView btnIntroduceContag;
 
 
         public ContagViewHolder() {

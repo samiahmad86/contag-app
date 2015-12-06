@@ -22,13 +22,13 @@
 
                 <ImageView
                     android:id="@+id/iv_nav_drawer_header"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/contag_screen"
+
                     android:scaleType="centerCrop"
                      />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:background="@color/bg_user_activity"
@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:textColor="@color/white"
-                        android:paddingLeft="9dp"
+                        android:paddingLeft="0dp"
                         android:text="Name"
                         android:textSize="25sp" />
 
@@ -51,15 +51,67 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="sami1234"
-                        android:paddingLeft="10dp"
+                        android:paddingLeft="0dp"
+                        android:layout_below="@id/tv_usr_name"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
+                    <RadioGroup
+                        android:id="@+id/radioSex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@id/tv_usr_cunt_id">
+
+                        <RadioButton
+                            android:id="@+id/radio_personal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Personal"
+                            android:padding="10dp"
+                            android:textColor="@color/white"
+
+                            android:button="@drawable/custom_radio"
+                            android:checked="true"
+                           />
+
+                        <RadioButton
+                            android:id="@+id/radio_social"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:padding="10dp"
+                            android:button="@drawable/custom_radio"
+                            android:text="Social" />
+                        <RadioButton
+                            android:id="@+id/radio_professional"
+                            android:layout_width="wrap_content"
+                            android:padding="10dp"
+                            android:textColor="@color/white"
+                            android:button="@drawable/custom_radio"
+                            android:layout_height="wrap_content"
+                            android:text="Professional" />
+
+                    </RadioGroup>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Share Contag"
+                        android:textColor="@color/white"
+                        android:padding="10dp"
+                        android:id="@+id/share_contag"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignBaseline="@id/radioSex"
+                        android:layout_alignBottom="@id/radioSex"
+                       android:layout_alignParentRight="true"
+                        android:background="@drawable/bg_block_button"
+                        />
 
 
 
 
 
-                </LinearLayout>
+                </RelativeLayout>
 
 
             </RelativeLayout>
@@ -83,13 +135,13 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_notification_count"
-                    android:background="@drawable/bg_indicator_white"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:background="@drawable/btn_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
 
                     android:layout_centerVertical="true"
@@ -119,7 +171,7 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_rate_txt"
@@ -133,7 +185,7 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -148,7 +200,7 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <!--<android.support.v7.widget.AppCompatTextView-->
                 <!--android:id="@+id/tv_notification_count"-->

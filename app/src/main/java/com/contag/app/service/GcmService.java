@@ -41,6 +41,9 @@ public class GcmService extends GcmListenerService {
                     intent = null;
                     break;
                 }
+                case "add_request_completed": {
+
+                }
                 case "introduction": {
                 }
                 case "request_granted": {
@@ -53,7 +56,7 @@ public class GcmService extends GcmListenerService {
                 }
                 default: {
 
-                    if (notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
+                    if (notification_type.equals("birthday") ||
                             notification_type.equals("anniversary")) {
                         Log.d("GCMPUSH", "Push received for:  " + notification_type);
                         intent = new Intent(this, UserActivity.class);

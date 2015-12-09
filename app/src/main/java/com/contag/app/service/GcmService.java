@@ -31,7 +31,7 @@ public class GcmService extends GcmListenerService {
             String notification_type = data.getString("notification_type");
 
             Intent intent;
-
+            Log.d("GCMPUSH", data.toString()) ;
 
             switch (notification_type) {
                 case "update_profile": {

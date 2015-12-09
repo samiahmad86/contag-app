@@ -26,50 +26,42 @@ public class GcmService extends GcmListenerService {
 
     public void onMessageReceived(String from, Bundle data) {
         Log.d(TAG, "notification got me " + PrefUtils.getCurrentUserID());
-        int notificationCount = PrefUtils.getNewNotificationCount() ;
+        int notificationCount = PrefUtils.getNewNotificationCount();
         if (PrefUtils.getAuthToken() != null) {
             String notification_type = data.getString("notification_type");
 
             Intent intent;
-            Log.d("GCMPUSH", data.toString()) ;
+            Log.d("GCMPUSH", data.toString());
 
             switch (notification_type) {
                 case "update_profile": {
                     Log.d("newprofile", "GCM push received");
                     long userID = Long.parseLong(data.getString("user_id"));
-                    Router.startServiceToGetUserByUserID(this, userID, true);
+                    Router.startServiceToGetUserByUserID(this, userID, true, null);
                     intent = null;
                     break;
                 }
                 case "introduction": {
-                    Log.d("GCMPUSH", "GCM push received for introductin");
-                    long userID = Long.parseLong(data.getString("user_id"));
-                    Router.startServiceToGetUserByUserID(this, userID, true);
-                    intent = new Intent(this, UserActivity.class) ;
-                    intent.putExtra(Constants.Keys.KEY_USER_ID, userID);
-                    Log.d("GCMPUSH", "User id for profile is: " + userID) ;
-                    break;
                 }
                 case "request_granted": {
                     Log.d("GCMPUSH", "GCM push received for introductin");
                     long userID = Long.parseLong(data.getString("user_id"));
-                    Router.startServiceToGetUserByUserID(this, userID, true);
-                    intent = new Intent(this, UserActivity.class) ;
-                    intent.putExtra(Constants.Keys.KEY_USER_ID, userID);
-                    Log.d("GCMPUSH", "User id for profile is: " + userID) ;
+                    Router.startServiceToGetUserByUserID(this, userID, true, data);
+                    intent = null;
+                    Log.d("GCMPUSH", "User id for profile is: " + userID);
                     break;
                 }
                 default: {
 
-                    if(notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
-                            notification_type.equals("anniversary")){
-                        Log.d("GCMPUSH", "Push received for:  "+ notification_type) ;
+                    if (notification_type.equals("add_request_completed") || notification_type.equals("birthday") ||
+                            notification_type.equals("anniversary")) {
+                        Log.d("GCMPUSH", "Push received for:  " + notification_type);
                         intent = new Intent(this, UserActivity.class);
                         intent.putExtra(Constants.Keys.KEY_USER_ID, data.getString("user_id"));
-                        Log.d("GCMPUSH", "Profile ID is: " + data.getString("user_id")) ;
-                    }else {
+                        Log.d("GCMPUSH", "Profile ID is: " + data.getString("user_id"));
+                    } else {
                         intent = new Intent(this, NotificationsActivity.class);
-                        notificationCount += 1 ;
+                        notificationCount += 1;
                     }
 
                     break;
@@ -81,7 +73,7 @@ public class GcmService extends GcmListenerService {
 
                 // build notification
                 // the addAction re-use the same intent to keep the example short
-                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(GcmService.this);
+                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
 
                 Uri notifTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -94,13 +86,10 @@ public class GcmService extends GcmListenerService {
                         .setSound(notifTone)
                         .setSmallIcon(R.drawable.contag_logo);
 
-                Log.d(TAG, data.getString("text"));
 
-                Log.d(TAG, "Notification manager got");
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-                Log.d(TAG, "notification sent");
                 notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
                 PrefUtils.setNewNotificationCount(notificationCount);
             }

@@ -214,7 +214,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     }
                 });
             } else {
-                Router.startServiceToGetUserByUserID(mCtxt, userID, false);
+                Router.startServiceToGetUserByUserID(mCtxt, userID, false, null);
             }
         }
     }

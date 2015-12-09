@@ -220,7 +220,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 });
 
             } else {
-                Router.startServiceToGetUserByUserID(getActivity(), userID, false);
+                Router.startServiceToGetUserByUserID(getActivity(), userID, false, null);
                 showToast("Please wait while we sync your contacts");
             }
         }

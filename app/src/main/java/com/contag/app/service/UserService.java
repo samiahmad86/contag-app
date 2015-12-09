@@ -1,14 +1,21 @@
 package com.contag.app.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.contag.app.R;
+import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.fragment.NewUserDetailsFragment;
@@ -32,6 +39,7 @@ import com.contag.app.request.FieldRequest;
 import com.contag.app.request.ImageUploadRequest;
 import com.contag.app.request.InterestRequest;
 import com.contag.app.request.UserRequest;
+import com.contag.app.util.AtomicIntegerUtils;
 import com.contag.app.util.ContactUtils;
 import com.contag.app.util.PrefUtils;
 import com.octo.android.robospice.SpiceManager;
@@ -49,6 +57,7 @@ public class UserService extends Service implements RequestListener<User> {
     private int profileType = 0;
     private int requestType = 0;
     private boolean isContagContact;
+    private Bundle data;
 
     public UserService() {
     }
@@ -159,7 +168,7 @@ public class UserService extends Service implements RequestListener<User> {
                             substring(selectedImageFile.getAbsolutePath().lastIndexOf(".") + 1);
                     if (selectedImageFile.length() / 1024 >= 1024) {
                         Toast.makeText(this, "The selected image is too big", Toast.LENGTH_SHORT).show();
-                    }  else {
+                    } else {
                         Log.d(TAG, "Starting image upload");
                         ImageUploadRequest mImageUploadRequest = new ImageUploadRequest
                                 (new TypedFile("multipart/form-data", selectedImageFile));
@@ -185,10 +194,11 @@ public class UserService extends Service implements RequestListener<User> {
                     break;
                 }
                 case Constants.Types.REQUEST_GET_USER_BY_USER_ID: {
-                    Log.d("newprofile", "Contact request being made") ;
+                    Log.d("newprofile", "Contact request being made");
                     ContactRequest contactRequest = new ContactRequest
                             (intent.getLongExtra(Constants.Keys.KEY_NOTIF_USER_ID, 0l), requestType);
                     isContagContact = intent.getBooleanExtra(Constants.Keys.KEY_IS_CONTAG_CONTACT, false);
+                    data = intent.getBundleExtra(Constants.Keys.KEY_BUNDLE);
                     mSpiceManager.execute(contactRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -197,9 +207,9 @@ public class UserService extends Service implements RequestListener<User> {
 
                         @Override
                         public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                            Log.d("newprofile", "Request is successfull" + contactResponses.size()) ;
+                            Log.d("newprofile", "Request is successfull" + contactResponses.size());
 
-                            if(contactResponses.size() == 1) {
+                            if (contactResponses.size() == 1) {
                                 new InsertContagContact().execute(contactResponses);
                             }
                         }
@@ -325,18 +335,45 @@ public class UserService extends Service implements RequestListener<User> {
 
     private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
         private long userId;
+
         @Override
         protected Void doInBackground(ContactResponse.ContactList... params) {
             ContactUtils.saveSingleContact(UserService.this, params[0], isContagContact);
             userId = params[0].get(0).contagContactResponse.id;
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
-            if(!isContagContact) {
+            if (!isContagContact) {
                 Intent iStartUserActivity = new Intent(getResources().getString(R.string.intent_filter_contag_contact_inserted));
                 iStartUserActivity.putExtra(Constants.Keys.KEY_USER_ID, userId);
                 LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(iStartUserActivity);
+            } else if (data != null) {
+                Intent intent = new Intent(UserService.this, UserActivity.class);
+                intent.putExtra(Constants.Keys.KEY_USER_ID, userId);
+                PendingIntent pIntent = PendingIntent.getActivity(UserService.this, (int) System.currentTimeMillis(), intent, 0);
+
+                // build notification
+                // the addAction re-use the same intent to keep the example short
+                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(UserService.this);
+
+                Uri notifTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                Log.d(TAG, "Building notification");
+                notifBuilder.setContentTitle(data.getString("heading"))
+                        .setContentText(data.getString("text"))
+                        .setContentIntent(pIntent)
+                        .setAutoCancel(true)
+                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                        .setSound(notifTone)
+                        .setSmallIcon(R.drawable.contag_logo);
+
+
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
             }
         }
     }

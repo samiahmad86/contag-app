@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
+import com.contag.app.activity.LinkedInActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
@@ -274,6 +275,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
         } else if (requestCode == Constants.Values.REQUEST_CODE_LINKEDIN) {
             if (resultCode == Activity.RESULT_OK) {
+                log(TAG, data.getBundleExtra(Constants.Keys.KEY_BUNDLE).getString(LinkedInActivity.TAG));
                 addBundletoList(data.getBundleExtra(Constants.Keys.KEY_BUNDLE), linkedInViewPosition, Constants.Types.FIELD_LINKEDIN);
             }
         } else if (requestCode == Constants.Values.REQUEST_CODE_GPLUS_SIGN_IN) {

@@ -207,6 +207,7 @@ public class Router {
     }
 
     public static void startLinkendInLoginActivity(Context context, int requestCode, long linkedInId) {
+        Log.d(LinkedInActivity.TAG, "linkedin activity started");
         Intent iLinkedIn = new Intent(context, LinkedInActivity.class);
         iLinkedIn.putExtra(Constants.Keys.KEY_SOCIAL_PLATFORM_ID, linkedInId);
         ((BaseActivity) context).startActivityForResult(iLinkedIn, requestCode);

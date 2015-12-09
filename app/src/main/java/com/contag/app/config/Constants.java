@@ -185,7 +185,7 @@ public class Constants {
     }
 
     public class Urls {
-        public static final String BASE_URL = "http://54-255-219-32-ln7o33jz2n6l.runscope.net/";
+        public static final String BASE_URL = "http://54.255.219.32/";
         public static final String URL_LOGIN = "/login/";
         public static final String URL_LOGOUT = "/logout/";
         public static final String URL_OTP = "/otp/";

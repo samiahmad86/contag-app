@@ -48,6 +48,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit.mime.TypedFile;
 
@@ -58,7 +59,7 @@ public class UserService extends Service implements RequestListener<User> {
     private int requestType = 0;
     private boolean isContagContact;
     private Bundle data;
-
+    private int serviceID;
     public UserService() {
     }
 
@@ -68,22 +69,25 @@ public class UserService extends Service implements RequestListener<User> {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, final int startId) {
         if (intent != null) {
             requestType = intent.getIntExtra(Constants.Keys.KEY_REQUEST_TYPE, 0);
             switch (requestType) {
                 case Constants.Types.REQUEST_GET_CURRENT_USER: {
+                    serviceID = startId;
                     UserRequest mUserRequest = new UserRequest(requestType);
                     mSpiceManager.execute(mUserRequest, this);
                     break;
                 }
                 case Constants.Types.REQUEST_GET_USER_BY_ID: {
+                    serviceID = startId;
                     long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 1l);
                     UserRequest mUserRequest = new UserRequest(requestType, userID);
                     mSpiceManager.execute(mUserRequest, this);
                     break;
                 }
                 case Constants.Types.REQUEST_PUT: {
+                    serviceID = startId;
                     String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
                     Log.d(TAG, "making request " + userArrayStr);
                     UserRequest mUserRequest = new UserRequest(requestType, userArrayStr);
@@ -107,6 +111,7 @@ public class UserService extends Service implements RequestListener<User> {
                             Log.d("iList", response.toString());
                             Intent intent = new Intent(getResources().getString(R.string.intent_filter_interest_updated));
                             LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
+                            UserService.this.stopSelf(startId);
                         }
                     });
                     break;
@@ -116,7 +121,6 @@ public class UserService extends Service implements RequestListener<User> {
                     final String fieldName = intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME);
                     final Boolean isPublic = intent.getBooleanExtra(Constants.Keys.KEY_IS_PUBLIC, false);
                     final String userIDS = intent.getStringExtra(Constants.Keys.KEY_USER_IDS);
-
                     ProfilePrivacyRequestModel privacyRequestModel = new ProfilePrivacyRequestModel(fieldName, isPublic, userIDS);
 
                     PrivacyRequest privacyRequest = new PrivacyRequest(privacyRequestModel);
@@ -130,7 +134,7 @@ public class UserService extends Service implements RequestListener<User> {
                         public void onRequestSuccess(MessageResponse response) {
                             User.updatePrivacy(fieldName, isPublic, userIDS, getApplicationContext());
                             Toast.makeText(UserService.this, "Shared successfully!", Toast.LENGTH_LONG).show();
-
+                            UserService.this.stopSelf(startId);
                         }
                     });
                     break;
@@ -153,7 +157,7 @@ public class UserService extends Service implements RequestListener<User> {
                         @Override
                         public void onRequestSuccess(Response response) {
                             Log.d(TAG, response.result + " fuck");
-                            UserService.this.stopSelf();
+                            UserService.this.stopSelf(startId);
                         }
                     });
                     break;
@@ -185,6 +189,7 @@ public class UserService extends Service implements RequestListener<User> {
                                         new ChangeAvatarUrl().execute(response.avatarUrl, serviceStartID);
                                     } else {
                                         sendImageBroadcast(Constants.Urls.BASE_URL + response.avatarUrl);
+                                        UserService.this.stopSelf(startId);
                                     }
                                 }
                             }
@@ -210,7 +215,7 @@ public class UserService extends Service implements RequestListener<User> {
                             Log.d("newprofile", "Request is successfull" + contactResponses.size());
 
                             if (contactResponses.size() == 1) {
-                                new InsertContagContact().execute(contactResponses);
+                                new InsertContagContact().execute(contactResponses, startId);
                             }
                         }
                     });
@@ -256,7 +261,7 @@ public class UserService extends Service implements RequestListener<User> {
             if (requestType == Constants.Types.REQUEST_GET_CURRENT_USER || requestType == Constants.Types.REQUEST_PUT) {
                 PrefUtils.setCurrentUserID(user.id);
             }
-            new SaveUser().execute(user);
+            new SaveUser().execute(user, serviceID);
         }
     }
 
@@ -266,12 +271,14 @@ public class UserService extends Service implements RequestListener<User> {
         LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(iProfilePictureChanged);
     }
 
-    public class SaveUser extends AsyncTask<User, Void, Void> {
+    public class SaveUser extends AsyncTask<Object, Void, Void> {
+        private int startID;
         @Override
-        protected Void doInBackground(User... params) {
+        protected Void doInBackground(Object... params) {
 
 
-            User user = params[0];
+            User user = (User) params[0];
+            startID = (Integer) params[1];
             DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
 
             ContagContag cc = User.getContagContagObject(user);
@@ -304,7 +311,7 @@ public class UserService extends Service implements RequestListener<User> {
             Log.d(NewUserDetailsFragment.TAG, "sending broadcast about new user created");
             LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(intent);
 
-            UserService.this.stopSelf();
+            UserService.this.stopSelf(startID);
         }
     }
 
@@ -333,13 +340,15 @@ public class UserService extends Service implements RequestListener<User> {
         }
     }
 
-    private class InsertContagContact extends AsyncTask<ContactResponse.ContactList, Void, Void> {
+    private class InsertContagContact extends AsyncTask<Object, Void, Void> {
         private long userId;
-
+        private int startId;
         @Override
-        protected Void doInBackground(ContactResponse.ContactList... params) {
-            ContactUtils.saveSingleContact(UserService.this, params[0], isContagContact);
-            userId = params[0].get(0).contagContactResponse.id;
+        protected Void doInBackground(Object... params) {
+            ContactResponse.ContactList contactList = (ContactResponse.ContactList) params[0];
+            ContactUtils.saveSingleContact(UserService.this, contactList, isContagContact);
+            startId = (Integer) params[1];
+            userId = contactList.get(0).contagContactResponse.id;
             return null;
         }
 
@@ -375,6 +384,7 @@ public class UserService extends Service implements RequestListener<User> {
 
                 notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
             }
+            UserService.this.stopSelf(startId);
         }
     }
 }

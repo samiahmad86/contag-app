@@ -5,30 +5,32 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-           >
+            android:layout_height="80dp">
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_back"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
                 android:layout_centerVertical="true"
-                android:background="@drawable/btn_back" />
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_back"
+                android:visibility="gone" />
+
             <com.contag.app.view.CircularImageView
                 android:id="@+id/iv_user_photo"
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
                 android:layout_marginLeft="2dp"
+                android:layout_marginRight="5dp"
                 android:src="@drawable/default_profile_pic_small" />
+
             <ImageView
                 android:id="@+id/iv_edit_profile"
                 android:layout_width="34dp"
@@ -40,7 +42,7 @@
                 android:layout_toLeftOf="@id/iv_user_photo"
                 android:src="@drawable/edit_contag_profile"
 
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
 
             <LinearLayout
@@ -48,11 +50,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/btn_back"
-                android:layout_toLeftOf="@id/iv_edit_profile"
-
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/iv_edit_profile"
+                android:layout_toRightOf="@id/btn_back"
 
 
                 android:orientation="vertical">
@@ -61,25 +62,24 @@
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-
                     android:minWidth="60dp"
-                    android:textSize="20sp"
-                   />
+
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/et_user_name"
                     android:layout_width="150dp"
-                    android:inputType="textCapSentences"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:padding="10dp"
-                    android:theme="@style/EditTextTheme"
                     android:background="@drawable/bg_edit_text"
-
+                    android:inputType="textCapSentences"
                     android:minEms="5"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+
+                    android:theme="@style/EditTextTheme"
                     android:visibility="gone" />
 
                 <android.support.v7.widget.AppCompatTextView
@@ -92,52 +92,48 @@
             </LinearLayout>
 
 
-
-
         </RelativeLayout>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:singleLine="true"
-            android:layout_marginTop="0dp"
-            android:textColor="@color/white"
-            android:textSize="14sp"
             android:layout_marginBottom="15dp"
-            />
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_user_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="0dp"
             android:background="@drawable/bg_edit_text"
             android:inputType="textCapSentences"
-            android:layout_marginRight="10dp"
             android:padding="10dp"
-            android:layout_marginTop="0dp"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:layout_marginBottom="15dp"
             android:theme="@style/EditTextTheme"
             android:visibility="gone" />
 
         <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/fl_interests_box"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <RelativeLayout
 
                 android:id="@+id/rl_interest_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginBottom="7dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone">
 
 
@@ -145,8 +141,7 @@
                     android:id="@+id/rl_interest_box_one"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_one"
@@ -155,17 +150,16 @@
                         android:textColor="@color/white" />
 
 
-
                 </RelativeLayout>
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_rm_interest_one"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone"
+                    android:layout_marginLeft="-10dp"
                     android:layout_toRightOf="@id/rl_interest_box_one"
-                    android:layout_marginLeft="-10dp"/>
+                    android:background="@drawable/btn_cross_blue_bg"
+                    android:visibility="gone" />
 
 
             </RelativeLayout>
@@ -174,9 +168,9 @@
                 android:id="@+id/rl_interest_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginBottom="7dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone">
 
 
@@ -184,8 +178,7 @@
                     android:id="@+id/rl_interest_box_two"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_two"
@@ -200,10 +193,10 @@
                     android:id="@+id/btn_rm_interest_two"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone"
+                    android:layout_marginLeft="-10dp"
                     android:layout_toRightOf="@id/rl_interest_box_two"
-                    android:layout_marginLeft="-10dp"/>
+                    android:background="@drawable/btn_cross_blue_bg"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -212,9 +205,9 @@
                 android:id="@+id/rl_interest_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginBottom="7dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone">
 
 
@@ -222,8 +215,7 @@
                     android:id="@+id/rl_interest_box_three"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_three"
@@ -238,23 +230,23 @@
                     android:id="@+id/btn_rm_interest_three"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone"
+                    android:layout_marginLeft="-10dp"
                     android:layout_toRightOf="@id/rl_interest_box_three"
-                    android:layout_marginLeft="-10dp"/>
+                    android:background="@drawable/btn_cross_blue_bg"
+                    android:visibility="gone" />
 
 
             </RelativeLayout>
 
 
             <include
+                android:id="@+id/add_new_interest"
+                layout="@layout/item_interest_new"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginRight="8dp"
                 android:layout_marginLeft="2dp"
-                layout="@layout/item_interest_new"
-                android:id="@+id/add_new_interest"/>
+                android:layout_marginRight="8dp"
+                android:visibility="gone" />
 
         </org.apmem.tools.layouts.FlowLayout>
 

@@ -272,7 +272,8 @@ public class Router {
 
     public static void openLinkedInProfile(Context context, String linkedInID) {
         Log.d("Router", "open linkedin called " + linkedInID);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("linkedin://profile/" + linkedInID));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("linkedin://profile/" + linkedInID));
         final PackageManager packageManager = context.getPackageManager();
         final List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.isEmpty()) {

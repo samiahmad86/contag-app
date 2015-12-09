@@ -2,6 +2,7 @@ package com.contag.app.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import com.contag.app.R;
 import com.contag.app.config.Router;
@@ -31,6 +32,7 @@ public class GcmRegisterIntentService extends IntentService {
                 InstanceID id = InstanceID.getInstance(this);
                 String token = id.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                Log.d(TAG, "fucking token " + token);
                 PrefUtils.setGcmToken(token);
                 Router.startLoginActivity(this, TAG, Intent.FLAG_ACTIVITY_NEW_TASK);
             } catch (IOException ioe) {

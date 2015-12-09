@@ -85,13 +85,13 @@ public class Router {
     }
 
 
-    public static void startUserServiceForPrivacy(Context mContext, String fieldName, Boolean isPublic, String userIDS){
-        Intent privacyIntent = new Intent(mContext, UserService.class) ;
-        privacyIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_POST_PRIVACY) ;
-        privacyIntent.putExtra(Constants.Keys.KEY_FIELD_NAME, fieldName) ;
-        privacyIntent.putExtra(Constants.Keys.KEY_IS_PUBLIC, isPublic) ;
-        privacyIntent.putExtra(Constants.Keys.KEY_USER_IDS, userIDS) ;
-        mContext.startService(privacyIntent) ;
+    public static void startUserServiceForPrivacy(Context mContext, String fieldName, Boolean isPublic, String userIDS) {
+        Intent privacyIntent = new Intent(mContext, UserService.class);
+        privacyIntent.putExtra(Constants.Keys.KEY_REQUEST_TYPE, Constants.Types.REQUEST_POST_PRIVACY);
+        privacyIntent.putExtra(Constants.Keys.KEY_FIELD_NAME, fieldName);
+        privacyIntent.putExtra(Constants.Keys.KEY_IS_PUBLIC, isPublic);
+        privacyIntent.putExtra(Constants.Keys.KEY_USER_IDS, userIDS);
+        mContext.startService(privacyIntent);
     }
 
     public static void startServiceToGetUserByUserID(Context context, long userID, boolean isContagContact) {
@@ -116,8 +116,8 @@ public class Router {
         mContext.startService(iFieldRequestNotifResponse);
     }
 
-    public static void addContagUser(Context mContext, Long userID){
-        Log.d("conadd", "Adding this user to server") ;
+    public static void addContagUser(Context mContext, Long userID) {
+        Log.d("conadd", "Adding this user to server");
         Intent iStartContactService = new Intent(mContext, ContactService.class);
         iStartContactService.putExtra(Constants.Keys.KEY_ADD_CONTACT, true);
         iStartContactService.putExtra(Constants.Keys.KEY_USER_ID, userID);
@@ -272,14 +272,7 @@ public class Router {
 
     public static void openLinkedInProfile(Context context, String linkedInID) {
         Log.d("Router", "open linkedin called " + linkedInID);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("linkedin://profile/" + linkedInID));
-        final PackageManager packageManager = context.getPackageManager();
-        final List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (list.isEmpty()) {
-            Log.d("Router", "http://www.linkedin.com/profile/view?id=" + linkedInID);
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.linkedin.com/profile/view?id=" + linkedInID));
-        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.linkedin.com/profile/view?id=" + linkedInID));
         context.startActivity(intent);
     }
 

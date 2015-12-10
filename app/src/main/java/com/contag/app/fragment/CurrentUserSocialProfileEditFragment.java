@@ -96,6 +96,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private GoogleApiClient mGoogleApiClient;
     private HashMap<Integer, SocialProfileModel> hmSocialProfileModel;
     private ArrayList<Bundle> bSocialProfileInfo;
+    public TextView tvTabDetail;
+
 
     private float x1, x2, y1, y2;
 
@@ -147,6 +149,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         btnSaveProfile = (Button) view.findViewById(R.id.btn_save_profile);
+        tvTabDetail=(TextView) view.findViewById(R.id.tv_tab_detail);
+
+        tvTabDetail.setText("SOCIAL");
         view.findViewById(R.id.sv_user_details).setOnTouchListener(this);
         btnEditProfile.setOnClickListener(this);
         btnSaveProfile.setOnClickListener(this);
@@ -343,6 +348,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.etFieldBaseValue = (EditText) view.findViewById(R.id.et_field_base_value);
             vh.tvFieldName = (TextView) view.findViewById(R.id.tv_field_name);
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
+            vh.view_line=view.findViewById(R.id.view_line);
             vh.tvConnectedAs = (TextView) view.findViewById(R.id.tv_connected_as);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
             vh.btnFb = (Button) view.findViewById(R.id.btn_facebook_login);
@@ -383,6 +389,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         mViewHolder.tvFieldName.setText(convertKeyToLabel(mSocialProfileModel.mSocialPlatform.getPlatformName()));
         mViewHolder.rlEditContainerInner.setVisibility(View.GONE);
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
+        mViewHolder.view_line.setVisibility(View.VISIBLE);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.tvConnectedAs.setVisibility(View.VISIBLE);
             //log(TAG, mSocialProfileModel.mSocialProfile.getPlatform_username());
@@ -442,6 +449,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         mViewHolder.btnInstagram.setVisibility(View.GONE);
         mViewHolder.etFieldBaseValue.setVisibility(View.GONE);
         mViewHolder.etFieldValue.setVisibility(View.GONE);
+        mViewHolder.view_line.setVisibility(View.GONE);
         SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
         if (mSocialProfileModel.isAdded) {
             mViewHolder.btnDisconnect.setVisibility(View.VISIBLE);
@@ -907,5 +915,6 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public RelativeLayout rlEditContainerInner;
         public RelativeLayout rlContainer;
         public ProgressBar pbDisconnectSocialProfile;
+        public View view_line;
     }
 }

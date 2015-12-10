@@ -1,5 +1,6 @@
 package com.contag.app.fragment;
 
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     public static final String TAG = UserProfileViewFragment.class.getName();
+    public TextView tvTabDetail;
 
     public static UserProfileViewFragment newInstance(int profileType, long userID) {
         UserProfileViewFragment mUserProfileViewFragment = new UserProfileViewFragment();
@@ -44,14 +46,27 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
+        tvTabDetail=(TextView) view.findViewById(R.id.tv_tab_detail);
         hmP2ProfileView = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
         userId = args.getLong(Constants.Keys.KEY_USER_ID);
+        tvTabDetail.setText(keyToString(profileType));
+      //  tvTabDetail.setPaintFlags(tvTabDetail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         new LoadUser().execute();
         return view;
+    }
+
+    private String keyToString(int profileType) {
+       if(profileType==Constants.Types.PROFILE_PERSONAL)
+        return "Personal Details";
+        if(profileType==Constants.Types.PROFILE_SOCIAL)
+            return "Social Details";
+        if(profileType==Constants.Types.PROFILE_PROFESSIONAL)
+            return "Professional Details";
+        return "";
     }
 
 
@@ -79,7 +94,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         for (int position = 0; position < size; position++) {
             ViewHolder mViewHolder = viewHolderArrayList.get(position);
             ProfileViewModel mProfileViewModel = hmP2ProfileView.get(position);
-            mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mProfileViewModel.key));
+            mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mProfileViewModel.key)+ " :");
             if (mProfileViewModel.isAdded) {
                 mViewHolder.btnAction.setTag(position);
                 mViewHolder.btnAction.setVisibility(View.VISIBLE);

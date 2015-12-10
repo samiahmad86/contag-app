@@ -44,7 +44,7 @@
     <color name="border_rect_contact">@color/caacae1</color>
     <color name="bg_rect_contact">@color/cfaf9f8</color>
     <color name="txt_contact_interest">@color/caacae1</color>
-    <color name="bg_tb_home">#4c3e69c0</color>
+    <color name="bg_tb_home">#4c0554F5</color>
     <color name="bg_user_activity">#88517bd0</color>
     <color name="bg_view_pager_home">@color/cf3f3f3</color>
     <color name="contact_scrollbar_thumb">@color/c507AD0</color>

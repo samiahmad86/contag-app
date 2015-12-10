@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#99253047"
+    >
 
     <!--<include-->
     <!--android:id="@+id/rl_indicator"-->
@@ -39,29 +41,67 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:background="@color/bg_tb_home"
-        android:paddingRight="20dp">
+               android:paddingRight="20dp">
 
         <include
             android:id="@+id/ll_interest_container"
-            layout="@layout/layout_user_interest" />
+            layout="@layout/layout_user_interest"
+            />
     </RelativeLayout>
 
     <com.contag.app.view.SlidingTabLayout
         android:id="@+id/stl_user"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@id/rl_interest_container"
         android:background="@color/bg_tb_home"
         />
 
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="84dp"
+        android:layout_below="@id/stl_user"
+        android:id="@+id/tv_dots"
+
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:src="@drawable/dots1"
+        />
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@id/tv_dots"
+    android:layout_alignRight="@id/tv_dots"
+    android:layout_alignLeft="@id/tv_dots"
+    android:layout_alignBottom="@id/tv_dots"
+    android:alpha="0">
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/btn_page1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/btn_page2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/btn_page3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/root_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/root_call_options"
-        android:layout_below="@id/stl_user"
+        android:layout_below="@id/tv_dots"
+
          />
 
 </RelativeLayout>

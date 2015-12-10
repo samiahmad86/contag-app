@@ -10,15 +10,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
+import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.EditViewPager;
 import com.contag.app.view.SlidingTabLayout;
 
@@ -37,6 +41,9 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     private Bundle requestBundle;
     private int fragmentToBeOpened;
     private String fieldName;
+    private ImageView tvDots;
+    private Button page1,page2,page3;
+
 
 
     public static CurrentUserProfileFragment newInstance() {
@@ -75,6 +82,13 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             View view = inflater.inflate(R.layout.fragment_current_user_profile, container, false);
 
         mEditViewPager = (EditViewPager) view.findViewById(R.id.root_pager);
+        tvDots=(ImageView)view.findViewById(R.id.tv_dots);
+        page1=(Button)view.findViewById(R.id.btn_page1);
+        page2=(Button)view.findViewById(R.id.btn_page2);
+        page3=(Button)view.findViewById(R.id.btn_page3);
+        page1.setOnClickListener(this);
+        page2.setOnClickListener(this);
+        page3.setOnClickListener(this);
 
         PersonalDetailsTabsAdapter homeTabsAdapter = new
                 PersonalDetailsTabsAdapter(getChildFragmentManager());
@@ -89,6 +103,33 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
             }
         });
         mSlidingTabLayout.setViewPager(mEditViewPager);
+        mEditViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                // the position parameter tells us at what page we moved to
+                // you could use the other two methods to update the views as
+                // soon as the user starts the swipe
+                // get a reference to the Buttons and change their backgrounds
+                if (position == 0)
+                    tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots1));
+                if (position == 1)
+                    tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots2));
+                if (position == 2)
+                    tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots3));
+                //showToast(position+"");
+            }
+
+            @Override
+            public void onPageScrolled(int position, float offset, int offsetPixel) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         Bundle args = getArguments();
 
@@ -176,10 +217,31 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
         return false;
     }
 
+
     @Override
     public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
 
+
+            case R.id.btn_page1: {
+                mEditViewPager.setCurrentItem(0);
+              //  showToast("page1");
+                break;
+            }
+            case R.id.btn_page2: {
+               mEditViewPager.setCurrentItem(1);
+               // showToast("page2");
+                break;
+            }
+            case R.id.btn_page3: {
+                mEditViewPager.setCurrentItem(2);
+              //  showToast("page3");
+                break;
+            }
+        }
     }
+
 
     private BroadcastReceiver brToggleSwipe = new BroadcastReceiver() {
         @Override

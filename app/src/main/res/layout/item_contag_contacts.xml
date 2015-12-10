@@ -79,14 +79,14 @@
         android:id="@+id/view_1"/>
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_call"
-        android:layout_width="25dp"
+        android:layout_width="20dp"
         android:layout_marginLeft="12dp"
         android:paddingTop="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_height="20dp"
         android:focusable="false"
          android:layout_below="@id/view_1"
-        android:background="@drawable/ic_action_call"
+        android:background="@drawable/action_phone"
         android:visibility="visible" />
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_msg"
@@ -98,7 +98,7 @@
         android:layout_height="25dp"
         android:focusable="false"
         android:layout_below="@id/view_1"
-        android:background="@drawable/btn_social_go"
+        android:background="@drawable/action_text"
         android:visibility="visible" />
 
     <TextView

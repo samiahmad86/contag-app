@@ -109,9 +109,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
+            final Button btnAddPic = (Button) findViewById(R.id.btn_add_pic);
             /*final Button backButton=(Button) findViewById(R.id.btn_back);
             backButton.setVisibility(View.GONE);
             backButton.setOnClickListener(this);*/
+            btnAddPic.setVisibility(View.VISIBLE);
             toolbar.findViewById(R.id.iv_user_photo).setOnClickListener(this);
             ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile);
             ivEditIcon.setVisibility(View.VISIBLE);

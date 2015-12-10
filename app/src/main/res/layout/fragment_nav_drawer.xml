@@ -20,21 +20,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
-                <ImageView
-                    android:id="@+id/iv_nav_drawer_header"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200dp"
-
-                    android:scaleType="centerCrop"
-                     />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@color/bg_user_activity"
-                     android:orientation="vertical"
-                    android:paddingLeft="30dp">
+                    android:layout_height="wrap_content"
 
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_nav_drawer_header"
+
+                        android:layout_alignTop="@+id/actual_content"
+                        android:scaleType="centerCrop"
+                        android:layout_alignBottom="@+id/actual_content"
+                        android:layout_alignLeft="@+id/actual_content"
+                        android:layout_alignRight="@+id/actual_content"
+                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/actual_content"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="30dp"
+
+                        android:orientation="vertical"
+                        >
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_usr_name"
                         android:layout_width="wrap_content"
@@ -44,7 +54,6 @@
                         android:paddingLeft="0dp"
                         android:text="Name"
                         android:textSize="25sp" />
-
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_usr_cunt_id"
                         android:layout_width="wrap_content"
@@ -106,11 +115,7 @@
                        android:layout_alignParentRight="true"
                         android:background="@drawable/bg_block_button"
                         />
-
-
-
-
-
+                    </RelativeLayout>
                 </RelativeLayout>
 
 

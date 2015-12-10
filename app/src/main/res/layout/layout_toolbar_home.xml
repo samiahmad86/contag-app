@@ -38,7 +38,7 @@
             android:layout_height="62dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/default_profile_pic_small" />
+           />
 
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

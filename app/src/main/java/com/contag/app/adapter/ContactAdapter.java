@@ -112,6 +112,7 @@ public class ContactAdapter extends BaseAdapter {
         vhCont.btnMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
             }
         });

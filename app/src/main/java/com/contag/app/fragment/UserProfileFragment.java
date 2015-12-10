@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.contag.app.R;
@@ -37,7 +38,9 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
     private static final int[] INTEREST_TV_IDS = {R.id.tv_user_interest_1, R.id.tv_user_interest_2,
             R.id.tv_user_interest_3, R.id.tv_user_interest_4};
     private TextView[] tvInterests = new TextView[4];
-
+    private ImageView tvDots;
+    private Button page1,page2,page3;
+    ViewPager pager;
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
         Bundle args = new Bundle();
@@ -66,6 +69,13 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         btnCall.setOnClickListener(this);
         btnMessage = (Button) view.findViewById(R.id.btn_msg);
         btnMessage.setOnClickListener(this);
+        tvDots=(ImageView)view.findViewById(R.id.tv_dots);
+        page1=(Button)view.findViewById(R.id.btn_page1);
+        page2=(Button)view.findViewById(R.id.btn_page2);
+        page3=(Button)view.findViewById(R.id.btn_page3);
+        page1.setOnClickListener(this);
+        page2.setOnClickListener(this);
+        page3.setOnClickListener(this);
 
         for (int i = 0; i < 4; i ++) {
             tvInterests[i] = (TextView) view.findViewById(INTEREST_TV_IDS[i]);
@@ -74,7 +84,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         new LoadNumber().execute();
         //new LoadInterests().execute();
 
-        ViewPager pager = (ViewPager) view.findViewById(R.id.root_pager);
+        pager = (ViewPager) view.findViewById(R.id.root_pager);
 
         PersonalDetailsTabsAdapter homeTabsAdapter = new PersonalDetailsTabsAdapter(mBaseActivity.getSupportFragmentManager());
         pager.setAdapter(homeTabsAdapter);
@@ -84,10 +94,39 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         stl.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
+
                 return Color.parseColor("#ffffff");
+
             }
         });
         stl.setViewPager(pager);
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                // the position parameter tells us at what page we moved to
+                // you could use the other two methods to update the views as
+                // soon as the user starts the swipe
+                // get a reference to the Buttons and change their backgrounds
+               if(position==0)
+                tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots1));
+                if(position==1)
+                    tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots2));
+                if(position==2)
+                    tvDots.setImageDrawable(getResources().getDrawable(R.drawable.dots3));
+                //showToast(position+"");
+            }
+
+            @Override
+            public void onPageScrolled(int position, float offset, int offsetPixel) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
         return view;
@@ -111,6 +150,21 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
                 }
                 break;
             }
+            case R.id.btn_page1: {
+               pager.setCurrentItem(0);
+               // showToast("page1");
+                break;
+            }
+            case R.id.btn_page2: {
+                pager.setCurrentItem(1);
+               // showToast("page2");
+                break;
+            }
+            case R.id.btn_page3: {
+                pager.setCurrentItem(2);
+               // showToast("page3");
+                break;
+            }
         }
     }
 
@@ -127,15 +181,18 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             switch (position) {
                 case ViewMode.PERSONAL_DETAILS: {
                     fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PERSONAL, userID);
+
                     break;
                 }
                 case ViewMode.SOCIAL_DETAILS: {
                     fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_SOCIAL, userID);
+
                     break;
                 }
                 case ViewMode.PROFESSIONAL_DETAILS: {
                     fragment = UserProfileViewFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL, userID);
-                    break;
+
+
                 }
             }
             return fragment;

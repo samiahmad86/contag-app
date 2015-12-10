@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +32,16 @@
                 android:layout_marginRight="5dp"
                 android:src="@drawable/default_profile_pic_small" />
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_add_pic"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginLeft="-20dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/iv_user_photo"
+                android:background="@drawable/btn_add"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_edit_profile"
                 android:layout_width="34dp"
@@ -42,7 +53,7 @@
                 android:layout_toLeftOf="@id/iv_user_photo"
                 android:src="@drawable/edit_contag_profile"
 
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
 
             <LinearLayout
@@ -96,6 +107,7 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_user_status"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"

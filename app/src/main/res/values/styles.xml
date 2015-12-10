@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/accent_color</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
 
     </style>
 
@@ -14,9 +15,17 @@
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
         <item name="colorAccent">@color/accent_color</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
 
+    </style>
+    <!--this will reduce space between actionBar Icons-->
+    <style name="ActionButtonStyle" parent="Widget.AppCompat.ActionButton">
+        <item name="android:minWidth">0dip</item>
+        <item name="android:maxWidth">50dip</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
     </style>
 
     <style name="Contag.Text.Headline" parent="Base.TextAppearance.AppCompat.Headline"></style>

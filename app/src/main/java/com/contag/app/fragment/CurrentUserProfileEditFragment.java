@@ -59,6 +59,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private Bundle requestBundle;
     private String fieldName;
     private float x1, x2, y1, y2;
+    public TextView tvTabDetail;
+
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
         CurrentUserProfileEditFragment currentUserProfileEditFragment = new CurrentUserProfileEditFragment();
@@ -85,6 +87,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         hmP2PProfileModel = new HashMap<>();
+
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
         llViewContainer = (LinearLayout) view.findViewById(R.id.ll_profile_container);
@@ -92,7 +95,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         pbProfileUpdate = (ProgressBar) view.findViewById(R.id.pb_edit_profile);
         svProfile = (ScrollView) view.findViewById(R.id.sv_user_details);
         svProfile.setOnTouchListener(this);
+
         profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
+        tvTabDetail=(TextView) view.findViewById(R.id.tv_tab_detail);
+        tvTabDetail.setText(keyToString(profileType));
         btnEditProfile.setVisibility(View.VISIBLE);
         btnEditProfile.setTag(0);
         btnEditProfile.setOnClickListener(this);
@@ -172,6 +178,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
+            vh.view_line=view.findViewById(R.id.view_line);
             //vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
             vh.btnShare.setTag(position);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
@@ -194,6 +201,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
         mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
         mViewHolder.etFieldValue.setVisibility(View.GONE);
+        mViewHolder.view_line.setVisibility(View.VISIBLE);
         mViewHolder.spFieldValue.setVisibility(View.GONE);
         mViewHolder.btnAdd.setVisibility(View.GONE);
 
@@ -261,11 +269,13 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             mViewHolder.btnShare.setVisibility(View.GONE);
             if (mP2ProfileModel.viewType == Constants.Types.FIELD_LIST) {
                 mViewHolder.spFieldValue.setVisibility(View.VISIBLE);
+                mViewHolder.view_line.setVisibility(View.GONE);
                 if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
                     mViewHolder.spFieldValue.setSelection(getSelectedPosition(i));
                 }
             } else {
                 mViewHolder.etFieldValue.setVisibility(View.VISIBLE);
+                mViewHolder.view_line.setVisibility(View.GONE);
                 if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
                     mViewHolder.etFieldValue.setText(mP2ProfileModel.value);
                 }
@@ -516,6 +526,16 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             }
         }
     }
+    private String keyToString(int profileType) {
+        if(profileType==Constants.Types.PROFILE_PERSONAL)
+            return "PERSONAl";
+        if(profileType==Constants.Types.PROFILE_SOCIAL)
+            return "SOCIAL";
+        if(profileType==Constants.Types.PROFILE_PROFESSIONAL)
+            return "PROFESSIONAL";
+        return "";
+    }
+
 
     private class ViewHolder {
         public TextView tvFieldLabel;
@@ -525,5 +545,6 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public Button btnShare;
         public Spinner spFieldValue;
         public RelativeLayout rlContainer;
+        public View view_line;
     }
 }

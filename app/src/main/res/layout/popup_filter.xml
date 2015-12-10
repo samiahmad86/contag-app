@@ -1,43 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="110dp"
-    android:background="@color/light_blue"
     android:layout_height="wrap_content"
-    android:layout_marginRight="10dp">
+    android:layout_marginRight="10dp"
+    android:background="@color/light_blue"
+    android:orientation="vertical">
 
 
     <TextView
         android:id="@+id/tv_filter_name"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        style="@style/InterestsTextBoxStyle"
         android:background="@color/filter_selection"
-        android:padding="10dp"
-        android:text="Name"
-        android:clickable="true"
-        android:textSize="16sp" />
+        android:text="Name" />
 
 
     <TextView
         android:id="@+id/tv_filter_platform"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:layout_below="@id/tv_filter_name"
-        android:padding="10dp"
-        android:text="Platform"
-        android:clickable="true"
-        android:textSize="16sp" />
+        style="@style/InterestsTextBoxStyle"
+        android:text="Platform" />
 
     <TextView
         android:id="@+id/tv_filter_blood"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:layout_below="@id/tv_filter_platform"
-        android:padding="10dp"
-        android:text="Blood Group"
-        android:clickable="true"
-        android:textSize="16sp" />
+        style="@style/InterestsTextBoxStyle"
+        android:text="Blood Group" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/tv_filter_interests"
+        style="@style/InterestsTextBoxStyle"
+        android:text="Interests" />
+</LinearLayout>

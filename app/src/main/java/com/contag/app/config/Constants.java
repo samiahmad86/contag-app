@@ -126,6 +126,7 @@ public class Constants {
         public static final String FILTER_PLATFORM = "Platform";
         public static final String FILTER_NAME = "Name";
         public static final String FILTER_BLOOD_GROUP = "Blood Group";
+        public static final String FILTER_INTERESTS = "Interests";
         public static final String STATUS_ALLOWED = "allow";
         public static final String STATUS_DECLINE = "declined";
         public static final int REQUEST_TIMEOUT = 60 * 1000;
@@ -206,7 +207,8 @@ public class Constants {
         public static final String[] USER_GENDER = {"Gender","female", "male", "other"};
         public static final String[] USER_BLOOD_GROUPS = {"Blood Group","O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"};
         public static final String[] USER_MARITAL_STATUS = {"Marital Status","Married", "Single"};
-        public static final String[] SEARCH_FILTER = {Values.FILTER_NAME,  Values.FILTER_PLATFORM, Values.FILTER_BLOOD_GROUP};
+        public static final String[] SEARCH_FILTER = {Values.FILTER_NAME,  Values.FILTER_PLATFORM,
+                Values.FILTER_BLOOD_GROUP, Values.FILTER_INTERESTS};
         public static final String[] SHARE_WITH = {"Private", "Public"};
     }
 

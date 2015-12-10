@@ -147,7 +147,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
             }
             case R.id.tv_rate_txt: {
                 startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=com.android.contag")));
+                        Uri.parse("market://details?id=com.contag.app")));
                 break ;
             }
             case R.id.tv_usr_name: {

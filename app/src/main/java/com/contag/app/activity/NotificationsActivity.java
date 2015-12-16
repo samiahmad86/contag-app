@@ -75,9 +75,9 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 5 && !isLoading) {
-                    Log.d("Nofubar", "Making the request now") ;
+                    Log.d("Nofubar", "Making the request now");
                     int start = notifications.size() == 0 ? 0 : notifications.size();
-                    int end = start + 10 ;
+                    int end = start + 10;
                     getNotifications(start, end);
                 }
             }
@@ -86,6 +86,9 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         //Set new notifications count to 0
 
         PrefUtils.setNewNotificationCount(0);
+        Intent notificationCountUpdatedIntent = new Intent(getResources().getString(R.string.intent_filter_notification_count));
+        notificationCountUpdatedIntent.putExtra(Constants.Keys.KEY_NOTIFICATION_COUNT, 0);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationCountUpdatedIntent);
         clearNotificationBar();
 
      }

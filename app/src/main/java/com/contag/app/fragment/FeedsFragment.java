@@ -42,7 +42,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     private FeedsAdapter feedsAdapter;
     private boolean isLoading = false, isListViewEnabled;
     private View pbFeeds;
-
+    private int profileCategory;
 
 
     public static FeedsFragment newInstance() {
@@ -140,7 +140,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         @Override
         public void onReceive(Context context, Intent intent) {
             long userID = intent.getLongExtra(Constants.Keys.KEY_USER_ID, 0l);
-            Router.startUserActivity(getActivity(), TAG, userID);
+            Router.startUserActivity(getActivity(), TAG, userID, profileCategory);
             pbFeeds.setVisibility(View.GONE);
         }
     };
@@ -171,13 +171,16 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (DeviceUtils.isWifiConnected(getActivity())) {
-            log(TAG, "progress bar made visible on feeds item click and requesting user profile");
-            pbFeeds.setVisibility(View.VISIBLE);
-            isListViewEnabled = false;
-            new GetUserAndShowProfile().execute(feeds.get(position).fromUser);
-        } else {
-            Router.startUserActivity(getBaseActivity(), TAG, feeds.get(position).fromUser);
+        if(isListViewEnabled) {
+            if (DeviceUtils.isWifiConnected(getActivity())) {
+                log(TAG, "progress bar made visible on feeds item click and requesting user profile");
+                pbFeeds.setVisibility(View.VISIBLE);
+                isListViewEnabled = false;
+                new GetUserAndShowProfile().execute(feeds.get(position).fromUser);
+                profileCategory = feeds.get(position).profileCategory;
+            } else {
+                Router.startUserActivity(getBaseActivity(), TAG, feeds.get(position).fromUser, feeds.get(position).profileCategory);
+            }
         }
     }
 
@@ -203,7 +206,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                         log(TAG, "hiding progress bar in request failure while fetching user");
                         pbFeeds.setVisibility(View.GONE);
                         isListViewEnabled = true;
-                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
+                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id, profileCategory);
                     }
 
                     @Override
@@ -215,7 +218,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                         log(TAG, "hiding progress bar afer user fetched");
                         pbFeeds.setVisibility(View.GONE);
                         isListViewEnabled = true;
-                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id);
+                        Router.startUserActivity(FeedsFragment.this.getActivity(), TAG, id, profileCategory);
                     }
                 });
 

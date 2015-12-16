@@ -18,16 +18,18 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
     private int type;
     private String newUserArray;
     private long userID ;
+    private int profileCategory;
 
     public UserRequest(int type) {
         super(User.class, APIInterface.class);
         this.type = type;
     }
 
-    public UserRequest(int type, String userArray) {
+    public UserRequest(int type, String userArray, int profileCategory) {
         super(User.class, APIInterface.class);
         this.type = type;
         this.newUserArray = userArray;
+        this.profileCategory = profileCategory;
     }
 
     public UserRequest(int type, long userID){
@@ -54,10 +56,7 @@ public class UserRequest extends RetrofitSpiceRequest<User, APIInterface> {
             Log.d("UserService", "put request type");
             Log.d("UserService", PrefUtils.getAuthToken());
 
-            User user = getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray));
-            Gson gson  = new Gson();
-            Log.d("UserService", gson.toJson(new UserRequestModel(newUserArray)).toString());
-            Log.d("UserService", gson.toJson(user).toString());
+            User user = getService().setUser(PrefUtils.getAuthToken(), new UserRequestModel(newUserArray, profileCategory));
             return user;
         }
         return null;

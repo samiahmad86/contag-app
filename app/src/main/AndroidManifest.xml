@@ -61,7 +61,7 @@
             android:name=".activity.UserActivity"
             android:label="@string/title_activity_fuck"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Facebook Activity -->
 

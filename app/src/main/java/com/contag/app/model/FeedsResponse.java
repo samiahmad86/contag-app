@@ -50,7 +50,11 @@ public class FeedsResponse {
         Log.d("feed", Constants.Urls.BASE_URL + avatarURL) ;
         return Constants.Urls.BASE_URL + avatarURL ;
     }
-    
+
+    @Expose
+    @SerializedName(Constants.Keys.KEY_PROFILE_CATEGORY)
+    public int profileCategory;
+
     public static class FeedList extends ArrayList<FeedsResponse> {
 
     }

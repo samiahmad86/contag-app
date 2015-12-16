@@ -41,10 +41,13 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
     private ImageView tvDots;
     private Button page1,page2,page3;
     ViewPager pager;
-    public static UserProfileFragment newInstance(long userId) {
+    private int profileCategory;
+
+    public static UserProfileFragment newInstance(long userId, int profileCategory) {
         UserProfileFragment fragment = new UserProfileFragment();
         Bundle args = new Bundle();
         args.putLong(Constants.Keys.KEY_USER_ID, userId);
+        args.putInt(Constants.Keys.KEY_PROFILE_CATEGORY, profileCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +58,7 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
         Bundle args = getArguments();
         if (args != null) {
             userID = args.getLong(Constants.Keys.KEY_USER_ID);
+            profileCategory = args.getInt(Constants.Keys.KEY_PROFILE_CATEGORY);
         }
     }
 
@@ -128,6 +132,9 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             }
         });
 
+        if(profileCategory != -1) {
+            pager.setCurrentItem(profileCategory);
+        }
 
         return view;
     }

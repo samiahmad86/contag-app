@@ -1,7 +1,10 @@
 package com.contag.app.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,6 +135,19 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(brNotificationCountUpdate,
+                new IntentFilter(getActivity().getResources().getString(R.string.intent_filter_notification_count)));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brNotificationCountUpdate);
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -250,4 +267,13 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+    private BroadcastReceiver brNotificationCountUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null) {
+                int notificationCount = intent.getIntExtra(Constants.Keys.KEY_NOTIFICATION_COUNT, 0);
+                tvNotificationCount.setText(notificationCount + "");
+            }
+        }
+    };
 }

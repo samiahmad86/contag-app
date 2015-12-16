@@ -7,6 +7,7 @@ package com.contag.app.config;
 public class Constants {
 
     public class Keys {
+        public static final String KEY_PROFILE_CATEGORY = "profile_category";
         public static final String KEY_DATA = "fucking_data";
         public static final String KEY_PREVIOUS_ACTIVITY = "previous_activity";
         public static final String KEY_APP_PREFS = "app_prefs";

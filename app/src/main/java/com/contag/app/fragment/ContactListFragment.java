@@ -116,7 +116,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                             Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
                         }
                     });
-                } else if(contactListItem.type != Constants.Types.ITEM_NON_CONTAG) {
+                } else if (contactListItem.type != Constants.Types.ITEM_NON_CONTAG) {
                     isListViewEnabled = true;
                     Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, contactListItem.mContagContag.getId());
                 }
@@ -346,7 +346,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         if (query.length() == 8 && RegexUtils.isContagId(query)) {
             ContagContag mContagContag = ContactUtils.getContagContagByContagID(getActivity().getApplicationContext(), query);
-            if(mContagContag != null) {
+            if (mContagContag != null) {
                 addContagContagToList(mContagContag);
             } else {
                 pbContacts.setVisibility(View.VISIBLE);
@@ -392,9 +392,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             List<Interest> interests = mInterestDao.queryBuilder().
                     orderAsc(InterestDao.Properties.ContagUserId).list();
 
-            for(Interest i: interests){
-                Log.d("ConList", "The interest user id is: " + i.getContagUserId()) ;
-                Log.d("ConList", "The interest is: " + i.getName()) ;
+            for (Interest i : interests) {
+                Log.d("ConList", "The interest user id is: " + i.getContagUserId());
+                Log.d("ConList", "The interest is: " + i.getName());
             }
 
             ContactDao mContactDao = session.getContactDao();
@@ -410,7 +410,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
         @Override
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
-            if(contactListItems.size() != 0) {
+            if (contactListItems.size() != 0) {
                 contacts.clear();
                 contacts.addAll(contactListItems);
 
@@ -462,51 +462,52 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                         for (Contact contact : contacts) {
                             contactListItems.add(new ContactListItem(contact, Constants.Types.ITEM_NON_CONTAG));
                         }
-
-                        break;
-                    }
-                    case Constants.Values.FILTER_BLOOD_GROUP: {
-                        query = query + "%";
-                        ContagContagDao mContagContagDao = session.getContagContagDao();
-                        List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
-                                where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())
-                                        , ContagContagDao.Properties.BloodGroup.like(query)).
-                                orderAsc(ContagContagDao.Properties.Name).list();
-
-                        if (contagContacts != null) {
-                            for (ContagContag mContagContag : contagContacts) {
-                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
-                                contactListItems.add(item);
-                            }
+                        if (contactListItems.size() != 0) {
+                            break;
                         }
-                        break;
                     }
-                    case Constants.Values.FILTER_PLATFORM: {
-                        query = "%" + query + "%";
-                        SocialProfileDao mSocialProfileDao = session.getSocialProfileDao();
-                        List<SocialProfile> socialProfiles =
-                                mSocialProfileDao.queryBuilder().where(
-                                        SocialProfileDao.Properties.ContagUserId.notEq(PrefUtils.getCurrentUserID()),
-                                        SocialProfileDao.Properties.Social_platform.like(query)).list();
-                        List<Long> userIds = new ArrayList<>();
-
-                        for (SocialProfile profile : socialProfiles) {
-                            userIds.add(profile.getContagUserId());
-                        }
-
-                        ContagContagDao mContagContagDao = session.getContagContagDao();
-                        List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
-                                where(ContagContagDao.Properties.Id.in(userIds)).
-                                orderAsc(ContagContagDao.Properties.Name).list();
-
-                        if (contagContacts != null) {
-                            for (ContagContag mContagContag : contagContacts) {
-                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
-                                contactListItems.add(item);
-                            }
-                        }
-                        break;
-                    }
+//                    case Constants.Values.FILTER_BLOOD_GROUP: {
+//                        query = query + "%";
+//                        ContagContagDao mContagContagDao = session.getContagContagDao();
+//                        List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
+//                                where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())
+//                                        , ContagContagDao.Properties.BloodGroup.like(query)).
+//                                orderAsc(ContagContagDao.Properties.Name).list();
+//
+//                        if (contagContacts != null) {
+//                            for (ContagContag mContagContag : contagContacts) {
+//                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
+//                                contactListItems.add(item);
+//                            }
+//                        }
+//                        break;
+//                    }
+//                    case Constants.Values.FILTER_PLATFORM: {
+//                        query = "%" + query + "%";
+//                        SocialProfileDao mSocialProfileDao = session.getSocialProfileDao();
+//                        List<SocialProfile> socialProfiles =
+//                                mSocialProfileDao.queryBuilder().where(
+//                                        SocialProfileDao.Properties.ContagUserId.notEq(PrefUtils.getCurrentUserID()),
+//                                        SocialProfileDao.Properties.Social_platform.like(query)).list();
+//                        List<Long> userIds = new ArrayList<>();
+//
+//                        for (SocialProfile profile : socialProfiles) {
+//                            userIds.add(profile.getContagUserId());
+//                        }
+//
+//                        ContagContagDao mContagContagDao = session.getContagContagDao();
+//                        List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
+//                                where(ContagContagDao.Properties.Id.in(userIds)).
+//                                orderAsc(ContagContagDao.Properties.Name).list();
+//
+//                        if (contagContacts != null) {
+//                            for (ContagContag mContagContag : contagContacts) {
+//                                ContactListItem item = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
+//                                contactListItems.add(item);
+//                            }
+//                        }
+//                        break;
+//                    }
                     case Constants.Values.FILTER_INTERESTS: {
                         query = query + "%";
                         InterestDao mInterestDao = session.getInterestDao();
@@ -514,7 +515,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                                 where(InterestDao.Properties.Name.like(query),
                                         InterestDao.Properties.ContagUserId.notEq(PrefUtils.getCurrentUserID())).list();
                         List<Long> userIds = new ArrayList<>();
-                        for (Interest interest: interests) {
+                        for (Interest interest : interests) {
                             userIds.add(interest.getContagUserId());
                         }
                         ContagContagDao mContagContagDao = session.getContagContagDao();

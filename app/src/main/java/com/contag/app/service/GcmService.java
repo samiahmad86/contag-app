@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -92,6 +93,10 @@ public class GcmService extends GcmListenerService {
 
                 notificationManager.notify(AtomicIntegerUtils.getmNotificationID(), notifBuilder.build());
                 PrefUtils.setNewNotificationCount(notificationCount);
+                Intent notificationCountUpdatedIntent = new Intent(getResources().getString(R.string.intent_filter_notification_count));
+                notificationCountUpdatedIntent.putExtra(Constants.Keys.KEY_NOTIFICATION_COUNT, notificationCount);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notificationCountUpdatedIntent);
+
             }
 
         }

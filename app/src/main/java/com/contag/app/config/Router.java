@@ -58,6 +58,15 @@ public class Router {
         mContext.startActivity(iUsrProf);
     }
 
+    public static void startUserActivity(Context mContext, String className, long userID, int profileCateogry) {
+        Log.d("Router", "profile category is " + profileCateogry);
+        Intent iUsrProf = new Intent(mContext, UserActivity.class);
+        iUsrProf.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iUsrProf.putExtra(Constants.Keys.KEY_USER_ID, userID);
+        iUsrProf.putExtra(Constants.Keys.KEY_PROFILE_CATEGORY, profileCateogry);
+        mContext.startActivity(iUsrProf);
+    }
+
 
     public static void startEditUserActivity(Context context, String className, long userID, Bundle requestBundle,
                                              int fragmentToBeOpened, String fieldName, boolean isComingFromNotification) {

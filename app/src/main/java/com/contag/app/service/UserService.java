@@ -19,6 +19,7 @@ import com.contag.app.activity.UserActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.fragment.NewUserDetailsFragment;
+import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
@@ -90,8 +91,14 @@ public class UserService extends Service implements RequestListener<User> {
                     serviceID = startId;
                     String userArrayStr = intent.getStringExtra(Constants.Keys.KEY_USER_ARRAY);
                     Log.d(TAG, "making request " + userArrayStr);
-                    UserRequest mUserRequest = new UserRequest(requestType, userArrayStr);
                     profileType = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
+                    int profileCategory = -1;
+                    if(profileType == Constants.Types.PROFILE_PERSONAL) {
+                        profileCategory = UserProfileFragment.ViewMode.PERSONAL_DETAILS;
+                    } else if(profileType == Constants.Types.PROFILE_PROFESSIONAL) {
+                        profileCategory = UserProfileFragment.ViewMode.PROFESSIONAL_DETAILS;
+                    }
+                    UserRequest mUserRequest = new UserRequest(requestType, userArrayStr, profileCategory);
                     mSpiceManager.execute(mUserRequest, this);
                     break;
                 }

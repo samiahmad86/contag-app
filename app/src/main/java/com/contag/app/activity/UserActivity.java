@@ -100,7 +100,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
 
         if (userID != PrefUtils.getCurrentUserID()) {
-            UserProfileFragment userFragment = UserProfileFragment.newInstance(userID);
+            int profileCategory = intent.getIntExtra(Constants.Keys.KEY_PROFILE_CATEGORY, 0);
+            UserProfileFragment userFragment = UserProfileFragment.newInstance(userID, profileCategory);
             transaction.replace(R.id.root_user_fragment, userFragment);
             transaction.commit();
         } else {

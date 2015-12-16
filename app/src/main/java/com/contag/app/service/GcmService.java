@@ -41,6 +41,9 @@ public class GcmService extends GcmListenerService {
                     intent = null;
                     break;
                 }
+                case "new_user": {
+
+                }
                 case "add_request_completed": {
 
                 }

@@ -110,7 +110,7 @@
         android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/tv_field_name"
-        android:background="@drawable/share_icon"
+        android:background="@drawable/share_salman"
         android:visibility="gone" />
 
 

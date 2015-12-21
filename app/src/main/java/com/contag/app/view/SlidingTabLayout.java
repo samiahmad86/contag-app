@@ -47,9 +47,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
-    private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 16;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 10;
+    private static final int TITLE_OFFSET_DIPS = 20;
+    private static final int TAB_VIEW_PADDING_DIPS = 14;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 16;
 
     private int mTitleOffset;
 
@@ -156,8 +156,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
+        textView.setTextSize(TAB_VIEW_TEXT_SIZE_SP);
+        textView.setTypeface(Typeface.DEFAULT);
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -204,7 +204,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             tabTitleView.setText(adapter.getPageTitle(i));
             tabTitleView.setTextColor(Color.parseColor("#ffffff"));
-            tabTitleView.setTextSize(10);
+            tabTitleView.setTextSize(TAB_VIEW_TEXT_SIZE_SP);
+            tabTitleView.setAllCaps(false);
             tabView.setOnClickListener(tabClickListener);
             String desc = mContentDescriptions.get(i, null);
             if (desc != null) {

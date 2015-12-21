@@ -10,9 +10,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -102,6 +105,15 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         shareDone.setOnClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        window.setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
     }
 
     @Override
@@ -275,9 +287,23 @@ public class ShareDialog extends DialogFragment implements View.OnClickListener 
         @Override
         protected void onPostExecute(ArrayList<ContactListItem> contactListItems) {
 
-            if (mCustomShare.getUser_ids().length() > 0)
+            if (mCustomShare.getUser_ids().length() > 0) {
                 shareCount = mCustomShare.getUser_ids().split(",").length;
+                shareCustom.setTextColor(getResources().getColor(R.color.light_blue));
+                sharePublic.setTextColor(getResources().getColor(R.color.black));
+            }
+            if(mCustomShare.getIs_private())
+            {
+                shareCustom.setTextColor(getResources().getColor(R.color.black));
+                sharePublic.setTextColor(getResources().getColor(R.color.black));
 
+            }
+            if(mCustomShare.getIs_public())
+            {
+                shareCustom.setTextColor(getResources().getColor(R.color.black));
+                sharePublic.setTextColor(getResources().getColor(R.color.light_blue));
+
+            }
             Log.d("ShareFubar", "Is Public? : " + mCustomShare.getIs_public()) ;
             Log.d("ShareFubar", "Share count is set at: " + shareCount) ;
 

@@ -10,7 +10,8 @@
     android:background="@drawable/bg_circle"
     android:indeterminateDrawable="@drawable/pb_animation"
     android:layout_height="32dp"
-
+    android:clickable="true"
+    android:focusable="true"
     android:max="1">
 
 </ProgressBar>

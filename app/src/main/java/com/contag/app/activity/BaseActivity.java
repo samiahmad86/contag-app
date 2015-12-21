@@ -1,5 +1,6 @@
 package com.contag.app.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -8,8 +9,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.contag.app.BuildConfig;
@@ -84,7 +87,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.btn_back);
+        //TextView tv = (TextView) findViewById(R.id.badge_ham);
+        if(PrefUtils.getNewNotificationCount()>0) {
+
+           // tb.setNavigationIcon(R.drawable.dot);
+           /* tv.setVisibility(View.VISIBLE);
+            String temp = PrefUtils.getNewNotificationCount() + "";
+            tv.setText(temp);*/
+        }
+        else
+        {
+            tb.setNavigationIcon(R.drawable.menu55);
+           /* tv.setVisibility(View.GONE);*/
+        }
+
 
         ImageView iv = (ImageView) findViewById(R.id.iv_header_pic) ;
         Picasso.with(this).load(this.getCurrentUser().getAvatarUrl()).
@@ -106,6 +124,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void showToast(String message) {
         Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
     }
+
+
 
     /**
      * prints a message if logcat if {@link com.contag.app.BuildConfig#DEBUG} is true
@@ -208,5 +228,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mInputMethodManager.hideSoftInputFromWindow(token, 0);
     }
+    public static void hideKeyboard(Context context, View view) {
+        if(view!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        }
+
 
 }

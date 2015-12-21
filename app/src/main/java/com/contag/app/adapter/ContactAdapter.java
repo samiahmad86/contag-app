@@ -112,8 +112,8 @@ public class ContactAdapter extends BaseAdapter {
         vhCont.btnMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
+                ShareUtils.shareText(mContext,"Hi");
+               // DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
             }
         });
 
@@ -207,7 +207,8 @@ public class ContactAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Contact contact = (Contact) v.getTag();
-                    DeviceUtils.sendSms(mContext, contact.getContactNumber(), null);
+                    ShareUtils.shareText(mContext,"Hi");
+                   // DeviceUtils.sendSms(mContext, contact.getContactNumber(), null);
                 }
             });
             vhContact.btnInvite.setOnClickListener(new View.OnClickListener() {

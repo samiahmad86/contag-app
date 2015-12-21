@@ -32,6 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_toRightOf="@id/iv_user_photo"
             android:text="adf"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_marginTop="10dp"
             android:textColor="@color/light_blue"
             android:layout_marginLeft="5dp"
@@ -81,7 +83,7 @@
         android:id="@+id/btn_call"
         android:layout_width="20dp"
         android:layout_marginLeft="12dp"
-        android:paddingTop="5dp"
+        android:paddingTop="0dp"
         android:layout_marginTop="8dp"
         android:layout_height="20dp"
         android:focusable="false"
@@ -90,25 +92,25 @@
         android:visibility="visible" />
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_msg"
-        android:layout_width="25dp"
+        android:layout_width="24dp"
         android:layout_marginLeft="12dp"
-        android:paddingTop="5dp"
+
         android:layout_toRightOf="@id/btn_call"
         android:layout_marginTop="5dp"
-        android:layout_height="25dp"
+        android:layout_height="24dp"
         android:focusable="false"
         android:layout_below="@id/view_1"
-        android:background="@drawable/action_text"
+        android:background="@drawable/conversation"
         android:visibility="visible" />
 
     <TextView
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/view_1"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:gravity="center"
+
         android:id="@+id/tv_share_contag"
         android:textColor="@color/light_blue"
         android:text="&#10140; Introduce"
@@ -117,14 +119,13 @@
     <Button
         android:id="@+id/btn_add_contag"
         android:layout_width="60dp"
-        android:layout_height="35dp"
+        android:layout_height="24dp"
         android:text="Add"
         android:layout_alignParentRight="true"
         android:layout_below="@id/view_1"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bg_blue_button"
-
         android:visibility="gone"/>
 
 

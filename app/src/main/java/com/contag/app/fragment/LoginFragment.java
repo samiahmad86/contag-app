@@ -100,7 +100,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             btnResendOtp.setVisibility(View.VISIBLE);
             btnResendOtp.setOnClickListener(this);
             view.findViewById(R.id.tv_otp_msg).setVisibility(View.VISIBLE);
-            btnLogin.setText("SUBMIT");
+            //btnLogin.setText("SUBMIT");
         }
         return view;
     }
@@ -252,6 +252,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             View view = getView();
             if (otp != null && view != null) {
                 ((EditText) view.findViewById(R.id.et_phone_num)).setText(otp);
+                // explicit click when the otp is received
+                 view.findViewById(R.id.btn_login).performClick();
             }
         }
     };

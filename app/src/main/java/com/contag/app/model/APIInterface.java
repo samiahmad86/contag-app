@@ -108,14 +108,14 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
-    @PUT(Constants.Urls.URL_CONTACT)
+    @PUT(Constants.Urls.URL_ADD_CONTACT)
     ContactResponse.ContactList addContagUser(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                               @Body AddContact userID);
 
     @Headers({
             "Content-Type: application/json"
     })
-    @PUT(Constants.Urls.URL_CONTACT)
+    @PUT(Constants.Urls.URL_ADD_CONTACT)
     ContactResponse.ContactList addContagUserFromNotification(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                               @Body NotificationAddContact nac );
 

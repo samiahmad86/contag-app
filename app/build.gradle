@@ -43,6 +43,7 @@ dependencies {
     compile files('libs/greendao-2.0.0.jar')
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile "com.android.support:design:22.2.0"
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     compile('com.octo.android.robospice:robospice-retrofit:1.4.14') {
         exclude group: 'org.apache.commons', module: 'commons-io'

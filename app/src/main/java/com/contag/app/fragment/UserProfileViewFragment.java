@@ -61,11 +61,11 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
 
     private String keyToString(int profileType) {
        if(profileType==Constants.Types.PROFILE_PERSONAL)
-        return "Personal Details";
+        return "Personal";
         if(profileType==Constants.Types.PROFILE_SOCIAL)
-            return "Social Details";
+            return "Social";
         if(profileType==Constants.Types.PROFILE_PROFESSIONAL)
-            return "Professional Details";
+            return "Professional";
         return "";
     }
 
@@ -137,6 +137,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 int positon = (int) v.getTag();
                 Router.startProfileRequestService(getActivity(), Constants.Types.SERVICE_MAKE_PROFILE_REQUEST,
                         userId, hmP2ProfileView.get(positon).key, profileType + "");
+                v.setAlpha(.40f);
                 break;
             }
             case R.id.tv_field_value: {

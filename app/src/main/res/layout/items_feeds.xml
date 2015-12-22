@@ -21,9 +21,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-
+            android:layout_toLeftOf="@+id/tv_feeds_createdOn"
             android:layout_marginLeft="10dp"
-            android:text="@string/hello_world"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text=""
             android:layout_toRightOf="@id/iv_feeds_usr_img"
             android:textColor="@color/light_blue"
             android:textSize="20sp" />
@@ -61,11 +63,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_alignParentRight="true"
             android:text="timestamp"
             android:singleLine="true"
-                android:layout_below="@id/tv_feeds_story"
-             android:layout_toRightOf="@id/iv_feeds_usr_img"
+
+
 
             android:textSize="13sp" />
 

@@ -11,7 +11,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +33,11 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
 
     public static final String TAG = HomeActivity.class.getName();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
         setUpActionBar(R.id.tb_home);
 
@@ -42,6 +46,10 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         vpHome.setAdapter(hpa);
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
+        findViewById(R.id.tv_user_name).setOnClickListener(this);
+        findViewById(R.id.badge_ham).setOnClickListener(this);
+       /* tv_noti_count=(TextView) findViewById(R.id.badge_ham);
+        addBadge(PrefUtils.getNewNotificationCount());*/
 
         SlidingTabLayout stl = (SlidingTabLayout) findViewById(R.id.stl_home);
         stl.setDistributeEvenly(true);
@@ -54,6 +62,13 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         });
         stl.setViewPager(vpHome);
         clearNotificationBar();
+
+    }
+
+    private void addBadge(int newNotificationCount) {
+    /*    tv_noti_count.setVisibility(View.VISIBLE);
+        tv_noti_count.setText(newNotificationCount+"");*/
+
 
     }
 
@@ -73,7 +88,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
     }
 
     private void clearNotificationBar(){
-        NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notifManager.cancelAll();
     }
 
@@ -89,6 +104,8 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         mDrawerLayout.closeDrawers();
     }
 
+
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -96,6 +113,16 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             case R.id.iv_user_photo: {
 
                 Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
+                break;
+            }
+            case R.id.tv_user_name: {
+
+                Router.startUserActivity(this, TAG, PrefUtils.getCurrentUserID());
+                break;
+            }
+            case R.id.badge_ham: {
+
+                Router.startNotificationsActivity(this, "navDrawer");
                 break;
             }
         }
@@ -112,11 +139,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             Fragment fragment = null;
             switch (position) {
                 case 0: {
-                    fragment = FeedsFragment.newInstance();
+                    fragment = ContactListFragment.newInstance();
                     break;
                 }
                 case 1: {
-                    fragment = ContactListFragment.newInstance();
+
+                    fragment = FeedsFragment.newInstance();
                     break;
                 }
             }
@@ -132,10 +160,10 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0: {
-                    return "Feeds";
+                    return "Connections";
                 }
                 case 1: {
-                    return "Contacts";
+                    return "Feeds";
                 }
             }
             return null;

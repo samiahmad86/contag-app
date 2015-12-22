@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -171,6 +172,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         for (int position = 0; position < hmP2PProfileModel.size(); position++) {
             View view = inflater.inflate(R.layout.item_profile_edit, llViewContainer, false);
+
             ViewHolder vh = new ViewHolder();
             vh.rlContainer = (RelativeLayout) view.findViewById(R.id.rl_other_container);
             vh.etFieldValue = (EditText) view.findViewById(R.id.et_field_value);
@@ -179,6 +181,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             vh.spFieldValue = (Spinner) view.findViewById(R.id.sp_field_value);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
             vh.view_line=view.findViewById(R.id.view_line);
+
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             //vh.btnShare.setTag(hmP2PProfileModel.get(i).key) ;
             vh.btnShare.setTag(position);
             vh.btnAdd = (Button) view.findViewById(R.id.btn_add);
@@ -286,7 +290,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
-        btnEditProfile.setBackgroundResource(R.drawable.btn_save);
+        btnEditProfile.setText("Save");
+        btnEditProfile.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void sendData() {
@@ -312,6 +317,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 aUser.put(oUser);
             }
             pbProfileUpdate.setVisibility(View.VISIBLE);
+           // btnEditProfile.setText("Save");
             // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
 
 
@@ -499,7 +505,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             setViewContent();
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
-            btnEditProfile.setBackgroundResource(R.drawable.edit_contag_profile);
+            btnEditProfile.setText("Edit");
             if (cameFromNotification) {
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
                     P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);

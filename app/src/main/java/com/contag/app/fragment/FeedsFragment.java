@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
@@ -64,13 +66,29 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         isListViewEnabled = true;
         lvFeeds.setOnItemClickListener(this);
         lvFeeds.setOnScrollListener(new AbsListView.OnScrollListener() {
+            int mLastFirstVisibleItem = 0;
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
 
+
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+              /* if (view.getId() == lvFeeds.getId()) {
+                    final int currentFirstVisibleItem = lvFeeds.getFirstVisiblePosition();
+
+                    if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+                    } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+                        // getSherlockActivity().getSup getSupportActionBar().show();
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    }
+
+                    mLastFirstVisibleItem = currentFirstVisibleItem;
+                }*/
+
                 if (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3
                         && !isLoading && isListViewEnabled) {
                     Log.d("FeedSizeDebug", "Inside onCreate view going to fetch feeds") ;

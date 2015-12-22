@@ -177,10 +177,10 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             notifications.addAll(notificationsResponses);
             notificationsAdapter.notifyDataSetChanged();
             isLoading = false;
-            progressbar.setVisibility(View.GONE);
+           progressbar.setVisibility(View.GONE);
         } else {
             isLoading = true;
-          //  progressbar.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.GONE);
 
         }
 

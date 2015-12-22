@@ -2,150 +2,223 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="3dp">
+    android:paddingBottom="3dp"
 
-    <LinearLayout
+    android:background="@color/bg_user_activity">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_top"
+            android:layout_marginTop="10dp"
+            android:minHeight="70dp"
 
+            >
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_back"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:layout_centerVertical="true"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/btn_back"
-                android:visibility="gone" />
-
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_back" />
             <com.contag.app.view.CircularImageView
                 android:id="@+id/iv_user_photo"
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="2dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
                 android:src="@drawable/default_profile_pic_small" />
-
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_add_pic"
                 android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginLeft="-20dp"
                 android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/iv_user_photo"
+                android:layout_height="12dp"
                 android:background="@drawable/btn_add"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_toRightOf="@id/iv_user_photo"
+                android:layout_marginLeft="-20dp"/>
 
-            <ImageView
-                android:id="@+id/iv_edit_profile"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_edit_profile"
                 android:layout_width="34dp"
                 android:layout_height="17dp"
-
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="15dp"
+                android:text="Edit"
+                android:background="@drawable/bg_thin_button"
                 android:layout_toLeftOf="@id/iv_user_photo"
-                android:src="@drawable/edit_contag_profile"
-
                 android:visibility="gone" />
+            <include
+                android:id="@+id/progress_bar"
+                layout="@layout/layout_progress_bar"
 
 
-            <LinearLayout
+                />
+
+
+            <RelativeLayout
                 android:id="@+id/ll_user_name_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="2dp"
                 android:layout_marginTop="10dp"
-                android:layout_toLeftOf="@id/iv_edit_profile"
                 android:layout_toRightOf="@id/btn_back"
-
-
+                android:layout_toLeftOf="@id/btn_edit_profile"
+                android:layout_marginLeft="0dp"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="60dp"
-
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:minWidth="60dp"
+                    android:textSize="20sp"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:alpha="0.3"
+                    android:id="@+id/view_1"
+                    android:layout_below="@id/tv_user_name"
+                    android:layout_alignRight="@id/tv_user_name"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white" />
+
 
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/et_user_name"
                     android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edit_text"
                     android:inputType="textCapSentences"
-                    android:minEms="5"
-                    android:padding="10dp"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-
-                    android:theme="@style/EditTextTheme"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/tv_user_contag_id"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:textSize="20sp"
+                    android:background="@null"
+                    android:paddingRight="10dp"
+                    android:theme="@style/EditTextTheme"
+                    android:minEms="5"
+                    android:visibility="gone" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:alpha="0.3"
+                    android:id="@+id/view_2"
+                    android:layout_below="@id/et_user_name"
+                    android:visibility="gone"
+                    android:layout_alignRight="@id/et_user_name"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white" />
+
+
+            </RelativeLayout>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_user_contag_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="contag id"
+                android:layout_below="@id/ll_user_name_container"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+
 
 
         </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tv_user_status"
-
-            android:layout_width="match_parent"
+        <RelativeLayout
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="0dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:layout_width="wrap_content"
+            android:layout_below="@id/rl_top"
+            android:id="@+id/rl_status"
+            android:minHeight="40dp"
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/et_user_status"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="0dp"
-            android:background="@drawable/bg_edit_text"
-            android:inputType="textCapSentences"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:theme="@style/EditTextTheme"
-            android:visibility="gone" />
+            >
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_user_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+
+                android:layout_alignParentTop="true"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:alpha="0.3"
+                android:id="@+id/view_3"
+                android:layout_below="@id/tv_user_status"
+                android:visibility="visible"
+                android:layout_alignRight="@id/tv_user_status"
+                android:layout_marginTop="0dp"
+                android:background="@color/white" />
+
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/et_user_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:background="@null"
+                android:inputType="textCapSentences"
+                android:layout_marginRight="10dp"
+                android:paddingRight="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+
+                android:theme="@style/EditTextTheme"
+                android:visibility="gone" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:alpha="0.3"
+                android:id="@+id/view_4"
+                android:layout_below="@id/et_user_status"
+                android:visibility="gone"
+                android:layout_alignRight="@id/et_user_status"
+                android:layout_marginTop="0dp"
+                android:background="@color/white" />
+        </RelativeLayout>
 
         <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/fl_interests_box"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+
+
+            android:layout_below="@id/rl_status"
+            android:layout_height="wrap_content"
+            >
 
             <RelativeLayout
 
                 android:id="@+id/rl_interest_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="7dp"
                 android:visibility="gone">
 
 
@@ -153,7 +226,8 @@
                     android:id="@+id/rl_interest_box_one"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_one"
@@ -162,16 +236,17 @@
                         android:textColor="@color/white" />
 
 
+
                 </RelativeLayout>
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_rm_interest_one"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_marginLeft="-10dp"
-                    android:layout_toRightOf="@id/rl_interest_box_one"
                     android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:layout_toRightOf="@id/rl_interest_box_one"
+                    android:layout_marginLeft="-10dp"/>
 
 
             </RelativeLayout>
@@ -180,9 +255,9 @@
                 android:id="@+id/rl_interest_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="7dp"
                 android:visibility="gone">
 
 
@@ -190,7 +265,8 @@
                     android:id="@+id/rl_interest_box_two"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_two"
@@ -205,10 +281,10 @@
                     android:id="@+id/btn_rm_interest_two"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_marginLeft="-10dp"
-                    android:layout_toRightOf="@id/rl_interest_box_two"
                     android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:layout_toRightOf="@id/rl_interest_box_two"
+                    android:layout_marginLeft="-10dp"/>
 
             </RelativeLayout>
 
@@ -217,9 +293,9 @@
                 android:id="@+id/rl_interest_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="7dp"
                 android:visibility="gone">
 
 
@@ -227,7 +303,8 @@
                     android:id="@+id/rl_interest_box_three"
                     style="@style/ProfileInterestTextBoxStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_user_interest_three"
@@ -242,25 +319,25 @@
                     android:id="@+id/btn_rm_interest_three"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_marginLeft="-10dp"
-                    android:layout_toRightOf="@id/rl_interest_box_three"
                     android:background="@drawable/btn_cross_blue_bg"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:layout_toRightOf="@id/rl_interest_box_three"
+                    android:layout_marginLeft="-10dp"/>
 
 
             </RelativeLayout>
 
 
             <include
-                android:id="@+id/add_new_interest"
-                layout="@layout/item_interest_new"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:visibility="gone"
                 android:layout_marginRight="8dp"
-                android:visibility="gone" />
+                android:layout_marginLeft="2dp"
+                layout="@layout/item_interest_new"
+                android:id="@+id/add_new_interest"/>
 
         </org.apmem.tools.layouts.FlowLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.Toolbar>

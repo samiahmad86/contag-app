@@ -24,8 +24,8 @@
     <string name="action_edit_profile">Edit Profile</string>
 
     <!-- ui elements -->
-    <string name="login">Proceed</string>
-    <string name="enter_phone_num">Enter your 10 digit phone number to proceed</string>
+    <string name="login">Go</string>
+    <string name="enter_phone_num">Enter your 10 digit phone number</string>
     <string name="enter_otp">Enter otp</string>
     <string name="otp_msg">We have sent an OTP to your number, please enter it to proceed.</string>
     <string name="hello_world">Hello world!</string>

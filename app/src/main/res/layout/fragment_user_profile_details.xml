@@ -6,61 +6,70 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rl_top">
+        android:id="@+id/rl_top"
+        android:layout_marginTop="5dp">
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_save_profile"
-        android:layout_width="34dp"
-        android:layout_height="17dp"
-        android:minWidth="0dp"
-        android:paddingBottom="10dp"
-        android:minHeight="0dp"
+        android:layout_width="50dp"
+        android:layout_height="35dp"
+
+        android:textSize="13sp"
         android:layout_marginRight="10dp"
+        android:textAllCaps="false"
+        android:layout_above="@+id/view_underline"
         android:layout_alignParentRight="true"
-        android:background="@drawable/btn_save"
+        android:text="Save"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_thin_button"
         android:visibility="invisible"
         />
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_edit_profile"
-        android:layout_width="34dp"
-        android:layout_height="17dp"
-        android:layout_marginBottom="0dp"
+        android:layout_width="50dp"
+        android:layout_height="35dp"
         android:layout_marginRight="10dp"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:paddingBottom="10dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/edit_contag_profile"
-        android:visibility="gone" />
+        android:layout_above="@+id/view_underline"
+
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+         android:layout_alignParentRight="true"
+        android:text="Edit"
+        android:background="@drawable/bg_thin_button"
+        android:visibility="invisible" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+
+            android:textSize="15sp"
+            android:textAllCaps="true"
+            android:layout_marginTop="0dp"
+            android:id="@+id/tv_tab_detail"
+            android:text="profle type"
+            android:layout_marginLeft="20dp"
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@id/tv_tab_detail"
+            android:layout_alignRight="@id/tv_tab_detail"
+            android:layout_marginTop="1dp"
+            android:id="@+id/view_underline"
+            android:layout_below="@id/tv_tab_detail"
+            android:background="@color/white" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@id/tv_tab_detail"
+            android:alpha="0.4"
+            android:layout_below="@id/tv_tab_detail"
+            android:layout_marginTop="1dp"
+            android:background="@color/white" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:layout_below="@id/rl_top"
-        android:textSize="15sp"
-        android:textAllCaps="true"
-        android:layout_marginTop="0dp"
-        android:id="@+id/tv_tab_detail"
-        android:text="profle type"
-        android:layout_marginLeft="20dp"
-        />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_alignLeft="@id/tv_tab_detail"
-        android:layout_alignRight="@id/tv_tab_detail"
-
-        android:layout_below="@id/tv_tab_detail"
-        android:background="@color/white" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignLeft="@id/tv_tab_detail"
-        android:alpha="0.4"
-        android:layout_below="@id/tv_tab_detail"
-        android:background="@color/white" />
 
 
 
@@ -69,8 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"
-
-        android:layout_below="@id/tv_tab_detail"
+        android:paddingTop="3dp"
+        android:layout_below="@id/rl_top"
 
 
         android:overScrollMode="never"

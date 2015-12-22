@@ -97,6 +97,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private HashMap<Integer, SocialProfileModel> hmSocialProfileModel;
     private ArrayList<Bundle> bSocialProfileInfo;
     public TextView tvTabDetail;
+    public ProgressBar pbDisconnectSocialProfile;
 
 
     private float x1, x2, y1, y2;
@@ -150,7 +151,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         btnEditProfile = (Button) view.findViewById(R.id.btn_edit_profile);
         btnSaveProfile = (Button) view.findViewById(R.id.btn_save_profile);
         tvTabDetail=(TextView) view.findViewById(R.id.tv_tab_detail);
-
+        pbDisconnectSocialProfile = (ProgressBar) view.findViewById(R.id.pb_edit_profile);
+        pbDisconnectSocialProfile.setVisibility(View.GONE);
         tvTabDetail.setText("SOCIAL");
         view.findViewById(R.id.sv_user_details).setOnTouchListener(this);
         btnEditProfile.setOnClickListener(this);
@@ -358,7 +360,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnTwitter = (Button) view.findViewById(R.id.btn_twitter_login);
             vh.btnDisconnect = (Button) view.findViewById(R.id.btn_disconnect);
             vh.btnShare = (Button) view.findViewById(R.id.btn_share);
-            vh.pbDisconnectSocialProfile = (ProgressBar) view.findViewById(R.id.pb_delete_social);
+
             vh.rlEditContainer = (RelativeLayout) view.findViewById(R.id.rl_social_edit_container);
             vh.rlEditContainerInner = (RelativeLayout) view.findViewById(R.id.rl_social_edit_container_inner);
             vh.tvFieldValue.setOnClickListener(this);
@@ -370,6 +372,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             vh.btnLinkedIn.setOnClickListener(this);
             vh.btnShare.setOnClickListener(this);
             vh.btnShare.setTag(i);
+         //   vh.pbDisconnectSocialProfile.setVisibility(View.VISIBLE);
             vh.btnDisconnect.setOnClickListener(this);
             viewHolderArrayList.add(vh);
             llViewContainer.addView(view);
@@ -386,6 +389,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private void setUpViewContent(int position) {
         SocialProfileModel mSocialProfileModel = hmSocialProfileModel.get(position);
         ViewHolder mViewHolder = viewHolderArrayList.get(position);
+        pbDisconnectSocialProfile.setVisibility(View.GONE);
         mViewHolder.tvFieldName.setText(convertKeyToLabel(mSocialProfileModel.mSocialPlatform.getPlatformName()));
         mViewHolder.rlEditContainerInner.setVisibility(View.GONE);
         mViewHolder.btnDisconnect.setVisibility(View.GONE);
@@ -505,6 +509,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private void sendData() {
         for (int i = 0; i < viewHolderArrayList.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
+             pbDisconnectSocialProfile.setVisibility(View.VISIBLE);
             SocialProfileModel socialProfileModel = hmSocialProfileModel.get(i);
             String value = vh.etFieldValue.getText().toString();
             if (socialProfileModel.mViewType == Constants.Types.FIELD_SOCIAL && value.length() != 0) {
@@ -747,6 +752,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         protected void onPostExecute(HashMap<Integer, SocialProfileModel> hm) {
             hmSocialProfileModel.clear();
             hmSocialProfileModel.putAll(hm);
+            pbDisconnectSocialProfile.setVisibility(View.GONE);
             if (viewHolderArrayList.size() != hmSocialProfileModel.size()) {
                 addViews();
             }
@@ -914,7 +920,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public RelativeLayout rlEditContainer;
         public RelativeLayout rlEditContainerInner;
         public RelativeLayout rlContainer;
-        public ProgressBar pbDisconnectSocialProfile;
+
         public View view_line;
     }
 }

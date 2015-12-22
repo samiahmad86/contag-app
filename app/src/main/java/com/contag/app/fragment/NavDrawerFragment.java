@@ -175,7 +175,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
                     category=" Professional";
 
 
-                ShareUtils.shareText(getActivity(),tvUsrName.getText()+ "has shared his"+ category +" information with you on Contag. \n Download link:https://play.google.com/store/apps/details?id=com.contag.app" );
+                ShareUtils.shareText(getActivity(),tvUsrName.getText()+ " has shared his"+ category +" information with you on Contag. \n Download link:https://play.google.com/store/apps/details?id=com.contag.app" );
 
 
 

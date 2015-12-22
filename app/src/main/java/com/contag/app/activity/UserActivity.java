@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,7 +59,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private FlowLayout interestsBoxFlowLayout;
     private ArrayList<Interest> interests;
     private ArrayList<Long> interestIDS = new ArrayList<>() ;
-    private ImageView ivEditIcon;
+
+    private Button btnEdit;
     private static int[] interestContainer = {R.id.rl_interest_one, R.id.rl_interest_two,
             R.id.rl_interest_three};
     private static int[] interestText = {R.id.tv_user_interest_one, R.id.tv_user_interest_two,
@@ -69,7 +71,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private boolean isEditModeOn = false;
     private long userID;
     private InterestSuggestion currentSuggestion = null;
-
+    private View progressBar;
+    private View view_1,view_2,view_3,view_4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,26 +112,42 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
+            final View view_1 =  findViewById(R.id.view_1);
+            final View view_2 =  findViewById(R.id.view_2);
+            final View view_3 =  findViewById(R.id.view_3);
+            final View view_4 =  findViewById(R.id.view_4);
             final Button btnAddPic = (Button) findViewById(R.id.btn_add_pic);
+            progressBar=findViewById(R.id.progress_bar);
+            progressBar.setVisibility(View.GONE);
             /*final Button backButton=(Button) findViewById(R.id.btn_back);
             backButton.setVisibility(View.GONE);
             backButton.setOnClickListener(this);*/
             btnAddPic.setVisibility(View.VISIBLE);
             toolbar.findViewById(R.id.iv_user_photo).setOnClickListener(this);
-            ivEditIcon = (ImageView) findViewById(R.id.iv_edit_profile);
-            ivEditIcon.setVisibility(View.VISIBLE);
-            ivEditIcon.setOnClickListener(new View.OnClickListener() {
+            btnEdit = (Button) findViewById(R.id.btn_edit_profile);
+            view_1.setVisibility(View.VISIBLE);
+            view_2.setVisibility(View.GONE);
+            view_3.setVisibility(View.VISIBLE);
+            view_4.setVisibility(View.GONE);
+            btnEdit.setVisibility(View.VISIBLE);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!isEditModeOn) {
                         setupEditableInterests();
-                        ivEditIcon.setImageResource(R.drawable.btn_save);
+                       // ivEditIcon.setImageResource(R.drawable.btn_save);
+                        btnEdit.setText("Save");
+                        btnEdit.setTextColor(Color.WHITE);
                         etUserName.setText(tvUserName.getText().toString());
                         etUserStatus.setText(tvUserStatus.getText().toString());
                         etUserName.setVisibility(View.VISIBLE);
                         etUserStatus.setVisibility(View.VISIBLE);
                         tvUserName.setVisibility(View.GONE);
+                        view_1.setVisibility(View.GONE);
+                        view_2.setVisibility(View.VISIBLE);
                         tvUserStatus.setVisibility(View.GONE);
+                        view_3.setVisibility(View.GONE);
+                        view_4.setVisibility(View.VISIBLE);
                         isEditModeOn = true;
                     } else {
 
@@ -202,6 +221,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             oUser = new JSONObject();
             oUser.put(Constants.Keys.KEY_USER_NAME, name);
             aUser.put(oUser);
+            progressBar.setVisibility(View.VISIBLE);
+            hideKeyboard(getApplicationContext(),this.getCurrentFocus());
             Router.startUserService(this, Constants.Types.REQUEST_PUT, aUser.toString(), Constants.Types.PROFILE_STATUS);
         } catch (JSONException ex) {
             ex.printStackTrace();
@@ -390,8 +411,14 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.tv_user_status).setVisibility(View.VISIBLE);
             findViewById(R.id.et_user_name).setVisibility(View.GONE);
             findViewById(R.id.et_user_status).setVisibility(View.GONE);
+            findViewById(R.id.view_1).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_2).setVisibility(View.GONE);
+            findViewById(R.id.view_3).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_4).setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
 
-            ivEditIcon.setImageResource(R.drawable.edit_contag_profile);
+          //  ivEditIcon.setImageResource(R.drawable.edit_contag_profile);
+            btnEdit.setText("Edit");btnEdit.setTextColor(Color.WHITE);
 
             (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
@@ -558,6 +585,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
                 ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
                 tbHome.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+//                progressBar.setVisibility(View.GONE);
                 tbHome.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -580,7 +608,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 });*/
 
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
-                        into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+                        fit()
+                        .centerCrop()
+                        .into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
                 Picasso.with(UserActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
                         into(picaasoTarget);
                 isEditModeOn = false;

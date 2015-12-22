@@ -19,6 +19,8 @@ import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.model.ContagContag;
 import com.contag.app.util.DeviceUtils;
+import com.contag.app.util.PrefUtils;
+import com.contag.app.util.ShareUtils;
 import com.contag.app.view.SlidingTabLayout;
 
 /**
@@ -146,7 +148,8 @@ public class UserProfileFragment extends BaseFragment implements View.OnClickLis
             case R.id.btn_msg: {
                 String number = (String) v.getTag();
                 if (number != null) {
-                    DeviceUtils.sendSms(getActivity(), number, null);
+                   DeviceUtils.sendSms(getActivity(), number, null);
+
                 }
                 break;
             }

@@ -108,7 +108,7 @@ public interface APIInterface {
     @Headers({
             "Content-Type: application/json"
     })
-    @PUT(Constants.Urls.URL_ADD_CONTACT)
+    @POST(Constants.Urls.URL_ADD_CONTACT)
     ContactResponse.ContactList addContagUser(@Header(Constants.Headers.HEADER_TOKEN) String token,
                                               @Body AddContact userID);
 

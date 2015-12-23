@@ -193,7 +193,7 @@ public class Constants {
         public static final String URL_OTP = "/otp/";
         public static final String URL_USER = "/user/";
         public static final String URL_CONTACT = "/contact/";
-        public static final String URL_ADD_CONTACT = "/add_contact";
+        public static final String URL_ADD_CONTACT = "/add_contact/";
         public static final String URL_FEEDS = "/feed/";
         public static final String URL_SOCIAL_PROFILE = "/social_profile/";
         public static final String URL_USER_INTEREST = "/interest/";

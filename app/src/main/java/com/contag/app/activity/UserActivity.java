@@ -30,6 +30,7 @@ import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
+import com.contag.app.fragment.BackPressedDialog;
 import com.contag.app.fragment.CurrentUserProfileFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
@@ -212,6 +213,20 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if(userID != PrefUtils.getCurrentUserID()) {
+            super.onBackPressed();
+        } else {
+            if(isEditModeOn()) {
+                BackPressedDialog mPressedDialog = BackPressedDialog.newInstance();
+                mPressedDialog.show(getSupportFragmentManager(), "fuck you");
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
 
     private void sendNameAndStatus(String name, String status) {
         try {

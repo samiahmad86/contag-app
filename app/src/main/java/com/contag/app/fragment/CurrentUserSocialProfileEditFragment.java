@@ -196,6 +196,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                     return;
                 }
                 if (!isEditModeOn) {
+                    ((BaseActivity) getActivity()).setEditMode(true);
                     openEditMode();
                     scrollToPosition((int) v.getTag());
                 } else {
@@ -763,6 +764,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 log(TAG, "sending broadcast true");
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             }
+            ((BaseActivity) getActivity()).setEditMode(false);
             isEditModeOn = false;
             btnEditProfile.setVisibility(View.VISIBLE);
             btnSaveProfile.setVisibility(View.GONE);

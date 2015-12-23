@@ -44,6 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
     private static ArrayList<SocialPlatform> socialPlatforms = null;
     private ActionBarDrawerToggle mDrawerToggle;
+    private boolean isEditModeOn;
 
     @Override
     protected void onStart() {
@@ -137,6 +138,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) {
 //            Log.d(tag, message);
         }
+    }
+
+    public void setEditMode(boolean value) {
+        this.isEditModeOn = value;
+    }
+
+    public boolean isEditModeOn() {
+        return this.isEditModeOn;
     }
 
     public ContagContag getCurrentUser() {

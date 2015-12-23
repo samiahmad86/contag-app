@@ -16,6 +16,7 @@ import com.contag.app.activity.LinkedInActivity;
 import com.contag.app.activity.LoginActivity;
 import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.NotificationsActivity;
+import com.contag.app.activity.SplashActivity;
 import com.contag.app.activity.UserActivity;
 import com.contag.app.service.ContactService;
 import com.contag.app.service.CustomService;
@@ -317,5 +318,10 @@ public class Router {
         context.startService(iLog);
     }
 
+
+    public static void startSplashActivity(Context context) {
+        Intent splashIntent  = new Intent(context, SplashActivity.class);
+        context.startActivity(splashIntent);
+    }
 }
 

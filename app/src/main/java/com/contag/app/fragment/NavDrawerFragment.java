@@ -211,7 +211,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener 
         session.getSocialProfileDao().deleteAll();
         session.getInterestDao().deleteAll();
         PrefUtils.clearData();
-        Router.startLoginActivity(getActivity(), "NavDrawer", Constants.Types.FRAG_LOGIN);
+        Router.startSplashActivity(getActivity());
         isLoading = true ;
     }
 

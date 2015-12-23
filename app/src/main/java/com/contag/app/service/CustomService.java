@@ -188,19 +188,19 @@ public class CustomService extends Service {
                 String logMessage = intent.getStringExtra(Constants.Keys.KEY_MESSAGE);
                 if(logMessage != null && timestamp != 0l) {
                     Log.d(CurrentUserProfileEditFragment.TAG, "fuck this world " + logMessage + " " + timestamp);
-                    LogMessageRequest mLogMessageRequest = new LogMessageRequest(logMessage, timestamp);
-                    mSpiceManager.execute(mLogMessageRequest, new RequestListener<MessageResponse>() {
-                        @Override
-                        public void onRequestFailure(SpiceException spiceException) {
-
-                        }
-
-                        @Override
-                        public void onRequestSuccess(MessageResponse messageResponse) {
-                            Log.d(CurrentUserProfileEditFragment.TAG, "Fuck me "  + messageResponse.message);
-                            CustomService.this.stopSelf(startId);
-                        }
-                    });
+//                    LogMessageRequest mLogMessageRequest = new LogMessageRequest(logMessage, timestamp);
+//                    mSpiceManager.execute(mLogMessageRequest, new RequestListener<MessageResponse>() {
+//                        @Override
+//                        public void onRequestFailure(SpiceException spiceException) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onRequestSuccess(MessageResponse messageResponse) {
+//                            Log.d(CurrentUserProfileEditFragment.TAG, "Fuck me "  + messageResponse.message);
+//                            CustomService.this.stopSelf(startId);
+//                        }
+//                    });
                 }
             }
         }

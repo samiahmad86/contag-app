@@ -151,6 +151,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     btnEditProfile.setEnabled(false);
                     sendData();
                 } else {
+                    ((BaseActivity) getActivity()).setEditMode(true);
                     openEditMode();
                 }
                 break;
@@ -211,7 +212,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
         String message = mP2ProfileModel.key + " is " + mP2ProfileModel.value;
         log(TAG, message);
-        Router.sendLogs(getActivity(), message, System.currentTimeMillis());
+//        Router.sendLogs(getActivity(), message, System.currentTimeMillis());
 
         mViewHolder.tvFieldLabel.setText(convertKeyToLabel(mP2ProfileModel.key));
 
@@ -501,6 +502,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 log(TAG, "sending broadcast from p2 with true");
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             }
+            ((BaseActivity) getActivity()).setEditMode(false);
             isEditModeOn = false;
             setViewContent();
             btnEditProfile.setEnabled(true);

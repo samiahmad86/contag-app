@@ -79,10 +79,12 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             llViewContainer.addView(view);
             ViewHolder mViewHolder = new ViewHolder();
             mViewHolder.btnAction = (Button) view.findViewById(R.id.btn_action);
+
             mViewHolder.btnRequestField = (Button) view.findViewById(R.id.btn_request);
             mViewHolder.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
             mViewHolder.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             mViewHolder.tvFieldValue.setOnClickListener(this);
+
             mViewHolder.btnAction.setOnClickListener(this);
             mViewHolder.btnRequestField.setOnClickListener(this);
             viewHolderArrayList.add(mViewHolder);
@@ -146,6 +148,8 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 showToast("copied to clipboard");
                 break;
             }
+
+
             case R.id.btn_action: {
                 int position = (Integer) v.getTag();
                 ProfileViewModel mProfileViewModel = hmP2ProfileView.get(position);
@@ -349,6 +353,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         protected TextView tvFieldLabel;
         protected Button btnRequestField;
         protected Button btnAction;
+
 
         public ViewHolder() {
 

@@ -62,6 +62,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         feeds = new ArrayList<>();
         feedsAdapter = new FeedsAdapter(getActivity(), feeds);
         pbFeeds = view.findViewById(R.id.pb_feeds);
+         view.findViewById(R.id.iv_no_feeds).setVisibility(View.VISIBLE);
         lvFeeds.setAdapter(feedsAdapter);
         isListViewEnabled = true;
         lvFeeds.setOnItemClickListener(this);
@@ -167,6 +168,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         Log.d("FeedSizeDebug", "Request failed") ;
+        getActivity().findViewById(R.id.iv_no_feeds).setVisibility(View.VISIBLE);
         pbFeeds.setVisibility(View.GONE);
     }
 
@@ -178,10 +180,12 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
             feeds.addAll(feedsResponses);
             Log.d("FeedSizeDebug", "Feeds size in onRequestSuccess: " + feeds.size()) ;
             feedsAdapter.notifyDataSetChanged();
+            getActivity().findViewById(R.id.iv_no_feeds).setVisibility(View.GONE);
 
             isLoading = false;
         } else {
             isLoading = true;
+            //getActivity().findViewById(R.id.iv_no_feeds).setVisibility(View.VISIBLE);
         }
         log(TAG, "hiding the progress bar after the feeds are fetched");
         pbFeeds.setVisibility(View.GONE);

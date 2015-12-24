@@ -14,7 +14,14 @@
         android:clipToPadding="false"
 
         android:scrollbars="none" />
-
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/no_feeds"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:id="@+id/iv_no_feeds"
+        />
     <include
         android:id="@+id/pb_feeds"
         layout="@layout/layout_progress_bar" />

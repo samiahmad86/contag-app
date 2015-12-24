@@ -13,6 +13,15 @@
         android:paddingTop="0dp"
         tools:context="com.contag.app.activity.NotificationsActivity">
 
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/no_notification"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:id="@+id/iv_no_notif"
+            />
         <RelativeLayout
             android:id="@+id/rl_tb_container"
             android:layout_width="match_parent"

@@ -136,7 +136,8 @@ public class CustomService extends Service {
                     @Override
                     public void onRequestSuccess(MessageResponse messageResponse) {
 //                        Log.d(TAG, messageResponse.message);
-                        Toast.makeText(CustomService.this, messageResponse.message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(CustomService.this, "Request Sent", Toast.LENGTH_LONG).show();
+                     //   Toast.makeText(CustomService.this, messageResponse.message, Toast.LENGTH_LONG).show();
                         CustomService.this.stopSelf(serviceID);
                     }
                 });

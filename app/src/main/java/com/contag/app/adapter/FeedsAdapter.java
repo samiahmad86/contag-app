@@ -65,7 +65,10 @@ public class FeedsAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(mCtxt).load(feed.getAvatarURL()).error(R.drawable.default_profile_pic_small).into(vh.ivUsrProfilePic);
+        Picasso.with(mCtxt).load(feed.getAvatarURL()).error(R.drawable.default_profile_pic_small).
+                fit()
+                .centerCrop()
+        .into(vh.ivUsrProfilePic);
         vh.tvUsrName.setText(feed.name);
         vh.tvUsrCuntId.setText(feed.contagId);
         String temp=formatTime(feed.createdOn);

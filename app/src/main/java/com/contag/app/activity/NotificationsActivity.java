@@ -178,6 +178,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
         } else {
             isLoading = true;
             progressbar.setVisibility(View.GONE);
+            findViewById(R.id.iv_no_notif).setVisibility(View.VISIBLE);
 
         }
 

@@ -73,6 +73,7 @@ public class Router {
 
     public static void startNotificationsActivity(Context mContext, String className) {
         Intent userNotifications = new Intent(mContext, NotificationsActivity.class);
+        userNotifications.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
         mContext.startActivity(userNotifications);
     }

@@ -14,6 +14,7 @@ import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.fragment.CurrentUserProfileEditFragment;
+import com.contag.app.fragment.UserProfileViewFragment;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.ContagContagDao;
 import com.contag.app.model.CustomShare;
@@ -137,6 +138,8 @@ public class CustomService extends Service {
                     public void onRequestSuccess(MessageResponse messageResponse) {
 //                        Log.d(TAG, messageResponse.message);
                         Toast.makeText(CustomService.this, "Request Sent", Toast.LENGTH_LONG).show();
+
+
                      //   Toast.makeText(CustomService.this, messageResponse.message, Toast.LENGTH_LONG).show();
                         CustomService.this.stopSelf(serviceID);
                     }

@@ -38,7 +38,7 @@
     <string name="sync_fb">Sync with facebook</string>
     <string name="invite_to_cunt">INVITE</string>
     <string name="fb_unsync_msg">remove facebook</string>
-    <string name="name_hint">Rohit Sharma</string>
+    <string name="name_hint">Enter your full name</string>
     <string name="name_label">Name</string>
     <string name="gender_label">Gender</string>
     <string name="proceed">Proceed</string>

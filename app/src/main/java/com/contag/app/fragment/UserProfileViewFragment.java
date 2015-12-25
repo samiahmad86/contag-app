@@ -33,6 +33,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
     private LinearLayout llViewContainer;
     public static final String TAG = UserProfileViewFragment.class.getName();
     public TextView tvTabDetail;
+    public View progressBar;
 
     public static UserProfileViewFragment newInstance(int profileType, long userID) {
         UserProfileViewFragment mUserProfileViewFragment = new UserProfileViewFragment();
@@ -47,6 +48,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile_details, container, false);
         tvTabDetail=(TextView) view.findViewById(R.id.tv_tab_detail);
+
         hmP2ProfileView = new HashMap<>();
         viewHolderArrayList = new ArrayList<>();
         Bundle args = getArguments();
@@ -79,10 +81,12 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
             llViewContainer.addView(view);
             ViewHolder mViewHolder = new ViewHolder();
             mViewHolder.btnAction = (Button) view.findViewById(R.id.btn_action);
+
             mViewHolder.btnRequestField = (Button) view.findViewById(R.id.btn_request);
             mViewHolder.tvFieldLabel = (TextView) view.findViewById(R.id.tv_field_name);
             mViewHolder.tvFieldValue = (TextView) view.findViewById(R.id.tv_field_value);
             mViewHolder.tvFieldValue.setOnClickListener(this);
+
             mViewHolder.btnAction.setOnClickListener(this);
             mViewHolder.btnRequestField.setOnClickListener(this);
             viewHolderArrayList.add(mViewHolder);
@@ -137,6 +141,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 int positon = (int) v.getTag();
                 Router.startProfileRequestService(getActivity(), Constants.Types.SERVICE_MAKE_PROFILE_REQUEST,
                         userId, hmP2ProfileView.get(positon).key, profileType + "");
+               // getActivity().findViewById(R.id.pb_edit_profile).setVisibility(View.VISIBLE);
                 v.setAlpha(.40f);
                 break;
             }
@@ -146,6 +151,8 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
                 showToast("copied to clipboard");
                 break;
             }
+
+
             case R.id.btn_action: {
                 int position = (Integer) v.getTag();
                 ProfileViewModel mProfileViewModel = hmP2ProfileView.get(position);
@@ -349,6 +356,7 @@ public class UserProfileViewFragment extends BaseFragment implements View.OnClic
         protected TextView tvFieldLabel;
         protected Button btnRequestField;
         protected Button btnAction;
+
 
         public ViewHolder() {
 

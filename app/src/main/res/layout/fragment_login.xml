@@ -2,55 +2,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     tools:context="com.contag.app.fragment.LoginFragment"
-    android:background="@drawable/login_splash">
+   >
 
-  <!--  <ImageView
+  <ImageView
         android:id="@+id/iv_contag_logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerInside"
-        android:src="@drawable/contag_logo"/>-->
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/contag_login_screen"/>
 
 
 
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:padding="20dp">
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_phone_num"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:background="@drawable/bg_gray_rect"
         android:hint="@string/enter_phone_num"
         android:inputType="number"
         android:imeOptions="actionDone"
-        android:padding="10dp"
-
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="30dp"
+        android:maxLength="10"
         android:layout_marginTop="50dp"
         android:singleLine="true"
         android:layout_marginBottom="-10dp"
         android:textColor="@color/black"
-        android:textSize="13sp" />
+        android:textSize="15sp" />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_prefix"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="+91"
+        android:textColor="@color/black"
+        android:layout_alignLeft="@id/et_phone_num"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+        />
 
 
 
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_login"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-
-        android:background="@drawable/next_blue"
-        android:layout_alignTop="@id/et_phone_num"
-
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/paper_plane"
+       android:layout_marginRight="5dp"
+        android:layout_centerVertical="true"
         android:layout_alignRight="@id/et_phone_num"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="5dp"
-         android:textColor="@color/white"
-         />
+
+        />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_otp_msg"
         android:layout_width="match_parent"
@@ -79,5 +90,5 @@
     <include
         android:id="@+id/pb_login"
         layout="@layout/layout_progress_bar" />
-
+</RelativeLayout>
 </RelativeLayout>

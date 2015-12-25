@@ -178,9 +178,11 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             notificationsAdapter.notifyDataSetChanged();
             isLoading = false;
            progressbar.setVisibility(View.GONE);
+            findViewById(R.id.iv_no_notif).setVisibility(View.GONE);
         } else {
             isLoading = true;
             progressbar.setVisibility(View.GONE);
+          //  findViewById(R.id.iv_no_notif).setVisibility(View.VISIBLE);
 
         }
 
@@ -207,6 +209,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
             }
             case R.id.btn_back: {
                 this.finish();
+                Router.startHomeActivity(this, TAG);
                 break;
             }
         }
@@ -238,7 +241,9 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
                 @Override
                 public void onClick(View v) {
                     //What to do on back clicked
+
                     finish();
+                    Router.startHomeActivity(NotificationsActivity.this, TAG);
                 }
             });
 
@@ -253,5 +258,11 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
                     .into((ImageView) findViewById(R.id.iv_header_pic));
 
         }
+    }
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        Router.startHomeActivity(this, TAG);
     }
 }

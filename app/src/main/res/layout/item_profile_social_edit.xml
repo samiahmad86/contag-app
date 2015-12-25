@@ -9,7 +9,7 @@
     android:paddingTop="0dp">
 
 <RelativeLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:id="@+id/rl_top">
 
@@ -31,11 +31,13 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginRight="5dp"
+        android:drawableRight="@drawable/share_another"
         android:layout_alignParentRight="true"
 
-        android:background="@drawable/share_salman"
         android:visibility="gone" />
 
 
@@ -130,7 +132,7 @@
                 android:background="@drawable/bg_google_plus"
                 android:drawableLeft="@drawable/googleplus_copy"
                 android:text="@string/sync_gplus"
-                android:gravity="left|center"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:visibility="gone" />
@@ -155,6 +157,7 @@
                 android:textAllCaps="false"
                 android:background="@drawable/bg_linkedin"
                 android:drawableLeft="@drawable/linkedin"
+                android:gravity="center"
                 android:text="@string/sync_linkedin"
                 android:textColor="@color/white"
                 android:textSize="13sp"
@@ -166,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_insta"
                 android:textAllCaps="false"
+                android:gravity="center"
                 android:drawableLeft="@drawable/instagram"
                 android:text="@string/sync_instagram"
                 android:textColor="@color/white"
@@ -192,14 +196,18 @@
         android:id="@+id/btn_disconnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_social_edit_container"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/bg_block_button"
+        android:layout_toRightOf="@+id/rl_top"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/bg_thin_button"
+        android:minHeight="30dp"
+        android:minWidth="30dp"
         android:padding="5dp"
+        android:layout_marginTop="10dp"
         android:text="@string/disconnect"
+        android:layout_alignParentRight="true"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <include
         android:id="@+id/pb_delete_social"

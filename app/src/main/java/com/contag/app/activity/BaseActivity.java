@@ -106,7 +106,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ImageView iv = (ImageView) findViewById(R.id.iv_header_pic) ;
         Picasso.with(this).load(this.getCurrentUser().getAvatarUrl()).
-                placeholder(R.drawable.default_profile_pic_small).into(iv);
+                fit()
+                .centerCrop().
+        placeholder(R.drawable.default_profile_pic_small).into(iv);
     }
 
     /**

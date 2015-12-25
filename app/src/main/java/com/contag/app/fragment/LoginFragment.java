@@ -54,6 +54,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private int mFragmentType;
     private long phoneNum;
     private Button btnLogin;
+    private TextView tvPrefix;
 
     public static LoginFragment newInstance(int code, long number) {
         LoginFragment fragment = new LoginFragment();
@@ -89,6 +90,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         btnLogin = (Button) view.findViewById(R.id.btn_login);
+        tvPrefix=(TextView) view.findViewById(R.id.tv_prefix);
         btnLogin.setOnClickListener(this);
         btnLogin.setOnEditorActionListener(this);
         EditText etPhoneNum = (EditText) view.findViewById(R.id.et_phone_num);
@@ -96,6 +98,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             etPhoneNum.setHint
                     (resources().getString(R.string.enter_otp));
+            tvPrefix.setVisibility(View.GONE);
             View btnResendOtp = view.findViewById(R.id.btn_resend_otp);
             btnResendOtp.setVisibility(View.VISIBLE);
             btnResendOtp.setOnClickListener(this);
@@ -152,6 +155,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
                 if (getView() != null) {
 
+                    BaseActivity.hideKeyboard(getActivity(),getView().findViewById(R.id.et_phone_num));
                     switch (mFragmentType) {
 
                         case Constants.Types.FRAG_LOGIN: {
@@ -179,6 +183,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                 return;
                             }
                             getActivity().findViewById(R.id.pb_login).setVisibility(View.VISIBLE);
+                            tvPrefix.setVisibility(View.GONE);
                             HashMap<String, String> hmHeaders = new HashMap<>();
                             hmHeaders.put(Constants.Headers.HEADER_APP_VERSION_ID, "" + BuildConfig.VERSION_CODE);
                             hmHeaders.put(Constants.Headers.HEADER_DEVICE_TYPE, "android");
@@ -206,6 +211,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                                         }
                                     } else {
                                         showToast("OTP is incorrect");
+                                        getActivity().findViewById(R.id.pb_login).setVisibility(View.GONE);
                                     }
                                 }
                             });
@@ -220,6 +226,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 log(TAG, "resend otp called");
                 Login mLogin = new Login(phoneNum);
                 LoginRequest lr = new LoginRequest(mLogin);
+                showToast("OTP Sent");
                 getSpiceManager().execute(lr, this);
                 break;
             }

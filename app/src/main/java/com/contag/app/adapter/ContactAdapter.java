@@ -98,6 +98,8 @@ public class ContactAdapter extends BaseAdapter {
         final ContagContag contObject = ((ContactListItem) getItem(position)).mContagContag;
 
         Picasso.with(mContext).load(contObject.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small)
+                . fit()
+                .centerCrop()
                 .into(vhCont.ivPhoto);
         vhCont.tvContactId.setText(contObject.getContag());
         vhCont.tvContactName.setText(contObject.getName());
@@ -112,8 +114,8 @@ public class ContactAdapter extends BaseAdapter {
         vhCont.btnMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareText(mContext,"Hi");
-               // DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
+               // ShareUtils.shareText(mContext,"Hi");
+                DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
             }
         });
 
@@ -207,15 +209,15 @@ public class ContactAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Contact contact = (Contact) v.getTag();
-                    ShareUtils.shareText(mContext,"Hi");
-                   // DeviceUtils.sendSms(mContext, contact.getContactNumber(), null);
+                    //ShareUtils.shareText(mContext,"Hi");
+                    DeviceUtils.sendSms(mContext, contact.getContactNumber(), null);
                 }
             });
             vhContact.btnInvite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Contact contact = (Contact) v.getTag();
-                    String text = "Hi " + contact.getContactName() + ", I am on Contag. Download contag at http://www.contag.com";
+                    String text = "Hi " + contact.getContactName() + ", I am on Contag. Download contag at http://bit.ly/1HHI6do";
                     ShareUtils.shareText(mContext, text);
                 }
             });

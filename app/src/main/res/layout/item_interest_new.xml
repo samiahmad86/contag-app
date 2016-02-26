@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_border_rect_transparent"
-
-        android:padding="10dp">
+        android:padding="2.5dp"
+        >
 
 
 
@@ -53,20 +53,21 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/btn_add"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_toRightOf="@id/interest_text"
+            android:layout_marginLeft="-30dp"
+
+            android:src="@drawable/request_icon"
+            android:layout_marginTop="0dp"/>
 
 
 
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/btn_add"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_toRightOf="@id/item_container"
-        android:layout_marginLeft="-30dp"
 
-        android:src="@drawable/request_icon"
-        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>

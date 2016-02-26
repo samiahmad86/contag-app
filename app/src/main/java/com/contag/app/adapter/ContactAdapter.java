@@ -1,6 +1,8 @@
 package com.contag.app.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 import com.contag.app.R;
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
+import com.contag.app.config.Router;
+import com.contag.app.fragment.DialogProfilePicture;
 import com.contag.app.fragment.IntroduceContagDialog;
+import com.contag.app.listener.DatabaseRequestListener;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactListItem;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.Interest;
+import com.contag.app.tasks.DatabaseOperationTask;
 import com.contag.app.util.ContactUtils;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.ShareUtils;
@@ -71,6 +77,7 @@ public class ContactAdapter extends BaseAdapter {
         }
     }
 
+
     private View getContagView(int position, View convertView, ViewGroup parent, int type) {
         ContagViewHolder vhCont;
         if (convertView == null || (convertView.getTag() instanceof ContactViewHolder)) {
@@ -87,6 +94,7 @@ public class ContactAdapter extends BaseAdapter {
             vhCont.btnAdd = (Button) convertView.findViewById(R.id.btn_add_contag) ;
             vhCont.btnMsg = (Button) convertView.findViewById(R.id.btn_msg);
             vhCont.btnCall = (Button) convertView.findViewById(R.id.btn_call);
+            vhCont.btnWhatsapp = (Button) convertView.findViewById(R.id.btn_whatsapp);
 
 
             vhCont.btnIntroduceContag = (TextView) convertView.findViewById(R.id.tv_share_contag) ;
@@ -101,9 +109,33 @@ public class ContactAdapter extends BaseAdapter {
                 . fit()
                 .centerCrop()
                 .into(vhCont.ivPhoto);
-        vhCont.tvContactId.setText(contObject.getContag());
+        vhCont.tvContactId.setText(contObject.getContag().toLowerCase());
         vhCont.tvContactName.setText(contObject.getName());
+        vhCont.ivPhoto.setTag(contObject.getAvatarUrl());
+        vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = (String) view.getTag();
+                Log.d(TAG, url);
+                DialogProfilePicture df=DialogProfilePicture.newInstance(url);
+               df.show(((AppCompatActivity) mContext).getSupportFragmentManager(),TAG);
 
+            }
+        });
+
+
+        vhCont.tvContactName.setClickable(false);
+        vhCont.tvContactId.setClickable(false);
+       /* vhCont.tvContactName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ShareUtils.shareText(mContext,"Hi");
+
+
+
+            }
+        });
+*/
         vhCont.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +148,13 @@ public class ContactAdapter extends BaseAdapter {
             public void onClick(View v) {
                // ShareUtils.shareText(mContext,"Hi");
                 DeviceUtils.sendSms(mContext, contObject.getMobileNumber(), null);
+            }
+        });
+        vhCont.btnWhatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ShareUtils.shareText(mContext,"Hi");
+                DeviceUtils.openConversationWithWhatsapp(mContext, contObject.getMobileNumber());
             }
         });
 
@@ -141,32 +180,60 @@ public class ContactAdapter extends BaseAdapter {
 
 
         if(type == Constants.Types.ITEM_ADD_CONTAG) {
+
             vhCont.btnIntroduceContag.setVisibility(View.GONE);
             newContactItem = (ContactListItem) getItem(position) ;
 
-            if(ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext())) {
-                vhCont.btnAdd.setVisibility(View.VISIBLE);
-                vhCont.btnMsg.setVisibility(View.INVISIBLE);
-                vhCont.btnCall.setVisibility(View.INVISIBLE);
-                vhCont.btnAdd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        ContactUtils.addContag(mContext.getApplicationContext(), newContactItem);
-                        Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            vhCont.ivPhoto.setOnClickListener(new View.OnClickListener() {
+            final View btnAdd = vhCont.btnAdd;
+            final View btnMsg = vhCont.btnMsg;
+            final View btnCall = vhCont.btnCall;
+            final View ivPhoto = vhCont.ivPhoto;
+
+            DatabaseRequestListener databaseRequestListener = new DatabaseRequestListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "You need to add and get approved by the user to view the profile.",
-                            Toast.LENGTH_LONG).show();
+                public void onPreExecute() {
+
                 }
-            });
-        }else {
+                @Override
+                public Object onRequestExecute() {
+                    return ContactUtils.isExistingContact(contObject.getMobileNumber(), mContext.getApplicationContext());
+                }
+
+                @Override
+                public void onPostExecute(Object responseObject) {
+                    Boolean value = (Boolean) responseObject;
+                    if(value) {
+                        btnAdd.setVisibility(View.VISIBLE);
+                        btnMsg.setVisibility(View.INVISIBLE);
+                        btnCall.setVisibility(View.INVISIBLE);
+                        btnAdd.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Router.addContagUser(mContext, newContactItem.mContagContag.getId());
+                                Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
+                                ((TextView)v).setText("Added");
+                            }
+                        });
+                    }
+                    ivPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "You need to add and get approved by the user to view the profile.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            };
+
+            DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(databaseRequestListener);
+            databaseOperationTask.execute();
+
+           }else {
+
             vhCont.btnIntroduceContag.setVisibility(View.VISIBLE);
-            vhCont.btnAdd.setVisibility(View.INVISIBLE);
+            vhCont.btnAdd.setVisibility(View.GONE);
            /* vhCont.btnCall.setVisibility(View.VISIBLE);
             vhCont.btnMsg.setVisibility(View.VISIBLE);*/
 
@@ -182,6 +249,8 @@ public class ContactAdapter extends BaseAdapter {
             });
 
         }
+
+
         return convertView;
     }
 
@@ -197,6 +266,17 @@ public class ContactAdapter extends BaseAdapter {
             vhContact.tvAlpha = (TextView) convertView.findViewById(R.id.tv_user_initial);
             vhContact.btnCallContact = (Button) convertView.findViewById(R.id.btn_call);
             vhContact.btnMsgContact = (Button) convertView.findViewById(R.id.btn_msg);
+            vhContact.btnWhatsapp = (Button) convertView.findViewById(R.id.btn_whatsapp);
+
+            vhContact.btnWhatsapp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Contact contact = (Contact) v.getTag();
+                    DeviceUtils.openConversationWithWhatsapp(mContext, contact.getContactNumber());
+                }
+            });
+
+
 
             vhContact.btnCallContact.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -227,12 +307,13 @@ public class ContactAdapter extends BaseAdapter {
         }
         Contact contact = ((ContactListItem) getItem(position)).mContact;
         vhContact.tvContactName.setText(contact.getContactName());
-        Log.e("character", contact.getContactName().substring(0, 1));
+        //Log.e("character", contact.getContactName().substring(0, 1));
         vhContact.tvContactNumber.setText(contact.getContactNumber());
         vhContact.tvAlpha.setText(contact.getContactName().substring(0,1).toUpperCase());
         vhContact.btnInvite.setTag(contact);
         vhContact.btnMsgContact.setTag(contact);
         vhContact.btnCallContact.setTag(contact);
+        vhContact.btnWhatsapp.setTag(contact);
         return convertView;
     }
 
@@ -257,7 +338,7 @@ public class ContactAdapter extends BaseAdapter {
         public TextView tvAlpha;
         public Button btnMsgContact;
         public Button btnCallContact;
-
+        private Button btnWhatsapp;
 
         public ContactViewHolder() {
 
@@ -276,7 +357,7 @@ public class ContactAdapter extends BaseAdapter {
         public Button btnAdd ;
         private Button btnMsg;
         private Button btnCall;
-
+        private Button btnWhatsapp;
         public TextView btnIntroduceContag;
 
 

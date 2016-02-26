@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_shadow"
+    android:elevation="1sp"
     android:paddingBottom="5dp"
     >
 
@@ -36,7 +37,7 @@
             android:singleLine="true"
             android:layout_marginTop="10dp"
             android:textColor="@color/light_blue"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
             android:layout_height="wrap_content" />
 
 
@@ -48,7 +49,7 @@
             style="@style/ContactIdStyle"
             android:layout_below="@id/tv_contact_name"
             android:layout_toRightOf="@id/iv_user_photo"
-            android:layout_marginLeft="6dp"
+            android:layout_marginLeft="9dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -57,7 +58,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_below="@id/tv_contact_id"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="9dp"
             android:layout_toRightOf="@id/iv_user_photo"
             android:layout_height="wrap_content"
             android:id="@+id/ll_int">
@@ -84,6 +85,7 @@
         android:layout_width="20dp"
         android:layout_marginLeft="12dp"
         android:paddingTop="0dp"
+        android:minWidth="0dp"
         android:layout_marginTop="8dp"
         android:layout_height="20dp"
         android:focusable="false"
@@ -103,6 +105,19 @@
         android:background="@drawable/conversation"
         android:visibility="visible" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_whatsapp"
+        android:layout_width="22dp"
+
+        android:layout_marginLeft="14dp"
+        android:paddingTop="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@id/btn_msg"
+        android:layout_height="22dp"
+        android:focusable="false"
+        android:layout_below="@id/view_1"
+        android:background="@drawable/wazzup"
+        android:visibility="visible" />
     <TextView
         android:layout_height="20dp"
         android:layout_width="wrap_content"
@@ -113,13 +128,14 @@
 
         android:id="@+id/tv_share_contag"
         android:textColor="@color/light_blue"
-        android:text="&#10140; Introduce"
+        android:text="Introduce"
         android:visibility="visible"
         />
     <Button
         android:id="@+id/btn_add_contag"
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
+        android:padding="5dp"
         android:text="Add"
         android:layout_alignParentRight="true"
         android:layout_below="@id/view_1"

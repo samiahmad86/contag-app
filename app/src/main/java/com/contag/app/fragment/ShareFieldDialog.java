@@ -74,6 +74,7 @@ public class ShareFieldDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         switch (id) {
             case R.id.btn_field_request_reject:{
                 Router.sendFieldRequestNotificationResponse(getActivity(), requestID, Constants.Types.SERVICE_REJECT_FIELD_REQUEST);

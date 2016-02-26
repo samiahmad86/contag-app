@@ -11,9 +11,9 @@
     <com.contag.app.view.CircularImageView
         android:id="@+id/iv_profile_img"
         android:layout_width="62dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_height="62dp"
-        android:background="@drawable/default_profile_pic_small"
+        android:background="@drawable/add_image"
         />
 
 
@@ -49,6 +49,7 @@
                     android:padding="5dp"
                     android:background="@drawable/bg_gray_rect"
                     android:hint="@string/name_hint"
+                    android:capitalize="words"
                     android:textColor="@color/black"
                     android:textColorHint="@color/light_gray"
                     android:textSize="16sp" />

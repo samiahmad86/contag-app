@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+
+
+    >
+
+    <TextView
+        android:id="@+id/tv_share_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:padding="10dp"
+        android:text="Text"
+        android:background="@color/white"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tv_share_text"
+        android:background="@color/light_gray" />
+
+    <LinearLayout
+        android:id="@+id/ll_two_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_below="@id/tv_share_text">
+
+        <RadioGroup
+            android:id="@+id/radioSex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            >
+            <RadioButton
+                android:id="@+id/radio_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Public"
+                android:padding="10dp"
+                android:textColor="@color/black"
+
+                />
+
+            <RadioButton
+                android:id="@+id/radio_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:padding="10dp"
+
+                android:text="Custom" />
+
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/view_heading"
+        android:layout_below="@id/ll_two_buttons"
+        android:background="@color/light_gray" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_contact_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Search"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:drawableRight="@drawable/searchicon"
+        android:layout_below="@+id/view_heading"
+        android:capitalize="sentences"
+        android:background="@color/white"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"
+        android:textSize="16sp" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:id="@+id/view_search"
+        android:layout_below="@id/et_contact_search"
+         android:background="@color/light_gray" />
+
+
+    <ListView
+        android:id="@+id/lv_contag_share"
+        style="@style/ContactScrollBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/view_search"
+        android:visibility="visible"
+        android:layout_marginTop="5dp"
+        android:listSelector="@android:color/transparent"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"/>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_share_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lv_contag_share"
+        android:background="@color/light_blue"
+        android:padding="2dp"
+        android:text="Ok"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>

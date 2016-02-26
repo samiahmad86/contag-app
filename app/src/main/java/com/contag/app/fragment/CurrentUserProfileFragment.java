@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.contag.app.R;
+import com.contag.app.activity.BaseActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.view.EditViewPager;
@@ -175,7 +176,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     public void onPause()
     {
         super.onPause();
-        Log.e("on pause", "currentuserprofilefragment");
+        //Log.e("on pause", "currentuserprofilefragment");
     }
     @Override
     public void onResume()
@@ -221,24 +222,29 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
+        if(!((BaseActivity) getActivity()).isEditModeOn()) {
+            switch (id) {
 
 
-            case R.id.btn_page1: {
-                mEditViewPager.setCurrentItem(0);
-              //  showToast("page1");
-                break;
+                case R.id.btn_page1: {
+                    mEditViewPager.setCurrentItem(0);
+                    //  showToast("page1");
+                    break;
+                }
+                case R.id.btn_page2: {
+                    mEditViewPager.setCurrentItem(1);
+                    // showToast("page2");
+                    break;
+                }
+                case R.id.btn_page3: {
+                    mEditViewPager.setCurrentItem(2);
+                    //  showToast("page3");
+                    break;
+                }
+
             }
-            case R.id.btn_page2: {
-               mEditViewPager.setCurrentItem(1);
-               // showToast("page2");
-                break;
-            }
-            case R.id.btn_page3: {
-                mEditViewPager.setCurrentItem(2);
-              //  showToast("page3");
-                break;
-            }
+        }else{
+            showToast("You cannot navigate in EditMode");
         }
     }
 
@@ -269,6 +275,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
                     if(fragmentToBeOpened == Constants.Types.PROFILE_PERSONAL && isComingFromNotification) {
                         fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL, isComingFromNotification,
                                 requestBundle, fieldName);
+
                         isComingFromNotification = false;
                     } else {
                         fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PERSONAL);
@@ -279,6 +286,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
                     if(fragmentToBeOpened == Constants.Types.PROFILE_SOCIAL && isComingFromNotification) {
                         fragment = CurrentUserSocialProfileEditFragment.newInstance(isComingFromNotification,
                                 requestBundle, fieldName);
+
                         isComingFromNotification = false;
                     } else {
                         fragment = CurrentUserSocialProfileEditFragment.newInstance();
@@ -289,6 +297,7 @@ public class CurrentUserProfileFragment extends BaseFragment implements View.OnT
                     if(fragmentToBeOpened == Constants.Types.PROFILE_PROFESSIONAL && isComingFromNotification) {
                         fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL,
                                 isComingFromNotification, requestBundle, fieldName);
+
                         isComingFromNotification = false;
                     } else {
                         fragment = CurrentUserProfileEditFragment.newInstance(Constants.Types.PROFILE_PROFESSIONAL);

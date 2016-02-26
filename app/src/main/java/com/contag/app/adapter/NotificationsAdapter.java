@@ -18,11 +18,13 @@ import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
+import com.contag.app.listener.DatabaseRequestListener;
 import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.NotificationsResponse;
 import com.contag.app.model.User;
 import com.contag.app.request.ContactRequest;
+import com.contag.app.tasks.DatabaseOperationTask;
 import com.contag.app.util.ContactUtils;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.PrefUtils;
@@ -95,12 +97,11 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
         mViewHolder.btnShare.setVisibility(View.INVISIBLE);
         mViewHolder.tvNotificationsTxt.setText(notification.text);
         mViewHolder.tvNotificationsTxt.setOnClickListener(null);
-        mViewHolder.tvNotificationsTxt.setTag(null) ;
-        Log.d("notifdelete", "Notification type: " + notification.notificationType) ;
+        mViewHolder.tvNotificationsTxt.setTag(null);
+        Log.d("notifdelete", "Notification type: " + notification.notificationType);
 
         if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                 notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
-
 
 
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
@@ -108,17 +109,17 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
             mViewHolder.btnShare.setOnClickListener(this);
 
             if (notification.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD)) {
-                mViewHolder.btnShare.setText("Add");
+              //  mViewHolder.btnShare.setText("Add");
             } else {
-                mViewHolder.btnShare.setText("Share");
+               // mViewHolder.btnShare.setText("Share");
             }
 
             mViewHolder.btnShare.setOnClickListener(this);
 
-        } else if(notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)) {
+        } else if (notification.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)) {
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
             mViewHolder.btnShare.setTag(position);
-            mViewHolder.btnShare.setText("Add") ;
+           // mViewHolder.btnShare.setText("Add");
             mViewHolder.btnShare.setOnClickListener(this);
 
         }
@@ -157,7 +158,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                             Constants.Types.SERVICE_ALLOW_FIELD_REQUEST);
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
-                } else if(notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)){
+                } else if (notificationsResponse.notificationType.equalsIgnoreCase(Constants.Keys.KEY_ADD_CONTACT)) {
 
                     ((NotificationsActivity) mCtxt).addContagUser(notificationsResponse.id);
                     notifications.remove(notificationsResponse);
@@ -168,15 +169,16 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
             case R.id.btn_notif_reject: {
                 int position = (int) v.getTag();
                 NotificationsResponse notificationsResponse = notifications.get(position);
-                if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
+                if (notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_ADD) ||
                         notificationsResponse.notificationType.equals(Constants.Keys.KEY_PROFILE_REQUEST_SHARE)) {
                     Router.sendFieldRequestNotificationResponse(mCtxt, notificationsResponse.request,
                             Constants.Types.SERVICE_REJECT_FIELD_REQUEST);
-                } else if(notificationsResponse.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)){
+                } else if (notificationsResponse.notificationType.equals(Constants.Keys.KEY_ADD_CONTACT)) {
                     ((NotificationsActivity) mCtxt).hideNotification(notificationsResponse.id);
                 }
                 notifications.remove(notificationsResponse);
                 notifyDataSetChanged();
+
                 break;
             }
 
@@ -186,6 +188,7 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
     private class GetUserAndShowProfile extends AsyncTask<Long, Void, ContagContag> {
         private long userID;
+
         @Override
         protected ContagContag doInBackground(Long... params) {
             userID = params[0];
@@ -205,12 +208,29 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     }
 
                     @Override
-                    public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                        if (contactResponses.size() == 1) {
-                            ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                    contactResponses.get(0).contagContactResponse, isContact);
-                        }
-                        Router.startUserActivity(mCtxt, TAG, id);
+                    public void onRequestSuccess(final ContactResponse.ContactList contactResponses) {
+                        DatabaseRequestListener mDatabaseRequestListener = new DatabaseRequestListener() {
+                            @Override
+                            public void onPreExecute() {
+
+                            }
+
+                            @Override
+                            public Object onRequestExecute() {
+                                if (contactResponses.size() == 1) {
+                                    ContactUtils.insertAndReturnContagContag(mCtxt.getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                            contactResponses.get(0).contagContactResponse, isContact);
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            public void onPostExecute(Object responseObject) {
+                                Router.startUserActivity(mCtxt, TAG, id);
+                            }
+                        };
+                        DatabaseOperationTask mDatabaseOperationTask = new DatabaseOperationTask(mDatabaseRequestListener);
+                        mDatabaseOperationTask.execute();
                     }
                 });
             } else {

@@ -8,11 +8,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,7 +49,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
     public static final String TAG = CurrentUserProfileEditFragment.class.getName();
 
-    private HashMap<Integer, P2ProfileModel> hmP2PProfileModel;
+    private HashMap<Integer, P2ProfileModel> hmP2PProfileModel=new HashMap<>();
     private ArrayList<ViewHolder> viewHolderArrayList;
     private LinearLayout llViewContainer;
     private boolean isEditModeOn = false;
@@ -57,10 +60,13 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     private ScrollView svProfile;
     private int profileType;
     private boolean isComingFromNotification, cameFromNotification;
+    private boolean notificationGone=false;
     private Bundle requestBundle;
     private String fieldName;
     private float x1, x2, y1, y2;
     public TextView tvTabDetail;
+    boolean flagEdit=false;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
 
 
     public static CurrentUserProfileEditFragment newInstance(int type) {
@@ -108,10 +114,30 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         if (isComingFromNotification) {
             requestBundle = args.getBundle(Constants.Keys.KEY_DATA);
             fieldName = args.getString(Constants.Keys.KEY_FIELD_NAME);
+            profileType = args.getInt(Constants.Keys.KEY_USER_PROFILE_TYPE);
+            Log.e(TAG, "iscoming from notification :"+((BaseActivity) getActivity()).isEditModeOn() + "1");
         }
         new LoadUser().execute();
-        return view;
+
+      /*  view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+
+                    Log.e(TAG,"inside fragment edit");
+                    return true;
+                }
+                return false;
+            }
+        } );*/
+       return view;
     }
+
 
     @Override
     public void onStart() {
@@ -143,20 +169,27 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                 break;
             }
             case R.id.btn_edit_profile: {
+                v.startAnimation(buttonClick);
                 if (!DeviceUtils.isInternetConnected(getActivity())) {
                     showToast("Sorry there is no internet.");
                     return;
                 }
                 if (isEditModeOn) {
                     btnEditProfile.setEnabled(false);
+                    if(!flagEdit)
+                         hideKeyboard();
                     sendData();
+                    isEditModeOn=false;
+                    ((BaseActivity) getActivity()).setEditMode(false);
                 } else {
+                    btnEditProfile.setEnabled(true);
                     ((BaseActivity) getActivity()).setEditMode(true);
-                    openEditMode();
+                     openEditMode();
                 }
                 break;
             }
             case R.id.btn_share: {
+                v.startAnimation(buttonClick);
                 int position = (int) v.getTag();
                 P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
                 ShareDialog share = ShareDialog.newInstance(mP2ProfileModel.key, mP2ProfileModel.value);
@@ -194,16 +227,30 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         }
     }
 
-    private void setViewContent() {
+    public void setViewContent() {
+        btnEditProfile.setText("Edit");
+        btnEditProfile.setEnabled(true);
+        ((BaseActivity) getActivity()).setEditMode(false);
+       // isEditModeOn=false;
+       // hideKeyboard();
+        isEditModeOn=false;
+        Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+        iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
+        Log.e(TAG, ((BaseActivity) getActivity()).isEditModeOn() + " "+isEditModeOn+ "5");
         for (int i = 0; i < hmP2PProfileModel.size(); i++) {
             setUpView(i);
         }
     }
 
     private void setUpView(int position) {
+
+        ((BaseActivity) getActivity()).setEditMode(false);
+        Log.e(TAG, "setupview"+isEditModeOn+ "1");
         P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
         ViewHolder mViewHolder = viewHolderArrayList.get(position);
 
+      //  Log.e(TAG, ((BaseActivity) getActivity()).isEditModeOn() + " "+isEditModeOn+ "6");
         mViewHolder.tvFieldValue.setVisibility(View.VISIBLE);
         mViewHolder.etFieldValue.setVisibility(View.GONE);
         mViewHolder.view_line.setVisibility(View.VISIBLE);
@@ -222,6 +269,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         } else if (viewType == Constants.Types.FIELD_LIST) {
             ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this.getActivity(),
                     R.layout.spinner_item, mP2ProfileModel.values);
+
             mViewHolder.spFieldValue.setAdapter(spAdapter);
         } else if (viewType == Constants.Types.FIELD_DATE) {
             final int datePosition = position;
@@ -245,6 +293,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             });
         }
 
+
         if (mP2ProfileModel.value != null && mP2ProfileModel.value.length() != 0) {
             mViewHolder.tvFieldValue.setText(mP2ProfileModel.value);
             mViewHolder.btnShare.setVisibility(View.VISIBLE);
@@ -254,6 +303,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             mViewHolder.btnAdd.setVisibility(View.GONE);
             mViewHolder.btnAdd.setTag(position);
         }
+      //  Log.e(TAG, ((BaseActivity) getActivity()).isEditModeOn() + " "+isEditModeOn+ "7");
     }
 
     private void showDate(int position) {
@@ -267,6 +317,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
     }
 
     private void openEditMode() {
+
+        isEditModeOn=true;
+        ((BaseActivity) getActivity()).setEditMode(true);
+        ((BaseActivity) getActivity()).setEditMode(true);
         for (int i = 0; i < hmP2PProfileModel.size(); i++) {
             ViewHolder mViewHolder = viewHolderArrayList.get(i);
             P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(i);
@@ -287,16 +341,32 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             }
             mViewHolder.tvFieldValue.setVisibility(View.GONE);
         }
-        isEditModeOn = true;
+       //isEditModeOn = true;
         Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
         iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+
+        Log.e(TAG, ((BaseActivity) getActivity()).isEditModeOn() + "1");
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
         btnEditProfile.setText("Save");
+        Log.e(TAG, "open edit mode"+isEditModeOn + "1");
         btnEditProfile.setTextColor(getResources().getColor(R.color.white));
     }
 
-    private void sendData() {
+    public void sendDataOnBack()
+    {
+        btnEditProfile.performClick();
+        setViewContent();
+       // isEditModeOn=false;
+       // ((BaseActivity) getActivity()).setEditMode(false);
+        flagEdit=true;
+    }
+
+    public void sendData() {
+        isEditModeOn=false;
+        btnEditProfile.setEnabled(false);
+//        hideKeyboard();
         JSONArray aUser = new JSONArray();
+        Log.e(TAG, "send data"+isEditModeOn + "1");
         JSONObject oUser;
         try {
             for (int i = 0; i < hmP2PProfileModel.size(); i++) {
@@ -311,16 +381,23 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
                     } else if (p2ProfileModel.value != null && p2ProfileModel.value.length() != 0) {
                         selectionValue = p2ProfileModel.value;
                     }
+
+                    Log.e(TAG,"loop 1 "+selectionValue);
                     oUser.put(p2ProfileModel.key, selectionValue);
                 } else {
+                    Log.e(TAG,"loop 2 "+vh.etFieldValue.getText().toString());
                     oUser.put(p2ProfileModel.key, vh.etFieldValue.getText().toString());
                 }
                 aUser.put(oUser);
             }
             pbProfileUpdate.setVisibility(View.VISIBLE);
+            Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+            iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
            // btnEditProfile.setText("Save");
             // pbProfileUpdate.setIndeterminateDrawable(getResources().getDrawable(R.anim.pb_animation));
-
+            log(TAG,aUser.toString());
+            log(TAG,profileType+"");
 
             Router.startUserService(getActivity(), Constants.Types.REQUEST_PUT, aUser.toString(), profileType);
         } catch (JSONException ex) {
@@ -368,6 +445,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         public void onReceive(Context context, Intent intent) {
             int type = intent.getIntExtra(Constants.Keys.KEY_USER_PROFILE_TYPE, 0);
             if (type == CurrentUserProfileEditFragment.this.profileType) {
+                log(TAG,type+"");
                 new LoadUser().execute(type);
             }
         }
@@ -421,7 +499,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         protected HashMap<Integer, P2ProfileModel> doInBackground(Integer... params) {
 
             ContagContag cc = ((BaseActivity) CurrentUserProfileEditFragment.this.getActivity()).getCurrentUser();
-            HashMap<Integer, P2ProfileModel> hmP2ProfileModel = new HashMap<>();
+          HashMap<Integer, P2ProfileModel> hmP2ProfileModel = new HashMap<>();
 
             switch (profileType) {
 
@@ -481,6 +559,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
 
                     hmP2ProfileModel.put(8, new P2ProfileModel(Constants.Keys.KEY_USER_IOS_APP_LINK, cc.getIosAppLink(),
                             Constants.Types.FIELD_STRING, InputType.TYPE_CLASS_TEXT));
+                    log(TAG,"ios link"+cc.getIosAppLink());
 
                     break;
                 }
@@ -496,7 +575,7 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             if (viewHolderArrayList.size() != hmP2PProfileModel.size()) {
                 addViews();
             }
-            if (isEditModeOn) {
+            if (!isEditModeOn) {
                 Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
                 iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
                 log(TAG, "sending broadcast from p2 with true");
@@ -508,24 +587,47 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             btnEditProfile.setEnabled(true);
             pbProfileUpdate.setVisibility(View.GONE);
             btnEditProfile.setText("Edit");
+            //if (cameFromNotification) {
             if (cameFromNotification) {
+
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
                     P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
                     if (mP2ProfileModel.key.equalsIgnoreCase(fieldName) && mP2ProfileModel.value != null
                             && mP2ProfileModel.value.length() != 0) {
+                        Log.e(TAG, isEditModeOn + "2");
+
+                        ((BaseActivity) getActivity()).setEditMode(false);
+                        isEditModeOn = false;
+                        setViewContent();
+                        Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+                        iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
+                        log(TAG, "sending broadcast from p2 with true");
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
+                        isComingFromNotification=false;
+                        Log.e(TAG, "came from notification:"+isEditModeOn + "1");
                         ShareFieldDialog mShareFieldDialog = ShareFieldDialog.newInstance(requestBundle, fieldName);
                         mShareFieldDialog.show(getChildFragmentManager(), "share_dialog");
+                        notificationGone=true;
                         break;
                     }
                 }
-                cameFromNotification = false;
+             cameFromNotification = false;
             }
-            if (isComingFromNotification) {
-                openEditMode();
+            if ((isComingFromNotification)&&(!notificationGone)) {
+               // openEditMode();
+
                 for (int position = 0; position < hmP2PProfileModel.size(); position++) {
                     P2ProfileModel mP2ProfileModel = hmP2PProfileModel.get(position);
                     if (mP2ProfileModel.key.equals(fieldName)) {
+                        ((BaseActivity) getActivity()).setEditMode(true);
+                         isEditModeOn = true;
                         scrollToPosition(position);
+                        Log.e(TAG, isEditModeOn + "3");
+                        Intent iDisableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
+                        iDisableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, false);
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iDisableSwipe);
+                        openEditMode();
+                        Log.e(TAG, "iscoming from notification 2 :"+isEditModeOn + "1");
                         break;
                     }
                 }
@@ -534,6 +636,8 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
             }
         }
     }
+
+
     private String keyToString(int profileType) {
         if(profileType==Constants.Types.PROFILE_PERSONAL)
             return "PERSONAl";
@@ -542,6 +646,11 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         if(profileType==Constants.Types.PROFILE_PROFESSIONAL)
             return "PROFESSIONAL";
         return "";
+    }
+
+    public boolean isEditModeOn()
+    {
+        return isEditModeOn;
     }
 
 

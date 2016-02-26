@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+   >
 
 
     <ImageView android:id="@+id/btn_filter"
@@ -43,6 +44,7 @@
         android:layout_margin="10dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp" />
+
     <include
         android:id="@+id/pb_contacts"
         layout="@layout/layout_progress_bar" />

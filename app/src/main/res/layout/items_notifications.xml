@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_shadow"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:elevation="1sp">
 
     <com.contag.app.view.CircularImageView
         android:id="@+id/iv_notifications_usr_img"
@@ -20,17 +21,18 @@
 
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/btn_cross" />
+        android:background="@drawable/cross02" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_share"
-        style="@style/NotificationsButtonStyle"
-        android:layout_width="50dp"
+        android:background="@drawable/tick01"
+        android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/btn_notif_reject"
         android:padding="2dp"
-        android:text="@string/allow"
+        android:layout_marginRight="15dp"
+
         android:textAllCaps="false"
         android:textSize="14sp"
         android:visibility="visible" />

@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +33,7 @@ import com.contag.app.adapter.ContactAdapter;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
+import com.contag.app.listener.DatabaseRequestListener;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContactListItem;
@@ -43,12 +46,14 @@ import com.contag.app.model.InterestDao;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.request.ContactRequest;
+import com.contag.app.tasks.DatabaseOperationTask;
 import com.contag.app.util.ContactUtils;
 import com.contag.app.util.DeviceUtils;
 import com.contag.app.util.PrefUtils;
 import com.contag.app.util.RegexUtils;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +61,7 @@ import java.util.List;
 public class ContactListFragment extends BaseFragment implements TextWatcher, TextView.OnEditorActionListener,
         AdapterView.OnItemSelectedListener, RequestListener<ContactResponse.ContactList> {
 
-    private static final String TAG = ContactListFragment.class.getName();
+    public static final String TAG = ContactListFragment.class.getName();
     private View pbContacts;
     private ArrayList<ContactListItem> contacts = new ArrayList<>();
     private ContactAdapter contactAdapter;
@@ -68,6 +73,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
     private View filterView;
     private boolean isListViewEnabled;
     ImageView btnFilter;
+    EditText etSearchBox;
+
+
 
     public static ContactListFragment newInstance() {
         ContactListFragment clf = new ContactListFragment();
@@ -83,53 +91,124 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         pbContacts = view.findViewById(R.id.pb_contacts);
         contactAdapter = new ContactAdapter(contacts, getActivity());
         lvContacts = (ListView) view.findViewById(R.id.lv_contact);
+
+        long userId=PrefUtils.getCurrentUserID();
+
         lvContacts.setAdapter(contactAdapter);
+        new LoadContacts().execute();
+        Log.d("Contactlist","OnCreate");
+
+
+      //  final Bundle savedInstance=savedInstanceState;
         isListViewEnabled = true;
+
+
         lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long viewID) {
                 ContactListItem contactListItem = contacts.get(position);
+
+
                 if (DeviceUtils.isWifiConnected(getActivity()) && (contactListItem.type == Constants.Types.ITEM_ADD_CONTAG
-                        || contactListItem.type == Constants.Types.ITEM_CONTAG)) {
+                        || contactListItem.type == Constants.Types.ITEM_CONTAG) && isListViewEnabled) {
                     ContagContag mContagContag = contactListItem.mContagContag;
                     ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
                     final boolean isContact = mContagContag.getIs_contact();
                     final long id = mContagContag.getId();
                     pbContacts.setVisibility(View.VISIBLE);
+                    log(TAG, System.currentTimeMillis() + " making request");
                     isListViewEnabled = false;
                     getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
+                            log(TAG, System.currentTimeMillis() + " error time");
                             pbContacts.setVisibility(View.GONE);
-                            isListViewEnabled = true;
                             Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
-                        }
+                            isListViewEnabled = true;
+                        }  
 
                         @Override
-                        public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-                            if (contactResponses.size() == 1) {
-                                ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
-                                        contactResponses.get(0).contagContactResponse, isContact);
-                            }
-                            pbContacts.setVisibility(View.GONE);
-                            isListViewEnabled = true;
-                            Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
+                        public void onRequestSuccess(final ContactResponse.ContactList contactResponses) {
+                            log(TAG, System.currentTimeMillis() + " success time");
+                            DatabaseRequestListener mDatabaseRequestListener = new DatabaseRequestListener() {
+                                @Override
+                                public void onPreExecute() {
+
+                                }
+
+                                @Override
+                                public Object onRequestExecute() {
+                                    if (contactResponses.size() == 1) {
+                                        ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), ContactUtils.getContact(contactResponses.get(0)),
+                                                contactResponses.get(0).contagContactResponse, isContact);
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                public void onPostExecute(Object responseObject) {
+                                    pbContacts.setVisibility(View.GONE);
+                                    Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
+                                    isListViewEnabled = true;
+                                }
+                            };
+                            DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(mDatabaseRequestListener);
+                            databaseOperationTask.execute();
                         }
                     });
-                } else if (contactListItem.type != Constants.Types.ITEM_NON_CONTAG) {
-                    isListViewEnabled = true;
+                } else if (contactListItem.type != Constants.Types.ITEM_NON_CONTAG && isListViewEnabled) {
+
+                    log(TAG, "No wifi");
                     Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, contactListItem.mContagContag.getId());
                 }
             }
         });
 
         lvContacts.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
+           /* @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState != 0) {
                     hideKeyboard();
                 }
+            }*/
+           int mLastFirstVisibleItem = 0;
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // TODO Auto-generated method stub
+
+              //  toolbarHeight= getActivity().findViewById(R.id.rl_tb_container).getHeight();
+                final ListView lw = lvContacts;
+                if (scrollState != 0) {
+                    hideKeyboard();
+
+                }
+
+                if(scrollState == 0) {
+                    Log.i("a", "scrolling stopped...");
+
+                }
+
+/*
+                if (view.getId() == lw.getId()) {
+                    final int currentFirstVisibleItem = lw.getFirstVisiblePosition();
+                    if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+
+                        if(!toolbarHidden) {
+                            getActivity().findViewById(R.id.rl_tb_container).animate().translationYBy(-toolbarHeight);
+                            toolbarHidden=true;
+                        }
+                        Log.i("a", "scrolling down...");
+                    } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+                       if(toolbarHidden) {
+                           getActivity().findViewById(R.id.rl_tb_container).animate().translationYBy(toolbarHeight);
+                           toolbarHidden=false;
+                       }
+                        Log.i("a", "scrolling up...");
+                    }
+
+                    mLastFirstVisibleItem = currentFirstVisibleItem;
+                }*/
             }
+
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -137,7 +216,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             }
         });
 
-        btnFilter = (ImageView) view.findViewById(R.id.btn_filter);
+      /*  btnFilter = (ImageView) view.findViewById(R.id.btn_filter);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,33 +224,34 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                 toggleDropDown(true, v);
 
             }
-        });
-        filterView = inflater.inflate(R.layout.popup_filter, container, false);
+        });*/
+      /*  filterView = inflater.inflate(R.layout.popup_filter, container, false);
         filterView.findViewById(R.id.tv_filter_name).setOnClickListener(filterSelection);
         filterView.findViewById(R.id.tv_filter_blood).setOnClickListener(filterSelection);
         filterView.findViewById(R.id.tv_filter_platform).setOnClickListener(filterSelection);
         filterView.findViewById(R.id.tv_filter_interests).setOnClickListener(filterSelection);
 
         filterDropDown = new PopupWindow(filterView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-     /*   filterDropDown.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);*/
+     *//*   filterDropDown.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);*//*
         // popupWindow.setContentView(popupView);
-     /*   filterDropDown.setWindowLayoutMode(
+     *//*   filterDropDown.setWindowLayoutMode(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         filterDropDown.setHeight(1);
-        filterDropDown.setWidth(1);*/
+        filterDropDown.setWidth(1);*//*
         // filterDropDown.setBackgroundDrawable(new BitmapDrawable());
         filterDropDown.setBackgroundDrawable(getResources().getDrawable(R.color.light_blue));
         // filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-      /*  Rect location=locateView(filterV
-        filterDropDown.showAtLocation(filterView, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);*/
+      *//*  Rect location=locateView(filterV*/
+     //   filterDropDown.showAtLocation(filterView, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);*/
 
-        EditText etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
+        etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
         etSearchBox.setOnEditorActionListener(this);
         etSearchBox.addTextChangedListener(this);
         pbContacts.setVisibility(View.VISIBLE);
         searchFilter = Constants.Arrays.SEARCH_FILTER[0];
+
         return view;
     }
 
@@ -190,16 +270,24 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brContactsUpdated);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(brContactRequestMade);
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        new LoadContacts().execute();
+        isListViewEnabled = true;
+
+        Log.d("Contactlist","OnResume");
+
     }
 
     private void toggleDropDown(Boolean show, View v) {
         if (show)
-        // filterDropDown.show
+        // filterDropD
 
         {
             Rect location = locateView(v);
@@ -315,50 +403,105 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
     @Override
     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-
         pbContacts.setVisibility(View.GONE);
-
         if (contactResponses.size() == 1) {
-            ContactResponse mContactResponse = contactResponses.get(0);
-            Contact mContact = ContactUtils.getContact(mContactResponse);
-            ContagContag mContagContag = ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), mContact,
-                    mContactResponse.contagContactResponse, false);
-            addContagContagToList(mContagContag);
+
+            final ContactResponse mContactResponse = contactResponses.get(0);
+
+            DatabaseRequestListener databaseRequestListener = new DatabaseRequestListener() {
+                @Override
+                public void onPreExecute() {
+                }
+
+                @Override
+                public Object onRequestExecute() {
+                    Contact mContact = ContactUtils.getContact(mContactResponse);
+                    ContagContag mContagContag = ContactUtils.insertAndReturnContagContag(getActivity().getApplicationContext(), mContact,
+                            mContactResponse.contagContactResponse, false);
+                    return mContagContag;
+                }
+
+                @Override
+                public void onPostExecute(Object responseObject) {
+                    ContagContag mContagContag = (ContagContag) responseObject;
+                    addContagContagToList(mContagContag);
+                }
+            };
+            DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(databaseRequestListener);
+            databaseOperationTask.execute();
+
         } else {
             showToast("No users found with that Contag id!");
         }
 
     }
 
-    private void addContagContagToList(ContagContag mContagContag) {
-        ContactListItem listItem = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
-        contacts.clear();
-        ArrayList<ContactListItem> contactListItems = new ArrayList<>();
-        contactListItems.add(listItem);
-        contacts.addAll(contactListItems);
-        contactAdapter.notifyDataSetChanged();
+    private void addContagContagToList(final ContagContag mContagContag) {
+        DatabaseRequestListener mDatabaseRequestListener = new DatabaseRequestListener() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public Object onRequestExecute() {
+                return ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
+            }
+
+            @Override
+            public void onPostExecute(Object responseObject) {
+                ContactListItem listItem = (ContactListItem) responseObject;
+                contacts.clear();
+                ArrayList<ContactListItem> contactListItems = new ArrayList<>();
+                contactListItems.add(listItem);
+                contacts.addAll(contactListItems);
+                contactAdapter.notifyDataSetChanged();
+            }
+        };
+        DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(mDatabaseRequestListener);
+        databaseOperationTask.execute();
     }
 
-    private void doSearch(String query) {
+    private void doSearch(final String query) {
         if (mSearchContacts != null) {
             mSearchContacts.cancel(true);
         }
 
         if (query.length() == 8 && RegexUtils.isContagId(query)) {
-            ContagContag mContagContag = ContactUtils.getContagContagByContagID(getActivity().getApplicationContext(), query);
-            if (mContagContag != null) {
-                addContagContagToList(mContagContag);
+            DatabaseRequestListener databaseRequestListener = new DatabaseRequestListener() {
+                @Override
+                public void onPreExecute() {
+
+                }
+
+                @Override
+                public Object onRequestExecute() {
+                    ContagContag mContagContag = ContactUtils.getContagContagByContagID(getActivity().getApplicationContext(), query);
+                    return null;
+                }
+
+                @Override
+                public void onPostExecute(Object responseObject) {
+                    ContagContag mContagContag = (ContagContag) responseObject;
+                    if (mContagContag != null) {
+                        addContagContagToList(mContagContag);
+                    } else {
+                        pbContacts.setVisibility(View.VISIBLE);
+                        ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, query);
+                        getSpiceManager().execute(contactUserRequest, ContactListFragment.this);
+                    }
+                }
+            };
+            DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(databaseRequestListener);
+            databaseOperationTask.execute(databaseOperationTask);
             } else {
-                pbContacts.setVisibility(View.VISIBLE);
-                ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, query);
-                getSpiceManager().execute(contactUserRequest, this);
-            }
-        } else {
             mSearchContacts = new SearchContacts();
             mSearchContacts.execute(query, searchFilter);
         }
 
     }
+
+
 
     private class LoadContacts extends AsyncTask<Void, Void, ArrayList<ContactListItem>> {
 
@@ -377,6 +520,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
             ArrayList<ContactListItem> contactListItems = new ArrayList<>();
 
+
             ContagContagDao mContagContagDao = session.getContagContagDao();
             List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                     where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID()),
@@ -384,11 +528,12 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
 
             if (contagContacts != null) {
                 for (ContagContag mContagContag : contagContacts) {
+
                     ContactListItem mContactListItem = ContactUtils.getContactListItem(getActivity().getApplicationContext(), mContagContag);
                     contactListItems.add(mContactListItem);
                 }
             }
-            InterestDao mInterestDao = session.getInterestDao();
+           /* InterestDao mInterestDao = session.getInterestDao();
             List<Interest> interests = mInterestDao.queryBuilder().
                     orderAsc(InterestDao.Properties.ContagUserId).list();
 
@@ -396,7 +541,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                 Log.d("ConList", "The interest user id is: " + i.getContagUserId());
                 Log.d("ConList", "The interest is: " + i.getName());
             }
-
+*/
             ContactDao mContactDao = session.getContactDao();
             List<Contact> contacts = mContactDao.queryBuilder().where(ContactDao.Properties.IsOnContag.eq(false)).
                     orderAsc(ContactDao.Properties.ContactName).list();
@@ -415,6 +560,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                 contacts.addAll(contactListItems);
 
                 pbContacts.setVisibility(View.GONE);
+
 
                 contactAdapter.notifyDataSetChanged();
             }
@@ -445,7 +591,8 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                         ContagContagDao mContagContagDao = session.getContagContagDao();
                         List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                                 where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID())
-                                        , ContagContagDao.Properties.Name.like(query)).
+                                        , ContagContagDao.Properties.Name.like(query),
+                                        ContagContagDao.Properties.Is_contact.eq(true)).
                                 orderAsc(ContagContagDao.Properties.Name).list();
 
                         if (contagContacts != null) {
@@ -546,6 +693,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             pbContacts.setVisibility(View.INVISIBLE);
         }
     }
+
 
     public static Rect locateView(View v) {
         int[] loc_int = new int[2];

@@ -31,7 +31,7 @@ public class NewUserFragment extends BaseFragment implements View.OnClickListene
     private OnFragmentInteractionListener mListener;
 
     /**
-     * Factory method to create an instance of fragment
+     * Factory method to create an instance of fragmentg
      *
      * @return new instance of {@link NewUserFragment}
      */
@@ -88,7 +88,7 @@ public class NewUserFragment extends BaseFragment implements View.OnClickListene
             case R.id.btn_contag_id: {
                 View v = getView();
                 if (v != null) {
-                    String contagIDChar = ((EditText) v.findViewById(R.id.et_contag_id_char)).getText().toString();
+                    String contagIDChar = ((EditText) v.findViewById(R.id.et_contag_id_char)).getText().toString().toLowerCase();
                     String contagIDNum = ((EditText) v.findViewById(R.id.et_contag_id_number)).getText().toString();
                     if (contagIDChar.length() != 4) {
                         showToast("Please create your Contag id using at least 4 alphabets.");

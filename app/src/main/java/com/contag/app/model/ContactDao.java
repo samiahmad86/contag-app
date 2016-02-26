@@ -1,3 +1,4 @@
+
 package com.contag.app.model;
 
 import android.database.Cursor;

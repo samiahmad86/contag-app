@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:text="@string/abc_action_bar_home_description"
         android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textSize="14sp"
             android:background="?android:selectableItemBackground"
             android:text="@string/reject"
             android:textColor="@color/black" />
@@ -45,6 +46,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:text="@string/allow"
+            android:textSize="14sp"
             android:textColor="@color/black" />
 
     </LinearLayout>

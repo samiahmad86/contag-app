@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:background="@color/bg_block_list"
     tools:context="com.contag.app.fragment.NavDrawerFragment">
 
     <ScrollView
@@ -30,7 +31,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/iv_nav_drawer_header"
-
+                        android:src="@drawable/img_back"
                         android:layout_alignTop="@+id/actual_content"
                         android:scaleType="centerCrop"
                         android:layout_alignBottom="@+id/actual_content"
@@ -44,7 +45,6 @@
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:background="@color/bg_tb_home"
-
                         android:orientation="vertical"
                         >
                     <android.support.v7.widget.AppCompatTextView
@@ -54,14 +54,14 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/white"
                         android:paddingLeft="0dp"
-                        android:text="Name"
+                        android:text=""
                         android:textSize="25sp" />
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tv_usr_cunt_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="sami1234"
+                        android:text=""
                         android:paddingLeft="0dp"
                         android:layout_below="@id/tv_usr_name"
                         android:textColor="@color/white"
@@ -110,10 +110,10 @@
                         android:text="Share Contag"
                         android:textColor="@color/white"
                         android:padding="10dp"
-                        android:visibility="invisible"
                         android:id="@+id/share_contag"
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"
+                        android:visibility="gone"
                         android:layout_alignBaseline="@id/radioSex"
                         android:layout_alignBottom="@id/radioSex"
                        android:layout_alignParentRight="true"
@@ -134,18 +134,26 @@
                 android:padding="5dp"
                 android:layout_marginTop="0dp">
 
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_alignBottom="@+id/tv_notification_txt"
+                    android:layout_alignTop="@+id/tv_notification_txt"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_stat_notification"/>
+
                 <TextView
                     android:id="@+id/tv_notification_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="60dp"
                     android:text="@string/notification"
                     android:padding="10dp"
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="15sp" />
+                    android:textSize="17sp" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_notification_count"
@@ -155,8 +163,8 @@
                     android:gravity="center"
 
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="100dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="80dp"
 
                     android:text="0"
                     android:shadowColor="@color/white"
@@ -173,26 +181,42 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/bg_block_list"
                 android:layout_below="@id/rl_notification_container">
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignBottom="@+id/tv_feedback_txt"
+                    android:layout_alignTop="@+id/tv_feedback_txt"
+                    android:src="@drawable/ic_stat_feedback"/>
 
                 <TextView
                     android:id="@+id/tv_feedback_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="60dp"
                     android:text="@string/feedback"
                     android:padding="10dp"
                     android:gravity="left"
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="15sp" />
+                    android:textSize="17sp" />
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_alignTop="@+id/tv_rate_txt"
+                    android:layout_alignBottom="@+id/tv_rate_txt"
+                    android:src="@drawable/ic_stat_rating"/>
+
 
                 <TextView
                     android:id="@+id/tv_rate_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="60dp"
                     android:layout_below="@id/tv_feedback_txt"
                     android:text="@string/rate_contag"
                     android:padding="10dp"
@@ -200,7 +224,16 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="15sp" />
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginLeft="15dp"
+
+                    android:layout_alignTop="@+id/tv_logout_txt"
+                    android:layout_alignBottom="@+id/tv_logout_txt"
+                    android:src="@drawable/ic_stat_logout"/>
 
 
                 <TextView
@@ -208,7 +241,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="60dp"
                     android:layout_below="@id/tv_rate_txt"
                     android:text="Logout"
                     android:gravity="left"
@@ -216,7 +249,7 @@
                     android:textColor="@color/white"
                     android:onClick="onClick"
                     android:clickable="true"
-                    android:textSize="15sp" />
+                    android:textSize="17sp" />
                 <View
                     android:layout_height="fill_parent"
                     android:layout_width="fill_parent"

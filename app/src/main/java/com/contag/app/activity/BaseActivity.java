@@ -12,12 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.contag.app.BuildConfig;
 import com.contag.app.R;
 import com.contag.app.config.ContagApplication;
+import com.contag.app.fragment.ContactListFragment;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContagContag;
@@ -49,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        log(ContactListFragment.TAG, "fuck evgradleweryone");
         mSpiceManager.start(this);
     }
 
@@ -56,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (mSpiceManager.isStarted()) {
+            log(ContactListFragment.TAG, "fuck you");
             mSpiceManager.shouldStop();
         }
     }
@@ -89,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.btn_back);
+       //getSupportActionBar().setHomeAsUpIndicator(R.drawable.btn_back);
         //TextView tv = (TextView) findViewById(R.id.badge_ham);
         if(PrefUtils.getNewNotificationCount()>0) {
 
@@ -109,13 +110,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         Picasso.with(this).load(this.getCurrentUser().getAvatarUrl()).
                 fit()
                 .centerCrop().
-        placeholder(R.drawable.default_profile_pic_small).into(iv);
+        placeholder(R.drawable.img_back).into(iv);
     }
 
     /**
      * @return an instance of {@link SpiceManager} to execute network request.
      */
-    protected SpiceManager getSpiceManager() {
+    public SpiceManager getSpiceManager() {
         return mSpiceManager;
     }
 

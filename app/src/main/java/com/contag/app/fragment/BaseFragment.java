@@ -36,12 +36,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof BaseActivity) {
-            mBaseActivity = (BaseActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof BaseActivity) {
+            mBaseActivity = (BaseActivity) context;
         }
+        mSpiceManager.start(getActivity());
     }
+
+
 
     /**
      * @return the mBaseActivity
@@ -53,22 +56,27 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mSpiceManager.start(getActivity());
+    }
+
+
+
+    public void onDetach() {
+        super.onDetach();
+        if (mSpiceManager.isStarted()) {
+            mSpiceManager.shouldStop();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mSpiceManager.isStarted()) {
-            mSpiceManager.shouldStop();
-        }
     }
 
     /**
      * @return an instance of {@link SpiceManager} to execute network request.
      */
     protected SpiceManager getSpiceManager() {
-        return mSpiceManager;
+        return ((BaseActivity) getActivity()).getSpiceManager();
     }
 
     /**

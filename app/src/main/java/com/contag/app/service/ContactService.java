@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
@@ -37,6 +39,9 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
     private CursorLoader clContact;
     private SpiceManager mSpiceManager = new SpiceManager(APIService.class);
     private static final String TAG = ContactService.class.getName();
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
+
 
     @Nullable
     @Override
@@ -110,6 +115,7 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
+            Log.d(TAG, "contact book updated set");
             PrefUtils.setContactBookUpdated(true);
         }
     };
@@ -117,33 +123,8 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
     @Override
     public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
-        HashSet<RawContacts> contacts = new HashSet<>();
-        ArrayList<Integer> contactIds = new ArrayList<>();
-        Log.d("Condev", "Currently loading your contact book") ;
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
-            if (!contactIds.contains(id)) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                phoneNumber = phoneNumber.replace(" ", "");
-                phoneNumber = phoneNumber.replace("+91", "");
-                if (phoneNumber.indexOf("0") == 0) {
-                    phoneNumber = phoneNumber.substring(1);
-                }
-
-                if (RegexUtils.isPhoneNumber(phoneNumber)) {
-                    char firstCharacter = phoneNumber.charAt(0);
-                    if (firstCharacter == '9' || firstCharacter == '8' || firstCharacter == '7') {
-                        contacts.add(new RawContacts(name, phoneNumber));
-                        contactIds.add(id);
-                    }
-                }
-            }
-        }
-        Log.d("Condev", "Contacts loaded from contact book. Time to make the request");
-        Log.d("Condev", "Requesting the server with " + String.valueOf(contacts.size()) + " contacts");
-        ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_POST, contacts);
-        mSpiceManager.execute(cr, this);
+        Log.d(TAG, "on load completed");
+        new GetContactListFromCursor().execute(cursor);
     }
 
     @Override
@@ -154,10 +135,54 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
 
     @Override
     public void onRequestSuccess(ContactResponse.ContactList contactResponses) {
-        Gson gson = new Gson();
         //Log.d("Condev", "Server request successful with a response of " + String.valueOf(contactResponses.size()) + "contacts") ;
 
         new InsertContact().execute(contactResponses);
+    }
+
+    private class GetContactListFromCursor extends AsyncTask<Cursor, Void, HashSet<RawContacts>> {
+        @Override
+        protected HashSet<RawContacts> doInBackground(Cursor... params) {
+            Log.d(TAG, "doInBackground");
+            Cursor cursor = params[0];
+            HashSet<RawContacts> contacts = new HashSet<>();
+            ArrayList<Integer> contactIds = new ArrayList<>();
+            Log.d("Condev", "Currently loading your contact book") ;
+            if(!cursor.isClosed())
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
+                if (!contactIds.contains(id)) {
+                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    phoneNumber = phoneNumber.replace(" ", "");
+                    phoneNumber = phoneNumber.replace("+91", "");
+                    if (phoneNumber.indexOf("0") == 0) {
+                        phoneNumber = phoneNumber.substring(1);
+                    }
+
+                    if (RegexUtils.isPhoneNumber(phoneNumber)) {
+                        char firstCharacter = phoneNumber.charAt(0);
+                        if (firstCharacter == '9' || firstCharacter == '8' || firstCharacter == '7') {
+                            contacts.add(new RawContacts(name, phoneNumber));
+                            contactIds.add(id);
+                        }
+                    }
+                }
+            }
+            if(cursor != null) {
+                cursor.close();
+            }
+            return contacts;
+        }
+
+        @Override
+        protected void onPostExecute(HashSet<RawContacts> contacts) {
+            Log.d("Condev", "Contacts loaded from contact book. Time to make the request");
+            Log.d("Condev", "Requesting the server with " + String.valueOf(contacts.size()) + " contacts");
+            ContactRequest cr = new ContactRequest(Constants.Types.REQUEST_POST, contacts);
+            mSpiceManager.execute(cr, ContactService.this);
+        }
+
     }
 
     private class InsertContact extends AsyncTask<ContactResponse.ContactList, Void, Boolean> {
@@ -177,5 +202,6 @@ public class ContactService extends Service implements Loader.OnLoadCompleteList
             Intent iContactUpdated = new Intent(getResources().getString(R.string.intent_filter_contacts_updated));
             LocalBroadcastManager.getInstance(ContactService.this).sendBroadcast(iContactUpdated);
         }
+
     }
 }

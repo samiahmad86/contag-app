@@ -249,13 +249,16 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
             Picasso.with(NotificationsActivity.this)
                     .load(ccUser.getAvatarUrl())
+                    .fit()
+                    .centerCrop()
                     .placeholder(R.drawable.default_profile_pic_small)
                     .into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
 
             Picasso.with(NotificationsActivity.this)
                     .load(ccUser.getAvatarUrl())
-                    .placeholder(R.drawable.default_profile_pic_small)
-                    .into((ImageView) findViewById(R.id.iv_header_pic));
+                    .fit()
+                    .centerCrop()
+                     .into((ImageView) findViewById(R.id.iv_header_pic));
 
         }
     }
@@ -263,6 +266,6 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     public void onBackPressed()
     {
         finish();
-        Router.startHomeActivity(this, TAG);
+       // Router.startHomeActivity(this, TAG);
     }
 }

@@ -19,6 +19,7 @@ import com.contag.app.model.InterestDao;
 import com.contag.app.model.InterestResponse;
 import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
+import com.contag.app.model.SocialProfileModel;
 import com.contag.app.model.SocialProfileResponse;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ContactUtils {
         }
     }
 
-    public static void saveSingleContact(Context mContext, ContactResponse.ContactList contactResponse, boolean isContact) {
+    public static boolean saveSingleContact(Context mContext, ContactResponse.ContactList contactResponse, boolean isContact) {
         ContactDao mContactDao = getSession(mContext.getApplicationContext()).getContactDao();
 
         for (ContactResponse response : contactResponse) {
@@ -65,11 +66,14 @@ public class ContactUtils {
             }
             try {
                 mContactDao.insertOrReplace(mContact);
+                return true;
             } catch (Exception ex) {
                 Log.d("newprofile", "Exception occurred when insertin contact") ;
                 ex.printStackTrace();
+                return false;
             }
         }
+        return false;
     }
 
     public static ContagContag getContagContagByContagID(Context mContext, String contagID) {
@@ -100,14 +104,38 @@ public class ContactUtils {
             }
         }
 
-        if (mContagContactRespone.socialProfile != null && mContagContactRespone.socialProfile.size() > 0) {
-            SocialProfileDao spDao = getSession(mContext).getSocialProfileDao();
+        SocialProfileDao spDao = getSession(mContext).getSocialProfileDao();
+        Log.d("size response",mContagContactRespone.socialProfile.size()+"");
+
+       // if (mContagContactRespone.socialProfile != null && mContagContactRespone.socialProfile.size() > 0) {
+        if ( mContagContactRespone.socialProfile.size() > 0) {
+
+            Log.d("Contact Utils", "comign here");
+
+           // spDao = getSession(mContext).getSocialProfileDao();
             List<SocialProfile> socialProfiles = getSocialProfiles(mContagContactRespone.socialProfile,
                     mContagContactRespone.id, mContagContag);
             for (SocialProfile socialProfile : socialProfiles) {
+
+                Log.d("Contact Utils", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
                 spDao.insertOrReplace(socialProfile);
+
             }
+
         }
+        else {
+
+          //  spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).buildDelete();
+           List<SocialProfile> socialProfiles=spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).list();
+            for (SocialProfile socialProfile : socialProfiles) {
+
+                Log.d("Contact Utils Delete", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
+                spDao.delete(socialProfile);
+
+            }
+            Log.d("contact","deleted");
+        }
+
         mContagContagDao.insertOrReplace(mContagContag);
         return mContagContag;
     }
@@ -137,7 +165,6 @@ public class ContactUtils {
 
     public static void addContag(Context mContext, ContactListItem contag) {
 
-        Router.addContagUser(mContext, contag.mContagContag.getId());
 
     }
 

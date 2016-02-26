@@ -2,17 +2,22 @@
 
 package com.contag.app.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,18 +25,23 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.BackPressedDialog;
+import com.contag.app.fragment.CurrentUserProfileEditFragment;
 import com.contag.app.fragment.CurrentUserProfileFragment;
+import com.contag.app.fragment.CurrentUserSocialProfileEditFragment;
 import com.contag.app.fragment.UserProfileFragment;
 import com.contag.app.model.ContagContag;
 import com.contag.app.model.Interest;
@@ -52,14 +62,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = UserActivity.class.getName();
     private FlowLayout interestsBoxFlowLayout;
     private ArrayList<Interest> interests;
-    private ArrayList<Long> interestIDS = new ArrayList<>() ;
+    private ArrayList<Long> interestIDS = new ArrayList<>();
 
     private Button btnEdit;
     private static int[] interestContainer = {R.id.rl_interest_one, R.id.rl_interest_two,
@@ -73,12 +86,17 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private long userID;
     private InterestSuggestion currentSuggestion = null;
     private View progressBar;
-    private View view_1,view_2,view_3,view_4;
+
+    private View view_1, view_2, view_3, view_4;
+    private static final int PERMISSIONS_REQUEST_WRITE_STORAGE = 100;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
 
 
 
@@ -102,6 +120,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             Router.startUserService(this, Constants.Types.REQUEST_GET_USER_BY_ID, userID);
 
 
+        log(TAG, "userid " + userID + " stored userid " + PrefUtils.getCurrentUserID());
 
         if (userID != PrefUtils.getCurrentUserID()) {
             int profileCategory = intent.getIntExtra(Constants.Keys.KEY_PROFILE_CATEGORY, 0);
@@ -109,18 +128,49 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             transaction.replace(R.id.root_user_fragment, userFragment);
             transaction.commit();
         } else {
-
+            log(TAG, "maaa chudao");
             final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
             final EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
             final TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
             final TextView tvUserStatus = (TextView) findViewById(R.id.tv_user_status);
-            final View view_1 =  findViewById(R.id.view_1);
-            final View view_2 =  findViewById(R.id.view_2);
-            final View view_3 =  findViewById(R.id.view_3);
-            final View view_4 =  findViewById(R.id.view_4);
+            final View view_1 = findViewById(R.id.view_1);
+            final View view_2 = findViewById(R.id.view_2);
+            final View view_3 = findViewById(R.id.view_3);
+            final View view_4 = findViewById(R.id.view_4);
             final Button btnAddPic = (Button) findViewById(R.id.btn_add_pic);
-            progressBar=findViewById(R.id.progress_bar);
+
+            final ImageView imgProfile=(ImageView) findViewById(R.id.iv_user_photo);
+
+            progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.GONE);
+
+
+
+           /* (findViewById(R.id.add_new_interest)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnEdit.performClick();
+                }
+            });*/
+            /*(findViewById(R.id.fl_interests_box)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnEdit.performClick();
+                }
+            });*/
+            tvUserName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnEdit.performClick();
+                }
+            });
+            tvUserStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnEdit.performClick();
+                }
+            });
+
             /*final Button backButton=(Button) findViewById(R.id.btn_back);
             backButton.setVisibility(View.GONE);
             backButton.setOnClickListener(this);*/
@@ -131,18 +181,20 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             view_2.setVisibility(View.GONE);
             view_3.setVisibility(View.VISIBLE);
             view_4.setVisibility(View.GONE);
-            btnEdit.setVisibility(View.VISIBLE);
+          //
+            btnEdit.setVisibility(View.GONE);
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!isEditModeOn) {
                         setupEditableInterests();
-                       // ivEditIcon.setImageResource(R.drawable.btn_save);
+                        // ivEditIcon.setImageResource(R.drawable.btn_save);
                         btnEdit.setText("Save");
-                        btnEdit.setTextColor(Color.WHITE);
+                     //   btnEdit.setTextColor();
                         etUserName.setText(tvUserName.getText().toString());
                         etUserStatus.setText(tvUserStatus.getText().toString());
                         etUserName.setVisibility(View.VISIBLE);
+                        etUserStatus.setVisibility(View.VISIBLE);
                         etUserStatus.setVisibility(View.VISIBLE);
                         tvUserName.setVisibility(View.GONE);
                         view_1.setVisibility(View.GONE);
@@ -159,7 +211,6 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                             sendNameAndStatus(name, etUserStatus.getText().toString());
 
 
-
                         } else {
                             showToast("Name cannot be blank!");
 
@@ -170,13 +221,21 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
 
+            log(TAG, "uncle fucker");
             boolean isComingFromNotification = intent.getBooleanExtra(Constants.Keys.KEY_COMING_FROM_NOTIFICATION, false);
+            log(TAG, "uncle fuicker");
+
             CurrentUserProfileFragment currentUserProfileFragment;
             if (isComingFromNotification) {
+
+             //   setEditMode(true);
                 currentUserProfileFragment = CurrentUserProfileFragment.newInstance(true, intent.getIntExtra(Constants.Keys.KEY_FRAGMENT_TYPE, 0),
                         intent.getBundleExtra(Constants.Keys.KEY_DATA), intent.getStringExtra(Constants.Keys.KEY_FIELD_NAME));
+                log(TAG, "Calling set is edit mode on as true");
+                setEditMode(true);
             } else {
                 currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
+                log(TAG, "oh fuck you");
 
             }
             transaction.replace(R.id.root_user_fragment, currentUserProfileFragment, CurrentUserProfileFragment.TAG).commit();
@@ -216,19 +275,154 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        if(userID != PrefUtils.getCurrentUserID()) {
-            super.onBackPressed();
-        } else {
-            if(isEditModeOn()) {
-                BackPressedDialog mPressedDialog = BackPressedDialog.newInstance();
-                mPressedDialog.show(getSupportFragmentManager(), "fuck you");
+
+        if(this.isEditModeOn==true)
+        {
+            BackPressedDialog mPressedDialog = BackPressedDialog.newInstance(true);
+            mPressedDialog.show(getSupportFragmentManager(), "fuck you");
+
+        }
+        else {
+            boolean isEditModeOn = false;
+            CurrentUserProfileFragment my = (CurrentUserProfileFragment) getSupportFragmentManager().findFragmentByTag(CurrentUserProfileFragment.TAG);
+            if (my != null && my.isVisible()) {
+                List<Fragment> fragments = my.getChildFragmentManager().getFragments();
+                if (fragments != null) {
+                    for (Fragment fragment : fragments) {
+                        if (fragment instanceof CurrentUserProfileEditFragment) {
+                            if (((CurrentUserProfileEditFragment) fragment).isEditModeOn()) {
+                                isEditModeOn = true;
+                            }
+
+                        }
+                        if (fragment instanceof CurrentUserSocialProfileEditFragment) {
+                            if (((CurrentUserSocialProfileEditFragment) fragment).isEditModeOn()) {
+                                isEditModeOn = true;
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            Log.e(TAG, isEditModeOn + "");
+            if ((userID != PrefUtils.getCurrentUserID())) {
+                if (isTaskRoot()) {
+                    finish();
+                    Router.startHomeActivity(this, TAG);
+                } else {
+                    super.onBackPressed();
+                }
+
+
             } else {
-                super.onBackPressed();
+                if (isEditModeOn) {
+
+                    BackPressedDialog mPressedDialog = BackPressedDialog.newInstance();
+                    mPressedDialog.show(getSupportFragmentManager(), "fuck you");
+                } else {
+                    if (isTaskRoot()) {
+                        Log.e(TAG, "here_3");
+                        finish();
+                        Router.startHomeActivity(this, TAG);
+                    } else {
+                        Log.e(TAG, "here_4");
+                        super.onBackPressed();
+                    }
+
+
+                }
             }
         }
     }
 
-    private void sendNameAndStatus(String name, String status) {
+
+
+    public void saveUserStatus()
+    {
+        if(this.isEditModeOn) {
+            EditText etUserName = (EditText) findViewById(R.id.et_user_name);
+            EditText etUserStatus = (EditText) findViewById(R.id.et_user_status);
+            sendNameAndStatus(etUserName.getText().toString(), etUserStatus.getText().toString());
+            this.isEditModeOn = false;
+        }
+      // super.onBackPressed();
+
+
+    }
+    public void rejectUserStatus()
+    {
+        if(this.isEditModeOn) {
+            findViewById(R.id.tv_user_name).setVisibility(View.VISIBLE);
+            findViewById(R.id.tv_user_status).setVisibility(View.VISIBLE);
+            findViewById(R.id.et_user_name).setVisibility(View.GONE);
+            findViewById(R.id.et_user_status).setVisibility(View.GONE);
+            findViewById(R.id.view_1).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_2).setVisibility(View.GONE);
+            findViewById(R.id.view_3).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_4).setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            btnEdit.setText("Edit");
+            setUpInterests();
+            hideInterestRemoveButton();
+        }
+        this.isEditModeOn=false;
+
+      //  super.onBackPressed();
+    }
+
+    public void saveUserData() {
+
+        CurrentUserProfileFragment my = (CurrentUserProfileFragment) getSupportFragmentManager().findFragmentByTag(CurrentUserProfileFragment.TAG);
+        if (my != null && my.isVisible()) {
+
+            List<Fragment> fragments = my.getChildFragmentManager().getFragments();
+            if (fragments != null) {
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof CurrentUserProfileEditFragment) {
+                       // ((CurrentUserProfileEditFragment) fragment).sendData();
+                        ((CurrentUserProfileEditFragment) fragment).sendDataOnBack();
+
+
+
+                    }
+                    if (fragment instanceof CurrentUserSocialProfileEditFragment) {
+                        ((CurrentUserSocialProfileEditFragment) fragment).sendDataOnBack();
+
+                    }
+                }
+            }
+        }
+    }
+
+    public void rejectUserData() {
+
+        CurrentUserProfileFragment my = (CurrentUserProfileFragment) getSupportFragmentManager().findFragmentByTag(CurrentUserProfileFragment.TAG);
+        if (my != null && my.isVisible()) {
+
+            List<Fragment> fragments = my.getChildFragmentManager().getFragments();
+            if (fragments != null) {
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof CurrentUserProfileEditFragment) {
+                        ((CurrentUserProfileEditFragment) fragment).setViewContent();
+
+                    }
+                    if (fragment instanceof CurrentUserSocialProfileEditFragment) {
+                        ((CurrentUserSocialProfileEditFragment) fragment).setViewContent();
+
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void reloadProfile() {
+        CurrentUserProfileFragment currentUserProfileFragment = CurrentUserProfileFragment.newInstance();
+    }
+
+
+    public void sendNameAndStatus(String name, String status) {
         try {
             JSONArray aUser = new JSONArray();
             JSONObject oUser = new JSONObject();
@@ -238,21 +432,19 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             oUser.put(Constants.Keys.KEY_USER_NAME, name);
             aUser.put(oUser);
             progressBar.setVisibility(View.VISIBLE);
-            hideKeyboard(getApplicationContext(),this.getCurrentFocus());
+            hideKeyboard(getApplicationContext(), this.getCurrentFocus());
             Router.startUserService(this, Constants.Types.REQUEST_PUT, aUser.toString(), Constants.Types.PROFILE_STATUS);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
 
-    /////////////////////////
-
 
     @Override
-    public void onSaveInstanceState(final Bundle savedInstance)
-    {
+    public void onSaveInstanceState(final Bundle savedInstance) {
         super.onSaveInstanceState(savedInstance);
     }
+
     // Show a user's interests
     private void setUpInterests() {
         new AsyncTask<Void, Void, ArrayList<Interest>>() {
@@ -293,9 +485,15 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         int i = 0;
         interestIDS.clear();
         hideInterest();
+
+        if((userInterests.size()<3)&&(userID ==PrefUtils.getCurrentUserID())) {
+           // (findViewById(R.id.add_new_interest)).setVisibility(View.VISIBLE);
+            setupNewInterestView();
+        }
         for (Interest userInterest : userInterests) {
             if (i >= 3)
                 return;
+
             // Set interest on the text views
             ((TextView) findViewById(interestText[i])).setText(userInterest.getName());
             Log.d("iList", "Showing interest with name" + userInterest.getName());
@@ -303,10 +501,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
             // make the interest boxes visible
             (findViewById(interestContainer[i])).setVisibility(View.VISIBLE);
-            interestIDS.add(userInterest.getInterest_id()) ;
+            interestIDS.add(userInterest.getInterest_id());
             i++;
         }
-        Log.d("iList", "Showed interests with interestids being: " + StringUtils.join(interestIDS,",") );
+        Log.d("iList", "Showed interests with interestids being: " + StringUtils.join(interestIDS, ","));
     }
 
     private void setupInterestRemoveButton(ArrayList<Interest> userInterests) {
@@ -366,10 +564,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         interestIDS.clear();
         for (Interest interest : interests) {
 
-            interestIDS.add(interest.getInterest_id()) ;
+            interestIDS.add(interest.getInterest_id());
         }
-        String interestList = StringUtils.join(interestIDS,",") ;
-        Log.d("iList", "The request string has this: " + interestList );
+        String interestList = StringUtils.join(interestIDS, ",");
+        Log.d("iList", "The request string has this: " + interestList);
 
         Router.startInterestUpdateService(this, interestList);
     }
@@ -433,10 +631,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.view_4).setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
 
-          //  ivEditIcon.setImageResource(R.drawable.edit_contag_profile);
-            btnEdit.setText("Edit");btnEdit.setTextColor(Color.WHITE);
+            //  ivEditIcon.setImageResource(R.drawable.edit_contag_profile);
+            btnEdit.setText("Edit");
+          //  btnEdit.setTextColor(Color.WHITE);
 
-            (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
+                    (findViewById(R.id.add_new_interest)).setVisibility(View.GONE);
             setUpInterests();
             hideInterestRemoveButton();
             new LoadUser().execute(PrefUtils.getCurrentUserID());
@@ -545,7 +744,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     newInterest.setContagUserId(PrefUtils.getCurrentUserID());
                     newInterest.setContagContag(getCurrentUser());
                     interests.add(newInterest);
-                    Log.d("iList", "New interest object created:" + newInterest.getInterest_id())  ;
+                    Log.d("iList", "New interest object created:" + newInterest.getInterest_id());
 
 
                     showInterests(interests);
@@ -572,9 +771,11 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (requestCode == Constants.Values.REQUEST_CODE_IMAGE_UPLOAD && resultCode == Activity.RESULT_OK) {
             String compressedImagePath = ImageUtils.getCompressedImagePath(data.getData(), this);
-            if(compressedImagePath != null) {
+            if (compressedImagePath != null) {
                 Router.startProfilePicutreUpload(this, compressedImagePath);
             }
         } else {
@@ -599,14 +800,39 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             if (ccUser != null) {
                 Toolbar tbHome = (Toolbar) UserActivity.this.findViewById(R.id.tb_user);
                 ((TextView) tbHome.findViewById(R.id.tv_user_name)).setText(ccUser.getName());
-                ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag());
+                ((TextView) tbHome.findViewById(R.id.tv_user_contag_id)).setText(ccUser.getContag().toLowerCase());
                 tbHome.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
 //                progressBar.setVisibility(View.GONE);
                 tbHome.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        onBackPressed();
                         //What to do on back clicked
-                        finish();
+                        // finish();
+                      /*  Log.e(TAG,"backpressed");
+                        if (userID != PrefUtils.getCurrentUserID()) {
+                            if (isTaskRoot()) {
+                                finish();
+                                Router.startHomeActivity(UserActivity.this, TAG);
+                            } else
+                                onBackPressed();
+
+
+                        } else {
+                            if (isEditModeOn()) {
+                                BackPressedDialog mPressedDialog = BackPressedDialog.newInstance();
+                                mPressedDialog.show(getSupportFragmentManager(), "fuck you");
+                            } else {
+                                if (isTaskRoot()) {
+                                    finish();
+                                    Router.startHomeActivity(UserActivity.this, TAG);
+                                } else
+                                    onBackPressed();
+
+                            }
+
+                        }*/
                     }
                 });
 
@@ -638,6 +864,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private Target picaasoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+          /*  ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));*/
             Bitmap blurredBitmap = ImageUtils.fastblur(bitmap, 3);
             ((ImageView) UserActivity.this.findViewById(R.id.iv_bg_usr_img)).setImageBitmap(blurredBitmap);
         }
@@ -652,6 +882,30 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         }
     };
+    public boolean checkWritePermission() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_STORAGE);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+            return false;
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            return true;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_WRITE_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+
+
+            } else {
+                Toast.makeText(UserActivity.this, "Until you grant the permission, we cannot access your profile", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 
 }

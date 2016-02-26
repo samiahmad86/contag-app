@@ -2,6 +2,28 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false">
 
+   <!-- <item android:drawable="@drawable/loader1" android:duration="50" />
+    <item android:drawable="@drawable/loader2" android:duration="50" />
+    <item android:drawable="@drawable/loader3" android:duration="50" />
+    <item android:drawable="@drawable/loader4" android:duration="50" />
+    <item android:drawable="@drawable/loader5" android:duration="50" />
+    <item android:drawable="@drawable/loader6" android:duration="50" />
+    <item android:drawable="@drawable/loader7" android:duration="50" />
+    <item android:drawable="@drawable/loader8" android:duration="50" />
+    <item android:drawable="@drawable/loader9" android:duration="50" />
+    <item android:drawable="@drawable/loader10" android:duration="50" />
+    <item android:drawable="@drawable/loader11" android:duration="50" />
+    <item android:drawable="@drawable/loader12" android:duration="50" />
+    <item android:drawable="@drawable/loader13" android:duration="50" />
+    <item android:drawable="@drawable/loader14" android:duration="50" />
+    <item android:drawable="@drawable/loader15" android:duration="50" />
+    <item android:drawable="@drawable/loader16" android:duration="50" />
+    <item android:drawable="@drawable/loader17" android:duration="50" />
+    <item android:drawable="@drawable/loader18" android:duration="50" />
+    <item android:drawable="@drawable/loader19" android:duration="50" />
+    <item android:drawable="@drawable/loader20" android:duration="50" />-->
+
+
     <item android:drawable="@drawable/p1" android:duration="10" />
     <item android:drawable="@drawable/p2" android:duration="10" />
     <item android:drawable="@drawable/p3" android:duration="10" />

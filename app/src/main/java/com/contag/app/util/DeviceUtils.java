@@ -4,6 +4,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -16,6 +18,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.contag.app.activity.BaseActivity;
 
@@ -83,4 +86,31 @@ public class DeviceUtils {
         cm.setPrimaryClip(data);
 
     }
+    public static void openConversationWithWhatsapp(Context context, String phoneNumber) {
+        boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp",context);
+        if (isWhatsappInstalled) {
+             Uri uri = Uri.parse("smsto:" + phoneNumber);
+            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+            i.setPackage("com.whatsapp");
+            context.startActivity(i);
+        } else {
+            Toast.makeText(context, "WhatsApp not Installed",
+                    Toast.LENGTH_SHORT).show();
+
+
+        }
+    }
+        public static boolean whatsappInstalledOrNot(String uri,Context context) {
+            PackageManager pm = context.getPackageManager();
+            boolean app_installed = false;
+            try {
+                pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+                app_installed = true;
+            } catch (PackageManager.NameNotFoundException e) {
+                app_installed = false;
+            }
+            return app_installed;
+        }
+
+
 }

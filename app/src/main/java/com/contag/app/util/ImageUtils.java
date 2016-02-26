@@ -90,8 +90,8 @@ public class ImageUtils {
 
 //      max Height and width values of the compressed image is taken as 816x612
 
-        float maxHeight = 320.0f;
-        float maxWidth = 320.0f;
+        float maxHeight = 408.0f;
+        float maxWidth = 306.0f;
         float imgRatio = actualWidth / actualHeight;
         float maxRatio = maxWidth / maxHeight;
 
@@ -222,7 +222,9 @@ public class ImageUtils {
         // the following line:
         //
         // Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+      //  Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+        Bitmap bitmap = sentBitmap.copy( Bitmap.Config.ARGB_8888, true);
+
 
         if (radius < 1) {
             return (null);

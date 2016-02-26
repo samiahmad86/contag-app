@@ -8,6 +8,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import com.contag.app.activity.BaseActivity;
 import com.contag.app.activity.HomeActivity;
@@ -42,6 +44,14 @@ public class Router {
     public static void startHomeActivity(Context mContext, String currentClassName) {
         Intent iStartHome = new Intent(mContext, HomeActivity.class);
         iStartHome.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, currentClassName);
+        mContext.startActivity(iStartHome);
+    }
+
+    public static void startHomeActivity(Context mContext, String currentClassName,int pMode,long id) {
+        Intent iStartHome = new Intent(mContext, HomeActivity.class);
+        iStartHome.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, currentClassName);
+        iStartHome.putExtra(Constants.Keys.KEY_LAUNCH_MODE, pMode);
+        iStartHome.putExtra(Constants.Keys.KEY_USER_ID, id);
         mContext.startActivity(iStartHome);
     }
 
@@ -83,7 +93,7 @@ public class Router {
 
     public static void startNotificationsActivity(Context mContext, String className) {
         Intent userNotifications = new Intent(mContext, NotificationsActivity.class);
-        userNotifications.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      //  userNotifications.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         userNotifications.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
         mContext.startActivity(userNotifications);
     }
@@ -214,8 +224,23 @@ public class Router {
     }
 
     public static void openSocialProfile(Context context, String link) {
-        Intent socialIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        context.startActivity(socialIntent);
+
+
+         try
+         {
+
+             if(!link.startsWith("www.")&& !link.startsWith("http://") && !link.startsWith("https://")){
+                 link = "www."+link;
+             }
+             if(!link.startsWith("http://") && !link.startsWith("https://")){
+                 link = "http://"+link;
+             }
+             Intent socialIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                context.startActivity(socialIntent);
+            }
+      catch(ActivityNotFoundException exception) {
+          Toast.makeText(context, "Link not reachable", Toast.LENGTH_SHORT).show();
+      }
     }
 
     public static void startLinkendInLoginActivity(Context context, int requestCode, long linkedInId) {

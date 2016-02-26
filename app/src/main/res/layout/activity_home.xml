@@ -9,8 +9,6 @@
         android:layout_height="wrap_content">
 
 
-
-
         <RelativeLayout
             android:id="@+id/rl_tb_container"
             android:layout_width="match_parent"
@@ -21,31 +19,31 @@
                 android:id="@+id/iv_header_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/ll_tb"
                 android:layout_alignBottom="@+id/ll_tb"
-                            android:scaleType="centerCrop"
-                />
+               android:src="@drawable/img_back"
+                android:layout_alignTop="@+id/ll_tb"
+                android:scaleType="centerCrop" />
 
 
             <LinearLayout
+                android:id="@+id/ll_tb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_user_activity"
                 android:orientation="vertical"
-                android:id="@+id/ll_tb"
 
-               >
+                >
 
-              <include
-                android:id="@+id/tb_home"
-                layout="@layout/layout_toolbar_home" />
+                <include
+                    android:id="@+id/tb_home"
+                    layout="@layout/layout_toolbar_home" />
 
                 <com.contag.app.view.SlidingTabLayout
                     android:id="@+id/stl_home"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                                      />
+                    />
 
             </LinearLayout>
 
@@ -57,17 +55,15 @@
             android:id="@+id/vp_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rl_tb_container"
-            />
-
+            android:layout_below="@id/rl_tb_container" />
 
 
     </RelativeLayout>
 
     <fragment
         android:name="com.contag.app.fragment.NavDrawerFragment"
-        android:layout_gravity="start"
         android:layout_width="300dp"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
 
 </android.support.v4.widget.DrawerLayout>

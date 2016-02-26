@@ -54,8 +54,8 @@ public class CircularImageView extends ImageView {
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
-        Log.d("CircleImage", String.valueOf(bmp.getWidth())) ;
-        Log.d("CircleImage", String.valueOf(bmp.getHeight())) ;
+      //  Log.d("CircleImage", String.valueOf(bmp.getWidth())) ;
+       // Log.d("CircleImage", String.valueOf(bmp.getHeight())) ;
         if(bmp.getWidth() != radius || bmp.getHeight() != radius)
             sbmp = Bitmap.createScaledBitmap(bmp, radius, radius, false);
         else

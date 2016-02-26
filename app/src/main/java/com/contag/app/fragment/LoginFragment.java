@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
@@ -94,6 +95,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         btnLogin.setOnClickListener(this);
         btnLogin.setOnEditorActionListener(this);
         EditText etPhoneNum = (EditText) view.findViewById(R.id.et_phone_num);
+
+        view.findViewById(R.id.tv_tnc).setOnClickListener(this);
         etPhoneNum.setOnEditorActionListener(this);
         if (mFragmentType == Constants.Types.FRAG_OTP) {
             etPhoneNum.setHint
@@ -228,6 +231,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 LoginRequest lr = new LoginRequest(mLogin);
                 showToast("OTP Sent");
                 getSpiceManager().execute(lr, this);
+                break;
+            }
+            case R.id.tv_tnc: {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://contagapp.com/terms_and_condition.html"));
+                startActivity(browserIntent);
                 break;
             }
         }

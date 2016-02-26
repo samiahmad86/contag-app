@@ -300,7 +300,6 @@ public class UserService extends Service implements RequestListener<User> {
             User.storeInterests(session, interestList);
             User.storeSocialProfile(socialProfiles, session);
             User.storeCustomShare(customShares, session);
-
             return null;
         }
 

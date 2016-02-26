@@ -53,6 +53,12 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
         this.contact = contact ;
     }
 
+    public ContactRequest(AddContact nfcContact,int type){
+        super(ContactResponse.ContactList.class, APIInterface.class);
+        this.type = type;
+        this.contact = nfcContact ;
+    }
+
 
     public ContactRequest(int type, long notificationID){
         super(ContactResponse.ContactList.class, APIInterface.class) ;
@@ -84,6 +90,8 @@ public class ContactRequest extends RetrofitSpiceRequest<ContactResponse.Contact
         } else if (Constants.Types.REQUEST_ADD_CONTAG_NOTIFICATION == type){
             NotificationAddContact nac = new NotificationAddContact(notificationID) ;
             return getService().addContagUserFromNotification(PrefUtils.getAuthToken(), nac) ;
+        } else if(type == Constants.Types.REQUEST_POST_NFC_ADD_USER) {
+            return getService().addByNfc(PrefUtils.getAuthToken(),contact);
         }
 
         return null;

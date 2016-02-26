@@ -1,6 +1,7 @@
 package com.contag.app.model;
 
 import com.contag.app.config.Constants;
+import com.contag.app.request.UserRequest;
 
 import java.util.HashSet;
 
@@ -219,6 +220,14 @@ public interface APIInterface {
     @PUT(Constants.Urls.URL_IMAGE_UPLOAD)
     ImageUploadResponse uploadImage(@Header(Constants.Headers.HEADER_TOKEN) String token,
                          @Part(Constants.Keys.KEY_USER_AVATAR_URL)TypedFile mProfileImage);
+
+    @Headers({
+            "Content-Type: application/json"
+    })
+    @POST(Constants.Urls.URL_ADD_BY_NFC)
+    ContactResponse.ContactList addByNfc(@Header(Constants.Headers.HEADER_TOKEN) String token,
+                                         @Body AddContact userId);
+
 
 
 }

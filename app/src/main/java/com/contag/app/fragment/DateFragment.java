@@ -54,7 +54,7 @@ public class DateFragment extends DialogFragment implements DatePickerDialog.OnD
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String date;
         if (this.date.length() == 0) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
             Calendar calendar = Calendar.getInstance();
             date = dateFormat.format(calendar.getTime()).toString();
         } else {
@@ -74,7 +74,8 @@ public class DateFragment extends DialogFragment implements DatePickerDialog.OnD
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
         Log.d(TAG, date);
-        this.date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+       // this.date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+        this.date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
     }
 
     @Override

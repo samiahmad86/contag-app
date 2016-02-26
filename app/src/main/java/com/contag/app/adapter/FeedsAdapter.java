@@ -58,7 +58,6 @@ public class FeedsAdapter extends BaseAdapter {
             vh.tvFeedsStory = (TextView) convertView.findViewById(R.id.tv_feeds_story);
             vh.tvUsrCuntId = (TextView) convertView.findViewById(R.id.tv_feeds_usr_cunt_id);
             vh.tvUsrName = (TextView) convertView.findViewById(R.id.tv_feeds_usr_name);
-            vh.tvUsrName = (TextView) convertView.findViewById(R.id.tv_feeds_usr_name);
             vh.tvFeedTime = (TextView) convertView.findViewById(R.id.tv_feeds_createdOn);
             convertView.setTag(vh);
         } else {
@@ -110,7 +109,7 @@ public class FeedsAdapter extends BaseAdapter {
             Log.e("time", temp3);
 
             DateFormat inputFormat = new SimpleDateFormat("HH:mm");
-            DateFormat outputFormat = new SimpleDateFormat("KK:mm a");
+            DateFormat outputFormat = new SimpleDateFormat("hh:mm a");
             try {
                 return outputFormat.format(inputFormat.parse(temp3));
             } catch (ParseException e) {

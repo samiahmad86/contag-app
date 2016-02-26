@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_shadow"
+    android:elevation="1sp"
     android:padding="10dp">
   <RelativeLayout
         android:layout_width="match_parent"

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -98,6 +99,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
     private ArrayList<Bundle> bSocialProfileInfo;
     public TextView tvTabDetail;
     public ProgressBar pbDisconnectSocialProfile;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
+    boolean flagEdit=false;
 
 
     private float x1, x2, y1, y2;
@@ -160,6 +163,7 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         btnEditProfile.setTag(0);
         btnEditProfile.setVisibility(View.VISIBLE);
         isEditModeOn = false;
+        ((BaseActivity) getActivity()).setEditMode(false);
         new LoadUser().execute();
         return view;
     }
@@ -191,10 +195,13 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
 
             case R.id.btn_edit_profile: {
+
+                v.startAnimation(buttonClick);
                 if (!DeviceUtils.isInternetConnected(getActivity())) {
                     showToast("Sorry there is no internet.");
                     return;
                 }
+
                 if (!isEditModeOn) {
                     ((BaseActivity) getActivity()).setEditMode(true);
                     openEditMode();
@@ -205,7 +212,8 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 break;
             }
             case R.id.btn_share: {
-                int position = (int) v.getTag();ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName(), "");
+                v.startAnimation(buttonClick);
+                int position = (int) v.getTag();ShareDialog share = ShareDialog.newInstance(hmSocialProfileModel.get(position).mSocialPlatform.getPlatformName(),  viewHolderArrayList.get(position).tvFieldValue.getText().toString());
                 share.show(getChildFragmentManager(), TAG);
                 break;
             }
@@ -380,7 +388,12 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         }
     }
 
-    private void setViewContent() {
+    public void setViewContent() {
+        isEditModeOn = false;
+        btnEditProfile.setVisibility(View.VISIBLE);
+        btnSaveProfile.setVisibility(View.GONE);
+        hideKeyboard();
+
         int size = viewHolderArrayList.size();
         for (int i = 0; i < size; i++) {
             setUpViewContent(i);
@@ -506,8 +519,16 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
             }
         }
     }
+    public void sendDataOnBack()
+    {
+        btnEditProfile.performClick();
+        setViewContent();
+      /*  isEditModeOn=false;
+        ((BaseActivity) getActivity()).setEditMode(false);*/
 
-    private void sendData() {
+    }
+
+    public void sendData() {
         for (int i = 0; i < viewHolderArrayList.size(); i++) {
             ViewHolder vh = viewHolderArrayList.get(i);
              pbDisconnectSocialProfile.setVisibility(View.VISIBLE);
@@ -758,14 +779,14 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 addViews();
             }
             setViewContent();
-            if (isEditModeOn) {
+            if (!isEditModeOn) {
                 Intent iEnableSwipe = new Intent(getActivity().getResources().getString(R.string.intent_filter_edit_mode_enabled));
                 iEnableSwipe.putExtra(Constants.Keys.KEY_EDIT_MODE_TOGGLE, true);
                 log(TAG, "sending broadcast true");
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(iEnableSwipe);
             }
             ((BaseActivity) getActivity()).setEditMode(false);
-            isEditModeOn = false;
+             isEditModeOn = false;
             btnEditProfile.setVisibility(View.VISIBLE);
             btnSaveProfile.setVisibility(View.GONE);
             if (cameFromNotification) {
@@ -782,6 +803,9 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
                 cameFromNotification = false;
             }
             if (isComingFromNotification) {
+
+
+                ((BaseActivity) getActivity()).setEditMode(true);
                 openEditMode();
                 for (int position = 0; position < hmSocialProfileModel.size(); position++) {
                     SocialProfileModel socialProfileModel = hmSocialProfileModel.get(position);
@@ -924,5 +948,10 @@ public class CurrentUserSocialProfileEditFragment extends BaseFragment implement
         public RelativeLayout rlContainer;
 
         public View view_line;
+    }
+
+    public boolean isEditModeOn()
+    {
+        return isEditModeOn;
     }
 }

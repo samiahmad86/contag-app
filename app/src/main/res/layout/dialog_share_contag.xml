@@ -1,53 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    style="@style/NotificationsButtonStyle"
-    android:padding="2dp"
+    android:minHeight="250dp"
+    android:background="@color/white"
+
+
     >
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_invite_message"
-        android:inputType="text"
-        android:layout_width="300dp"
-        android:layout_marginRight="20dp"
-        android:padding="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
+        android:layout_width="fill_parent"
+        android:lines="2"
+        android:padding="20dp"
+        android:minLines="2"
+        android:maxEms="2"
+        android:ems="2"
+        android:gravity="top"
+        android:inputType="textMultiLine|textCapSentences"
+        android:maxLines="2"
+        android:paddingLeft="25dp"
+        android:background="@color/c949393"
+
+        android:hint="Introduce \n(write message)"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
     />
-
-     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_invite"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_contact_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_invite_message"
-        android:textAllCaps="false"
-        android:visibility="visible"
-        android:text="Invite"
-        android:padding="2dp"
-         android:background="?android:selectableItemBackground"
-        android:textColor="@color/black"/>
+        android:padding="10dp"
+        android:hint="Search"
+        android:drawableRight="@drawable/searchicon"
+        android:layout_below="@+id/et_invite_message"
+        android:capitalize="sentences"
+        android:background="@color/white"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"
+        android:textSize="16sp" />
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/light_gray"
-        android:layout_above="@id/btn_invite"/>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/light_gray"
-        android:layout_below="@id/btn_invite"/>
+        android:id="@+id/view_search"
+        android:layout_below="@id/et_contact_search"
+        android:background="@color/light_gray" />
+
+
+
+
+
     <ListView
         android:id="@+id/lv_contag_share"
         style="@style/ContactScrollBarStyle"
         android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/view_search"
+         android:layout_marginTop="5dp"
+        android:listSelector="@android:color/transparent"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp" />
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_invite"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_invite"
-        android:layout_margin="10dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
+     android:layout_below="@+id/lv_contag_share"
+        android:textAllCaps="false"
+        android:visibility="visible"
+        android:text="Introduce"
+        android:padding="2dp"
+        android:background="@color/light_blue"
+        android:textColor="@color/white"/>
 
 
 

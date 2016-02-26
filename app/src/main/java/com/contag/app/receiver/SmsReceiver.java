@@ -12,6 +12,9 @@ import android.util.Log;
 import com.contag.app.R;
 import com.contag.app.config.Constants;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SmsReceiver extends BroadcastReceiver {
 
     private final static String TAG = SmsReceiver.class.getName();
@@ -29,9 +32,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 for (Object pdus : oPdus) {
                     String message = SmsMessage.createFromPdu((byte[]) pdus).getDisplayMessageBody();
                     Log.d(TAG, message);
-                    String blahblah = "Dear user you One Time Password(OTP) for login to Contag is ";
-                    int startIndex = blahblah.length();
-                    String otp = message.substring(startIndex, startIndex + 6);
+                    String otp = extractDigits(message);
                     Intent iSms = new Intent(context.getResources().getString(R.string.intent_filter_sms));
                     iSms.putExtra(Constants.Keys.KEY_OTP, otp);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(iSms);
@@ -40,5 +41,14 @@ public class SmsReceiver extends BroadcastReceiver {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static String extractDigits(final String in) {
+        final Pattern p = Pattern.compile("(\\d{6})");
+        final Matcher m = p.matcher(in);
+        if ( m.find() ) {
+            return m.group( 0 );
+        }
+        return "";
     }
 }

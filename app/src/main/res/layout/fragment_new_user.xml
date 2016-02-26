@@ -37,7 +37,7 @@
         android:maxLength="4"
         android:gravity="center"
         android:textAllCaps="false"
-        android:hint="John"
+        android:hint="john"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:id="@+id/et_contag_id_char"
         android:background="@drawable/bg_gray_rect"

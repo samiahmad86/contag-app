@@ -162,10 +162,14 @@ public class ContactAdapter extends BaseAdapter {
         Log.d("ConAdap", "Size of intersts is: " + interests.size()) ;
         if (interests != null && interests.size() > 0) {
             try {
-                setInterestElseHide(interests.get(0), vhCont.tvInterest1);
-                setInterestElseHide(interests.get(1), vhCont.tvInterest2);
+               final TextView interest[]=new TextView[]{vhCont.tvInterest1,vhCont.tvInterest2,vhCont.tvInterest3,vhCont.tvInterest4};
+                for(int i=0;i<interests.size();i++) {
+                    setInterestElseHide(interests.get(i),interest[i]);
+
+                }
+               /* setInterestElseHide(interests.get(1), vhCont.tvInterest2);
                 setInterestElseHide(interests.get(2), vhCont.tvInterest3);
-                setInterestElseHide(interests.get(3), vhCont.tvInterest4);
+                setInterestElseHide(interests.get(3), vhCont.tvInterest4);*/
             } catch (IndexOutOfBoundsException ex) {
                 ex.printStackTrace();
                 Log.d("ConAdap", "Exception occurred") ;
@@ -211,7 +215,7 @@ public class ContactAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 Router.addContagUser(mContext, newContactItem.mContagContag.getId());
-                                Toast.makeText(mContext, "Adding this user!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, "Add request Sent!", Toast.LENGTH_LONG).show();
                                 ((TextView)v).setText("Added");
                             }
                         });

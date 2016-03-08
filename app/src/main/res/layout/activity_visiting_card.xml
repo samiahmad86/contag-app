@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/tb_home"
+        layout="@layout/layout_toolbar_notifications" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:id="@+id/rl_card"
+        android:background="@color/filter_selection"
+        >
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sami Ahmad"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="17sp"
+            android:id="@+id/tv_user_name"
+            android:textColor="@color/white"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Software Developer"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/tv_user_name"
+            android:id="@+id/tv_designation"
+            android:textColor="@color/white"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contag App"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/tv_designation"
+            android:id="@+id/tv_company"
+            android:textColor="@color/white"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contag"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:textSize="10sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/tv_credits"
+            android:textColor="@color/white"/>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/iv_contag_logo"
+            android:layout_above="@+id/tv_credits"
+            android:src="@drawable/contag_logo"
+            />
+
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:id="@+id/btn_save"
+            android:capitalize="sentences"
+            android:text="Download"
+            />
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:capitalize="sentences"
+            android:id="@+id/btn_share"
+            android:text="Send"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -262,6 +262,11 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
 
         }
     }
+
+    public void showNoNotification()
+    {
+        findViewById(R.id.iv_no_notif).setVisibility(View.VISIBLE);
+    }
     @Override
     public void onBackPressed()
     {

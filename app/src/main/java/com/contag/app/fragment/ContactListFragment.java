@@ -95,11 +95,16 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         long userId=PrefUtils.getCurrentUserID();
 
         lvContacts.setAdapter(contactAdapter);
-        new LoadContacts().execute();
-        Log.d("Contactlist","OnCreate");
+
+        if(savedInstanceState==null) {
+            new LoadContacts().execute();
+            Log.d("Contactlist", "saved instance null");
+        }
+        else
+            Log.d("Contactlist", "saved instance not null");
 
 
-      //  final Bundle savedInstance=savedInstanceState;
+        //  final Bundle savedInstance=savedInstanceState;
         isListViewEnabled = true;
 
 
@@ -107,9 +112,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long viewID) {
                 ContactListItem contactListItem = contacts.get(position);
-
-
-                if (DeviceUtils.isWifiConnected(getActivity()) && (contactListItem.type == Constants.Types.ITEM_ADD_CONTAG
+                      if (DeviceUtils.isWifiConnected(getActivity()) && (contactListItem.type == Constants.Types.ITEM_ADD_CONTAG
                         || contactListItem.type == Constants.Types.ITEM_CONTAG) && isListViewEnabled) {
                     ContagContag mContagContag = contactListItem.mContagContag;
                     ContactRequest contactUserRequest = new ContactRequest(Constants.Types.REQUEST_GET_USER_BY_CONTAG_ID, mContagContag.getContag());
@@ -118,6 +121,10 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                     pbContacts.setVisibility(View.VISIBLE);
                     log(TAG, System.currentTimeMillis() + " making request");
                     isListViewEnabled = false;
+
+                    log(TAG, "pending request count"+getSpiceManager().getPendingRequestCount());
+                    getSpiceManager().removeAllDataFromCache();
+
                     getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -125,7 +132,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                             pbContacts.setVisibility(View.GONE);
                             Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
                             isListViewEnabled = true;
-                        }  
+                        }
 
                         @Override
                         public void onRequestSuccess(final ContactResponse.ContactList contactResponses) {
@@ -148,6 +155,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                                 @Override
                                 public void onPostExecute(Object responseObject) {
                                     pbContacts.setVisibility(View.GONE);
+                                    log(TAG, System.currentTimeMillis() + " success time opening user profile");
                                     Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
                                     isListViewEnabled = true;
                                 }
@@ -165,17 +173,17 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         });
 
         lvContacts.setOnScrollListener(new AbsListView.OnScrollListener() {
-           /* @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState != 0) {
-                    hideKeyboard();
-                }
-            }*/
-           int mLastFirstVisibleItem = 0;
+            /* @Override
+             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                 if (scrollState != 0) {
+                     hideKeyboard();
+                 }
+             }*/
+            int mLastFirstVisibleItem = 0;
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 // TODO Auto-generated method stub
 
-              //  toolbarHeight= getActivity().findViewById(R.id.rl_tb_container).getHeight();
+                //  toolbarHeight= getActivity().findViewById(R.id.rl_tb_container).getHeight();
                 final ListView lw = lvContacts;
                 if (scrollState != 0) {
                     hideKeyboard();
@@ -244,7 +252,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
         filterDropDown.setBackgroundDrawable(getResources().getDrawable(R.color.light_blue));
         // filterDropDown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
       *//*  Rect location=locateView(filterV*/
-     //   filterDropDown.showAtLocation(filterView, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);*/
+        //   filterDropDown.showAtLocation(filterView, Gravity.TOP | Gravity.LEFT, location.top, location.bottom);*/
 
         etSearchBox = (EditText) view.findViewById(R.id.et_contact_search);
         etSearchBox.setOnEditorActionListener(this);
@@ -494,7 +502,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             };
             DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(databaseRequestListener);
             databaseOperationTask.execute(databaseOperationTask);
-            } else {
+        } else {
             mSearchContacts = new SearchContacts();
             mSearchContacts.execute(query, searchFilter);
         }
@@ -518,9 +526,10 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             DaoSession session = ((ContagApplication) ContactListFragment.this.getActivity().
                     getApplicationContext()).getDaoSession();
 
+
+
+
             ArrayList<ContactListItem> contactListItems = new ArrayList<>();
-
-
             ContagContagDao mContagContagDao = session.getContagContagDao();
             List<ContagContag> contagContacts = mContagContagDao.queryBuilder().
                     where(ContagContagDao.Properties.Id.notEq(PrefUtils.getCurrentUserID()),
@@ -533,7 +542,8 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                     contactListItems.add(mContactListItem);
                 }
             }
-           /* InterestDao mInterestDao = session.getInterestDao();
+
+             /* InterestDao mInterestDao = session.getInterestDao();
             List<Interest> interests = mInterestDao.queryBuilder().
                     orderAsc(InterestDao.Properties.ContagUserId).list();
 
@@ -558,11 +568,9 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
             if (contactListItems.size() != 0) {
                 contacts.clear();
                 contacts.addAll(contactListItems);
-
                 pbContacts.setVisibility(View.GONE);
-
-
                 contactAdapter.notifyDataSetChanged();
+
             }
         }
     }

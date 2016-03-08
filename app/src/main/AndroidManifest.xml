@@ -62,6 +62,11 @@
             android:label="@string/title_activity_fuck"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.VisitingCardActivity"
+            android:label="@string/title_activity_fuck"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Facebook Activity -->
 

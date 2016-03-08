@@ -572,7 +572,10 @@ public class CurrentUserProfileEditFragment extends BaseFragment implements View
         protected void onPostExecute(HashMap<Integer, P2ProfileModel> hm) {
             hmP2PProfileModel.clear();
             hmP2PProfileModel.putAll(hm);
+            Log.e(TAG,"coming here 1- "+viewHolderArrayList.size()+" "+hmP2PProfileModel.size());
             if (viewHolderArrayList.size() != hmP2PProfileModel.size()) {
+
+                Log.e(TAG,"coming here 2");
                 addViews();
             }
             if (!isEditModeOn) {

@@ -20,6 +20,7 @@ import com.contag.app.activity.NewUserActivity;
 import com.contag.app.activity.NotificationsActivity;
 import com.contag.app.activity.SplashActivity;
 import com.contag.app.activity.UserActivity;
+import com.contag.app.activity.VisitingCardActivity;
 import com.contag.app.service.ContactService;
 import com.contag.app.service.CustomService;
 import com.contag.app.service.GcmRegisterIntentService;
@@ -64,6 +65,12 @@ public class Router {
 
     public static void startUserActivity(Context mContext, String className, long userID) {
         Intent iUsrProf = new Intent(mContext, UserActivity.class);
+        iUsrProf.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
+        iUsrProf.putExtra(Constants.Keys.KEY_USER_ID, userID);
+        mContext.startActivity(iUsrProf);
+    }
+    public static void startVisitingCardActivity(Context mContext, String className, long userID) {
+        Intent iUsrProf = new Intent(mContext,VisitingCardActivity.class);
         iUsrProf.putExtra(Constants.Keys.KEY_PREVIOUS_ACTIVITY, className);
         iUsrProf.putExtra(Constants.Keys.KEY_USER_ID, userID);
         mContext.startActivity(iUsrProf);

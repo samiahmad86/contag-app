@@ -126,6 +126,37 @@
             </RelativeLayout>
 
             <RelativeLayout
+            android:id="@+id/rl_visiting_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_block_list"
+            android:layout_below="@+id/rl_notification_container"
+            android:padding="5dp"
+            android:layout_marginTop="0dp">
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_alignBottom="@+id/tv_visiting_text"
+                    android:layout_alignTop="@+id/tv_visiting_text"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_stat_notification"/>
+
+
+            <TextView
+                android:id="@+id/tv_visiting_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="60dp"
+                android:text="Business Card"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:onClick="onClick"
+                android:clickable="true"
+                android:textSize="17sp" />
+
+          </RelativeLayout>
+            <RelativeLayout
                 android:id="@+id/rl_notification_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,9 +200,10 @@
                     android:text="0"
                     android:shadowColor="@color/white"
                     android:shadowRadius="10.0"
-                     />
+                    />
 
             </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/rl_extras"
@@ -180,7 +212,7 @@
                 android:padding="5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/bg_block_list"
-                android:layout_below="@id/rl_notification_container">
+                android:layout_below="@id/rl_visiting_card">
                 <ImageView
                     android:layout_height="20dp"
                     android:layout_width="20dp"

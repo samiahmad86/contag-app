@@ -111,7 +111,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                         && !isLoading && isListViewEnabled) {
                     Log.d("FeedSizeDebug", "Inside onCreate view going to fetch feeds");
                     int start = feeds.size() == 0 ? 0 : feeds.size();
-                    int end = start + 10;
+                    int end = start + 5;
                     getFeeds(start, end);
 
                 }
@@ -141,21 +141,12 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onResume() {
         super.onResume();
-
-
-       /* if (feeds.size() != 0) {
-            Log.d("FeedSizeDebug", "Feeds size in onResume: " + feeds.size());
-            feeds.clear();
-            Log.d("FeedSizeDebug", "Feeds size after clearing in onResume: " + feeds.size());
-            feedsAdapter.notifyDataSetChanged();
-            getFeeds(0, 10);
-        }*/
     }
 
     private void getFeeds(int start, int end) {
         Log.d("FeedSizeDebug", "Going to request");
         Log.d("FeedSizeDebug", "Start " + start + " End: " + end);
-        pbFeeds.setVisibility(View.VISIBLE);
+      //  pbFeeds.setVisibility(View.VISIBLE);
         FeedsRequest feedsRequest = new FeedsRequest(start, end);
         getSpiceManager().execute(feedsRequest, FeedsFragment.this);
         isLoading = true;
@@ -165,7 +156,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
         @Override
         public void onReceive(Context context, Intent intent) {
             if (feeds.size() == 0) {
-                FeedsRequest fr = new FeedsRequest(0, 10);
+                FeedsRequest fr = new FeedsRequest(0, 5);
                 getSpiceManager().execute(fr, FeedsFragment.this);
                 isLoading = true;
             }
@@ -228,15 +219,25 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(true);
-        if(feeds.size() != 0) {
-            Log.d("FeedSizeDebug", "Feeds size in onResume: " + feeds.size()) ;
-            feeds.clear();
-            Log.d("FeedSizeDebug", "Feeds size after clearing in onResume: " + feeds.size()) ;
-            feedsAdapter.notifyDataSetChanged();
-            getFeeds(0,10);
+        if(!DeviceUtils.isInternetConnected(getActivity())) {
+            showToast("No internet.");
+            swipeRefreshLayout.setRefreshing(true);
+            swipeRefreshLayout.setRefreshing(false);
         }
 
+        else {
+            swipeRefreshLayout.setRefreshing(true);
+            if (feeds.size() != 0) {
+                Log.d("FeedSizeDebug", "Feeds size in onResume: " + feeds.size());
+                feeds.clear();
+                Log.d("FeedSizeDebug", "Feeds size after clearing in onResume: " + feeds.size());
+                feedsAdapter.notifyDataSetChanged();
+                getFeeds(0, 10);
+            }
+            else{
+                getFeeds(0, 10);
+            }
+        }
 
 
     }
@@ -257,7 +258,7 @@ public class FeedsFragment extends BaseFragment implements AdapterView.OnItemCli
                 final boolean isContact = mContagContag.getIs_contact();
                 final long id = mContagContag.getId();
                 log(TAG, "making progress bar visible inside post execute");
-                pbFeeds.setVisibility(View.VISIBLE);
+             //   pbFeeds.setVisibility(View.VISIBLE);
                 getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {

@@ -124,6 +124,13 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         if (userID != PrefUtils.getCurrentUserID()) {
             int profileCategory = intent.getIntExtra(Constants.Keys.KEY_PROFILE_CATEGORY, 0);
+            Bundle extra=intent.getBundleExtra(Constants.Keys.KEY_BUNDLE);
+            if(extra!=null) {
+                String i=extra.getString("profile_category");
+             //   Log.e("Router in loop", i);
+                profileCategory=Integer.parseInt(i);
+            }
+          //  Log.e("Router",profileCategory+" : in user activity");
             UserProfileFragment userFragment = UserProfileFragment.newInstance(userID, profileCategory);
             transaction.replace(R.id.root_user_fragment, userFragment);
             transaction.commit();

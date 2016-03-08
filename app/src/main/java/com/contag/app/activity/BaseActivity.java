@@ -139,7 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void log(String tag, String message) {
         if (BuildConfig.DEBUG) {
-//            Log.d(tag, message);
+         Log.d(tag, message);
         }
     }
 
@@ -171,7 +171,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
         ContagContagDao contagContagDao = session.getContagContagDao();
         try {
-            return contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+
+            ContagContag c=contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
+            if(c.getIosAppLink()!=null)
+            Log.d("Getting user data",c.getIosAppLink());
+            return c;
+            //return contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
         }   catch (Exception ex) {
             log("BaseActivity", "user is null");
             return null;

@@ -59,7 +59,9 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
 
         ViewPager vpHome = (ViewPager) findViewById(R.id.vp_home);
         HomePagerAdapter hpa = new HomePagerAdapter(getSupportFragmentManager());
+        vpHome.setOffscreenPageLimit(1);
         vpHome.setAdapter(hpa);
+        vpHome.setOffscreenPageLimit(1);
 
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
         findViewById(R.id.tv_user_name).setOnClickListener(this);
@@ -231,7 +233,7 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
             setUpDrawer(R.id.drawer_layout, R.id.tb_home);
 
         }
-       /* @Override
+       /* @Overri
         public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                                int[] grantResults) {
             if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
@@ -278,6 +280,12 @@ public class HomeActivity extends BaseActivity implements NavDrawerFragment.OnFr
                 Toast.makeText(HomeActivity.this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        // Router.startHomeActivity(this, TAG);
     }
 
 }

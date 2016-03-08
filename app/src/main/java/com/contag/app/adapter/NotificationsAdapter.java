@@ -43,11 +43,13 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
     private Context mCtxt;
     private ArrayList<NotificationsResponse> notifications;
     private SpiceManager mSpiceManager;
+    View noFeed;
 
     public NotificationsAdapter(Context mContext, ArrayList<NotificationsResponse> notifications, SpiceManager mSpiceManager) {
         this.mCtxt = mContext;
         this.notifications = notifications;
         this.mSpiceManager = mSpiceManager;
+
 
     }
 
@@ -164,7 +166,10 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
                     notifications.remove(notificationsResponse);
                     notifyDataSetChanged();
                 }
+
                 break;
+
+
             }
             case R.id.btn_notif_reject: {
                 int position = (int) v.getTag();
@@ -181,6 +186,12 @@ public class NotificationsAdapter extends BaseAdapter implements View.OnClickLis
 
                 break;
             }
+
+        }
+
+        if (getCount() == 0) {
+            if (mCtxt instanceof NotificationsActivity)
+                ((NotificationsActivity) mCtxt).showNoNotification();
 
         }
     }

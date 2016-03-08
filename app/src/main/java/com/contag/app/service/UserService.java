@@ -288,6 +288,8 @@ public class UserService extends Service implements RequestListener<User> {
             startID = (Integer) params[1];
             DaoSession session = ((ContagApplication) getApplicationContext()).getDaoSession();
 
+
+          //  Log.d(TAG,"My personal Emai first time login"+user.personalEmail);
             ContagContag cc = User.getContagContagObject(user);
 
             ContagContagDao ccDao = session.getContagContagDao();
@@ -363,10 +365,19 @@ public class UserService extends Service implements RequestListener<User> {
             if (!isContagContact) {
                 Intent iStartUserActivity = new Intent(getResources().getString(R.string.intent_filter_contag_contact_inserted));
                 iStartUserActivity.putExtra(Constants.Keys.KEY_USER_ID, userId);
+                Log.d("Router : in service", "at the wrong place");
                 LocalBroadcastManager.getInstance(UserService.this).sendBroadcast(iStartUserActivity);
             } else if (data != null) {
                 Intent intent = new Intent(UserService.this, UserActivity.class);
                 intent.putExtra(Constants.Keys.KEY_USER_ID, userId);
+                intent.putExtra(Constants.Keys.KEY_BUNDLE,data);
+
+                    int i =Integer.parseInt(data.getString("profile_category"));
+                    intent.putExtra(Constants.Keys.KEY_PROFILE_CATEGORY,i);
+                    Log.d("UserService", i+" putting in intent");
+
+
+
                 PendingIntent pIntent = PendingIntent.getActivity(UserService.this, (int) System.currentTimeMillis(), intent, 0);
 
                 // build notification

@@ -62,7 +62,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
     private ImageView ivHeader;
     private TextView tvUsrName, tvUsrCuntId, notificationTxt, feedbackTxt, rateTxt, logoutTxt;
     private Boolean isLoading;
-    private TextView tvNotificationCount;
+    private TextView tvNotificationCount,tvVisitingCard;
     private RadioGroup radioSexGroup;
     private RadioButton radioButton;
     private TextView share_contag;
@@ -109,7 +109,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
         tvUsrName = (TextView) view.findViewById(R.id.tv_usr_name);
         radioSexGroup = (RadioGroup) view.findViewById(R.id.radioSex);
         share_contag = (TextView) view.findViewById(R.id.share_contag);
-
+        tvVisitingCard=(TextView) view.findViewById(R.id.tv_visiting_text);
         tvUsrName.setOnClickListener(this);
         tvUsrCuntId.setOnClickListener(this);
 
@@ -118,6 +118,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
         feedbackTxt.setOnClickListener(this);
         rateTxt.setOnClickListener(this);
         logoutTxt.setOnClickListener(this);
+        tvVisitingCard.setOnClickListener(this);
         return view;
     }
 
@@ -144,7 +145,10 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
         super.onResume();
         Log.d("GCM", "Notification count: " + PrefUtils.getNewNotificationCount());
         new LoadUser().execute();
+
         tvNotificationCount.setText(String.valueOf(PrefUtils.getNewNotificationCount()));
+        if(PrefUtils.getNewNotificationCount()==0)
+            tvNotificationCount.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -185,6 +189,11 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
 
                 break;
             }
+            case R.id.tv_visiting_text: {
+                Router. startVisitingCardActivity(getActivity(), TAG, PrefUtils.getCurrentUserID());
+
+                break;
+            }
             case R.id.tv_usr_cunt_id: {
                 Router.startUserActivity(getActivity(), TAG, PrefUtils.getCurrentUserID());
                 break;
@@ -205,17 +214,17 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
                     category=" Professional";
                 ShareUtils.shareText(getActivity(), tvUsrName.getText() + " has shared his" + category + " information with you on Contag. \n Download link:https://play.google.com/store/apps/details?id=com.contag.app");*/
 
-                if (mCcUser != null) {
+               /* if (mCcUser != null) {
                     ShareUtils.sendViaNFC(getActivity(), getShareableData(mCcUser), this);
                 } else {
                     Toast.makeText(getActivity(), "user was null", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
 
         }
     }
 
-    private String getShareableData(ContagContag pUser) {
+   /* private String getShareableData(ContagContag pUser) {
 
         DaoSession session = ((ContagApplication) getActivity().getApplicationContext()).getDaoSession();
         CustomShareDao customShareDao = session.getCustomShareDao();
@@ -338,7 +347,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
         Log.e(TAG+" : NFC Data sending",userData);
         return userData;
     }
-
+*/
     private void logout() {
         Log.d("logout", "going to clear pref utils");
         PrefUtils.clearForLogout();
@@ -424,6 +433,7 @@ public class NavDrawerFragment extends Fragment implements View.OnClickListener,
         @Override
         protected void onPostExecute(ContagContag ccUser) {
             mCcUser = ccUser;
+
             Picasso.with(getActivity()).load(ccUser.getAvatarUrl()).
                     placeholder(R.drawable.img_back).into(headerTarget);
             tvUsrName.setText(ccUser.getName());

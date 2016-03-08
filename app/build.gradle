@@ -32,8 +32,8 @@ android {
         applicationId "com.contag.app"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 21
-        versionName "1.1.16"
+        versionCode 22
+        versionName "1.1.17"
         multiDexEnabled true
         /* signingConfig signingConfigs.config*/
 
@@ -51,7 +51,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/greendao-2.0.0.jar')
-    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
     /* compile 'com.android.support:appcompat-v7:22.2.0'
         compile 'com.android.support:design:22.2.0'*/
     compile 'com.android.support:appcompat-v7:23.1.0'

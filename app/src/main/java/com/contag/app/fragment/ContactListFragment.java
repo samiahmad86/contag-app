@@ -125,6 +125,8 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                     log(TAG, "pending request count"+getSpiceManager().getPendingRequestCount());
                     getSpiceManager().removeAllDataFromCache();
 
+                    Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
+                          isListViewEnabled = true;
                     getSpiceManager().execute(contactUserRequest, new RequestListener<ContactResponse.ContactList>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -156,7 +158,7 @@ public class ContactListFragment extends BaseFragment implements TextWatcher, Te
                                 public void onPostExecute(Object responseObject) {
                                     pbContacts.setVisibility(View.GONE);
                                     log(TAG, System.currentTimeMillis() + " success time opening user profile");
-                                    Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
+                                   // Router.startUserActivity(ContactListFragment.this.getActivity(), TAG, id);
                                     isListViewEnabled = true;
                                 }
                             };

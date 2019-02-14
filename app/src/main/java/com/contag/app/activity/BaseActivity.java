@@ -173,8 +173,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
 
             ContagContag c=contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
-            if(c.getIosAppLink()!=null)
-            Log.d("Getting user data",c.getIosAppLink());
             return c;
             //return contagContagDao.queryBuilder().where(ContagContagDao.Properties.Id.eq(id)).list().get(0);
         }   catch (Exception ex) {

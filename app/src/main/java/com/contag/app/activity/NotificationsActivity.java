@@ -47,6 +47,7 @@ public class NotificationsActivity extends BaseActivity implements AdapterView.O
     private View progressbar;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

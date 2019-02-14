@@ -6,6 +6,7 @@ import android.util.Log;
 import com.contag.app.config.Constants;
 import com.contag.app.config.ContagApplication;
 import com.contag.app.config.Router;
+import com.contag.app.listener.DatabaseRequestListener;
 import com.contag.app.model.Contact;
 import com.contag.app.model.ContactDao;
 import com.contag.app.model.ContactListItem;
@@ -21,6 +22,7 @@ import com.contag.app.model.SocialProfile;
 import com.contag.app.model.SocialProfileDao;
 import com.contag.app.model.SocialProfileModel;
 import com.contag.app.model.SocialProfileResponse;
+import com.contag.app.tasks.DatabaseOperationTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +60,8 @@ public class ContactUtils {
 
         for (ContactResponse response : contactResponse) {
             Contact mContact = getContact(response);
-            Log.d("newprofile", "Contag user: " + mContact.getIsOnContag()) ;
-            Log.d("newprofile", "Name is: "+ mContact.getContactName()) ;
+          //  Log.d("newprofile", "Contag user: " + mContact.getIsOnContag()) ;
+          //  Log.d("newprofile", "Name is: "+ mContact.getContactName()) ;
 
             if (mContact.getIsOnContag()) {
                 insertAndReturnContagContag(mContext, mContact, response.contagContactResponse, isContact);
@@ -86,58 +88,81 @@ public class ContactUtils {
         }
     }
 
-    public static ContagContag insertAndReturnContagContag(Context mContext, Contact mContact, ContagContactResponse mContagContactRespone,
-                                                           boolean isContact) {
-        ContagContag mContagContag = getContagContact(mContagContactRespone, mContact, isContact);
-        ContagContagDao mContagContagDao = getSession(mContext).getContagContagDao();
+    public static ContagContag insertAndReturnContagContag(final Context mContext,final Contact mContact, final ContagContactResponse mContagContactRespone,
+                                                           final boolean isContact) {
 
-        if (mContagContactRespone.userInterest != null && mContagContactRespone.userInterest.size() > 0) {
-            InterestDao interestDao = getSession(mContext).getInterestDao();
-            Log.d("ConFetch", "Name of contact: " + mContagContag.getName()) ;
-            List<Interest> interests = getInterestList(mContagContactRespone.userInterest,
-                    mContagContactRespone, mContagContag);
-            removeExistingInterests(mContagContag.getId(), interestDao);
-            for (Interest interest : interests) {
-                Log.d("ConFetch", "interest is: "+ interest.getName()) ;
-                Log.d("ConFetch", "interest id is: "+ interest.getId()) ;
-                interestDao.insertOrReplace(interest);
+        final ContagContag mContagContag = getContagContact(mContagContactRespone, mContact, isContact);
+        final ContagContagDao mContagContagDao = getSession(mContext).getContagContagDao();
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    if (mContagContactRespone.userInterest != null && mContagContactRespone.userInterest.size() > 0) {
+                        InterestDao interestDao = getSession(mContext).getInterestDao();
+                     //   Log.d("ConFetch", "Name of contact: " + mContagContag.getName()) ;
+                        List<Interest> interests = getInterestList(mContagContactRespone.userInterest,
+                                mContagContactRespone, mContagContag);
+                        removeExistingInterests(mContagContag.getId(), interestDao);
+                        for (Interest interest : interests) {
+                         /*   Log.d("ConFetch", "interest is: "+ interest.getName()) ;
+                            Log.d("ConFetch", "interest id is: "+ interest.getId()) ;*/
+                            interestDao.insertOrReplace(interest);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
-
-        SocialProfileDao spDao = getSession(mContext).getSocialProfileDao();
-        Log.d("size response",mContagContactRespone.socialProfile.size()+"");
-
-       // if (mContagContactRespone.socialProfile != null && mContagContactRespone.socialProfile.size() > 0) {
-        if ( mContagContactRespone.socialProfile.size() > 0) {
-
-            Log.d("Contact Utils", "comign here");
-
-           // spDao = getSession(mContext).getSocialProfileDao();
-            List<SocialProfile> socialProfiles = getSocialProfiles(mContagContactRespone.socialProfile,
-                    mContagContactRespone.id, mContagContag);
-            for (SocialProfile socialProfile : socialProfiles) {
-
-                Log.d("Contact Utils", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
-                spDao.insertOrReplace(socialProfile);
-
+        };
+        thread.start();
+        DatabaseRequestListener databaseRequestListener = new DatabaseRequestListener() {
+            @Override
+            public void onPreExecute() {
             }
 
-        }
-        else {
+            @Override
+            public Object onRequestExecute() {
 
-          //  spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).buildDelete();
-           List<SocialProfile> socialProfiles=spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).list();
-            for (SocialProfile socialProfile : socialProfiles) {
+                SocialProfileDao spDao = getSession(mContext).getSocialProfileDao();
+                //       Log.d("size response",mContagContactRespone.socialProfile.size()+"");
+                // if (mContagContactRespone.socialProfile != null && mContagContactRespone.socialProfile.size() > 0) {
+                if ( mContagContactRespone.socialProfile.size() > 0) {
+                    Log.d("Contact Utils", "Social profile inserting");
+                    // spDao = getSession(mContext).getSocialProfileDao();
+                    List<SocialProfile> socialProfiles = getSocialProfiles(mContagContactRespone.socialProfile,
+                            mContagContactRespone.id, mContagContag);
+                    for (SocialProfile socialProfile : socialProfiles) {
+                        // Log.d("Contact Utils", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
+                        spDao.insertOrReplace(socialProfile);
+                    }
+                }
+                else {
+                    //  spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).buildDelete();
+                    List<SocialProfile> socialProfiles=spDao.queryBuilder().where(SocialProfileDao.Properties.ContagUserId.eq(mContagContag.getId())).list();
+                    for (SocialProfile socialProfile : socialProfiles) {
+                        Log.d("Contact Utils Delete", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
+                        spDao.delete(socialProfile);
+                    }
+//                    Log.d("contact","deleted");
+                }
+                return mContagContag;
+            }
 
-                Log.d("Contact Utils Delete", socialProfile.getPlatform_username()+socialProfile.getPlatform_id()+socialProfile.toString());
-                spDao.delete(socialProfile);
+            @Override
+            public void onPostExecute(Object responseObject) {
+                ContagContag mContagContag = (ContagContag) responseObject;
+                mContagContagDao.insertOrReplace(mContagContag);
 
             }
-            Log.d("contact","deleted");
-        }
-
-        mContagContagDao.insertOrReplace(mContagContag);
+        };
+        DatabaseOperationTask databaseOperationTask = new DatabaseOperationTask(databaseRequestListener);
+        databaseOperationTask.execute();
         return mContagContag;
+
     }
 
     private static void removeExistingInterests(long userID, InterestDao mInterestDao){

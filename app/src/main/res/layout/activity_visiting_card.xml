@@ -11,38 +11,64 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="10dp"
-        android:id="@+id/rl_card"
-        android:background="@color/filter_selection"
+        android:id="@+id/rl_card_view"
+        android:visibility="visible"
+        android:background="@drawable/bg_visiting_card"
         >
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sami Ahmad"
+            android:text="Emaild Id"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
-            android:textSize="17sp"
-            android:id="@+id/tv_user_name"
-            android:textColor="@color/white"/>
+            android:textSize="13sp"
+            android:id="@+id/tv_user_email"
+            android:textColor="@color/black"/>
+
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Software Developer"
+            android:text="Phone Number"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:textSize="13sp"
+            android:id="@+id/tv_user_phone"
+            android:textColor="@color/black"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Name"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:id="@+id/tv_user_name"
+            android:textColor="@color/black"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Designation"
             android:textSize="12sp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
+            android:layout_alignLeft="@+id/tv_user_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="2dp"
             android:layout_below="@+id/tv_user_name"
             android:id="@+id/tv_designation"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contag App"
+            android:text="contag Id: bond0007"
             android:textSize="12sp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/tv_user_contag_id"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
+            android:layout_alignLeft="@+id/tv_designation"
             android:layout_below="@+id/tv_designation"
-            android:id="@+id/tv_company"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
+
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +80,7 @@
             android:layout_marginLeft="20dp"
             android:layout_alignParentBottom="true"
             android:id="@+id/tv_credits"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -68,26 +94,130 @@
 
 
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:id="@+id/rl_card_edit"
+        android:visibility="gone"
+        android:background="@drawable/bg_visiting_card"
+        >
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_user_name"
+            android:layout_width="200dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_user_name"
+                android:layout_width="200dp"
+                android:textSize="14sp"
+                android:layout_height="wrap_content"
+                android:hint="Enter Name"
+                android:singleLine="true"
+               />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_user_designation"
+            android:layout_width="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/il_user_name"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_user_designation"
+                android:layout_width="200dp"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:layout_height="wrap_content"
+                android:hint="Enter Designation"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_user_email"
+            android:layout_width="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/il_user_designation"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_user_email"
+                android:layout_width="200dp"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:layout_height="wrap_content"
+                android:hint="Enter Work Email"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_phone"
+            android:layout_width="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/il_user_email"
+            android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_user_phone"
+            android:layout_width="200dp"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            android:hint="Enter Phone Number"
+            />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_save"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/img_edit_2"
+            android:background="@drawable/bg_circle_1"
+          />
+        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_buttons"
         android:layout_width="fill_parent"
         android:layout_margin="10dp"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:id="@+id/btn_save"
-            android:capitalize="sentences"
-            android:text="Download"
-            />
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:capitalize="sentences"
-            android:id="@+id/btn_share"
-            android:text="Send"/>
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/btn_edit"
+            android:layout_toLeftOf="@+id/btn_download"
+            android:src="@drawable/img_edit_2"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_circle"
 
-    </LinearLayout>
+            />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/btn_download"
+            android:layout_centerInParent="true"
+            android:src="@drawable/img_save"
+            android:background="@drawable/bg_circle"
+            />
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/btn_share"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/btn_download"
+            android:src="@drawable/img_share"
+            android:background="@drawable/bg_circle"
+            />
+
+
+
+    </RelativeLayout>
 
 </LinearLayout>

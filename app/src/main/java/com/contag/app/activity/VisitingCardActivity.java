@@ -4,66 +4,44 @@ package com.contag.app.activity;
  * Created by SAMI on 02-03-2016.
  */
 
-import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.contag.app.R;
-import com.contag.app.adapter.NotificationsAdapter;
-import com.contag.app.config.Constants;
 import com.contag.app.config.Router;
 import com.contag.app.fragment.NavDrawerFragment;
-import com.contag.app.model.ContactResponse;
 import com.contag.app.model.ContagContag;
-import com.contag.app.model.NotificationsResponse;
-import com.contag.app.request.ContactRequest;
-import com.contag.app.request.NotificationsRequest;
+import com.contag.app.util.ImageUtils;
 import com.contag.app.util.PrefUtils;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class VisitingCardActivity extends BaseActivity implements NavDrawerFragment.OnFragmentInteractionListener, View.OnClickListener {
 
-    public static final String TAG = NotificationsActivity.class.getName();
-    private boolean isLoading = false;
-    private ArrayList<NotificationsResponse> notifications;
-    private NotificationsAdapter notificationsAdapter;
-    private View progressbar;
+    public static final String TAG = VisitingCardActivity.class.getName();
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-
+    private boolean editMode=false;
+    RelativeLayout rlCardView,rlCardEdit,rlButtons;
+    ImageButton btnEdit,btnDownload,btnShare,btnSave;
+    public ContagContag myUser;
+    public TextView userName,userEmail,userPhone,userContagId,userDesignation;
+    public EditText etUserName,etUserEmail,etUserPhone,etUserContagId,etUserDesignation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +51,32 @@ public class VisitingCardActivity extends BaseActivity implements NavDrawerFragm
         findViewById(R.id.iv_user_photo).setOnClickListener(this);
 
         Button btnBack = (Button) findViewById(R.id.btn_back);
+        btnEdit = (ImageButton) findViewById(R.id.btn_edit);
+        btnDownload = (ImageButton) findViewById(R.id.btn_download);
+        btnShare = (ImageButton) findViewById(R.id.btn_share);
+        rlCardView=(RelativeLayout) findViewById(R.id.rl_card_view);
+        rlCardEdit=(RelativeLayout) findViewById(R.id.rl_card_edit);
+        rlButtons=(RelativeLayout) findViewById(R.id.rl_buttons);
+        btnSave=(ImageButton) findViewById(R.id.btn_save);
 
-        Button btnSave = (Button) findViewById(R.id.btn_save);
-        Button btnShare = (Button) findViewById(R.id.btn_share);
-        btnShare.setOnClickListener(this);
+        userName=(TextView) findViewById(R.id.tv_user_name);
+        userEmail=(TextView) findViewById(R.id.tv_user_email);
+        userPhone=(TextView) findViewById(R.id.tv_user_phone);
+        userContagId=(TextView) findViewById(R.id.tv_user_contag_id);
+        userDesignation=(TextView) findViewById(R.id.tv_designation);
+
+        etUserName=(EditText) findViewById(R.id.et_user_name);
+        etUserPhone=(EditText) findViewById(R.id.et_user_phone);
+        etUserEmail=(EditText) findViewById(R.id.et_user_email);
+        etUserDesignation=(EditText) findViewById(R.id.et_user_designation);
+
         btnSave.setOnClickListener(this);
-        progressbar = findViewById(R.id.pb_edit_profile_1);
+        btnShare.setOnClickListener(this);
+        btnDownload.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
         btnBack.setOnClickListener(this);
-
-
-
-    }
+        new LoadUser().execute();
+   }
 
 
     @Override
@@ -124,65 +117,127 @@ public class VisitingCardActivity extends BaseActivity implements NavDrawerFragm
             }
             case R.id.btn_back: {
                 this.finish();
-                Router.startHomeActivity(this, TAG);
+                //Router.startHomeActivity(this, TAG);
+                break;
+            }
+            case R.id.btn_edit: {
+                toggleEditMode();
+                break;
+            }
+            case R.id.btn_download: {
+                Bitmap bitmap = ImageUtils.getBitmapFromView(findViewById(R.id.rl_card_view));
+                ImageUtils.saveImage(bitmap,this);
                 break;
             }
             case R.id.btn_save: {
-                Bitmap bitmap = getBitmapFromView(findViewById(R.id.rl_card));
-                saveImage(bitmap);
-                break;
+                syncProfile();
+                setUpVisitingCard(myUser+);
+                toggleEditMode();
+                 break;
             }
         }
     }
 
-    public static Bitmap getBitmapFromView(View view) {
-        //Define a bitmap with the same size as the view
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        //Bind a canvas to it
-        Canvas canvas = new Canvas(returnedBitmap);
-        //Get the view's background
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable != null)
-            //has background drawable, then draw it on the canvas
-            bgDrawable.draw(canvas);
-        else
-            //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
-        // draw the view on the canvas
-        view.draw(canvas);
-        //return the bitmap
-        return returnedBitmap;
-    }
 
-    private void saveImage(Bitmap finalBitmap) {
+    private void toggleEditMode()
+    {
+        if(editMode) {
+            setUpVisitingCard(myUser);
+            rlCardView.setVisibility(View.VISIBLE);
+            rlCardEdit.setVisibility(View.GONE);
+            rlButtons.setVisibility(View.VISIBLE);
 
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Contag");
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        else
+        {
+            setUpVisitingCardEdit(myUser);
+            rlCardView.setVisibility(View.GONE);
+            rlCardEdit.setVisibility(View.VISIBLE);
+            rlButtons.setVisibility(View.GONE);
 
-        sendBroadcast(new Intent(
-                Intent.ACTION_MEDIA_MOUNTED,
-                Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        }
+        editMode=!editMode;
+
     }
-
     @Override
     public void onBackPressed() {
         finish();
         // Router.startHomeActivity(this, TAG);
+    }
+    private class LoadUser extends AsyncTask<Void, Void, ContagContag> {
+        @Override
+        protected ContagContag doInBackground(Void... params) {
+            log(TAG, "wtf");
+            return VisitingCardActivity.this.getCurrentUser();
+        }
+
+        @Override
+        protected void onPostExecute(ContagContag ccUser) {
+
+            myUser=ccUser;
+            setUpVisitingCard(myUser);
+            Toolbar tbHome = (Toolbar) VisitingCardActivity.this.findViewById(R.id.tb_home);
+            TextView name,id;
+            name= (TextView) tbHome.findViewById(R.id.tv_user_name);
+            id= (TextView) tbHome.findViewById(R.id.tv_user_contag_id);
+            name.setText(ccUser.getName());
+            id.setText(ccUser.getContag().toLowerCase());
+            name.setTextColor(Color.BLACK);
+            id.setTextColor(Color.BLACK);
+            Picasso.with(VisitingCardActivity.this).load(ccUser.getAvatarUrl()).placeholder(R.drawable.default_profile_pic_small).
+                    fit()
+                    .centerCrop().
+                    into(((ImageView) tbHome.findViewById(R.id.iv_user_photo)));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            tbHome.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //What to do on back clicked
+                    finish();
+                    Router.startHomeActivity(VisitingCardActivity.this, TAG);
+                }
+            });
+        }
+  }
+    public void setUpVisitingCard(ContagContag myUser)
+    {
+
+        Log.d("Name",myUser.getName());
+        if(myUser.getName()!=null)
+            userName.setText(myUser.getName());
+        userContagId.setText(myUser.getContag().toLowerCase());
+        if(myUser.getWorkEmail()!=null)
+            userEmail.setText(myUser.getWorkEmail());
+        if(myUser.getMobileNumber()!=null)
+            userPhone.setText(myUser.getMobileNumber());
+        if(myUser.getDesignation()!=null)
+            userDesignation.setText(myUser.getDesignation());
+    }
+    public void setUpVisitingCardEdit(ContagContag myUser)
+    {
+        etUserName.setText(myUser.getName());
+        if(myUser.getWorkEmail()!=null)
+         etUserEmail.setText(myUser.getWorkEmail());
+        if(myUser.getDesignation()!=null)
+         etUserDesignation.setText(myUser.getDesignation());
+        if(myUser.getMobileNumber()!=null)
+         etUserPhone.setText(myUser.getMobileNumber());
+    }
+    public void syncProfile()
+    {
+        String name=etUserName.getText().toString();
+        String email=etUserEmail.getText().toString();
+        String phone=etUserPhone.getText().toString();
+        String designation=etUserDesignation.getText().toString();
+        if(name!=null)
+            myUser.setName(name);
+        if(email!=null)
+            myUser.setWorkEmail(email);
+        if(phone!=null)
+            myUser.setMobileNumber(phone);
+        if(designation!=null)
+            myUser.setDesignation(designation);
+
     }
 }
